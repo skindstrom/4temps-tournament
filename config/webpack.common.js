@@ -1,18 +1,10 @@
 const path = require('path');
-/*
-Used to remove warning:
-WARNING in ./node_modules/express/lib/view.js
-81:13-25 Critical dependency: the request of a dependency is an expression
-*/
-const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-    entry: './src/index.js',
-    target: 'node',
-    externals: [nodeExternals()],
+    entry: './src/app/index.js',
     output: {
-        filename: 'server.js',
-        path: path.resolve(__dirname, 'lib')
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, '../public')
     },
     module: {
         rules: [
