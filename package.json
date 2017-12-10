@@ -7,16 +7,19 @@
   "author": "Simon Kindström <simon.kindstrom@gmail.com>",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "node lib/index.js",
-    "build": "babel server -d lib"
+    "start": "node lib/server.js",
+    "build": "webpack"
   },
   "dependencies": {
     "express": "^4.16.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
-    "flow-bin": "^0.61.0"
+    "flow-bin": "^0.61.0",
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
   }
 }
