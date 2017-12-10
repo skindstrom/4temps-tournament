@@ -7,8 +7,8 @@
   "author": "Simon Kindström <simon.kindstrom@gmail.com>",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "node lib/server.js",
-    "build": "webpack"
+    "start": "webpack --config config/webpack.dev.js",
+    "build": "webpack --config config/webpack.prod.js"
   },
   "dependencies": {
     "express": "^4.16.2"
@@ -19,7 +19,9 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
     "flow-bin": "^0.61.0",
+    "nodemon-webpack-plugin": "^0.1.5",
     "webpack": "^3.10.0",
+    "webpack-merge": "^4.1.1",
     "webpack-node-externals": "^1.6.0"
   }
 }

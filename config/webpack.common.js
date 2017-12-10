@@ -7,7 +7,7 @@ WARNING in ./node_modules/express/lib/view.js
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-    entry: './server/index.js',
+    entry: './src/index.js',
     target: 'node',
     externals: [nodeExternals()],
     output: {
