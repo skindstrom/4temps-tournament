@@ -1,0 +1,9 @@
+{
+  "name": "4temps-tournament",
+  "version": "0.0.1",
+  "description": "A website to host 4temps tournaments",
+  "main": "server/index.js",
+  "repository": "git@github.com:SimonKinds/4temps-tournament.git",
+  "author": "Simon Kindström <simon.kindstrom@gmail.com>",
+  "license": "GPL-3.0"
+}
