@@ -11,7 +11,7 @@ import App from './app/components/App'
 
 const app = express();
 
-app.use('static', express.static(path.join(__dirname, '../public')));
+app.use('/static', express.static(path.join(__dirname, '../public')));
 app.use(handleRender);
 app.listen(3000, () => console.log('Started express server'));
 

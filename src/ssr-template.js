@@ -6,6 +6,7 @@ export default (html: string) => {
     <html>
       <head>
         <title>4 Temps</title>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
       </head>
       <body>
         <div id="root">${html}</div>
