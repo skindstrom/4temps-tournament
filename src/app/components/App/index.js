@@ -4,10 +4,9 @@ import { Header } from 'semantic-ui-react';
 import { Route } from 'react-router-dom';
 
 import NavigationBar from '../NavigationBar';
-import SignUpOrLogin from '../SignUpOrLogin';
+import CreateTournament from '../CreateTournament';
 
-const CreateTournament = () => <div>Create!</div>;
-const Home = () => <div>Home!</div>;
+const Home = () => 'Home!';
 
 const App = () => {
     return (
