@@ -2,28 +2,30 @@
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
 
-type Props = {
-    onClick: () => void,
-};
+import { Link } from 'react-router-dom';
 
-const NavigationBar = (props: Props) => {
+const NavigationBar = () => {
     return (
         <Menu>
-            <Menu.Item
-                name='home'
-                active
-                onClick={props.onClick}
-            >
-                Home
-            </Menu.Item>
-            <Menu.Item
-                name='create-tournament'
-                onClick={props.onClick}
-            >
-                Create Tournament
-            </Menu.Item>
+            <Link to='/'>
+                <Menu.Item
+                    name='home'
+                    active
+                >
+                    Home
+                </Menu.Item>
+            </Link>
+            <Link to='/create-tournament'>
+                <Menu.Item
+                    name='create-tournament'
+                >
+                    Create Tournament
+                </Menu.Item>
+            </Link>
         </Menu>);
 
 }
+
+
 
 export default NavigationBar;
