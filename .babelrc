@@ -6,6 +6,7 @@
   ],
   "plugins": [
     [
+      // enable styleName="" in react components
       "react-css-modules"
     ]
   ],
@@ -15,6 +16,7 @@
         [
           "react-css-modules",
           {
+            // Don't import during SSR
             "removeImport": true
           }
         ]
