@@ -1,4 +1,4 @@
-// flow-typed signature: 3aa5f76ea4b47d684ba6a1cf0f163cbb
+// flow-typed signature: 521defbab7006ffd8910ac3bedc926dd
 // flow-typed version: <<STUB>>/semantic-ui-react_v^0.77.0/flow_v0.61.0
 
 /**
@@ -506,7 +506,7 @@ declare module 'semantic-ui-react/dist/commonjs/lib/getUnhandledProps' {
   declare module.exports: any;
 }
 
-declare module 'semantic-ui-react/dist/commonjs/lib/htmlInputPropsUtils' {
+declare module 'semantic-ui-react/dist/commonjs/lib/htmlPropsUtils' {
   declare module.exports: any;
 }
 
@@ -1422,7 +1422,7 @@ declare module 'semantic-ui-react/dist/es/lib/getUnhandledProps' {
   declare module.exports: any;
 }
 
-declare module 'semantic-ui-react/dist/es/lib/htmlInputPropsUtils' {
+declare module 'semantic-ui-react/dist/es/lib/htmlPropsUtils' {
   declare module.exports: any;
 }
 
@@ -2342,7 +2342,7 @@ declare module 'semantic-ui-react/src/lib/getUnhandledProps' {
   declare module.exports: any;
 }
 
-declare module 'semantic-ui-react/src/lib/htmlInputPropsUtils' {
+declare module 'semantic-ui-react/src/lib/htmlPropsUtils' {
   declare module.exports: any;
 }
 
@@ -3138,8 +3138,8 @@ declare module 'semantic-ui-react/dist/commonjs/lib/getElementType.js' {
 declare module 'semantic-ui-react/dist/commonjs/lib/getUnhandledProps.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/getUnhandledProps'>;
 }
-declare module 'semantic-ui-react/dist/commonjs/lib/htmlInputPropsUtils.js' {
-  declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/htmlInputPropsUtils'>;
+declare module 'semantic-ui-react/dist/commonjs/lib/htmlPropsUtils.js' {
+  declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/htmlPropsUtils'>;
 }
 declare module 'semantic-ui-react/dist/commonjs/lib/index.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/index'>;
@@ -3825,8 +3825,8 @@ declare module 'semantic-ui-react/dist/es/lib/getElementType.js' {
 declare module 'semantic-ui-react/dist/es/lib/getUnhandledProps.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/getUnhandledProps'>;
 }
-declare module 'semantic-ui-react/dist/es/lib/htmlInputPropsUtils.js' {
-  declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/htmlInputPropsUtils'>;
+declare module 'semantic-ui-react/dist/es/lib/htmlPropsUtils.js' {
+  declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/htmlPropsUtils'>;
 }
 declare module 'semantic-ui-react/dist/es/lib/index.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/index'>;
@@ -4515,8 +4515,8 @@ declare module 'semantic-ui-react/src/lib/getElementType.js' {
 declare module 'semantic-ui-react/src/lib/getUnhandledProps.js' {
   declare module.exports: $Exports<'semantic-ui-react/src/lib/getUnhandledProps'>;
 }
-declare module 'semantic-ui-react/src/lib/htmlInputPropsUtils.js' {
-  declare module.exports: $Exports<'semantic-ui-react/src/lib/htmlInputPropsUtils'>;
+declare module 'semantic-ui-react/src/lib/htmlPropsUtils.js' {
+  declare module.exports: $Exports<'semantic-ui-react/src/lib/htmlPropsUtils'>;
 }
 declare module 'semantic-ui-react/src/lib/index.js' {
   declare module.exports: $Exports<'semantic-ui-react/src/lib/index'>;

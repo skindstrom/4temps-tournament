@@ -1,6 +1,7 @@
 // @flow
 
 import express from 'express';
+import compression from 'compression';
 import type { $Request, $Response } from 'express';
 import path from 'path';
 import React from 'react';
@@ -12,7 +13,14 @@ import App from './app/components/App'
 
 const app = express();
 
+// gzip compression
+app.use(compression());
+
+// used for files that should be public, e.g. favicon etc.
 app.use('/public', express.static(path.join(__dirname, '../public')));
+// used for files that should be public, but that's generated
+app.use('/public', express.static(path.join(__dirname, '../public-build')));
+
 app.use(handleRender);
 app.listen(3000, () => console.log('Started express server'));
 
