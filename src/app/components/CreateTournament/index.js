@@ -1,6 +1,7 @@
 //@flow 
 
 import React from 'react';
+import SignUpOrLogin from '../SignUpOrLogin';
 
 type Props = {
     user: ?string
@@ -9,8 +10,11 @@ type Props = {
 const CreateTournament = (props: Props) => {
     if (props.user) {
         return `You're ready to create a tournament!`;
-    } 
-    return `Please log in or sign up`;
+    }
+    return (
+        <SignUpOrLogin
+            header='An account is needed to create a tournament'
+        />);
 };
 
 export default CreateTournament;

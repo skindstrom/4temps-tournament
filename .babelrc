@@ -4,6 +4,11 @@
     "flow",
     "react"
   ],
+  "plugins": [
+    [
+      "react-css-modules"
+    ]
+  ],
   "env": {
     "server": {
       "plugins": [

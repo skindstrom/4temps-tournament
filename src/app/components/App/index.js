@@ -22,7 +22,7 @@ const App = () => {
             />
             <Route
                 path='/create-tournament'
-                render={(props) => <CreateTournament />}
+                render={(props) => <CreateTournament user={null} />}
             />
         </div>
     );
