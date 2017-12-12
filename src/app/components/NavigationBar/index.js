@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Menu } from 'semantic-ui-react';
+import { Menu, MenuItem } from 'semantic-ui-react';
 
 import { Link } from 'react-router-dom';
 
@@ -8,19 +8,19 @@ const NavigationBar = () => {
     return (
         <Menu>
             <Link to='/'>
-                <Menu.Item
+                <MenuItem
                     name='home'
                     active
                 >
                     Home
-                </Menu.Item>
+                </MenuItem>
             </Link>
             <Link to='/create-tournament'>
-                <Menu.Item
+                <MenuItem
                     name='create-tournament'
                 >
                     Create Tournament
-                </Menu.Item>
+                </MenuItem>
             </Link>
         </Menu>);
 

@@ -20,9 +20,11 @@ const SignUp = (props: SignUpProps) => {
                 label='Email'
                 placeholder='john@gmail.com'
                 value={props.email}
-                onChange={(event) =>
-                    props.onChangeEmail(event.target.value)}
-
+                onChange={(event: Event) => {
+                    if (event.target instanceof HTMLInputElement) {
+                        props.onChangeEmail(event.target.value)
+                    }
+                }}
             />
             <FormInput
                 styleName='field'
@@ -30,8 +32,11 @@ const SignUp = (props: SignUpProps) => {
                 type='password'
                 value={props.password}
                 placeholder='P4ssw0rd'
-                onChange={(event) =>
-                    props.onChangePassword(event.target.value)}
+                onChange={(event: Event) => {
+                    if (event.target instanceof HTMLInputElement) {
+                        props.onChangePassword(event.target.value)
+                    }
+                }}
             />
             <Button onClick={props.onSubmit} type='submit'>Submit</Button>
         </Form >
