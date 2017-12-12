@@ -4,6 +4,7 @@ import { Header } from 'semantic-ui-react';
 import { Route } from 'react-router-dom';
 
 import NavigationBar from '../NavigationBar';
+import SignUpOrLogin from '../SignUpOrLogin';
 
 const CreateTournament = () => <div>Create!</div>;
 const Home = () => <div>Home!</div>;
@@ -20,7 +21,10 @@ const App = () => {
                 exact
                 component={Home}
             />
-            <Route path='/create-tournament' component={CreateTournament} />
+            <Route
+                path='/create-tournament'
+                render={(props) => <CreateTournament />}
+            />
         </div>
     );
 }

@@ -12,13 +12,13 @@ import App from './app/components/App'
 
 const app = express();
 
-app.use('/static', express.static(path.join(__dirname, '../public')));
+app.use('/public', express.static(path.join(__dirname, '../public')));
 app.use(handleRender);
 app.listen(3000, () => console.log('Started express server'));
 
 // used for server side rendering of React components
 function handleRender(req: $Request, res: $Response) {
-    const context = {}
+    const context = {};
     const html = renderToString(
         <StaticRouter
             location={req.url}
@@ -26,15 +26,15 @@ function handleRender(req: $Request, res: $Response) {
         >
             <App />
         </StaticRouter>
-    )
+    );
 
     // redirects
     if (context.url) {
         res.writeHead(301, {
             Location: context.url
-        })
+        });
     } else {
         res.write(renderHtmlTemplate(html));
     }
-    res.end()
+    res.end();
 }

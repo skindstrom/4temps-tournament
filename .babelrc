@@ -1,3 +1,19 @@
 {
-  "presets": ["env", "flow", "react"]
+  "presets": [
+    "env",
+    "flow",
+    "react"
+  ],
+  "env": {
+    "server": {
+      "plugins": [
+        [
+          "react-css-modules",
+          {
+            "removeImport": true
+          }
+        ]
+      ]
+    }
+  }
 }
