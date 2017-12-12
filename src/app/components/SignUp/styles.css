@@ -1,6 +1,4 @@
-.form {
-    margin: 20px;
-}
-.field {
+.wrapper {
     max-width: 500px;
+    margin: 20px;
 }

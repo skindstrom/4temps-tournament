@@ -13,28 +13,33 @@
     "build": "npm-run-all -p build:*",
     "build:server": "BABEL_ENV=server babel -s -d lib/ src/ ",
     "build:client": "webpack --config config/webpack.prod.js",
-    "start:prod": "node lib/index.js"
+    "start:prod": "node lib/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "compression": "^1.7.1",
+    "babel-polyfill": "^6.26.0",
     "express": "^4.16.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-router-dom": "^4.2.2",
-    "semantic-ui-react": "^0.77.0"
+    "react-router-dom": "^4.2.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-react-css-modules": "^3.3.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
     "flow-bin": "^0.61.0",
+    "jest": "^21.2.1",
     "nodemon": "^1.12.5",
     "npm-run-all": "^4.1.2",
+    "semantic-ui-react": "^0.77.1",
     "style-loader": "^0.19.0",
     "uglifyjs-webpack-plugin": "^1.1.2",
     "webpack": "^3.10.0",

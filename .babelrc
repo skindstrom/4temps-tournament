@@ -5,10 +5,12 @@
     "react"
   ],
   "plugins": [
-    [
       // enable styleName="" in react components
-      "react-css-modules"
-    ]
+      ["react-css-modules"],
+      // enable class properties
+      ["transform-class-properties"],
+      // async
+      ["transform-regenerator"]
   ],
   "env": {
     "server": {
