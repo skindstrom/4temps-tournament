@@ -37,3 +37,17 @@ npm run start:prod
 ```
 
 Once again, you should be able to visit `http://localhost:3000`.
+
+# Contributing
+## Writing tests
+[jest](https://facebook.github.io/jest/) is used for testing.
+To run the tests, simply execute `npm test`.
+Tests should be placed in a `__tests__` folder, in whatever directory the file you're testing is in.
+
+How to write tests can be found on [jest's website](https://facebook.github.io/jest/docs/en/using-matchers.html#content), but here's a short example taken from their documentation.
+
+```js
+test('two plus two is four', () => {
+  expect(2 + 2).toBe(4);
+});
+```
