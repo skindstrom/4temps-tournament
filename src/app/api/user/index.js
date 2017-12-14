@@ -5,14 +5,8 @@ import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
 import validateUser from '../../../validators/validate-user';
 
-export interface IUserApi {
-  static createUser(user: UserWithPassword):
-    Promise<UserCreateValidationSummary>;
-}
-
-class UserApi implements IUserApi {
-  static async createUser(
-    user: UserWithPassword): Promise<UserCreateValidationSummary> {
+export const createUser =
+  async (user: UserWithPassword): Promise<UserCreateValidationSummary> => {
     let result = await validateUser(user);
     if (!result.isValid) {
       return result;
@@ -29,7 +23,6 @@ class UserApi implements IUserApi {
 
     result = httpResult.json();
     return result;
-  }
-}
+  };
 
-export default UserApi;
+export default createUser;

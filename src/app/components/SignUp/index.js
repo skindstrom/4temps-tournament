@@ -7,7 +7,7 @@ import SignUp from './component';
 import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
 import type { UserWithPassword } from '../../../models/user';
-import UserApi from '../../api/user';
+import { createUser } from '../../api/user';
 
 type Props = {
   history: RouterHistory
@@ -30,7 +30,7 @@ class SignUpContainer extends Component<Props, State> {
   };
 
   _onSubmit = async (user: UserWithPassword) => {
-    const result = await UserApi.createUser(user);
+    const result = await createUser(user);
     this.setState({ validation: result });
 
     if (result.isValid) {
