@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SimonKinds/4temps-tournament.svg?branch=master)](https://travis-ci.org/SimonKinds/4temps-tournament)
+
 # Installation
 ## Installing NodeJS and npm
 Start by installing NodeJS and npm.
