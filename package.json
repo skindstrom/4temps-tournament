@@ -16,9 +16,7 @@
     "start:prod": "node lib/index.js",
     "test": "jest",
     "lint": "eslint src/**",
-    "lint:fix": "eslint src/** --fix",
-    "precommit": "npm-run-all -s lint:fix test",
-    "prepush": "npm-run-all -s lint:fix test"
+    "lint:fix": "eslint src/** --fix"
   },
   "dependencies": {
     "compression": "^1.7.1",
