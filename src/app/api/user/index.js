@@ -13,7 +13,22 @@ export interface IUserApi {
 class UserApi implements IUserApi {
   static async createUser(
     user: UserWithPassword): Promise<UserCreateValidationSummary> {
-    return validateUser(user);
+    let result = validateUser(user);
+    if (!result.isValid) {
+      return result;
+    }
+    let httpResult = await fetch("/api/user/create",
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(user)
+      });
+
+    result = httpResult.json();
+    return result;
   }
 }
 

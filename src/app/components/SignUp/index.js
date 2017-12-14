@@ -22,6 +22,7 @@ class SignUpContainer extends Component<Props, State> {
     validation: {
       isValid: false,
       isValidEmail: true,
+      isEmailNotUsed: true,
       isValidFirstName: true,
       isValidLastName: true,
       isValidPassword: true

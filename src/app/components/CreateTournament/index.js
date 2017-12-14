@@ -8,7 +8,7 @@ type Props = {
 };
 
 const CreateTournament = (props: Props) => {
-  if (props.user !== null) {
+  if (props.user != null) {
     return `You're ready to create a tournament!`;
   }
   return (

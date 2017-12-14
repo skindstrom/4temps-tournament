@@ -68,6 +68,11 @@ class SignUp extends Component<Props, UserWithPassword> {
           />
           {!this.props.validation.isValidEmail &&
             <Message error content='Invalid email' />}
+          {!this.props.validation.isEmailNotUsed &&
+            <Message
+              error
+              content='An account already exists with this email'
+            />}
           <FormInput
             label='Password'
             type='password'
