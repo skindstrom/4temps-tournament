@@ -1,6 +1,9 @@
 // @flow
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 import type { User, UserWithPassword } from '../models/user';
+
+const SALT_ROUNDS = 12;
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/4temps', { useMongoClient: true })
@@ -32,6 +35,7 @@ const schema = new mongoose.Schema({
 const UserModel = mongoose.model('user', schema);
 
 export const createUser = async (user: UserWithPassword): Promise<boolean> => {
+  user.password = ((await bcrypt.hash(user.password, SALT_ROUNDS)): string);
   const dbUser = new UserModel(user);
   try {
     await dbUser.save();
