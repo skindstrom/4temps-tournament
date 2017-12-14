@@ -3,14 +3,14 @@
 import validateUser from '../validate-user';
 import type { UserWithPassword } from '../../models/user';
 
-test('Valid object is valid', () => {
+test('Valid object is valid', async () => {
   const user: UserWithPassword = {
     firstName: 'Simon',
     lastName: 'Smith',
     email: 'test@test.com',
     password: 'p4ssw0rdh4xxor'
   };
-  const result = validateUser(user);
+  const result = await validateUser(user);
   expect(result.isValid).toBe(true);
   expect(result.isEmailNotUsed).toBe(true);
   expect(result.isValidFirstName).toBe(true);
@@ -19,14 +19,14 @@ test('Valid object is valid', () => {
   expect(result.isValidPassword).toBe(true);
 });
 
-test('Empty first name is invalid', () => {
+test('Empty first name is invalid', async () => {
   const user: UserWithPassword = {
     firstName: '',
     lastName: 'Smith',
     email: 'test@test.com',
     password: 'p4ssw0rdh4xxor'
   };
-  const result = validateUser(user);
+  const result = await validateUser(user);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidFirstName).toBe(false);
@@ -37,7 +37,7 @@ test('Empty first name is invalid', () => {
   expect(result.isValidPassword).toBe(true);
 });
 
-test('Empty last name is invalid', () => {
+test('Empty last name is invalid', async () => {
   const user: UserWithPassword = {
     firstName: 'Simon',
     lastName: '',
@@ -45,7 +45,7 @@ test('Empty last name is invalid', () => {
     password: 'p4ssw0rdh4xxor'
   };
 
-  const result = validateUser(user);
+  const result = await validateUser(user);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidLastName).toBe(false);
@@ -56,7 +56,7 @@ test('Empty last name is invalid', () => {
   expect(result.isValidPassword).toBe(true);
 });
 
-test('Password requires at least 8 characters', () => {
+test('Password requires at least 8 characters', async () => {
   const user: UserWithPassword = {
     firstName: 'Simon',
     lastName: 'Smith',
@@ -64,7 +64,7 @@ test('Password requires at least 8 characters', () => {
     password: 'abc4567'
   };
 
-  const result = validateUser(user);
+  const result = await validateUser(user);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidPassword).toBe(false);
@@ -75,7 +75,7 @@ test('Password requires at least 8 characters', () => {
   expect(result.isValidEmail).toBe(true);
 });
 
-test('Email requires valid format', () => {
+test('Email requires valid format', async () => {
   const emails = ['@test.com', 't@t', 't@.com'];
   const users: Array<UserWithPassword> = emails.map((email) => ({
     firstName: 'Simon',
@@ -85,7 +85,7 @@ test('Email requires valid format', () => {
   }));
 
   for (let i = 0; i < users.length; ++i) {
-    const result = validateUser(users[i]);
+    const result = await validateUser(users[i]);
 
     expect(result.isValid).toBe(false);
     expect(result.isValidEmail).toBe(false);
@@ -97,9 +97,14 @@ test('Email requires valid format', () => {
   }
 });
 
-test('Email in use is invalid', () => {
+test('Email in use is invalid', async () => {
   const getUsers = () => {
-    return [{ firstName: 'Other', lastName: 'Other', email: 'test@test.com' }];
+    return new Promise(resolve =>
+      resolve([{
+        firstName: 'Other',
+        lastName: 'Other',
+        email: 'test@test.com'
+      }]));
   };
 
   const user: UserWithPassword = {
@@ -109,7 +114,7 @@ test('Email in use is invalid', () => {
     password: 'Password123'
   };
 
-  const result = validateUser(user, getUsers);
+  const result = await validateUser(user, getUsers);
   expect(result.isValid).toBe(false);
   expect(result.isEmailNotUsed).toBe(false);
 

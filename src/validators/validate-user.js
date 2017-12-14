@@ -17,8 +17,10 @@ const validateEmail = (email: string): boolean => {
 }
 
 
-const validateUser = (user: UserWithPassword,
-  getUsers: ?() => Array<User>): UserCreateValidationSummary => {
+const validateUser = async (
+  user: UserWithPassword,
+  getUsers: ?() =>
+    Promise<Array<User>>): Promise<UserCreateValidationSummary> => {
   const isValidFirstName = user.firstName.length > 0;
   const isValidLastName = user.lastName.length > 0;
   const isValidPassword = user.password.length >= 8;
@@ -27,7 +29,7 @@ const validateUser = (user: UserWithPassword,
   let isEmailNotUsed = true;
   if (getUsers != null) {
     isEmailNotUsed =
-      getUsers().findIndex(u => u.email === user.email) === -1;
+      (await getUsers()).findIndex(u => u.email === user.email) === -1;
   }
 
   return {

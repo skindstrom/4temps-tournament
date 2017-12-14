@@ -1,14 +1,13 @@
 // @flow
 import { Router } from 'express';
 import type { $Request, $Response } from 'express';
-import type { User, UserWithPassword } from '../models/user';
+import type { UserWithPassword } from '../models/user';
 import validateUser from '../validators/validate-user';
-
-let users: Array<User> = [];
+import { createUser, getUsers } from '../data/user';
 
 const router = Router();
 
-router.post('/create', (req: $Request, res: $Response) => {
+router.post('/create', async (req: $Request, res: $Response) => {
   const user: UserWithPassword = {
     email: req.body.email || '',
     firstName: req.body.firstName || '',
@@ -16,14 +15,14 @@ router.post('/create', (req: $Request, res: $Response) => {
     password: req.body.password || ''
   };
 
-  const validation = validateUser(user, () => users);
+  const validation = await validateUser(user, getUsers);
   if (validation.isValid) {
-    users.push({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName
-    });
-    res.status(200);
+    const success = await createUser(user);
+    if (success) {
+      res.status(200);
+    } else {
+      res.status(500);
+    }
   } else if (!validation.isEmailNotUsed) {
     res.status(409);
   } else {

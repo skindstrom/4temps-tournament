@@ -13,7 +13,7 @@ export interface IUserApi {
 class UserApi implements IUserApi {
   static async createUser(
     user: UserWithPassword): Promise<UserCreateValidationSummary> {
-    let result = validateUser(user);
+    let result = await validateUser(user);
     if (!result.isValid) {
       return result;
     }

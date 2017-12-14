@@ -5,12 +5,22 @@
     "react"
   ],
   "plugins": [
-      // enable styleName="" in react components
-      ["react-css-modules"],
-      // enable class properties
-      ["transform-class-properties"],
-      // async
-      ["transform-regenerator"]
+    // enable styleName="" in react components
+    [
+      "react-css-modules"
+    ],
+    // enable class properties
+    [
+      "transform-class-properties"
+    ],
+    // async
+    [
+      "transform-regenerator"
+    ],
+    // spread operator
+    [
+      "transform-object-rest-spread"
+    ]
   ],
   "env": {
     "server": {
