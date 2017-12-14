@@ -15,8 +15,10 @@
     "build:client": "webpack --config config/webpack.prod.js",
     "start:prod": "node lib/index.js",
     "test": "jest",
-    "lint": "eslint src/**",
-    "lint:fix": "eslint src/** --fix"
+    "lint": "npm-run-all -p lint:eslint lint:flow",
+    "lint:fix": "eslint src/** --fix",
+    "lint:eslint": "eslint src/**",
+    "lint:flow": "flow check"
   },
   "dependencies": {
     "compression": "^1.7.1",

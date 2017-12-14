@@ -1,5 +1,7 @@
 // @flow
 
+/* eslint-disable max-len */
+
 export default (html: string) => {
   return `
     <!doctype html>

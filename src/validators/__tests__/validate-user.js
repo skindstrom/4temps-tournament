@@ -1,7 +1,7 @@
 // @flow
 
-import validateUser from '../validator';
-import type { UserWithPassword } from '../user';
+import validateUser from '../validate-user';
+import type { UserWithPassword } from '../../models/user';
 
 test('Valid object is valid', () => {
   const user: UserWithPassword = {

@@ -47,12 +47,13 @@ const SignUpOrLogin = ({ header, onClickSignUp, onClickLogin }: Props) => {
 };
 
 const SignUpOrLoginWithRouter =
-  withRouter(({ history, header }: { history: RouterHistory, header: string }) =>
-    (<SignUpOrLogin
-      header={header}
-      onClickLogin={() => history.push('/login')}
-      onClickSignUp={() => history.push('/signup')}
-    />)
+  withRouter(
+    ({ history, header }: { history: RouterHistory, header: string }) =>
+      (<SignUpOrLogin
+        header={header}
+        onClickLogin={() => history.push('/login')}
+        onClickSignUp={() => history.push('/signup')}
+      />)
   );
 
 export default SignUpOrLoginWithRouter;

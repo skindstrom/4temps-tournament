@@ -1,0 +1,1 @@
+Here you may define flow types and classes that should be shared around the application.
