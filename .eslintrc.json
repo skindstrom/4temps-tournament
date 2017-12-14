@@ -1,0 +1,43 @@
+{
+    "parser": "babel-eslint",
+    "plugins": [
+        "react",
+        "flowtype",
+        "jest"
+    ],
+    "extends": [
+        "airbnb",
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:flowtype/recommended",
+        "plugin:jest/recommended"
+    ],
+    "env": {
+        "browser": true,
+        "node": true,
+        "jest/globals": true
+    },
+    "rules": {
+        // 2 spaces as indents
+        "indent": [
+            "error",
+            2
+        ],
+        // allow jsx in .js files
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        // don't error on react router4 Link component
+        "jsx-a11y/anchor-is-valid": [ "error", {
+            "components": [ "Link" ],
+            "specialLink": [ "to"],
+            "aspects": [ "noHref" ]
+          }]
+    }
+}

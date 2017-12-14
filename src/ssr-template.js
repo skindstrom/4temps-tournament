@@ -1,7 +1,7 @@
 // @flow
 
 export default (html: string) => {
-    return `
+  return `
     <!doctype html>
     <html>
       <head>

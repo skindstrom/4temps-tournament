@@ -10,12 +10,12 @@ import App from './components/App';
 
 const root = document.getElementById('root');
 if (root) {
-    hydrate(
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>,
-        root
-    );
+  hydrate(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+    root
+  );
 } else {
-    throw new Error('Could not find react root');
+  throw new Error('Could not find react root');
 }

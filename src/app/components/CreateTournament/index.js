@@ -8,13 +8,13 @@ type Props = {
 };
 
 const CreateTournament = (props: Props) => {
-    if (props.user) {
-        return `You're ready to create a tournament!`;
-    }
-    return (
-        <SignUpOrLogin
-            header='An account is needed to create a tournament'
-        />);
+  if (props.user) {
+    return `You're ready to create a tournament!`;
+  }
+  return (
+    <SignUpOrLogin
+      header='An account is needed to create a tournament'
+    />);
 };
 
 export default CreateTournament;

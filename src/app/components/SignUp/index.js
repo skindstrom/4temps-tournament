@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { Form, FormField, Button } from 'semantic-ui-react';
 
 import SignUp from './component';
 import validateUser from './validator';
@@ -15,26 +14,26 @@ type State = {
 
 class SignUpContainer extends Component<Props, State> {
     state = {
-        validation: {
-            isValid: true,
-            isValidEmail: true,
-            isValidFirstName: true,
-            isValidLastName: true,
-            isValidPassword: true
-        },
+      validation: {
+        isValid: true,
+        isValidEmail: true,
+        isValidFirstName: true,
+        isValidLastName: true,
+        isValidPassword: true
+      },
+    };
+
+    _onSubmit = async (user: UserWithPassword) => {
+      this.setState({ validation: validateUser(user) });
     };
 
     render() {
-        return (
-            <SignUp
-                onSubmit={this._onSubmit}
-                validation={this.state.validation}
-            />);
+      return (
+        <SignUp
+          onSubmit={this._onSubmit}
+          validation={this.state.validation}
+        />);
     }
-
-    _onSubmit = async (user: UserWithPassword) => {
-        this.setState({ validation: validateUser(user) });
-    };
-};
+}
 
 export default SignUpContainer;
