@@ -32,6 +32,10 @@
                 "ignoreComments": true
             }
         ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
         // allow jsx in .js files
         "react/jsx-filename-extension": [
             1,

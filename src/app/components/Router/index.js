@@ -9,15 +9,16 @@ import Home from '../Home';
 
 
 const Router = () => {
-  return(
-    <router>
-      <Switch>
-        <Route path='/(|home)' exact component={Home} />
-        <Route path='/create-tournament' render={() => <CreateTournament user={null} />} />
-        <Route path='/signup' component={SignUp} />
-      </Switch>
-    </router>
-  )
+  return (
+    <Switch>
+      <Route path='/(|home)' exact component={Home} />
+      <Route
+        path='/create-tournament'
+        render={() => <CreateTournament user={null} />}
+      />
+      <Route path='/signup' component={SignUp} />
+    </Switch>
+  );
 }
 
 export default Router;
