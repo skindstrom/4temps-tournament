@@ -1,7 +1,7 @@
 // @flow
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import type { User, UserWithPassword } from '../models/user';
+import type { User, UserCredentials, UserWithPassword } from '../models/user';
 
 const SALT_ROUNDS = 12;
 
@@ -51,4 +51,17 @@ export const getUsers = async (): Promise<Array<User>> => {
     const { firstName, lastName, email } = user;
     return { firstName, lastName, email };
   });
+};
+
+export const getUser = async (credentials: UserCredentials): Promise<?User> => {
+  const user = await UserModel.findOne({ email: credentials.email });
+  if (user != null &&
+    await bcrypt.compare(credentials.password, user.password) === true) {
+    return {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName
+    };
+  }
+  return null;
 };

@@ -2,16 +2,18 @@
 
 import React, { PureComponent } from 'react';
 import { Button, Form, FormInput, Header, Message } from 'semantic-ui-react';
-import type { UserLoginValidationSummary } from
-  '../../../validators/validate-user-login';
 import type { UserCredentials } from '../../../models/user';
 
 import './styles.css';
 
 type Props = {
-  onSubmit: (user: UserCredentials) => void,
-  validation: UserLoginValidationSummary
+  onSubmit: (user: UserCredentials) => Promise<void>,
+  isValidInput: boolean,
+  isValidEmail: boolean,
+  isValidPassword: boolean,
+  wasCorrectCredentials: boolean,
 }
+
 type State = UserCredentials;
 
 class Login extends PureComponent<Props, State> {
@@ -38,22 +40,23 @@ class Login extends PureComponent<Props, State> {
         <Header as='h1'>
           Log in
         </Header>
-        <Form error={!this.props.validation.isValid}>
+        <Form error={!this.props.isValidInput}>
           <FormInput
             label='Email'
             placeholder='john@gmail.com'
             value={this.state.email}
             onChange={this._onEmailChange}
           />
-          {!this.props.validation.isValidEmail &&
+          {!this.props.isValidEmail &&
             <Message error content='Invalid email address' />}
           <FormInput
+            type='password'
             label='Password'
             placeholder='P4ssw0rd'
             value={this.state.password}
             onChange={this._onPasswordChange}
           />
-          {!this.props.validation.isValidPassword &&
+          {!this.props.isValidPassword &&
             <Message error content='Invalid password' />}
           <Button
             type='submit'
@@ -61,6 +64,8 @@ class Login extends PureComponent<Props, State> {
           >
             Submit
           </Button>
+          {!this.props.wasCorrectCredentials &&
+            <Message error content='Invalid email or password' />}
         </Form>
       </div>
     );

@@ -1,9 +1,13 @@
 // @flow
 
-import type { UserWithPassword } from '../../../models/user';
+import validateUser from '../../../validators/validate-user';
+import validateUserLogin from '../../../validators/validate-user-login';
+
+import type { UserCredentials, UserWithPassword } from '../../../models/user';
+import type { UserLoginValidationSummary } from
+  '../../../validators/validate-user-login';
 import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
-import validateUser from '../../../validators/validate-user';
 
 export const createUser =
   async (user: UserWithPassword): Promise<UserCreateValidationSummary> => {
@@ -11,7 +15,7 @@ export const createUser =
     if (!result.isValid) {
       return result;
     }
-    let httpResult = await fetch("/api/user/create",
+    let httpResult = await fetch('/api/user/create',
       {
         headers: {
           'Accept': 'application/json',
@@ -25,4 +29,22 @@ export const createUser =
     return result;
   };
 
-export default createUser;
+export const loginUser =
+  async (credentials: UserCredentials): Promise<UserLoginValidationSummary> => {
+    let result = await validateUserLogin(credentials);
+    if (!result.isValid) {
+      return result;
+    }
+
+    let httpResult = await fetch('/api/user/login',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(credentials)
+      });
+
+    return httpResult.json();
+  };

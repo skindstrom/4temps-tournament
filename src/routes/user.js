@@ -1,9 +1,10 @@
 // @flow
 import { Router } from 'express';
 import type { $Request, $Response } from 'express';
-import type { UserWithPassword } from '../models/user';
+import type { UserCredentials, UserWithPassword } from '../models/user';
 import validateUser from '../validators/validate-user';
-import { createUser, getUsers } from '../data/user';
+import validateUserLogin from '../validators/validate-user-login';
+import { createUser, getUsers, getUser } from '../data/user';
 
 const router = Router();
 
@@ -25,6 +26,23 @@ router.post('/create', async (req: $Request, res: $Response) => {
     }
   } else if (!validation.isEmailNotUsed) {
     res.status(409);
+  } else {
+    res.status(400);
+  }
+
+  res.json(validation);
+});
+
+router.post('/login', async (req: $Request, res: $Response) => {
+  const credentials: UserCredentials = {
+    email: req.body.email || '',
+    password: req.body.password || ''
+  };
+
+  const validation = await validateUserLogin(credentials, getUser);
+  if (validation.isValid) {
+    // TODO: generate some token and also return it
+    res.status(200);
   } else {
     res.status(400);
   }

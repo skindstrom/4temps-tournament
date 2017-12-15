@@ -1,22 +1,23 @@
 // @flow
 
 import validateUserLogin from '../validate-user-login';
-import type { UserCredentials } from '../../models/user';
+import type { User, UserCredentials } from '../../models/user';
 
-test('Valid info is valid', () => {
+test('Valid info is valid', async () => {
   const user: UserCredentials = {
     email: 'test@test.com',
     password: 'password'
   };
 
-  const result = validateUserLogin(user);
+  const result = await validateUserLogin(user);
 
   expect(result.isValid).toBe(true);
   expect(result.isValidEmail).toBe(true);
   expect(result.isValidPassword).toBe(true);
+  expect(result.doesUserExist).toBe(true);
 });
 
-test('Email has to be valid', () => {
+test('Email has to be valid', async () => {
   const emails = ['@test.com', 't@t', 't@.com'];
   const users: Array<UserCredentials> = emails.map((email) => ({
     email,
@@ -24,25 +25,65 @@ test('Email has to be valid', () => {
   }));
 
   for (let i = 0; i < users.length; ++i) {
-    const result = validateUserLogin(users[i]);
+    const result = await validateUserLogin(users[i]);
 
     expect(result.isValid).toBe(false);
     expect(result.isValidEmail).toBe(false);
 
     expect(result.isValidPassword).toBe(true);
+    expect(result.doesUserExist).toBe(true);
   }
 });
 
-test('Password may not be empty', () => {
+test('Password may not be empty', async () => {
   const user: UserCredentials = {
     email: 'test@test.com',
     password: ''
   };
 
-  const result = validateUserLogin(user);
+  const result = await validateUserLogin(user);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidPassword).toBe(false);
 
+  expect(result.isValidEmail).toBe(true);
+  expect(result.doesUserExist).toBe(true);
+});
+
+test('Returns valid user if exists', async () => {
+  const user: UserCredentials = {
+    email: 'test@test.com',
+    password: 'password'
+  };
+
+  const fullUser: User = {
+    email: user.email,
+    firstName: 'Test',
+    lastName: 'WopWop'
+  };
+
+  const result = await validateUserLogin(user,
+    () => new Promise((resolve) => resolve(fullUser)));
+
+  expect(result.isValid).toBe(true);
+  expect(result.doesUserExist).toBe(true);
+
+  expect(result.isValidPassword).toBe(true);
+  expect(result.isValidEmail).toBe(true);
+});
+
+test('Returns null user if not exists', async () => {
+  const user: UserCredentials = {
+    email: 'test@test.com',
+    password: 'password'
+  };
+
+  const result = await validateUserLogin(user,
+    () => new Promise((resolve) => resolve(null)));
+
+  expect(result.isValid).toBe(false);
+  expect(result.doesUserExist).toBe(false);
+
+  expect(result.isValidPassword).toBe(true);
   expect(result.isValidEmail).toBe(true);
 });
