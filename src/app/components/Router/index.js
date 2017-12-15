@@ -6,6 +6,7 @@ import { Switch, Route } from 'react-router-dom';
 import CreateTournament from '../CreateTournament';
 import SignUp from '../SignUp';
 import Home from '../Home';
+import Login from '../Login';
 
 
 const Router = () => {
@@ -17,6 +18,7 @@ const Router = () => {
         render={() => <CreateTournament user={null} />}
       />
       <Route path='/signup' component={SignUp} />
+      <Route path='/login' component={Login} />
     </Switch>
   );
 }

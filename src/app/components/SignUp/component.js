@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Form, FormInput, Button, Message } from 'semantic-ui-react';
+import { Header, Form, FormInput, Button, Message } from 'semantic-ui-react';
 import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
 import type { UserWithPassword } from '../../../models/user';
@@ -43,6 +43,9 @@ class SignUp extends Component<Props, UserWithPassword> {
   render() {
     return (
       <div styleName='wrapper'>
+        <Header as='h1'>
+        Sign up
+        </Header>  
         <Form error={!this.props.validation.isValid}>
           <FormInput
             label='First name'
