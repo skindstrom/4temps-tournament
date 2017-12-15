@@ -21,6 +21,6 @@ const Router = () => {
       <Route path='/login' component={Login} />
     </Switch>
   );
-}
+};
 
 export default Router;

@@ -17,5 +17,5 @@ export default (html: string) => {
         <script src="/public/bundle.js"></script>
       </body>
     </html>
-    `
+    `;
 };

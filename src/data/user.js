@@ -51,4 +51,4 @@ export const getUsers = async (): Promise<Array<User>> => {
     const { firstName, lastName, email } = user;
     return { firstName, lastName, email };
   });
-}
+};

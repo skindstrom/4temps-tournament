@@ -121,4 +121,4 @@ test('Email in use is invalid', async () => {
   expect(result.isValidFirstName).toBe(true);
   expect(result.isValidLastName).toBe(true);
   expect(result.isValidPassword).toBe(true);
-})
+});

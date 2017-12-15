@@ -24,7 +24,7 @@ const NavigationBar = () => {
       </Link>
     </Menu>);
 
-}
+};
 
 
 

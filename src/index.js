@@ -12,7 +12,7 @@ import bodyParser from 'body-parser';
 import ApiRoute from './routes';
 
 import renderHtmlTemplate from './ssr-template';
-import App from './app/components/App'
+import App from './app/components/App';
 
 const app = express();
 
