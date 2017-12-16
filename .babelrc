@@ -54,6 +54,11 @@
           "transform-class-properties"
         ]
       ]
+    },
+    "test": {
+      "presets": [
+        "env"
+      ]
     }
   }
 }
