@@ -1,21 +1,16 @@
 {
   "presets": [
-    "env",
     "flow",
     "react"
   ],
   "plugins": [
-    // enable styleName="" in react components
-    [
-      "react-css-modules"
-    ],
     // enable class properties
     [
       "transform-class-properties"
     ],
-    // async
+    // enable styleName="" in react components
     [
-      "transform-regenerator"
+      "react-css-modules"
     ],
     // spread operator
     [
@@ -24,6 +19,16 @@
   ],
   "env": {
     "server": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            }
+          }
+        ]
+      ],
       "plugins": [
         [
           "react-css-modules",
@@ -31,6 +36,22 @@
             // Don't import during SSR
             "removeImport": true
           }
+        ]
+      ]
+    },
+    "client": {
+      "presets": [
+        "env"
+      ],
+      "plugins": [
+        // async
+        [
+          "transform-regenerator"
+        ],
+        // for some unknown reason I also have to specifically define it for the client... ?
+        // enable class properties
+        [
+          "transform-class-properties"
         ]
       ]
     }

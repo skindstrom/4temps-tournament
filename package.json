@@ -9,10 +9,10 @@
   "scripts": {
     "start": "npm-run-all -p watch:client watch:server",
     "watch:server": "BABEL_ENV=server nodemon src/index.js --exec babel-node",
-    "watch:client": "webpack --config config/webpack.dev.js",
+    "watch:client": "BABEL_ENV=client webpack --config config/webpack.dev.js",
     "build": "npm-run-all -p build:*",
     "build:server": "BABEL_ENV=server babel -s -d lib/ src/ ",
-    "build:client": "webpack --config config/webpack.prod.js",
+    "build:client": "BABEL_ENV=client webpack --config config/webpack.prod.js",
     "start:prod": "node lib/index.js",
     "test": "jest",
     "lint": "npm-run-all -p lint:eslint lint:flow",
