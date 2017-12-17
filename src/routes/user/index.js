@@ -1,10 +1,10 @@
 // @flow
 import { Router } from 'express';
 import type { $Request, $Response } from 'express';
-import type { UserCredentials, UserWithPassword } from '../models/user';
-import validateUser from '../validators/validate-user';
-import validateUserLogin from '../validators/validate-user-login';
-import { createUser, getUsers, getUser } from '../data/user';
+import type { UserCredentials, UserWithPassword } from '../../models/user';
+import validateUser from '../../validators/validate-user';
+import validateUserLogin from '../../validators/validate-user-login';
+import { createUser, getUsers, getUser } from '../../data/user';
 
 const router = Router();
 
