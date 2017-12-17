@@ -101,9 +101,11 @@ test('Email in use is invalid', async () => {
   const getUsers = () => {
     return new Promise(resolve =>
       resolve([{
+        _id: 'asdasd',
         firstName: 'Other',
         lastName: 'Other',
-        email: 'test@test.com'
+        email: 'test@test.com',
+        password: 'asasdasdasd'
       }]));
   };
 

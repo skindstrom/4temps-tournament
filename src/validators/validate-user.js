@@ -1,6 +1,7 @@
 // @flow
 import validateEmail from './validate-email';
-import type { User, UserWithPassword } from "../models/user";
+import type { UserWithPassword } from '../models/user';
+import type { UserModel } from '../data/user';
 
 export type UserCreateValidationSummary = {
   isValid: boolean,
@@ -15,7 +16,7 @@ export type UserCreateValidationSummary = {
 const validateUser = async (
   user: UserWithPassword,
   getUsers: ?() =>
-    Promise<Array<User>>): Promise<UserCreateValidationSummary> => {
+    Promise<Array<UserModel>>): Promise<UserCreateValidationSummary> => {
   const isValidFirstName = user.firstName.length > 0;
   const isValidLastName = user.lastName.length > 0;
   const isValidPassword = user.password.length >= 8;

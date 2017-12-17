@@ -1,7 +1,8 @@
 // @flow
 
 import validateUserLogin from '../validate-user-login';
-import type { User, UserCredentials } from '../../models/user';
+import type { UserCredentials } from '../../models/user';
+import type { UserModel } from '../../data/user';
 
 test('Valid info is valid', async () => {
   const user: UserCredentials = {
@@ -56,10 +57,12 @@ test('Returns valid user if exists', async () => {
     password: 'password'
   };
 
-  const fullUser: User = {
+  const fullUser: UserModel = {
+    _id: '12312',
     email: user.email,
     firstName: 'Test',
-    lastName: 'WopWop'
+    lastName: 'WopWop',
+    password: 'asdasdasd',
   };
 
   const result = await validateUserLogin(user,

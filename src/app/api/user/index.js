@@ -46,5 +46,7 @@ export const loginUser =
         body: JSON.stringify(credentials)
       });
 
-    return httpResult.json();
+    const { validation } = await httpResult.json();
+
+    return validation;
   };
