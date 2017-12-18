@@ -1,5 +1,6 @@
 // @flow
 import mongoose from 'mongoose';
+import type { ObjectId } from 'mongoose';
 import bcrypt from 'bcrypt';
 import type { UserCredentials, UserWithPassword } from '../models/user';
 
@@ -14,7 +15,7 @@ mongoose.connect('mongodb://localhost/4temps', { useMongoClient: true })
   });
 
 export type UserModel = {
-  _id: string,
+  _id: ObjectId,
   email: string,
   firstName: string,
   lastName: string,
@@ -42,7 +43,7 @@ const schema = new mongoose.Schema({
 
 const Model = mongoose.model('user', schema);
 
-export const createUser = async (user: UserWithPassword): Promise<boolean> => {
+const createUser = async (user: UserWithPassword): Promise<boolean> => {
   user.password = ((await bcrypt.hash(user.password, SALT_ROUNDS)): string);
   const dbUser = new Model(user);
   try {
@@ -53,11 +54,19 @@ export const createUser = async (user: UserWithPassword): Promise<boolean> => {
   }
 };
 
-export const getUsers = async (): Promise<Array<UserModel>> => {
+const getUsers = async (): Promise<Array<UserModel>> => {
   return await Model.find();
 };
 
-export const getUser =
+const getUserFromId = async (userId: ObjectId): Promise<?UserModel> => {
+  try {
+    return await Model.findOne({ _id: userId });
+  } catch (e) {
+    return null;
+  }
+};
+
+const getUserFromCredentials =
   async (credentials: UserCredentials): Promise<?UserModel> => {
     const user = await Model.findOne({ email: credentials.email });
     if (user != null &&
@@ -66,3 +75,10 @@ export const getUser =
     }
     return null;
   };
+
+module.exports = {
+  createUser,
+  getUsers,
+  getUserFromId,
+  getUserFromCredentials
+};

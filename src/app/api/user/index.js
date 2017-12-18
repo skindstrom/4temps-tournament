@@ -43,6 +43,7 @@ export const loginUser =
           'Content-Type': 'application/json'
         },
         method: 'POST',
+        credentials: 'include',
         body: JSON.stringify(credentials)
       });
 

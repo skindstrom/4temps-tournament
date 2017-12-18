@@ -7,7 +7,10 @@ import { loginUser } from '../../api/user';
 
 import type { UserCredentials } from '../../../models/user';
 
-type Props = {}
+type Props = {
+  updatedAuthenticationState: () => void
+}
+
 type State = {
   isValidInput: boolean,
   isValidEmail: boolean,
@@ -33,6 +36,11 @@ class LoginContainer extends PureComponent<Props, State> {
       isValidPassword,
       wasCorrectCredentials: doesUserExist
     });
+
+    if (isValid) {
+      window.isAuthenticated = true;
+      this.props.updatedAuthenticationState();
+    }
   }
 
   render() {

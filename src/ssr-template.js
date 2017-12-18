@@ -2,7 +2,7 @@
 
 /* eslint-disable max-len */
 
-export default (html: string) => {
+export default (html: string, isAuthenticated: boolean) => {
   return `
     <!doctype html>
     <html>
@@ -14,6 +14,9 @@ export default (html: string) => {
       </head>
       <body>
         <div id="root">${html}</div>
+        <script>
+          window.isAuthenticated = ${String(isAuthenticated)}
+        </script>
         <script src="/public/bundle.js"></script>
       </body>
     </html>

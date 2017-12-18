@@ -8,11 +8,16 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from './components/App';
 
+const isAuthenticated = () => {
+  // initialized on the server
+  return window.isAuthenticated;
+};
+
 const root = document.getElementById('root');
 if (root) {
   hydrate(
     <BrowserRouter>
-      <App />
+      <App isAuthenticated={isAuthenticated} />
     </BrowserRouter>,
     root
   );

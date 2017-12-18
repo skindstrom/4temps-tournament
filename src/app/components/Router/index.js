@@ -7,18 +7,29 @@ import CreateTournament from '../CreateTournament';
 import SignUp from '../SignUp';
 import Home from '../Home';
 import Login from '../Login';
+import PrivateRoute from './private-route';
 
+type Props = {
+  isAuthenticated: boolean,
+  updatedAuthenticationState: () => void
+}
 
-const Router = () => {
+const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
   return (
     <Switch>
       <Route path='/(|home)' exact component={Home} />
-      <Route
-        path='/create-tournament'
-        render={() => <CreateTournament user={null} />}
-      />
       <Route path='/signup' component={SignUp} />
-      <Route path='/login' component={Login} />
+      <Route
+        path='/login'
+        render={() =>
+          <Login updatedAuthenticationState={updatedAuthenticationState} />}
+      />
+      <PrivateRoute
+        isAuthenticated={isAuthenticated}
+        path='/create-tournament'
+        exact
+        component={CreateTournament}
+      />
     </Switch>
   );
 };

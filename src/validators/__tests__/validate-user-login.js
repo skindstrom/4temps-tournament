@@ -58,6 +58,7 @@ test('Returns valid user if exists', async () => {
   };
 
   const fullUser: UserModel = {
+    // $FlowFixMe
     _id: '12312',
     email: user.email,
     firstName: 'Test',

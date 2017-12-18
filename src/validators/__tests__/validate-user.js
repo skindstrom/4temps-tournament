@@ -101,6 +101,7 @@ test('Email in use is invalid', async () => {
   const getUsers = () => {
     return new Promise(resolve =>
       resolve([{
+        // $FlowFixMe
         _id: 'asdasd',
         firstName: 'Other',
         lastName: 'Other',

@@ -1,23 +1,8 @@
 // @flow
-import jwt from 'jsonwebtoken';
 import type { $Request, $Response } from 'express';
 import type { UserCredentials } from '../../models/user';
 import validateUserLogin from '../../validators/validate-user-login';
-import { getUser } from '../../data/user';
-import { appendToken } from '../../data/token';
-import type { UserModel } from '../../data/user';
-
-const createTemporaryToken = (user: UserModel): string => {
-  const { _id } = user;
-  // TODO: use environment variable for secret
-  return jwt.sign({ userId: _id }, 'secret', { expiresIn: 60 * 60 });
-};
-
-const createRefreshToken = (user: UserModel): string => {
-  const { _id } = user;
-  // TODO: use environment variable for secret
-  return jwt.sign({ userId: _id }, 'another_secret');
-};
+import { getUserFromCredentials } from '../../data/user';
 
 export default async (req: $Request, res: $Response) => {
   const credentials: UserCredentials = {
@@ -27,19 +12,16 @@ export default async (req: $Request, res: $Response) => {
 
   let status: number = 200;
 
-  const validation = await validateUserLogin(credentials, getUser);
-  let temporaryToken: string = '';
-  let refreshToken: string = '';
-  if (validation.isValid) {
-    const user = await getUser(credentials);
-    // there _should_ always be a user here if the validation went through
-    if (user) {
-      temporaryToken = createTemporaryToken(user);
-      refreshToken = createRefreshToken(user);
+  const validation =
+    await validateUserLogin(credentials, getUserFromCredentials);
 
-      if (!await appendToken(user._id, refreshToken)) {
-        status = 500;
-      }
+  if (validation.isValid) {
+    const user = await getUserFromCredentials(credentials);
+
+    // user should always be non-null if validation went through
+    if (user != null) {
+      // $FlowFixMe
+      req.session.user = user;
     } else {
       status = 500;
     }
@@ -48,5 +30,5 @@ export default async (req: $Request, res: $Response) => {
   }
 
   res.status(status);
-  res.json({ validation, temporaryToken, refreshToken });
+  res.json({ validation });
 };
