@@ -51,3 +51,12 @@ export const loginUser =
 
     return validation;
   };
+
+export const logoutUser = async (): Promise<boolean> => {
+  const httpResult = await fetch('/api/user/logout',
+    {
+      method: 'POST',
+      credentials: 'include'
+    });
+  return httpResult.status === 200;
+};

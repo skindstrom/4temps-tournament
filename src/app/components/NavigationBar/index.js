@@ -1,40 +1,47 @@
 // @flow
 import React, { Component } from 'react';
-import { Button, Menu, MenuItem, MenuMenu } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import type { Location, RouterHistory } from 'react-router-dom';
+import { logoutUser } from '../../api/user';
+
+import NavigationBar from './component';
 
 type Props = {
   location: Location,
-  history: RouterHistory
+  history: RouterHistory,
+  isAuthenticated: boolean,
+  updatedAuthenticationState: () => void
 }
 
 type State = {
-  activeName: string
+  activePath: string
 }
 
-class NavigationBar extends Component<Props, State> {
-  static _getActiveName = (location: string): string => {
+class NavigationBarContainer extends Component<Props, State> {
+  static _getActivePath = (location: string): string => {
     const matches = location.match(/\/(.+)\/?\??.*/);
-    let activeName = 'home';
+    let activePath = 'home';
     if (matches) {
-      activeName = matches[1];
+      activePath = matches[1];
     }
-    return activeName;
+    return activePath;
   }
 
   state = {
-    activeName: NavigationBar._getActiveName(this.props.location.pathname)
+    activePath:
+      NavigationBarContainer._getActivePath(this.props.location.pathname)
   };
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      activeName: NavigationBar._getActiveName(nextProps.location.pathname)
+      activePath:
+        NavigationBarContainer._getActivePath(nextProps.location.pathname)
     });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.activeName != this.state.activeName;
+    return nextState.activePath != this.state.activePath
+      || nextProps.isAuthenticated != this.props.isAuthenticated;
   }
 
   _navigate = (to: string) => {
@@ -43,45 +50,30 @@ class NavigationBar extends Component<Props, State> {
     }
   }
 
+  _logout = async () => {
+    if (await logoutUser()) {
+      window.isAuthenticated = false;
+      this.props.updatedAuthenticationState();
+      this.props.history.push('/');
+    }
+  }
+
   render() {
     return (
-      <Menu>
-        <MenuItem
-          name='home'
-          active={this.state.activeName === 'home'}
-          onClick={() => this._navigate('/')}
-        >
-          Home
-        </MenuItem>
-        <MenuItem
-          name='create-tournament'
-          active={this.state.activeName === 'create-tournament'}
-          onClick={() => this._navigate('/create-tournament')}
-        >
-          Create Tournament
-        </MenuItem>
-        <MenuMenu position='right'>
-          <MenuItem
-            name='signup'
-            onClick={() => this._navigate('/signup')}
-          >
-            <Button primary>
-              Sign up
-            </Button>
-          </MenuItem>
-          <MenuItem
-            name='login'
-            onClick={() => this._navigate('/login')}
-          >
-            <Button secondary>
-              Log in
-            </Button>
-          </MenuItem>
-        </MenuMenu>
-      </Menu>);
+      <NavigationBar
+        activePath={this.state.activePath}
+        leftMenu={[
+          { path: 'home', text: 'Home' },
+          { path: 'create-tournament', text: 'Create Tournament' }
+        ]}
+        isAuthenticated={this.props.isAuthenticated}
+        onClick={this._navigate}
+        onClickLogout={this._logout}
+      />
+    );
   }
 }
 
-const NavigationBarWithRouter = withRouter(NavigationBar);
+const NavigationBarWithRouter = withRouter(NavigationBarContainer);
 
 export default NavigationBarWithRouter;

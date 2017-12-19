@@ -28,7 +28,10 @@ class App extends Component<Props, State> {
     return (
       <div>
         <Header as='h1'> 4 Temps tournament website </Header>
-        <NavigationBar />
+        <NavigationBar
+          isAuthenticated={this.state.isAuthenticated}
+          updatedAuthenticationState={this._updatedAuthenticationState}
+        />
         <Router
           isAuthenticated={this.state.isAuthenticated}
           updatedAuthenticationState={this._updatedAuthenticationState}

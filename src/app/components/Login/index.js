@@ -54,14 +54,14 @@ class LoginContainer extends PureComponent<Props, State> {
     return (
       <div>
         <Modal
-          open={this.state.wasCorrectCredentials}
+          open={this.state.wasCorrectCredentials && this.state.isValidInput}
           header='Success!'
           content='Redirecting...'
         />
         <LoginComponent
           {...this.state}
           onSubmit={this._onSubmit}
-        />);
+        />
       </div>);
   }
 }
