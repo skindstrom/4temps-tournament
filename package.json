@@ -27,13 +27,15 @@
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "express": "^4.16.2",
+    "express-force-ssl": "^0.3.2",
     "express-session": "^1.15.6",
     "mongodb": "^3.0.0-rc0",
     "mongoose": "^4.13.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
-    "semantic-ui-react": "^0.77.1"
+    "semantic-ui-react": "^0.77.1",
+    "spdy": "^3.4.7"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

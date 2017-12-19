@@ -2,6 +2,9 @@
 
 import Express from 'express';
 import Session from 'express-session';
+import forceSsl from 'express-force-ssl';
+import fs from 'fs';
+import spdy from 'spdy';
 import compression from 'compression';
 import type { $Request, $Response } from 'express';
 import path from 'path';
@@ -31,6 +34,11 @@ app.use(Session({
   }
 }));
 
+app.set('forceSSLOptions', {
+  httpsPort: 3001,
+});
+app.use(forceSsl);
+
 // used for files that should be public, e.g. favicon etc.
 app.use('/public', Express.static(path.join(__dirname, '../public')));
 // used for files that should be public, but that's generated
@@ -38,7 +46,15 @@ app.use('/public', Express.static(path.join(__dirname, '../public-build')));
 
 app.use('/api', ApiRoute);
 app.use(handleRender);
+
+// TODO: use environment variable for certs
+const key = fs.readFileSync('encryption/server.key');
+const cert = fs.readFileSync( 'encryption/server.crt');
+
+// TODO: use environment variable for passphrase
+spdy.createServer({ key, cert , passphrase: 'password'}, app).listen(3001);
 app.listen(3000);
+
 
 // used for server side rendering of React components
 function handleRender(req: $Request, res: $Response) {

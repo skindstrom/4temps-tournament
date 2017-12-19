@@ -30,7 +30,12 @@ Once there, run `npm install` to install all the dependencies of the project.
 # Usage
 From the root directory of the project run `npm start` and wait a short while.
 
-You should now be able to visit `http://localhost:3000` and see the website.
+You should now be able to visit `https://localhost:3001`.
+By visiting this website, your web browser will alert you that there is a security issue with the certificate.
+This is because we're using a locally self-signed certificate.
+**You must allow the certificate before you can access the webpage.**
+How to do this is different for every browser.
+
 Any changes to the source files will automatically recompile the project and restart the server.
 
 ## Run the optimized version
@@ -43,7 +48,7 @@ npm run build
 npm run start:prod
 ```
 
-Once again, you should be able to visit `http://localhost:3000`.
+Once again, you should be able to visit `https://localhost:3001`.
 
 # Contributing
 ## Writing tests
