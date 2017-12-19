@@ -30,6 +30,7 @@ app.use(Session({
   resave: false,
   saveUninitialized: false,
   cookie: {
+    secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
   }
 }));
