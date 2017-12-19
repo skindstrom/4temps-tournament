@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { Modal } from 'semantic-ui-react';
 import type { RouterHistory, Location } from 'react-router-dom';
 
 import LoginComponent from './component';
@@ -44,16 +45,24 @@ class LoginContainer extends PureComponent<Props, State> {
       window.isAuthenticated = true;
       this.props.updatedAuthenticationState();
       const referer = this.props.location.search.replace(/\?referer=/, '');
-      this.props.history.push(referer);
+      setTimeout(() =>
+        this.props.history.push(referer), 1000);
     }
   }
 
   render() {
     return (
-      <LoginComponent
-        {...this.state}
-        onSubmit={this._onSubmit}
-      />);
+      <div>
+        <Modal
+          open={this.state.wasCorrectCredentials}
+          header='Success!'
+          content='Redirecting...'
+        />
+        <LoginComponent
+          {...this.state}
+          onSubmit={this._onSubmit}
+        />);
+      </div>);
   }
 }
 
