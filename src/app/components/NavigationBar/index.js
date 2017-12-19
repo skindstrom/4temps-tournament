@@ -14,33 +14,33 @@ type Props = {
 }
 
 type State = {
-  activePath: string
+  activeName: string
 }
 
 class NavigationBarContainer extends Component<Props, State> {
   static _getActivePath = (location: string): string => {
     const matches = location.match(/\/(.+)\/?\??.*/);
-    let activePath = 'home';
+    let activeName = 'home';
     if (matches) {
-      activePath = matches[1];
+      activeName = matches[1];
     }
-    return activePath;
+    return activeName;
   }
 
   state = {
-    activePath:
+    activeName:
       NavigationBarContainer._getActivePath(this.props.location.pathname)
   };
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      activePath:
+      activeName:
         NavigationBarContainer._getActivePath(nextProps.location.pathname)
     });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.activePath != this.state.activePath
+    return nextState.activeName != this.state.activeName
       || nextProps.isAuthenticated != this.props.isAuthenticated;
   }
 
@@ -61,10 +61,14 @@ class NavigationBarContainer extends Component<Props, State> {
   render() {
     return (
       <NavigationBar
-        activePath={this.state.activePath}
+        activeName={this.state.activeName}
         leftMenu={[
-          { path: 'home', text: 'Home' },
-          { path: 'create-tournament', text: 'Create Tournament' }
+          { name: 'home', path: '', text: 'Home' },
+          {
+            name: 'create-tournament',
+            path: 'create-tournament',
+            text: 'Create Tournament'
+          }
         ]}
         isAuthenticated={this.props.isAuthenticated}
         onClick={this._navigate}

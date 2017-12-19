@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { Header } from 'semantic-ui-react';
 
 import Router from '../Router';
 import NavigationBar from '../NavigationBar';
@@ -27,7 +26,6 @@ class App extends Component<Props, State> {
   render() {
     return (
       <div>
-        <Header as='h1'> 4 Temps tournament website </Header>
         <NavigationBar
           isAuthenticated={this.state.isAuthenticated}
           updatedAuthenticationState={this._updatedAuthenticationState}

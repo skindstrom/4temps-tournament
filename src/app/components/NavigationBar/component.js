@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import { Button, Menu, MenuItem, MenuMenu } from 'semantic-ui-react';
 
 type Item = {
+  name: string,
   path: string,
   text: string
 }
 
 type Props = {
-  activePath: string,
+  activeName: string,
   leftMenu: Array<Item>,
   onClick: (path: string) => void,
   isAuthenticated: boolean,
@@ -18,7 +19,7 @@ type Props = {
 class NavigationBar extends Component<Props> {
 
   shouldComponentUpdate(nextProps: Props) {
-    return nextProps.activePath != this.props.activePath
+    return nextProps.activeName != this.props.activeName
       || nextProps.isAuthenticated != this.props.isAuthenticated;
   }
 
@@ -61,8 +62,8 @@ class NavigationBar extends Component<Props> {
     return (
       <MenuItem
         key={item.path}
-        name={item.path}
-        active={this.props.activePath === item.path}
+        name={item.name}
+        active={this.props.activeName === item.name}
         onClick={() => this.props.onClick(`/${item.path}`)}
       >
         {item.text}
@@ -72,6 +73,9 @@ class NavigationBar extends Component<Props> {
   render() {
     return (
       <Menu>
+        <MenuItem name='header' header onClick={() => this.props.onClick('/')}>
+          4Temps Tournaments
+        </MenuItem>
         {this.props.leftMenu.map(item => this._renderLeftItem(item))}
         {this.props.isAuthenticated ?
           this._renderAuthenticated() :
