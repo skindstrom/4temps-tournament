@@ -1,7 +1,8 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import { Button, Form, FormInput, Header, Message } from 'semantic-ui-react';
+import { Button, Form, FormInput, Header, Message, Loader } from
+  'semantic-ui-react';
 import type { UserCredentials } from '../../../models/user';
 
 import './styles.css';
@@ -12,6 +13,7 @@ type Props = {
   isValidEmail: boolean,
   isValidPassword: boolean,
   wasCorrectCredentials: boolean,
+  isLoading: boolean
 }
 
 type State = UserCredentials;
@@ -64,6 +66,7 @@ class Login extends PureComponent<Props, State> {
           >
             Submit
           </Button>
+          <Loader active={this.props.isLoading} inline />
           {!this.props.wasCorrectCredentials &&
             <Message error content='Invalid email or password' />}
         </Form>

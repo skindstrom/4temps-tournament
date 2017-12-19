@@ -15,7 +15,8 @@ type Props = {
 };
 
 type State = {
-  validation: UserCreateValidationSummary
+  validation: UserCreateValidationSummary,
+  isLoading: boolean
 };
 
 class SignUpContainer extends Component<Props, State> {
@@ -28,15 +29,21 @@ class SignUpContainer extends Component<Props, State> {
       isValidLastName: true,
       isValidPassword: true
     },
+    isLoading: false
   };
 
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    return nextState !== this.state;
+  }
+
   _onSubmit = async (user: UserWithPassword) => {
+    this.setState({ isLoading: true });
     const result = await createUser(user);
-    this.setState({ validation: result });
+    this.setState({ validation: result, isLoading: false});
 
     if (result.isValid) {
       setTimeout(() =>
-        this.props.history.push('/login' + this.props.location.search), 1000);
+        this.props.history.push('/login' + this.props.location.search), 800);
     }
   };
 
@@ -51,6 +58,7 @@ class SignUpContainer extends Component<Props, State> {
         <SignUp
           onSubmit={this._onSubmit}
           validation={this.state.validation}
+          isLoading={this.state.isLoading}
         />
       </div>);
   }

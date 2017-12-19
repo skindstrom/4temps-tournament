@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import { Header, Form, FormInput, Button, Message } from 'semantic-ui-react';
+import { Header, Form, FormInput, Button, Message, Loader } from
+  'semantic-ui-react';
 import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
 import type { UserWithPassword } from '../../../models/user';
@@ -10,6 +11,7 @@ import './styles.css';
 type Props = {
   onSubmit: (user: UserWithPassword) => Promise<void>,
   validation: UserCreateValidationSummary,
+  isLoading: boolean
 };
 
 class SignUp extends Component<Props, UserWithPassword> {
@@ -44,7 +46,7 @@ class SignUp extends Component<Props, UserWithPassword> {
     return (
       <div styleName='wrapper'>
         <Header as='h1'>
-        Sign up
+          Sign up
         </Header>
         <Form error={!this.props.validation.isValid}>
           <FormInput
@@ -86,6 +88,7 @@ class SignUp extends Component<Props, UserWithPassword> {
           {!this.props.validation.isValidPassword &&
             <Message error content='A password is at least 8 characters' />}
           <Button onClick={this._onSubmit} type='submit'>Submit</Button>
+          <Loader active={this.props.isLoading} inline />
         </Form >
       </div>
     );

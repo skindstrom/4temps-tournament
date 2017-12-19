@@ -20,6 +20,7 @@ type State = {
   isValidEmail: boolean,
   isValidPassword: boolean,
   wasCorrectCredentials: boolean,
+  isLoading: boolean
 };
 
 class LoginContainer extends PureComponent<Props, State> {
@@ -27,10 +28,12 @@ class LoginContainer extends PureComponent<Props, State> {
     isValidInput: true,
     isValidEmail: false,
     isValidPassword: false,
-    wasCorrectCredentials: false
+    wasCorrectCredentials: false,
+    isLoading: false
   };
 
   _onSubmit = async (credentials: UserCredentials) => {
+    this.setState({ isLoading: true });
     const { isValid, isValidEmail, isValidPassword, doesUserExist } =
       await loginUser(credentials);
 
@@ -38,7 +41,8 @@ class LoginContainer extends PureComponent<Props, State> {
       isValidInput: isValid,
       isValidEmail,
       isValidPassword,
-      wasCorrectCredentials: doesUserExist
+      wasCorrectCredentials: doesUserExist,
+      isLoading: false
     });
 
     if (isValid) {
@@ -46,7 +50,7 @@ class LoginContainer extends PureComponent<Props, State> {
       this.props.updatedAuthenticationState();
       const referer = this.props.location.search.replace(/\?referer=/, '');
       setTimeout(() =>
-        this.props.history.push(referer), 1000);
+        this.props.history.push(referer), 800);
     }
   }
 
