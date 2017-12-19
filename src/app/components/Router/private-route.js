@@ -20,7 +20,12 @@ const PrivateRoute =
         render={props =>
           isAuthenticated === true
             ? <Component {...props} />
-            : <SignUpOrLogin header='Please sign up to perform that action' />}
+            : (
+              <SignUpOrLogin
+                {...props}
+                header='Please log in or sign up'
+                referer={rest.path}
+              />)}
       />
     );
   };

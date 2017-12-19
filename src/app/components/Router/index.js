@@ -21,8 +21,11 @@ const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
       <Route path='/signup' component={SignUp} />
       <Route
         path='/login'
-        render={() =>
-          <Login updatedAuthenticationState={updatedAuthenticationState} />}
+        render={(props) =>
+          (<Login
+            {...props}
+            updatedAuthenticationState={updatedAuthenticationState}
+          />)}
       />
       <PrivateRoute
         isAuthenticated={isAuthenticated}

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Modal } from 'semantic-ui-react';
-import type { RouterHistory } from 'react-router-dom';
+import type { Location, RouterHistory } from 'react-router-dom';
 
 import SignUp from './component';
 import type { UserCreateValidationSummary } from
@@ -10,7 +10,8 @@ import type { UserWithPassword } from '../../../models/user';
 import { createUser } from '../../api/user';
 
 type Props = {
-  history: RouterHistory
+  history: RouterHistory,
+  location: Location
 };
 
 type State = {
@@ -34,7 +35,8 @@ class SignUpContainer extends Component<Props, State> {
     this.setState({ validation: result });
 
     if (result.isValid) {
-      setTimeout(() => this.props.history.push('/login'), 1000);
+      setTimeout(() =>
+        this.props.history.push('/login' + this.props.location.search), 1000);
     }
   };
 

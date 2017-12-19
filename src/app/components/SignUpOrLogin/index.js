@@ -1,59 +1,22 @@
 // @flow
 import React from 'react';
-
-import { withRouter } from 'react-router-dom';
 import type { RouterHistory } from 'react-router-dom';
-import { Button, Grid, GridRow, Header } from 'semantic-ui-react';
 
-import './styles.css';
+import SignUpOrLogin from './component';
 
 type Props = {
+  history: RouterHistory,
   header: string,
-  onClickSignUp: () => void,
-  onClickLogin: () => void,
-};
+  referer: string
+}
 
-const SignUpOrLogin = ({ header, onClickSignUp, onClickLogin }: Props) => {
-  return (
-    <Grid
-      styleName='grid'
-      columns={1}
-      centered
-    >
-      <GridRow>
-        <Header as='h3'>
-          {header}
-        </Header>
-      </GridRow>
-      <GridRow>
-        <Button
-          styleName='button'
-          primary
-          onClick={onClickSignUp}
-        >
-          Sign up
-        </Button>
-      </GridRow>
-      <GridRow>
-        <Button
-          styleName='button'
-          secondary
-          onClick={onClickLogin}
-        >
-          Log in
-        </Button>
-      </GridRow>
-    </Grid>);
-};
-
-const SignUpOrLoginWithRouter =
-  withRouter(
-    ({ history, header }: { history: RouterHistory, header: string }) =>
-      (<SignUpOrLogin
-        header={header}
-        onClickLogin={() => history.push('/login')}
-        onClickSignUp={() => history.push('/signup')}
-      />)
-  );
+const SignUpOrLoginWithRouter = ({ history, header, referer }: Props) =>
+  (<SignUpOrLogin
+    header={header}
+    onClickLogin={() =>
+      history.push(`/login?referer=${referer}`)}
+    onClickSignUp={() =>
+      history.push(`/signup?referer=${referer}`)}
+  />);
 
 export default SignUpOrLoginWithRouter;
