@@ -45,7 +45,7 @@ class SignUp extends Component<Props, UserWithPassword> {
       <div styleName='wrapper'>
         <Header as='h1'>
         Sign up
-        </Header>  
+        </Header>
         <Form error={!this.props.validation.isValid}>
           <FormInput
             label='First name'

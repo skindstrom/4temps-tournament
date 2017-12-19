@@ -40,6 +40,9 @@
             "error",
             "unix"
         ],
+        "no-trailing-spaces": [
+            "error"
+        ],
         // allow jsx in .js files
         "react/jsx-filename-extension": [
             1,

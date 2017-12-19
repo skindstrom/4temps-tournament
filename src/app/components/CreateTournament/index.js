@@ -1,4 +1,4 @@
-//@flow 
+//@flow
 
 const CreateTournament = () => {
   return `Now let's create a tournament!!`;
