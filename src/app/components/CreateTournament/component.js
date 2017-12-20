@@ -9,38 +9,22 @@ import type Moment from 'moment';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-
-export type TournamentType = 'none' | 'jj' | 'classic';
+import type { Tournament, TournamentType } from '../../../models/tournament';
+import type { TournamentValidationSummary } from
+  '../../../validators/validate-tournament';
 
 type Props = {
-  onSubmit: (name: string, date: Moment, type: TournamentType) => void,
-  isValidInput: boolean,
-  isValidName: boolean,
-  isValidType: boolean
+  onSubmit: (tournament: Tournament) => void,
+  validation: TournamentValidationSummary
 }
 
-type State = {
-  name: string,
-  date: Moment,
-  type: TournamentType
-}
+type State = Tournament;
 
 class CreateTournament extends Component<Props, State> {
   state = {
     name: '',
     date: moment(),
     type: 'none',
-  }
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    const isStateDifferent = this.state.name !== nextState.name
-      || !nextState.date.isSame(this.state.date)
-      || this.state.type !== nextState.type;
-    const isPropsDifferent = this.props.isValidInput !== nextProps.isValidInput
-      || this.props.isValidName !== nextProps.isValidName
-      || this.props.isValidType !== nextProps.isValidType;
-
-    return isStateDifferent || isPropsDifferent;
   }
 
   _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -58,21 +42,20 @@ class CreateTournament extends Component<Props, State> {
     };
 
   _onSubmit = () => {
-    const { name, date, type } = this.state;
-    this.props.onSubmit(name, date, type);
+    this.props.onSubmit(this.state);
   };
 
   render() {
     return (
       <Container>
-        <Form error={!this.props.isValidInput}>
+        <Form error={!this.props.validation.isValidTournament}>
           <FormInput
             label='Name'
             placeholder='4Temps World Championship'
             value={this.state.name}
             onChange={this._onChangeName}
           />
-          {!this.props.isValidName &&
+          {!this.props.validation.isValidName &&
             <Message error content='Invalid name' />}
           <div className='field'>
             <label htmlFor='date'>Date
@@ -99,7 +82,7 @@ class CreateTournament extends Component<Props, State> {
               checked={this.state.type === 'jj'}
             />
           </FormGroup>
-          {!this.props.isValidType &&
+          {!this.props.validation.isValidType &&
             <Message error content='Must select a type' />}
           <Button type='submit' onClick={this._onSubmit}>
             Submit

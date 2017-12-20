@@ -1,33 +1,33 @@
 //@flow
 
 import React, { PureComponent } from 'react';
-import type Moment from 'moment';
 import CreateTournament from './component';
-import type { TournamentType } from './component';
+import { createTournament } from '../../api/tournament';
+import type { Tournament } from '../../../models/tournament';
+import type { TournamentValidationSummary } from
+  '../../../validators/validate-tournament';
 
 type Props = {}
-type State = {
-  isValidInput: boolean,
-  isValidName: boolean,
-  isValidType: boolean,
-}
+type State = TournamentValidationSummary;
 
 class CreateTournamentContainer extends PureComponent<Props, State> {
   state = {
-    isValidInput: false,
+    isValidTournament: false,
     isValidName: true,
     isValidType: true
   }
 
-  _onSubmit = (name: string, date: Moment, type: TournamentType) => {
-    const isValidName = name !== '';
-    const isValidType = type !== 'none';
-    const isValidInput = isValidName && isValidType;
-    this.setState({ isValidInput, isValidName, isValidType });
+  _onSubmit = (tournament: Tournament) => {
+    const validation = createTournament(tournament);
+    this.setState(validation);
   };
 
   render() {
-    return <CreateTournament {...this.state} onSubmit={this._onSubmit} />;
+    return (
+      <CreateTournament
+        validation={{ ...this.state }}
+        onSubmit={this._onSubmit}
+      />);
   }
 }
 
