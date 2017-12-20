@@ -14,7 +14,7 @@ import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 
 type Props = {
-  onSubmit: (tournament: Tournament) => void,
+  onSubmit: (tournament: Tournament) => Promise<void>,
   validation: TournamentValidationSummary
 }
 
@@ -67,6 +67,8 @@ class CreateTournament extends Component<Props, State> {
               />
             </label>
           </div>
+          {!this.props.validation.isValidDate &&
+            <Message error content='Invalid date' />}
           <FormGroup inline>
             <FormField label='Tournament Type' />
             <FormRadio

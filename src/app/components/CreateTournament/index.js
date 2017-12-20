@@ -14,12 +14,16 @@ class CreateTournamentContainer extends PureComponent<Props, State> {
   state = {
     isValidTournament: false,
     isValidName: true,
+    isValidDate: true,
     isValidType: true
   }
 
-  _onSubmit = (tournament: Tournament) => {
-    const validation = createTournament(tournament);
-    this.setState(validation);
+  _onSubmit = async (tournament: Tournament) => {
+    const result = await createTournament(tournament);
+    // TODO: Require some user action if no longer authenticated
+    if (result.wasAuthenticated) {
+      this.setState(result.result);
+    }
   };
 
   render() {
