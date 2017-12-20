@@ -1,90 +1,34 @@
 //@flow
-import React, { Component } from 'react';
-import {
-  Container,Button, Form, FormField,
-  FormInput, FormRadio, FormGroup
-} from 'semantic-ui-react';
+
+import React, { PureComponent } from 'react';
 import type Moment from 'moment';
-import DatePicker from 'react-datepicker';
+import CreateTournament from './component';
+import type { TournamentType } from './component';
 
-import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-
-type TournamentType = 'jj' | 'classic';
 type Props = {}
-
 type State = {
-  name: string,
-  date: ?Moment,
-  type: ?TournamentType
+  isValidInput: boolean,
+  isValidName: boolean,
+  isValidType: boolean,
 }
 
-class CreateTournament extends Component<Props, State> {
+class CreateTournamentContainer extends PureComponent<Props, State> {
   state = {
-    name: '',
-    date: null,
-    type: null,
+    isValidInput: false,
+    isValidName: true,
+    isValidType: true
   }
 
-  _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ name: event.target.value });
-  };
-
-  _onChangDate = (date: Moment) => {
-    this.setState({ date });
-  };
-
-  _onChangeRadio =
-    (event: SyntheticInputEvent<HTMLInputElement>,
-      { value }: { value: TournamentType }) => {
-      this.setState({ type: value });
-    };
-
-  _onSubmit = () => {
-    alert('Submitted!');
+  _onSubmit = (name: string, date: Moment, type: TournamentType) => {
+    const isValidName = name !== '';
+    const isValidType = type !== 'none';
+    const isValidInput = isValidName && isValidType;
+    this.setState({ isValidInput, isValidName, isValidType });
   };
 
   render() {
-    return (
-      <Container>
-        <Form>
-          <FormInput
-            label='Name'
-            placeholder='4Temps World Championship'
-            value={this.state.name}
-            onChange={this._onChangeName}
-          />
-          <div className='field'>
-            <label htmlFor='date'>Date
-              <DatePicker
-                id='date'
-                allowSameDay
-                selected={this.state.date}
-                onChange={this._onChangDate}
-              />
-            </label>
-          </div>
-          <FormGroup inline>
-            <FormField label='Tournament Type' />
-            <FormRadio
-              label='Classic'
-              value='classic'
-              onChange={this._onChangeRadio}
-              checked={this.state.type === 'classic'}
-            />
-            <FormRadio
-              label="Jack n' Jill"
-              value='jj'
-              onChange={this._onChangeRadio}
-              checked={this.state.type === 'jj'}
-            />
-          </FormGroup>
-          <Button type='submit' onClick={this._onSubmit}>
-            Submit
-          </Button>
-        </Form>
-      </Container>
-    );
+    return <CreateTournament {...this.state} onSubmit={this._onSubmit} />;
   }
 }
 
-export default CreateTournament;
+export default CreateTournamentContainer;
