@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { Modal } from 'semantic-ui-react';
 import type { Location, RouterHistory } from 'react-router-dom';
 
 import SignUp from './component';
@@ -42,25 +41,18 @@ class SignUpContainer extends Component<Props, State> {
     this.setState({ validation: result, isLoading: false});
 
     if (result.isValid) {
-      setTimeout(() =>
-        this.props.history.push('/login' + this.props.location.search), 800);
+      this.props.history.push('/login' + this.props.location.search);
     }
   };
 
   render() {
     return (
-      <div>
-        <Modal
-          open={this.state.validation.isValid}
-          header='Success!'
-          content='Redirecting to login page...'
-        />
-        <SignUp
-          onSubmit={this._onSubmit}
-          validation={this.state.validation}
-          isLoading={this.state.isLoading}
-        />
-      </div>);
+      <SignUp
+        onSubmit={this._onSubmit}
+        validation={this.state.validation}
+        isLoading={this.state.isLoading}
+      />
+    );
   }
 }
 

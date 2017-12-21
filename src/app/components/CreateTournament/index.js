@@ -1,7 +1,6 @@
 //@flow
 
 import React, { Component } from 'react';
-import { Modal } from 'semantic-ui-react';
 import type { RouterHistory } from 'react-router-dom';
 import CreateTournament from './component';
 import { createTournament } from '../../api/tournament';
@@ -38,8 +37,7 @@ class CreateTournamentContainer extends Component<Props, State> {
       this.setState({ isLoading: false, validation });
 
       if (validation.isValidTournament) {
-        setTimeout(() =>
-          this.props.history.push('/modify-tournament'), 800);
+        this.props.history.push('/modify-tournament');
       }
     } else {
       this.setState({ isLoading: false });
@@ -50,17 +48,11 @@ class CreateTournamentContainer extends Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <Modal
-          open={this.state.validation.isValidTournament}
-          header='Success!'
-          content='Redirecting...'
-        />
-        <CreateTournament
-          {...this.state}
-          onSubmit={this._onSubmit}
-        />
-      </div>);
+      <CreateTournament
+        {...this.state}
+        onSubmit={this._onSubmit}
+      />
+    );
   }
 }
 
