@@ -1,6 +1,6 @@
 //@flow
 
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import CreateTournament from './component';
 import { createTournament } from '../../api/tournament';
 import type { Tournament } from '../../../models/tournament';
@@ -8,28 +8,36 @@ import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 
 type Props = {}
-type State = TournamentValidationSummary;
+type State = {
+  isLoading: boolean,
+  validation: TournamentValidationSummary
+};
 
-class CreateTournamentContainer extends PureComponent<Props, State> {
+class CreateTournamentContainer extends Component<Props, State> {
   state = {
-    isValidTournament: false,
-    isValidName: true,
-    isValidDate: true,
-    isValidType: true
+    isLoading: false,
+    validation: {
+      isValidTournament: false,
+      isValidName: true,
+      isValidDate: true,
+      isValidType: true
+    }
   }
 
   _onSubmit = async (tournament: Tournament) => {
+    this.setState({ isLoading: true });
     const result = await createTournament(tournament);
+
     // TODO: Require some user action if no longer authenticated
-    if (result.wasAuthenticated) {
-      this.setState(result.result);
-    }
+    let validation =
+      result.result != null ? result.result : this.state.validation;
+    this.setState({ isLoading: false, validation });
   };
 
   render() {
     return (
       <CreateTournament
-        validation={{ ...this.state }}
+        {...this.state}
         onSubmit={this._onSubmit}
       />);
   }

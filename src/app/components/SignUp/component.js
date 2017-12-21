@@ -48,7 +48,10 @@ class SignUp extends Component<Props, UserWithPassword> {
         <Header as='h1'>
           Sign up
         </Header>
-        <Form error={!this.props.validation.isValid}>
+        <Form
+          loading={this.props.isLoading}
+          error={!this.props.validation.isValid}
+        >
           <FormInput
             label='First name'
             placeholder='John'
@@ -88,7 +91,6 @@ class SignUp extends Component<Props, UserWithPassword> {
           {!this.props.validation.isValidPassword &&
             <Message error content='A password is at least 8 characters' />}
           <Button onClick={this._onSubmit} type='submit'>Submit</Button>
-          <Loader active={this.props.isLoading} inline />
         </Form >
       </div>
     );

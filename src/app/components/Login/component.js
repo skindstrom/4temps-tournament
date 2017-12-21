@@ -42,7 +42,10 @@ class Login extends PureComponent<Props, State> {
         <Header as='h1'>
           Log in
         </Header>
-        <Form error={!this.props.isValidInput}>
+        <Form
+          loading={this.props.isLoading}
+          error={!this.props.isValidInput}
+        >
           <FormInput
             label='Email'
             placeholder='john@gmail.com'
@@ -66,7 +69,6 @@ class Login extends PureComponent<Props, State> {
           >
             Submit
           </Button>
-          <Loader active={this.props.isLoading} inline />
           {!this.props.wasCorrectCredentials &&
             <Message error content='Invalid email or password' />}
         </Form>

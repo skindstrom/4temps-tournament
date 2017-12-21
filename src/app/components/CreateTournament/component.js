@@ -15,6 +15,7 @@ import type { TournamentValidationSummary } from
 
 type Props = {
   onSubmit: (tournament: Tournament) => Promise<void>,
+  isLoading: boolean,
   validation: TournamentValidationSummary
 }
 
@@ -48,7 +49,10 @@ class CreateTournament extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Form error={!this.props.validation.isValidTournament}>
+        <Form
+          loading={this.props.isLoading}
+          error={!this.props.validation.isValidTournament}
+        >
           <FormInput
             label='Name'
             placeholder='4Temps World Championship'
