@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import { Button, Form, FormInput, Header, Message, Loader } from
+import { Button, Form, FormInput, Header, Message } from
   'semantic-ui-react';
 import type { UserCredentials } from '../../../models/user';
 

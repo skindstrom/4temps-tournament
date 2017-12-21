@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Header, Form, FormInput, Button, Message, Loader } from
+import { Header, Form, FormInput, Button, Message } from
   'semantic-ui-react';
 import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
