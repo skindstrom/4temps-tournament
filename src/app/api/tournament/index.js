@@ -1,5 +1,7 @@
 // @flow
 
+import moment from 'moment';
+
 import validateTournament from '../../../validators/validate-tournament';
 import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
@@ -40,4 +42,24 @@ export const createTournament =
     return { wasAuthenticated: true, result: await httpResult.json() };
   };
 
-export default createTournament;
+export const getTournamentsForUser =
+  async (): ApiRequest<Array<Tournament>> => {
+    const httpResult = await fetch('/api/tournament/get',
+      {
+        headers: {
+          'Accept': 'application/json',
+        },
+        method: 'GET',
+        credentials: 'include'
+      });
+
+    if (httpResult.status === 301) {
+      return { wasAuthenticated: false, result: null };
+    }
+
+    const result =
+      (await httpResult.json())
+        .map(({ date, ...rest }) => ({ date: moment(date), ...rest }));
+
+    return { wasAuthenticated: true, result };
+  };

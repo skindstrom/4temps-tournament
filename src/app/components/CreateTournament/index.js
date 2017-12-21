@@ -1,13 +1,17 @@
 //@flow
 
 import React, { Component } from 'react';
+import { Modal } from 'semantic-ui-react';
+import type { RouterHistory } from 'react-router-dom';
 import CreateTournament from './component';
 import { createTournament } from '../../api/tournament';
 import type { Tournament } from '../../../models/tournament';
 import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 
-type Props = {}
+type Props = {
+  history: RouterHistory
+}
 type State = {
   isLoading: boolean,
   validation: TournamentValidationSummary
@@ -28,18 +32,35 @@ class CreateTournamentContainer extends Component<Props, State> {
     this.setState({ isLoading: true });
     const result = await createTournament(tournament);
 
-    // TODO: Require some user action if no longer authenticated
-    let validation =
-      result.result != null ? result.result : this.state.validation;
-    this.setState({ isLoading: false, validation });
+
+    if (result.wasAuthenticated && result.result != null) {
+      let validation = result.result;
+      this.setState({ isLoading: false, validation });
+
+      if (validation.isValidTournament) {
+        setTimeout(() =>
+          this.props.history.push('/modify-tournament'), 800);
+      }
+    } else {
+      this.setState({ isLoading: false });
+      // TODO: Actually act in accordance
+      alert('Invalid login session');
+    }
   };
 
   render() {
     return (
-      <CreateTournament
-        {...this.state}
-        onSubmit={this._onSubmit}
-      />);
+      <div>
+        <Modal
+          open={this.state.validation.isValidTournament}
+          header='Success!'
+          content='Redirecting...'
+        />
+        <CreateTournament
+          {...this.state}
+          onSubmit={this._onSubmit}
+        />
+      </div>);
   }
 }
 

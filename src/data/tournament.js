@@ -40,7 +40,7 @@ const schema = new mongoose.Schema({
 
 const Model = mongoose.model('tournament', schema);
 
-const createTournament =
+export const createTournament =
   async (userId: ObjectId, tournament: Tournament): Promise<boolean> => {
     try {
       const { date, ...rest } = tournament;
@@ -51,6 +51,11 @@ const createTournament =
     }
   };
 
-module.exports = {
-  createTournament
-};
+export const getTournamentsForUser =
+  async (userId: ObjectId): Promise<Array<TournamentModel>> => {
+    try {
+      return await Model.find({ userId });
+    } catch (e) {
+      return [];
+    }
+  };
