@@ -2,6 +2,7 @@
 
 import Express from 'express';
 import Session from 'express-session';
+import ConnectMongo from 'connect-mongo';
 import forceSsl from 'express-force-ssl';
 import fs from 'fs';
 import spdy from 'spdy';
@@ -23,8 +24,9 @@ const app = Express();
 // gzip compression
 app.use(compression());
 app.use(bodyParser.json());
+
+const MongoStore = ConnectMongo(Session);
 // TODO: use environment variable for secret
-// TODO: use MongoDB as store
 app.use(Session({
   secret: 'secret',
   resave: false,
@@ -32,7 +34,8 @@ app.use(Session({
   cookie: {
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
-  }
+  },
+  store: new MongoStore({url: 'mongodb://localhost/4temps'})
 }));
 
 app.set('forceSSLOptions', {
