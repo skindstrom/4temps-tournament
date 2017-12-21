@@ -32,8 +32,10 @@ class CreateTournament extends Component<Props, State> {
     this.setState({ name: event.target.value });
   };
 
-  _onChangDate = (date: Moment) => {
-    this.setState({ date });
+  _onChangDate = (date: ?Moment) => {
+    if (date != null) {
+      this.setState({ date });
+    }
   };
 
   _onChangeRadio =
