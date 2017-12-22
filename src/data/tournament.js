@@ -3,14 +3,6 @@ import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 import type { Tournament, TournamentType } from '../models/tournament';
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/4temps', { useMongoClient: true })
-  .catch(() => {
-    // eslint-disable-next-line
-    console.error('Could not connect to mongo database, shutting down...');
-    process.exit(1);
-  });
-
 export type TournamentModel = {
   _id: ObjectId,
   userId: ObjectId,

@@ -6,14 +6,6 @@ import type { UserCredentials, UserWithPassword } from '../models/user';
 
 const SALT_ROUNDS = 12;
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/4temps', { useMongoClient: true })
-  .catch(() => {
-    // eslint-disable-next-line
-    console.error('Could not connect to mongo database, shutting down...');
-    process.exit(1);
-  });
-
 export type UserModel = {
   _id: ObjectId,
   email: string,

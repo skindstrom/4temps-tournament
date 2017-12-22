@@ -15,6 +15,7 @@ import { StaticRouter } from 'react-router-dom';
 import bodyParser from 'body-parser';
 
 import ApiRoute from './routes';
+import getDbConnection from './data/setup';
 
 import renderHtmlTemplate from './ssr-template';
 import App from './app/components/App';
@@ -35,7 +36,7 @@ app.use(Session({
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
   },
-  store: new MongoStore({url: 'mongodb://localhost/4temps'})
+  store: new MongoStore({mongooseConnection: getDbConnection()})
 }));
 
 app.set('forceSSLOptions', {
