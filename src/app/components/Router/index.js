@@ -8,6 +8,7 @@ import ModifyTournamentList from '../ModifyTournamentList';
 import SignUp from '../SignUp';
 import Home from '../Home';
 import Login from '../Login';
+import FourOFour from '../FourOFour';
 import PrivateRoute from './private-route';
 
 type Props = {
@@ -40,6 +41,7 @@ const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
         exact
         component={ModifyTournamentList}
       />
+      <Route component={FourOFour} />
     </Switch>
   );
 };
