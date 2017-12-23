@@ -23,11 +23,16 @@ router.post('/create', async (req: $Request, res: $Response) => {
     type: req.body.type || 'none'
   };
 
-  const validation = validateTournament(tournament);
+  let result = {
+    validation: validateTournament(tournament),
+    tournamentId: null
+  };
   let status: number = 200;
-  if (validation.isValidTournament) {
-    // $FlowFixMe
-    if (!await createTournament(req.session.user._id, tournament)) {
+  if (result.validation.isValidTournament) {
+    result.tournamentId =
+      // $FlowFixMe
+      await createTournament(req.session.user._id, tournament);
+    if (result.tournamentId == null) {
       status = 500;
     }
   } else {
@@ -35,7 +40,7 @@ router.post('/create', async (req: $Request, res: $Response) => {
   }
 
   res.status(status);
-  res.json(validation);
+  res.json(result);
 });
 
 router.get('/get', async (req: $Request, res: $Response) => {

@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 // Components
 import CreateTournament from '../CreateTournament';
 import ModifyTournamentList from '../ModifyTournamentList';
+import ModifyTournament from '../ModifyTournament';
 import SignUp from '../SignUp';
 import Home from '../Home';
 import Login from '../Login';
@@ -40,6 +41,12 @@ const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
         path='/modify-tournament'
         exact
         component={ModifyTournamentList}
+      />
+      <PrivateRoute
+        isAuthenticated={isAuthenticated}
+        path='/modify-tournament/:tournamentId'
+        exact
+        component={ModifyTournament}
       />
       <Route component={FourOFour} />
     </Switch>

@@ -2,11 +2,13 @@
 
 import React from 'react';
 import type { ComponentType } from 'react';
-import { Route } from 'react-router-dom';
+import { withRouter, Route } from 'react-router-dom';
+import type { Location } from 'react-router-dom';
 
 import SignUpOrLogin from '../SignUpOrLogin';
 
 type Props = {
+  location: Location,
   path: string,
   component: ComponentType<*>,
   isAuthenticated: boolean,
@@ -24,10 +26,11 @@ const PrivateRoute =
               <SignUpOrLogin
                 {...props}
                 header='Please log in or sign up'
-                referer={rest.path}
+                referer={rest.location.pathname}
               />)}
       />
     );
   };
 
-export default PrivateRoute;
+
+export default withRouter(PrivateRoute);

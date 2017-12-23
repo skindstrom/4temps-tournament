@@ -14,13 +14,19 @@ type Request<T> = {
 
 export type ApiRequest<T> = Promise<Request<T>>
 
+
+type CreateTournamentResponse = {
+  validation: TournamentValidationSummary,
+  tournamentId: ?string,
+}
+
 export const createTournament =
-  async (tournament: Tournament): ApiRequest<TournamentValidationSummary> => {
-    let result = validateTournament(tournament);
-    if (!result.isValidTournament) {
+  async (tournament: Tournament): ApiRequest<CreateTournamentResponse> => {
+    let validation = validateTournament(tournament);
+    if (!validation.isValidTournament) {
       return {
         wasAuthenticated: true,
-        result
+        result: { validation, tournamentId: null }
       };
     }
 
@@ -39,7 +45,7 @@ export const createTournament =
       return { wasAuthenticated: false, result: null };
     }
 
-    return { wasAuthenticated: true, result: await httpResult.json() };
+    return { wasAuthenticated: true, result: await httpResult.json()};
   };
 
 export const getTournamentsForUser =

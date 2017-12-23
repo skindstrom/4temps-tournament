@@ -33,13 +33,14 @@ const schema = new mongoose.Schema({
 const Model = mongoose.model('tournament', schema);
 
 export const createTournament =
-  async (userId: ObjectId, tournament: Tournament): Promise<boolean> => {
+  async (userId: ObjectId, tournament: Tournament): Promise<?ObjectId> => {
     try {
       const { date, ...rest } = tournament;
-      await Model.create({ userId, date: date.toDate(), ...rest });
-      return true;
+      const entry =
+        await Model.create({ userId, date: date.toDate(), ...rest });
+      return entry._id;
     } catch (e) {
-      return false;
+      return null;
     }
   };
 
