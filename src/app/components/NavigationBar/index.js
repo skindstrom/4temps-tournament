@@ -44,12 +44,6 @@ class NavigationBarContainer extends Component<Props, State> {
       || nextProps.isAuthenticated != this.props.isAuthenticated;
   }
 
-  _navigate = (to: string) => {
-    if (to != this.props.location.pathname) {
-      this.props.history.push(to);
-    }
-  }
-
   _logout = async () => {
     if (await logoutUser()) {
       window.isAuthenticated = false;
@@ -63,7 +57,6 @@ class NavigationBarContainer extends Component<Props, State> {
       <NavigationBar
         activeName={this.state.activeName}
         isAuthenticated={this.props.isAuthenticated}
-        onClick={this._navigate}
         onClickLogout={this._logout}
       />
     );

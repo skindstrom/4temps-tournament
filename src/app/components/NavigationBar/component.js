@@ -4,10 +4,10 @@ import {
   Button, Dropdown, DropdownMenu, DropdownItem,
   Menu, MenuItem, MenuMenu
 } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 type Props = {
   activeName: string,
-  onClick: (path: string) => void,
   isAuthenticated: boolean,
   onClickLogout: () => Promise<void>,
 }
@@ -24,17 +24,15 @@ class NavigationBar extends Component<Props> {
       <MenuMenu position='right'>
         <MenuItem
           name='signup'
-          onClick={() => this.props.onClick('/signup')}
         >
-          <Button primary>
+          <Button primary as={Link} to='/signup'>
             Sign up
           </Button>
         </MenuItem>
         <MenuItem
           name='login'
-          onClick={() => this.props.onClick('/login')}
         >
-          <Button secondary>
+          <Button secondary as={Link} to='/login'>
             Log in
           </Button>
         </MenuItem>
@@ -57,27 +55,30 @@ class NavigationBar extends Component<Props> {
   render() {
     return (
       <Menu>
-        <MenuItem name='header' header onClick={() => this.props.onClick('/')}>
+        <MenuItem as={Link} to='/' name='header' header>
           4Temps Tournaments
         </MenuItem>
         <MenuItem
           name='home'
+          as={Link}
+          to='/'
           active={this.props.activeName === 'home'}
-          onClick={() => this.props.onClick('/')}
         >
-        Home
+          Home
         </MenuItem>
         <Dropdown item text='Tournament'>
           <DropdownMenu>
             <DropdownItem
+              as={Link}
+              to='/create-tournament'
               text='Create tournament'
               active={this.props.activeName === 'create-tournament'}
-              onClick={() => this.props.onClick('/create-tournament')}
             />
             <DropdownItem
+              as={Link}
+              to='/modify-tournament'
               text='Modify tournaments'
               active={this.props.activeName === 'modify-tournament'}
-              onClick={() => this.props.onClick('/modify-tournament')}
             />
           </DropdownMenu>
         </Dropdown>
