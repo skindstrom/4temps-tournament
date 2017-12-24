@@ -62,19 +62,6 @@ class NavigationBarContainer extends Component<Props, State> {
     return (
       <NavigationBar
         activeName={this.state.activeName}
-        leftMenu={[
-          { name: 'home', path: '', text: 'Home' },
-          {
-            name: 'create-tournament',
-            path: 'create-tournament',
-            text: 'Create Tournament'
-          },
-          {
-            name: 'modify-tournament',
-            path: 'modify-tournament',
-            text: 'Modify Your Tournaments'
-          },
-        ]}
         isAuthenticated={this.props.isAuthenticated}
         onClick={this._navigate}
         onClickLogout={this._logout}

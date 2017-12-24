@@ -1,16 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import { Button, Menu, MenuItem, MenuMenu } from 'semantic-ui-react';
-
-type Item = {
-  name: string,
-  path: string,
-  text: string
-}
+import {
+  Button, Dropdown, DropdownMenu, DropdownItem,
+  Menu, MenuItem, MenuMenu
+} from 'semantic-ui-react';
 
 type Props = {
   activeName: string,
-  leftMenu: Array<Item>,
   onClick: (path: string) => void,
   isAuthenticated: boolean,
   onClickLogout: () => Promise<void>,
@@ -58,25 +54,33 @@ class NavigationBar extends Component<Props> {
       </MenuItem>);
   };
 
-  _renderLeftItem = (item: Item) => {
-    return (
-      <MenuItem
-        key={item.path}
-        name={item.name}
-        active={this.props.activeName === item.name}
-        onClick={() => this.props.onClick(`/${item.path}`)}
-      >
-        {item.text}
-      </MenuItem>);
-  }
-
   render() {
     return (
       <Menu>
         <MenuItem name='header' header onClick={() => this.props.onClick('/')}>
           4Temps Tournaments
         </MenuItem>
-        {this.props.leftMenu.map(item => this._renderLeftItem(item))}
+        <MenuItem
+          name='home'
+          active={this.props.activeName === 'home'}
+          onClick={() => this.props.onClick('/')}
+        >
+        Home
+        </MenuItem>
+        <Dropdown item text='Tournament'>
+          <DropdownMenu>
+            <DropdownItem
+              text='Create tournament'
+              active={this.props.activeName === 'create-tournament'}
+              onClick={() => this.props.onClick('/create-tournament')}
+            />
+            <DropdownItem
+              text='Modify tournaments'
+              active={this.props.activeName === 'modify-tournament'}
+              onClick={() => this.props.onClick('/modify-tournament')}
+            />
+          </DropdownMenu>
+        </Dropdown>
         {this.props.isAuthenticated ?
           this._renderAuthenticated() :
           this._renderNotAuthenticated()}
