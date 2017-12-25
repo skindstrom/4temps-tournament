@@ -1,25 +1,22 @@
 // @flow
 
 import React, { Component } from 'react';
-import moment from 'moment';
 
 import type { Tournament } from '../../../models/tournament';
-import ModifyTournamentList from './component';
+import TournamentList from '../TournamentList';
 import { getTournamentsForUser } from '../../api/tournament';
 
 type Props = {}
 type State = {
   isLoading: boolean,
-  previousTournaments: Array<Tournament>,
-  futureTournaments: Array<Tournament>
+  tournaments: Array<Tournament>,
 }
 
 
 class ModifyTournamentListContainer extends Component<Props, State> {
   state = {
     isLoading: true,
-    previousTournaments: [],
-    futureTournaments: []
+    tournaments: [],
   }
 
   componentDidMount() {
@@ -30,22 +27,7 @@ class ModifyTournamentListContainer extends Component<Props, State> {
     // TODO: cancel upon leaving the component
     const result = await getTournamentsForUser();
     if (result.wasAuthenticated && result.result != null) {
-      // sort by latest date first
-      const tournaments = result.result.sort(
-        (a: Tournament, b: Tournament) =>
-          a.date.isSameOrBefore(b.date) ? 1 : -1);
-
-      const now = moment();
-      const previousTournaments = tournaments
-        .filter(tour => tour.date.isSameOrBefore(now));
-      const futureTournaments = tournaments
-        .filter(tour => tour.date.isSameOrAfter(now));
-
-      this.setState({
-        isLoading: false,
-        previousTournaments,
-        futureTournaments
-      });
+      this.setState({ isLoading: false, tournaments: result.result });
     } else {
       // TODO: do something else
       alert('Invalid login session');
@@ -53,7 +35,7 @@ class ModifyTournamentListContainer extends Component<Props, State> {
   }
 
   render() {
-    return <ModifyTournamentList {...this.state} />;
+    return <TournamentList {...this.state} />;
   }
 }
 

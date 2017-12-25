@@ -37,16 +37,20 @@ export const createTournament =
           'Content-Type': 'application/json'
         },
         method: 'POST',
-        body: JSON.stringify(tournament),
-        credentials: 'include'
+        body: JSON.stringify(tournament), credentials: 'include'
       });
 
-    if (httpResult.status === 301) {
+    if (httpResult.status === 401) {
       return { wasAuthenticated: false, result: null };
     }
 
     return { wasAuthenticated: true, result: await httpResult.json()};
   };
+
+const deserializeTournament = (tour: Tournament): Tournament => {
+  const { date, ...rest } = tour;
+  return { date: moment(date), ...rest };
+};
 
 export const getTournamentsForUser =
   async (): ApiRequest<Array<Tournament>> => {
@@ -59,13 +63,29 @@ export const getTournamentsForUser =
         credentials: 'include'
       });
 
-    if (httpResult.status === 301) {
+    if (httpResult.status === 401) {
       return { wasAuthenticated: false, result: null };
     }
 
     const result =
       (await httpResult.json())
-        .map(({ date, ...rest }) => ({ date: moment(date), ...rest }));
+        .map(deserializeTournament);
 
     return { wasAuthenticated: true, result };
   };
+
+export const getAllTournaments = async (): Promise<Array<Tournament>> => {
+  const httpResult = await fetch('/api/tournament/get-all',
+    {
+      headers: {
+        'Accept': 'application/json',
+      },
+      method: 'GET',
+    });
+
+  if (httpResult.status === 200) {
+    return (await httpResult.json())
+      .map(deserializeTournament);
+  }
+  return [];
+};

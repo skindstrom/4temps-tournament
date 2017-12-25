@@ -4,7 +4,8 @@ import { Router } from 'express';
 import type { $Request, $Response } from 'express';
 import moment from 'moment';
 
-import { createTournament, getTournamentsForUser } from '../../data/tournament';
+import { createTournament, getTournamentsForUser, getTournaments } from
+  '../../data/tournament';
 import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
 
@@ -53,6 +54,15 @@ router.get('/get', async (req: $Request, res: $Response) => {
   const tournaments: Array<Tournament> =
     // $FlowFixMe
     (await getTournamentsForUser(req.session.user._id))
+      .map(db => ({ name: db.name, date: moment(db.date), type: db.type }));
+  res.status(200);
+  res.json(tournaments);
+});
+
+router.get('/get-all', async (req: $Request, res: $Response) => {
+  const tournaments: Array<Tournament> =
+    // $FlowFixMe
+    (await getTournaments())
       .map(db => ({ name: db.name, date: moment(db.date), type: db.type }));
   res.status(200);
   res.json(tournaments);

@@ -52,3 +52,11 @@ export const getTournamentsForUser =
       return [];
     }
   };
+
+export const getTournaments = async (): Promise<Array<TournamentModel>> => {
+  try {
+    return await Model.find();
+  } catch (e) {
+    return [];
+  }
+};
