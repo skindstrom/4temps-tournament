@@ -14,7 +14,7 @@ const router = Router();
 router.post('/create', async (req: $Request, res: $Response) => {
   // $FlowFixMe
   if (req.session.user == null) {
-    res.sendStatus(301);
+    res.sendStatus(401);
     return;
   }
 
@@ -47,7 +47,7 @@ router.post('/create', async (req: $Request, res: $Response) => {
 router.get('/get', async (req: $Request, res: $Response) => {
   // $FlowFixMe
   if (req.session.user == null) {
-    res.sendStatus(301);
+    res.sendStatus(401);
     return;
   }
 
