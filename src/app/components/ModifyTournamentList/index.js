@@ -20,14 +20,22 @@ class ModifyTournamentListContainer extends Component<Props, State> {
   }
 
   componentDidMount() {
+    this.isFetchedCanceled = false;
     this._getTournaments();
   }
 
+  componentWillUnmount() {
+    this.isFetchedCanceled = true;
+  }
+
+  isFetchedCanceled = true;
+
   _getTournaments = async () => {
-    // TODO: cancel upon leaving the component
     const result = await getTournamentsForUser();
     if (result.wasAuthenticated && result.result != null) {
-      this.setState({ isLoading: false, tournaments: result.result });
+      if (!this.isFetchedCanceled) {
+        this.setState({ isLoading: false, tournaments: result.result });
+      }
     } else {
       // TODO: do something else
       alert('Invalid login session');
