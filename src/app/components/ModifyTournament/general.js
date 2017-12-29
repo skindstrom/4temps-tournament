@@ -55,7 +55,6 @@ class ModifyGeneral extends Component<Props> {
       </Form>
     );
   }
-
 }
 
 export default ModifyGeneral;

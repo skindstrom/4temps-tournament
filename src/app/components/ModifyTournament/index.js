@@ -2,31 +2,66 @@
 
 import React, { Component } from 'react';
 import { Container, Menu, MenuItem } from 'semantic-ui-react';
+import moment from 'moment';
+import type Moment from 'moment';
+import type { Match } from 'react-router-dom';
+
+import { getTournament } from '../../api/tournament';
+
+import General from './general';
 
 type TabName = 'general' | 'rounds' | 'staff' | 'participants';
-type Props = {}
+type Props = {
+  match: Match
+}
 type State = {
-  activeTab: TabName
+  activeTab: TabName,
+
+  isLoading: boolean,
+
+  name: string,
+  date: Moment,
+
+  isValidName: boolean,
+  isValidDate: boolean
 }
 
-const General = () => 'Change name, date, type';
 const Rounds = () => 'Overview of rounds, set round criteria etc.';
 const Staff = () => 'Add and remove staff (judges, organizers, helpers)';
 const Participants = () => 'Add and remove participants';
 
 class ModifyTournament extends Component<Props, State> {
-  static components = {
-    general: <General />,
-    rounds: <Rounds />,
-    staff: <Staff />,
-    participants: <Participants />
+  state = {
+    activeTab: 'general',
+
+    isLoading: true,
+
+    name: '',
+    date: moment(),
+
+    isValidName: true,
+    isValidDate: true
   }
 
-  state = {
-    activeTab: 'general'
-  };
+  componentDidMount() {
+    const tournamentId = this.props.match.params.tournamentId;
+    if (tournamentId != null) {
+      this._getTournament(tournamentId);
+    }
+  }
 
-  _onClickTab = (tab: TabName) => { this.setState({ activeTab: tab }); };
+  _getTournament = async (tournamentId: string) => {
+    const apiResult = await getTournament(tournamentId);
+    if (apiResult.wasAuthenticated && apiResult.result != null) {
+      const { name, date } = apiResult.result;
+      this.setState({ isLoading: false, name, date });
+    }
+  }
+
+  _onClickTab = (tab: TabName) => this.setState({ activeTab: tab });
+  _onChangeName = (name: string) => this.setState({ name });
+  _onChangeDate = (date: Moment) => this.setState({ date });
+
   _renderMenuItem = (tab: TabName, content: string) => {
     return (
       <MenuItem
@@ -36,6 +71,25 @@ class ModifyTournament extends Component<Props, State> {
       >
         {content}
       </MenuItem>);
+  }
+
+  _renderGeneral = () => {
+    return (<General
+      {...this.state}
+      onChangeName={this._onChangeName}
+      onChangeDate={this._onChangeDate}
+    />);
+  }
+
+  _renderRounds = () => <Rounds />
+  _renderStaff = () => <Staff />
+  _renderParticipants = () => <Participants />
+
+  components = {
+    'general': this._renderGeneral,
+    'rounds': this._renderRounds,
+    'staff': this._renderStaff,
+    'participants': this._renderParticipants
   }
 
   render() {
@@ -51,7 +105,7 @@ class ModifyTournament extends Component<Props, State> {
             ].map(({ name, content }) => this._renderMenuItem(name, content))
           }
         </Menu>
-        {ModifyTournament.components[this.state.activeTab]}
+        {this.components[this.state.activeTab]()}
       </Container>
     );
   }
