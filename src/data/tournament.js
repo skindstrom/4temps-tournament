@@ -45,7 +45,7 @@ export const createTournament =
   };
 
 export const getTournamentsForUser =
-  async (userId: ObjectId): Promise<Array<TournamentModel>> => {
+  async (userId: string): Promise<Array<TournamentModel>> => {
     try {
       return await Model.find({ userId });
     } catch (e) {
@@ -60,3 +60,12 @@ export const getTournaments = async (): Promise<Array<TournamentModel>> => {
     return [];
   }
 };
+
+export const getTournament =
+  async (tournamentId: string): Promise<?TournamentModel> => {
+    try {
+      return await Model.findOne({ _id: tournamentId });
+    } catch (e) {
+      return null;
+    }
+  };

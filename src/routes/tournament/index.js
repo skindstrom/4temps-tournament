@@ -4,10 +4,15 @@ import { Router } from 'express';
 import type { $Request, $Response } from 'express';
 import moment from 'moment';
 
-import { createTournament, getTournamentsForUser, getTournaments } from
-  '../../data/tournament';
+import {
+  createTournament,
+  getTournamentsForUser,
+  getTournaments,
+  getTournament
+} from '../../data/tournament';
 import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
+import type { UserModel } from '../../data/user';
 
 const router = Router();
 
@@ -57,6 +62,34 @@ router.get('/get', async (req: $Request, res: $Response) => {
       .map(db => ({ name: db.name, date: moment(db.date), type: db.type }));
   res.status(200);
   res.json(tournaments);
+});
+
+router.get('/get/:tournamentId', async (req: $Request, res: $Response) => {
+  // $FlowFixMe
+  const user: ?UserModel = req.session.user;
+  if (user == null) {
+    res.sendStatus(401);
+    return;
+  }
+
+  const dbTournament = await getTournament(req.params.tournamentId);
+
+  if (dbTournament == null) {
+    res.sendStatus(404);
+    return;
+  }
+
+  if (dbTournament.userId.toString() !== user._id) {
+    res.sendStatus(401);
+    return;
+  }
+
+  res.status(200);
+  res.json({
+    name: dbTournament.name,
+    date: moment(dbTournament.date),
+    type: dbTournament.type
+  });
 });
 
 router.get('/get-all', async (req: $Request, res: $Response) => {

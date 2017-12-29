@@ -89,3 +89,24 @@ export const getAllTournaments = async (): Promise<Array<Tournament>> => {
   }
   return [];
 };
+
+export const getTournament =
+  async (tournamentId: string): ApiRequest<Tournament> => {
+    const httpResult = await fetch(`/api/tournament/get/${tournamentId}`,
+      {
+        headers: {
+          'Accept': 'application/json',
+        },
+        method: 'GET',
+        credentials: 'include'
+      });
+
+    const wasAuthenticated = httpResult.status !== 401;
+    let result: ?Tournament = null;
+
+    if (httpResult.status === 200) {
+      result = deserializeTournament(await httpResult.json());
+    }
+
+    return { wasAuthenticated, result };
+  };
