@@ -2,18 +2,17 @@
 
 import moment from 'moment';
 
+import {
+  apiGetRequest,
+  apiAuthGetRequest,
+  apiAuthPostRequest,
+} from '../util';
+import type { ApiRequest, AuthorizedApiRequest } from '../util';
+
 import validateTournament from '../../../validators/validate-tournament';
 import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 import type { Tournament } from '../../../models/tournament';
-
-type Request<T> = {
-  wasAuthenticated: boolean,
-  result: ?T
-}
-
-export type ApiRequest<T> = Promise<Request<T>>
-
 
 type CreateTournamentResponse = {
   validation: TournamentValidationSummary,
@@ -21,7 +20,8 @@ type CreateTournamentResponse = {
 }
 
 export const createTournament =
-  async (tournament: Tournament): ApiRequest<CreateTournamentResponse> => {
+  async (
+    tournament: Tournament): AuthorizedApiRequest<CreateTournamentResponse> => {
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       return {
@@ -30,21 +30,7 @@ export const createTournament =
       };
     }
 
-    const httpResult = await fetch('/api/tournament/create',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(tournament), credentials: 'include'
-      });
-
-    if (httpResult.status === 401) {
-      return { wasAuthenticated: false, result: null };
-    }
-
-    return { wasAuthenticated: true, result: await httpResult.json()};
+    return apiAuthPostRequest('/api/tournament/create', tournament);
   };
 
 const deserializeTournament = (tour: Tournament): Tournament => {
@@ -53,60 +39,36 @@ const deserializeTournament = (tour: Tournament): Tournament => {
 };
 
 export const getTournamentsForUser =
-  async (): ApiRequest<Array<Tournament>> => {
-    const httpResult = await fetch('/api/tournament/get',
-      {
-        headers: {
-          'Accept': 'application/json',
-        },
-        method: 'GET',
-        credentials: 'include'
-      });
+  async (): AuthorizedApiRequest<Array<Tournament>> => {
+    const response: AuthorizedApiRequest<Array<Tournament>> =
+      apiAuthGetRequest('/api/tournament/get');
+    const { wasAuthenticated, result } = await response;
 
-    if (httpResult.status === 401) {
-      return { wasAuthenticated: false, result: null };
+    if (result != null) {
+      return { wasAuthenticated, result: result.map(deserializeTournament) };
     }
-
-    const result =
-      (await httpResult.json())
-        .map(deserializeTournament);
-
-    return { wasAuthenticated: true, result };
+    return { wasAuthenticated, result: null };
   };
 
-export const getAllTournaments = async (): Promise<Array<Tournament>> => {
-  const httpResult = await fetch('/api/tournament/get-all',
-    {
-      headers: {
-        'Accept': 'application/json',
-      },
-      method: 'GET',
-    });
+export const getAllTournaments = async (): ApiRequest<Array<Tournament>> => {
+  const response: ApiRequest<Array<Tournament>> =
+    apiGetRequest('/api/tournament/get-all');
+  const { result } = await response;
 
-  if (httpResult.status === 200) {
-    return (await httpResult.json())
-      .map(deserializeTournament);
+  if (result != null) {
+    return { result: result.map(deserializeTournament) };
   }
-  return [];
+  return { result: null };
 };
 
 export const getTournament =
-  async (tournamentId: string): ApiRequest<Tournament> => {
-    const httpResult = await fetch(`/api/tournament/get/${tournamentId}`,
-      {
-        headers: {
-          'Accept': 'application/json',
-        },
-        method: 'GET',
-        credentials: 'include'
-      });
+  async (tournamentId: string): AuthorizedApiRequest<Tournament> => {
+    const response: AuthorizedApiRequest<Tournament> =
+      apiAuthGetRequest(`/api/tournament/get/${tournamentId}`);
+    const { wasAuthenticated, result } = await response;
 
-    const wasAuthenticated = httpResult.status !== 401;
-    let result: ?Tournament = null;
-
-    if (httpResult.status === 200) {
-      result = deserializeTournament(await httpResult.json());
+    if (result != null) {
+      return { wasAuthenticated, result: deserializeTournament(result) };
     }
-
-    return { wasAuthenticated, result };
+    return { wasAuthenticated, result: null };
   };
