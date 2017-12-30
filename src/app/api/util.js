@@ -1,20 +1,18 @@
 // @flow
 
-export type ApiRequest<T> = Promise<{
-  // TODO: change to response
-  result: ?T
-}>
+export type ApiRequest<T> = Promise<?T>;
 
 async function parseResponse<T>(response: Response): ApiRequest<T> {
   let result: ?T = null;
   if (response.status === 200) {
     result = await response.json();
   }
-  return { result };
+  return result;
 }
 
-export async function apiGetRequest<T>(url: string): ApiRequest<T> {
-  return parseResponse(await fetch(url,
+export async function
+apiGetRequest<T>(url: string, deserialize: ?(T) => T): ApiRequest<T> {
+  const result = await parseResponse(await fetch(url,
     {
       headers: {
         'Accept': 'application/json',
@@ -22,12 +20,17 @@ export async function apiGetRequest<T>(url: string): ApiRequest<T> {
       method: 'GET',
       credentials: 'include'
     }));
+
+  if(result != null && deserialize != null) {
+    return deserialize(result);
+  }
+  return result;
 }
 
 export async function
 apiPostRequest<Body, T>(url: string,
-  body: Body): ApiRequest<T> {
-  return parseResponse(await fetch('/api/tournament/create',
+  body: Body, deserialize: ?(T) => T): ApiRequest<T> {
+  const result = await parseResponse(await fetch('/api/tournament/create',
     {
       headers: {
         'Accept': 'application/json',
@@ -37,4 +40,9 @@ apiPostRequest<Body, T>(url: string,
       body: JSON.stringify(body),
       credentials: 'include'
     }));
+
+  if(result != null && deserialize != null) {
+    return deserialize(result);
+  }
+  return result;
 }

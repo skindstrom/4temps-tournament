@@ -51,9 +51,9 @@ class ModifyTournament extends Component<Props, State> {
   }
 
   _getTournament = async (tournamentId: string) => {
-    const apiResult = await getTournament(tournamentId);
-    if (apiResult.result != null) {
-      const { name, date } = apiResult.result;
+    const result = await getTournament(tournamentId);
+    if (result != null) {
+      const { name, date } = result;
       this.setState({ isLoading: false, name, date });
     }
   }

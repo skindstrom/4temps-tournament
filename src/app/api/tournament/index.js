@@ -24,8 +24,7 @@ export const createTournament =
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       return {
-        wasAuthenticated: true,
-        result: { validation, tournamentId: null }
+        validation, tournamentId: null
       };
     }
 
@@ -38,36 +37,18 @@ const deserializeTournament = (tour: Tournament): Tournament => {
 };
 
 export const getTournamentsForUser =
-  async (): ApiRequest<Array<Tournament>> => {
-    const response: ApiRequest<Array<Tournament>> =
-      apiGetRequest('/api/tournament/get');
-    const { result } = await response;
-
-    if (result != null) {
-      return { result: result.map(deserializeTournament) };
-    }
-    return { result: null };
+  (): ApiRequest<Array<Tournament>> => {
+    return apiGetRequest('/api/tournament/get',
+      (tours) => (tours.map(deserializeTournament)));
   };
 
-export const getAllTournaments = async (): ApiRequest<Array<Tournament>> => {
-  const response: ApiRequest<Array<Tournament>> =
-    apiGetRequest('/api/tournament/get-all');
-  const { result } = await response;
-
-  if (result != null) {
-    return { result: result.map(deserializeTournament) };
-  }
-  return { result: null };
+export const getAllTournaments = (): ApiRequest<Array<Tournament>> => {
+  return apiGetRequest('/api/tournament/get-all',
+    (tours) => (tours.map(deserializeTournament)));
 };
 
 export const getTournament =
   async (tournamentId: string): ApiRequest<Tournament> => {
-    const response: ApiRequest<Tournament> =
-      apiGetRequest(`/api/tournament/get/${tournamentId}`);
-    const { result } = await response;
-
-    if (result != null) {
-      return { result: deserializeTournament(result) };
-    }
-    return { result: null };
+    return apiGetRequest(`/api/tournament/get/${tournamentId}`,
+      deserializeTournament);
   };

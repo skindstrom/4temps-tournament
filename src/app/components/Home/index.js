@@ -32,7 +32,7 @@ class Home extends Component<Props, State> {
 
   _getTournaments = async () => {
     this.setState({ isLoading: true });
-    const { result } = await getAllTournaments();
+    const result = await getAllTournaments();
     const tournaments = result != null ? result : [];
     if (!this.isFetchedCanceled) {
       this.setState({ isLoading: false, tournaments });

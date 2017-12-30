@@ -32,8 +32,8 @@ class CreateTournamentContainer extends Component<Props, State> {
     const result = await createTournament(tournament);
 
 
-    if (result.result != null) {
-      const { validation, tournamentId } = result.result;
+    if (result!= null) {
+      const { validation, tournamentId } = result;
       this.setState({ isLoading: false, validation });
 
       if (validation.isValidTournament && tournamentId != null) {
