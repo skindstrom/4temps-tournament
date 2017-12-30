@@ -4,6 +4,7 @@ import type { $Request, $Response } from 'express';
 export default async (req: $Request, res: $Response) => {
   // $FlowFixMe
   req.session.destroy(() => {
-    res.sendStatus(200);
+    res.status(200);
+    res.json(true);
   });
 };

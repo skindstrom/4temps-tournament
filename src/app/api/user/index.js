@@ -1,4 +1,8 @@
 // @flow
+import {
+  apiPostRequest,
+} from '../util';
+import type { ApiRequest } from '../util';
 
 import validateUser from '../../../validators/validate-user';
 import validateUserLogin from '../../../validators/validate-user-login';
@@ -10,53 +14,25 @@ import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
 
 export const createUser =
-  async (user: UserWithPassword): Promise<UserCreateValidationSummary> => {
+  async (user: UserWithPassword): ApiRequest<UserCreateValidationSummary> => {
     let result = await validateUser(user);
     if (!result.isValid) {
       return result;
     }
-    let httpResult = await fetch('/api/user/create',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(user)
-      });
-
-    result = httpResult.json();
-    return result;
+    return apiPostRequest('/api/user/create', user);
   };
 
 export const loginUser =
-  async (credentials: UserCredentials): Promise<UserLoginValidationSummary> => {
+  async (
+    credentials: UserCredentials): ApiRequest<UserLoginValidationSummary> => {
     let result = await validateUserLogin(credentials);
     if (!result.isValid) {
       return result;
     }
 
-    let httpResult = await fetch('/api/user/login',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify(credentials)
-      });
-
-    const { validation } = await httpResult.json();
-
-    return validation;
+    return apiPostRequest('/api/user/login', credentials);
   };
 
-export const logoutUser = async (): Promise<boolean> => {
-  const httpResult = await fetch('/api/user/logout',
-    {
-      method: 'POST',
-      credentials: 'include'
-    });
-  return httpResult.status === 200;
+export const logoutUser = async (): ApiRequest<boolean> => {
+  return apiPostRequest('/api/user/logout');
 };

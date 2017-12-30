@@ -30,5 +30,5 @@ export default async (req: $Request, res: $Response) => {
   }
 
   res.status(status);
-  res.json({ validation });
+  res.json(validation);
 };

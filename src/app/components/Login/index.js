@@ -33,23 +33,26 @@ class LoginContainer extends PureComponent<Props, State> {
 
   _onSubmit = async (credentials: UserCredentials) => {
     this.setState({ isLoading: true });
-    const { isValid, isValidEmail, isValidPassword, doesUserExist } =
-      await loginUser(credentials);
+    const result = await loginUser(credentials);
+    if (result != null) {
+      const { isValid, isValidEmail, isValidPassword, doesUserExist } = result;
+      this.setState({
+        isValidInput: isValid,
+        isValidEmail,
+        isValidPassword,
+        wasCorrectCredentials: doesUserExist,
+        isLoading: false
+      });
 
-    this.setState({
-      isValidInput: isValid,
-      isValidEmail,
-      isValidPassword,
-      wasCorrectCredentials: doesUserExist,
-      isLoading: false
-    });
+      if (isValid) {
+        window.isAuthenticated = true;
+        this.props.updatedAuthenticationState();
+        const referer = this.props.location.search.replace(/\?referer=/, '');
+        this.props.history.push(referer);
+      }
 
-    if (isValid) {
-      window.isAuthenticated = true;
-      this.props.updatedAuthenticationState();
-      const referer = this.props.location.search.replace(/\?referer=/, '');
-      this.props.history.push(referer);
     }
+
   }
 
   render() {
