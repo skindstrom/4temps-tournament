@@ -6,12 +6,6 @@ import { getTournamentsForUser } from '../../data/tournament';
 import type { Tournament } from '../../models/tournament';
 
 export default async (req: $Request, res: $Response) => {
-  // $FlowFixMe
-  if (req.session.user == null) {
-    res.sendStatus(401);
-    return;
-  }
-
   const tournaments: Array<Tournament> =
     // $FlowFixMe
     (await getTournamentsForUser(req.session.user._id))

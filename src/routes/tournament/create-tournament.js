@@ -7,12 +7,6 @@ import type { Tournament } from '../../models/tournament';
 import { createTournament } from '../../data/tournament';
 
 export default async (req: $Request, res: $Response) => {
-  // $FlowFixMe
-  if (req.session.user == null) {
-    res.sendStatus(401);
-    return;
-  }
-
   const tournament: Tournament = {
     name: req.body.name || '',
     date: moment(req.body.date) || moment(0),
