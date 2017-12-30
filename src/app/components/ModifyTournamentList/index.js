@@ -32,13 +32,13 @@ class ModifyTournamentListContainer extends Component<Props, State> {
 
   _getTournaments = async () => {
     const result = await getTournamentsForUser();
-    if (result.wasAuthenticated && result.result != null) {
+    if (result.result != null) {
       if (!this.isFetchedCanceled) {
         this.setState({ isLoading: false, tournaments: result.result });
       }
     } else {
       // TODO: do something else
-      alert('Invalid login session');
+      alert('Something went wrong');
     }
   }
 

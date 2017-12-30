@@ -4,10 +4,9 @@ import moment from 'moment';
 
 import {
   apiGetRequest,
-  apiAuthGetRequest,
-  apiAuthPostRequest,
+  apiPostRequest,
 } from '../util';
-import type { ApiRequest, AuthorizedApiRequest } from '../util';
+import type { ApiRequest } from '../util';
 
 import validateTournament from '../../../validators/validate-tournament';
 import type { TournamentValidationSummary } from
@@ -21,7 +20,7 @@ type CreateTournamentResponse = {
 
 export const createTournament =
   async (
-    tournament: Tournament): AuthorizedApiRequest<CreateTournamentResponse> => {
+    tournament: Tournament): ApiRequest<CreateTournamentResponse> => {
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       return {
@@ -30,7 +29,7 @@ export const createTournament =
       };
     }
 
-    return apiAuthPostRequest('/api/tournament/create', tournament);
+    return apiPostRequest('/api/tournament/create', tournament);
   };
 
 const deserializeTournament = (tour: Tournament): Tournament => {
@@ -39,15 +38,15 @@ const deserializeTournament = (tour: Tournament): Tournament => {
 };
 
 export const getTournamentsForUser =
-  async (): AuthorizedApiRequest<Array<Tournament>> => {
-    const response: AuthorizedApiRequest<Array<Tournament>> =
-      apiAuthGetRequest('/api/tournament/get');
-    const { wasAuthenticated, result } = await response;
+  async (): ApiRequest<Array<Tournament>> => {
+    const response: ApiRequest<Array<Tournament>> =
+      apiGetRequest('/api/tournament/get');
+    const { result } = await response;
 
     if (result != null) {
-      return { wasAuthenticated, result: result.map(deserializeTournament) };
+      return { result: result.map(deserializeTournament) };
     }
-    return { wasAuthenticated, result: null };
+    return { result: null };
   };
 
 export const getAllTournaments = async (): ApiRequest<Array<Tournament>> => {
@@ -62,13 +61,13 @@ export const getAllTournaments = async (): ApiRequest<Array<Tournament>> => {
 };
 
 export const getTournament =
-  async (tournamentId: string): AuthorizedApiRequest<Tournament> => {
-    const response: AuthorizedApiRequest<Tournament> =
-      apiAuthGetRequest(`/api/tournament/get/${tournamentId}`);
-    const { wasAuthenticated, result } = await response;
+  async (tournamentId: string): ApiRequest<Tournament> => {
+    const response: ApiRequest<Tournament> =
+      apiGetRequest(`/api/tournament/get/${tournamentId}`);
+    const { result } = await response;
 
     if (result != null) {
-      return { wasAuthenticated, result: deserializeTournament(result) };
+      return { result: deserializeTournament(result) };
     }
-    return { wasAuthenticated, result: null };
+    return { result: null };
   };

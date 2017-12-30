@@ -32,7 +32,7 @@ class CreateTournamentContainer extends Component<Props, State> {
     const result = await createTournament(tournament);
 
 
-    if (result.wasAuthenticated && result.result != null) {
+    if (result.result != null) {
       const { validation, tournamentId } = result.result;
       this.setState({ isLoading: false, validation });
 
@@ -42,7 +42,7 @@ class CreateTournamentContainer extends Component<Props, State> {
     } else {
       this.setState({ isLoading: false });
       // TODO: Actually act in accordance
-      alert('Invalid login session');
+      alert('Something went wrong');
     }
   };
 
