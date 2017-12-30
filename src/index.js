@@ -4,6 +4,7 @@ import Express from 'express';
 import Session from 'express-session';
 import ConnectMongo from 'connect-mongo';
 import forceSsl from 'express-force-ssl';
+import Helmet from 'helmet';
 import fs from 'fs';
 import spdy from 'spdy';
 import compression from 'compression';
@@ -29,16 +30,19 @@ app.use(bodyParser.json());
 const MongoStore = ConnectMongo(Session);
 // TODO: use environment variable for secret
 app.use(Session({
+  name: 'SESSION',
   secret: 'secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: true,
+    httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
   },
   store: new MongoStore({mongooseConnection: getDbConnection()})
 }));
 
+app.use(Helmet());
 app.set('forceSSLOptions', {
   httpsPort: 3001,
 });

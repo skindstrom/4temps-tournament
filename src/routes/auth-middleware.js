@@ -1,7 +1,7 @@
 // @flow
-import type { Middleware, NextFunction, $Request, $Response } from 'express';
+import type { NextFunction, $Request, $Response } from 'express';
 
-export const isAuthenticated: Middleware =
+export const isAuthenticated =
   (req: $Request, res: $Response, next: NextFunction) => {
     // $FlowFixMe
     if (req.session.user != null) {
