@@ -29,8 +29,8 @@ apiGetRequest<T>(url: string, deserialize: ?(T) => T): ApiRequest<T> {
 
 export async function
 apiPostRequest<Body, T>(url: string,
-  body: Body, deserialize: ?(T) => T): ApiRequest<T> {
-  const result = await parseResponse(await fetch('/api/tournament/create',
+  body: ?Body, deserialize: ?(T) => T): ApiRequest<T> {
+  const result = await parseResponse(await fetch(url,
     {
       headers: {
         'Accept': 'application/json',
