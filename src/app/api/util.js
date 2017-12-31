@@ -4,9 +4,12 @@ export type ApiRequest<T> = Promise<?T>;
 
 async function parseResponse<T>(response: Response): ApiRequest<T> {
   let result: ?T = null;
-  if (response.status === 200) {
+
+  const contentType = response.headers.get('content-type');
+  if (contentType != null && contentType.indexOf("application/json") !== -1) {
     result = await response.json();
   }
+
   return result;
 }
 
