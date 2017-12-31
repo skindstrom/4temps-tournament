@@ -44,6 +44,23 @@ export const createTournament =
     }
   };
 
+export const updateTournament =
+  async (tournamentId: string,
+    tournament: Tournament): Promise<?TournamentModel> => {
+    try {
+      return Model.update({ _id: tournamentId }, {
+        $set: {
+          name:
+            tournament.name,
+          date: tournament.date.toDate(),
+          type: tournament.type
+        }
+      });
+    } catch (e) {
+      return null;
+    }
+  };
+
 export const getTournamentsForUser =
   async (userId: string): Promise<Array<TournamentModel>> => {
     try {

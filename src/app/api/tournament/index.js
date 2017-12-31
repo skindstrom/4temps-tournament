@@ -52,3 +52,30 @@ export const getTournament =
     return apiGetRequest(`/api/tournament/get/${tournamentId}`,
       deserializeTournament);
   };
+
+export const updateTournament =
+  async (tournamentId: string,
+    tournament: Tournament): ApiRequest<{
+      validation: TournamentValidationSummary,
+      tournament: ?Tournament
+    }> => {
+
+    let validation = validateTournament(tournament);
+    if (!validation.isValidTournament) {
+      return {
+        validation, tournament: null
+      };
+    }
+
+    return apiPostRequest('/api/tournament/update',
+      { tournamentId, tournament },
+      result => {
+        const { tournament, ...rest } = result;
+
+        if (tournament != null) {
+          return { ...rest, tournament: deserializeTournament(tournament) };
+        }
+
+        return result;
+      });
+  };

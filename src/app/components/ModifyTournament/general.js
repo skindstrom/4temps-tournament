@@ -14,7 +14,7 @@ type Props = {
   isValidDate: boolean,
 
   onChangeName: (name: string) => void,
-  onChangeDate: (date: Moment) => void
+  onChangeDate: (date: Moment) => void,
 }
 
 class ModifyGeneral extends Component<Props> {
@@ -31,7 +31,11 @@ class ModifyGeneral extends Component<Props> {
 
   render() {
     return (
-      <Form loading={this.props.isLoading} >
+      <Form
+        as='div'
+        loading={this.props.isLoading}
+        error={!this.props.isValidName || !this.props.isValidDate}
+      >
         <FormInput
           label='Name'
           placeholder='4Temps World Championship'

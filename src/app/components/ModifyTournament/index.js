@@ -1,12 +1,13 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Container, Menu, MenuItem } from 'semantic-ui-react';
+import { Container, Form, FormButton, Menu, MenuItem } from 'semantic-ui-react';
 import moment from 'moment';
 import type Moment from 'moment';
 import type { Match } from 'react-router-dom';
 
-import { getTournament } from '../../api/tournament';
+import type { Tournament } from '../../../models/tournament';
+import { updateTournament, getTournament } from '../../api/tournament';
 
 import General from './general';
 
@@ -19,8 +20,7 @@ type State = {
 
   isLoading: boolean,
 
-  name: string,
-  date: Moment,
+  tournament: Tournament,
 
   isValidName: boolean,
   isValidDate: boolean
@@ -36,8 +36,11 @@ class ModifyTournament extends Component<Props, State> {
 
     isLoading: true,
 
-    name: '',
-    date: moment(),
+    tournament: {
+      name: '',
+      date: moment(),
+      type: 'none'
+    },
 
     isValidName: true,
     isValidDate: true
@@ -51,16 +54,20 @@ class ModifyTournament extends Component<Props, State> {
   }
 
   _getTournament = async (tournamentId: string) => {
-    const result = await getTournament(tournamentId);
-    if (result != null) {
-      const { name, date } = result;
-      this.setState({ isLoading: false, name, date });
+    const tournament = await getTournament(tournamentId);
+    if (tournament != null) {
+      this.setState({ isLoading: false, tournament });
     }
   }
 
   _onClickTab = (tab: TabName) => this.setState({ activeTab: tab });
-  _onChangeName = (name: string) => this.setState({ name });
-  _onChangeDate = (date: Moment) => this.setState({ date });
+  _onChangeName = (name: string) => this.setState({
+    tournament: { ...this.state.tournament, name }
+  });
+
+  _onChangeDate = (date: Moment) => this.setState({
+    tournament: { ...this.state.tournament, date }
+  });
 
   _renderMenuItem = (tab: TabName, content: string) => {
     return (
@@ -75,7 +82,14 @@ class ModifyTournament extends Component<Props, State> {
 
   _renderGeneral = () => {
     return (<General
-      {...this.state}
+      isLoading={this.state.isLoading}
+
+      name={this.state.tournament.name}
+      date={this.state.tournament.date}
+
+      isValidName={this.state.isValidName}
+      isValidDate={this.state.isValidDate}
+
       onChangeName={this._onChangeName}
       onChangeDate={this._onChangeDate}
     />);
@@ -84,6 +98,29 @@ class ModifyTournament extends Component<Props, State> {
   _renderRounds = () => <Rounds />
   _renderStaff = () => <Staff />
   _renderParticipants = () => <Participants />
+
+  _onSubmit = async () => {
+    this.setState({ isLoading: true });
+
+    const tournamentId = this.props.match.params.tournamentId;
+    if (tournamentId != null) {
+      const result =
+        await updateTournament(tournamentId, this.state.tournament);
+
+      let updatedState = { ...this.state };
+      updatedState.isLoading = false;
+
+      if (result != null) {
+        updatedState.isValidName = result.validation.isValidName;
+        updatedState.isValidDate = result.validation.isValidDate;
+
+        if (result.tournament != null) {
+          updatedState.tournament = result.tournament;
+        }
+      }
+      this.setState(updatedState);
+    }
+  }
 
   components = {
     'general': this._renderGeneral,
@@ -105,7 +142,12 @@ class ModifyTournament extends Component<Props, State> {
             ].map(({ name, content }) => this._renderMenuItem(name, content))
           }
         </Menu>
-        {this.components[this.state.activeTab]()}
+        <Form>
+          {this.components[this.state.activeTab]()}
+          <FormButton onClick={this._onSubmit} style={{ marginTop: '1em' }}>
+            Submit
+          </FormButton>
+        </Form>
       </Container>
     );
   }
