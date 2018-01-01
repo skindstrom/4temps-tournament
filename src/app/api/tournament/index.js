@@ -9,11 +9,11 @@ import {
 import type { ApiRequest } from '../util';
 
 import validateTournament from '../../../validators/validate-tournament';
-import type { TournamentValidationSummary } from
-  '../../../validators/validate-tournament';
 import type { Tournament } from '../../../models/tournament';
 import type { CreateTournamentResponse } from
   '../../../routes/tournament/create-tournament';
+import type { UpdateTournamentResponse } from
+  '../../../routes/tournament/update-tournament';
 
 export const createTournament =
   async (
@@ -52,11 +52,7 @@ export const getTournament =
 
 export const updateTournament =
   async (tournamentId: string,
-    tournament: Tournament): ApiRequest<{
-      validation: TournamentValidationSummary,
-      tournament: ?Tournament
-    }> => {
-
+    tournament: Tournament): ApiRequest<UpdateTournamentResponse> => {
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       return {
@@ -66,7 +62,7 @@ export const updateTournament =
 
     return apiPostRequest('/api/tournament/update',
       { tournamentId, tournament },
-      result => {
+      (result: UpdateTournamentResponse) => {
         const { tournament, ...rest } = result;
 
         if (tournament != null) {
