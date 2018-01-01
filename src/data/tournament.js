@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
 const Model = mongoose.model('tournament', schema);
 
 export const createTournament =
-  async (userId: ObjectId, tournament: Tournament): Promise<?ObjectId> => {
+  async (userId: string, tournament: Tournament): Promise<?ObjectId> => {
     try {
       const { date, ...rest } = tournament;
       const entry =

@@ -8,7 +8,7 @@ import type { Tournament } from '../../models/tournament';
 import type { TournamentModel } from '../../data/tournament';
 
 export const getTournamentRoute = async (tournamentId: string,
-  userId: ?string,
+  userId: string,
   getTournament: (tournamentId: string)
     => Promise<?TournamentModel>): RouteResult<?Tournament> => {
 
@@ -33,7 +33,7 @@ export const getTournamentRoute = async (tournamentId: string,
 export default async (req: $Request, res: $Response) => {
   const tournamentId = req.params.tournamentId;
   // $FlowFixMe
-  const userId: ?string = req.session.user._id;
+  const userId: string = req.session.user._id;
 
   const { status, body } =
     await getTournamentRoute(tournamentId, userId, getTournament);

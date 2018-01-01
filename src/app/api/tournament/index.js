@@ -12,11 +12,8 @@ import validateTournament from '../../../validators/validate-tournament';
 import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 import type { Tournament } from '../../../models/tournament';
-
-type CreateTournamentResponse = {
-  validation: TournamentValidationSummary,
-  tournamentId: ?string,
-}
+import type { CreateTournamentResponse } from
+  '../../../routes/tournament/create-tournament';
 
 export const createTournament =
   async (
