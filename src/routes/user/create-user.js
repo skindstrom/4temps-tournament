@@ -2,8 +2,41 @@
 import type { $Request, $Response } from 'express';
 
 import validateUser from '../../validators/validate-user';
+import type { UserCreateValidationSummary } from
+  '../../validators/validate-user';
 import { createUser, getUsers } from '../../data/user';
+import type { UserModel } from '../../data/user';
 import type { UserWithPassword } from '../../models/user';
+
+export type RouteResult<T> = Promise<{
+  status: number,
+  body: T
+}>;
+
+export const createUserRoute =
+  async (user: UserWithPassword,
+    createUser: (user: UserWithPassword) => Promise<boolean>,
+    getUsers: () =>
+      Promise<Array<UserModel>>): RouteResult<UserCreateValidationSummary> => {
+    let status = 200;
+    const validation = await validateUser(user, getUsers);
+
+    if (validation.isValid) {
+      const success = await createUser(user);
+      if (!success) {
+        status = 500;
+      }
+    } else if (!validation.isEmailNotUsed) {
+      status = 409;
+    } else {
+      status = 400;
+    }
+
+    return {
+      status,
+      body: validation
+    };
+  };
 
 export default async (req: $Request, res: $Response) => {
   const user: UserWithPassword = {
@@ -13,19 +46,7 @@ export default async (req: $Request, res: $Response) => {
     password: req.body.password || ''
   };
 
-  const validation = await validateUser(user, getUsers);
-  if (validation.isValid) {
-    const success = await createUser(user);
-    if (success) {
-      res.status(200);
-    } else {
-      res.status(500);
-    }
-  } else if (!validation.isEmailNotUsed) {
-    res.status(409);
-  } else {
-    res.status(400);
-  }
-
-  res.json(validation);
+  const { status, body } = await createUserRoute(user, createUser, getUsers);
+  res.status(status);
+  res.json(body);
 };
