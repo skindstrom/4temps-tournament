@@ -2,16 +2,12 @@
 import type { $Request, $Response } from 'express';
 
 import validateUser from '../../validators/validate-user';
+import type { RouteResult } from '../util';
 import type { UserCreateValidationSummary } from
   '../../validators/validate-user';
 import { createUser, getUsers } from '../../data/user';
 import type { UserModel } from '../../data/user';
 import type { UserWithPassword } from '../../models/user';
-
-export type RouteResult<T> = Promise<{
-  status: number,
-  body: T
-}>;
 
 export const createUserRoute =
   async (user: UserWithPassword,
