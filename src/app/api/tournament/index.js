@@ -40,7 +40,7 @@ export const getTournamentsForUser =
   };
 
 export const getAllTournaments = (): ApiRequest<Array<Tournament>> => {
-  return apiGetRequest('/api/tournament/get-all',
+  return apiGetRequest('/api/tournament/get/all',
     (tours) => (tours.map(deserializeTournament)));
 };
 

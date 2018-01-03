@@ -15,8 +15,8 @@ const router = Router();
 router.post('/create', isUserAuthenticated, createTournament);
 router.post('/update', isUserAuthenticated, updateTournament);
 router.get('/get', isUserAuthenticated, getUserTournaments);
+router.get('/get/all', getAllTournament);
 router.get('/get/:tournamentId', isUserAuthenticated, getTournament);
 
-router.get('/get-all', getAllTournament);
 
 export default router;

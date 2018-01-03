@@ -37,7 +37,7 @@ class CreateTournamentContainer extends Component<Props, State> {
       this.setState({ isLoading: false, validation });
 
       if (validation.isValidTournament && tournamentId != null) {
-        this.props.history.push(`/edit-tournament/${tournamentId}`);
+        this.props.history.push(`/tournament/edit/${tournamentId}`);
       }
     } else {
       this.setState({ isLoading: false });

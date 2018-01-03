@@ -70,15 +70,15 @@ class NavigationBar extends Component<Props> {
           <DropdownMenu>
             <DropdownItem
               as={Link}
-              to='/create-tournament'
+              to='/tournament/create'
               text='Create tournament'
-              active={this.props.activeName === 'create-tournament'}
+              active={this.props.activeName === 'tournament/create'}
             />
             <DropdownItem
               as={Link}
-              to='/edit-tournament'
+              to='/tournament/edit'
               text='Edit tournaments'
-              active={this.props.activeName === 'edit-tournament'}
+              active={this.props.activeName === 'tournament/edit'}
             />
           </DropdownMenu>
         </Dropdown>

@@ -32,19 +32,19 @@ const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
       />
       <PrivateRoute
         isAuthenticated={isAuthenticated}
-        path='/create-tournament'
+        path='/tournament/create'
         exact
         component={CreateTournament}
       />
       <PrivateRoute
         isAuthenticated={isAuthenticated}
-        path='/edit-tournament'
+        path='/tournament/edit'
         exact
         component={EditTournamentList}
       />
       <PrivateRoute
         isAuthenticated={isAuthenticated}
-        path='/edit-tournament/:tournamentId'
+        path='/tournament/edit/:tournamentId'
         exact
         component={EditTournament}
       />
