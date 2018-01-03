@@ -45,7 +45,6 @@ const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
       <PrivateRoute
         isAuthenticated={isAuthenticated}
         path='/tournament/edit/:tournamentId'
-        exact
         component={EditTournament}
       />
       <Route component={FourOFour} />
