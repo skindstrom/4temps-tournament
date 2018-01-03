@@ -4,8 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 
 // Components
 import CreateTournament from '../CreateTournament';
-import ModifyTournamentList from '../ModifyTournamentList';
-import ModifyTournament from '../ModifyTournament';
+import EditTournamentList from '../EditTournamentList';
+import EditTournament from '../EditTournament';
 import SignUp from '../SignUp';
 import Home from '../Home';
 import Login from '../Login';
@@ -38,15 +38,15 @@ const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
       />
       <PrivateRoute
         isAuthenticated={isAuthenticated}
-        path='/modify-tournament'
+        path='/edit-tournament'
         exact
-        component={ModifyTournamentList}
+        component={EditTournamentList}
       />
       <PrivateRoute
         isAuthenticated={isAuthenticated}
-        path='/modify-tournament/:tournamentId'
+        path='/edit-tournament/:tournamentId'
         exact
-        component={ModifyTournament}
+        component={EditTournament}
       />
       <Route component={FourOFour} />
     </Switch>

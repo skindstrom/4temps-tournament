@@ -13,7 +13,7 @@ type State = {
 }
 
 
-class ModifyTournamentListContainer extends Component<Props, State> {
+class EditTournamentListContainer extends Component<Props, State> {
   state = {
     isLoading: true,
     tournaments: [],
@@ -47,4 +47,4 @@ class ModifyTournamentListContainer extends Component<Props, State> {
   }
 }
 
-export default ModifyTournamentListContainer;
+export default EditTournamentListContainer;

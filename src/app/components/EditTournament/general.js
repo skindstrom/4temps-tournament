@@ -17,7 +17,7 @@ type Props = {
   onChangeDate: (date: Moment) => void,
 }
 
-class ModifyGeneral extends Component<Props> {
+class EditGeneral extends Component<Props> {
 
   _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.props.onChangeName(event.target.value);
@@ -61,4 +61,4 @@ class ModifyGeneral extends Component<Props> {
   }
 }
 
-export default ModifyGeneral;
+export default EditGeneral;

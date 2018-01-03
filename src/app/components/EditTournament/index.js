@@ -30,7 +30,7 @@ const Rounds = () => 'Overview of rounds, set round criteria etc.';
 const Staff = () => 'Add and remove staff (judges, organizers, helpers)';
 const Participants = () => 'Add and remove participants';
 
-class ModifyTournament extends Component<Props, State> {
+class EditTournament extends Component<Props, State> {
   state = {
     activeTab: 'general',
 
@@ -153,4 +153,4 @@ class ModifyTournament extends Component<Props, State> {
   }
 }
 
-export default ModifyTournament;
+export default EditTournament;
