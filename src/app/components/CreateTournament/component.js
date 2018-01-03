@@ -32,7 +32,7 @@ class CreateTournament extends Component<Props, State> {
     this.setState({ name: event.target.value });
   };
 
-  _onChangDate = (date: ?Moment) => {
+  _onChangeDate = (date: ?Moment) => {
     if (date != null) {
       this.setState({ date });
     }
@@ -63,16 +63,13 @@ class CreateTournament extends Component<Props, State> {
           />
           {!this.props.validation.isValidName &&
             <Message error content='Invalid name' />}
-          <div className='field'>
-            <label htmlFor='date'>Date
-              <DatePicker
-                id='date'
-                allowSameDay
-                selected={this.state.date}
-                onChange={this._onChangDate}
-              />
-            </label>
-          </div>
+          <FormInput
+            label='Date'
+            control={DatePicker}
+            allowSameDay
+            selected={this.state.date}
+            onChange={this._onChangeDate}
+          />
           {!this.props.validation.isValidDate &&
             <Message error content='Invalid date' />}
           <FormGroup inline>
