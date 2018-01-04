@@ -5,6 +5,7 @@ import { Container, Menu, MenuItem } from 'semantic-ui-react';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
 
 import EditTournamentGeneral from './EditTournamentGeneral';
+import EditTournamentParticipants from './EditTournamentParticipants';
 
 type TabName = 'general' | 'rounds' | 'staff' | 'participants';
 type Props = {
@@ -18,7 +19,6 @@ type State = {
 
 const Rounds = () => 'Overview of rounds, set round criteria etc.';
 const Staff = () => 'Add and remove staff (judges, organizers, helpers)';
-const Participants = () => 'Add and remove participants';
 
 const getActiveTab = (pathname: string): TabName => {
   const splits = pathname.split('/');
@@ -71,7 +71,7 @@ class EditTournament extends Component<Props, State> {
 
   _renderRounds = () => <Rounds />
   _renderStaff = () => <Staff />
-  _renderParticipants = () => <Participants />
+  _renderParticipants = () => <EditTournamentParticipants />
 
   components = {
     'general': this._renderGeneral,
