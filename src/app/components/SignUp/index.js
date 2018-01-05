@@ -37,7 +37,7 @@ class SignUpContainer extends Component<Props, State> {
 
   _onSubmit = async (user: UserWithPassword) => {
     this.setState({ isLoading: true });
-    const result = await createUser(user);
+    const { result } = await createUser(user);
     if (result != null) {
       this.setState({ validation: result, isLoading: false });
 

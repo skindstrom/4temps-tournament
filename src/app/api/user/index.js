@@ -17,7 +17,7 @@ export const createUser =
   async (user: UserWithPassword): ApiRequest<UserCreateValidationSummary> => {
     let result = await validateUser(user);
     if (!result.isValid) {
-      return result;
+      return { success: false, result };
     }
     return apiPostRequest('/api/user/create', user);
   };
@@ -27,7 +27,7 @@ export const loginUser =
     credentials: UserCredentials): ApiRequest<UserLoginValidationSummary> => {
     let result = await validateUserLogin(credentials);
     if (!result.isValid) {
-      return result;
+      return { success: false, result };
     }
 
     return apiPostRequest('/api/user/login', credentials);

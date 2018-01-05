@@ -43,7 +43,7 @@ class EditTournament extends Component<Props, State> {
   }
 
   _getTournament = async (tournamentId: string) => {
-    const tournament = await getTournament(tournamentId);
+    const tournament = (await getTournament(tournamentId)).result;
     if (tournament != null) {
       this.setState({ isLoading: false, tournament });
     }
@@ -62,7 +62,7 @@ class EditTournament extends Component<Props, State> {
 
     const { tournamentId } = this.props;
     if (tournamentId != null) {
-      const result =
+      const { result } =
         await updateTournament(tournamentId, this.state.tournament);
 
       let updatedState = { ...this.state };

@@ -33,7 +33,7 @@ class LoginContainer extends PureComponent<Props, State> {
 
   _onSubmit = async (credentials: UserCredentials) => {
     this.setState({ isLoading: true });
-    const result = await loginUser(credentials);
+    const { result } = await loginUser(credentials);
     if (result != null) {
       const { isValid, isValidEmail, isValidPassword, doesUserExist } = result;
       this.setState({

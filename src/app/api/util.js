@@ -1,6 +1,7 @@
 // @flow
 
-export type ApiRequest<T> = Promise<?T>;
+export type ApiResponse<T> = { success: boolean, result: ?T };
+export type ApiRequest<T> = Promise<ApiResponse<T>>;
 
 async function parseResponse<T>(response: Response): ApiRequest<T> {
   let result: ?T = null;
@@ -10,12 +11,12 @@ async function parseResponse<T>(response: Response): ApiRequest<T> {
     result = await response.json();
   }
 
-  return result;
+  return { success: response.status === 200, result };
 }
 
 export async function
 apiGetRequest<T>(url: string, deserialize: ?(T) => T): ApiRequest<T> {
-  const result = await parseResponse(await fetch(url,
+  const response = await parseResponse(await fetch(url,
     {
       headers: {
         'Accept': 'application/json',
@@ -24,16 +25,16 @@ apiGetRequest<T>(url: string, deserialize: ?(T) => T): ApiRequest<T> {
       credentials: 'include'
     }));
 
-  if(result != null && deserialize != null) {
-    return deserialize(result);
+  if(response.result != null && deserialize != null) {
+    return { success: response.success, result: deserialize(response.result) };
   }
-  return result;
+  return response;
 }
 
 export async function
 apiPostRequest<Body, T>(url: string,
   body: ?Body, deserialize: ?(T) => T): ApiRequest<T> {
-  const result = await parseResponse(await fetch(url,
+  const response = await parseResponse(await fetch(url,
     {
       headers: {
         'Accept': 'application/json',
@@ -44,8 +45,8 @@ apiPostRequest<Body, T>(url: string,
       credentials: 'include'
     }));
 
-  if(result != null && deserialize != null) {
-    return deserialize(result);
+  if(response.result != null && deserialize != null) {
+    return { success: response.success, result: deserialize(response.result) };
   }
-  return result;
+  return response;
 }

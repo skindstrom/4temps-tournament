@@ -21,7 +21,10 @@ export const createTournament =
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       return {
-        validation, tournamentId: null
+        success: false,
+        result: {
+          validation, tournamentId: null
+        }
       };
     }
 
@@ -56,7 +59,10 @@ export const updateTournament =
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       return {
-        validation, tournament: null
+        success: false,
+        result: {
+          validation, tournament: null
+        }
       };
     }
 
