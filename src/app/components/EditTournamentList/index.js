@@ -31,10 +31,10 @@ class EditTournamentListContainer extends Component<Props, State> {
   isFetchedCanceled = true;
 
   _getTournaments = async () => {
-    const response = await getTournamentsForUser();
-    if (response != null) {
+    const { result } = await getTournamentsForUser();
+    if (result != null) {
       if (!this.isFetchedCanceled) {
-        this.setState({ isLoading: false, tournaments: response });
+        this.setState({ isLoading: false, tournaments: result });
       }
     } else {
       // TODO: do something else

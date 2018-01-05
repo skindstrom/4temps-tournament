@@ -35,7 +35,7 @@ const schema = new mongoose.Schema({
 
 const Model = mongoose.model('user', schema);
 
-const createUser = async (user: UserWithPassword): Promise<boolean> => {
+export const createUser = async (user: UserWithPassword): Promise<boolean> => {
   user.password = ((await bcrypt.hash(user.password, SALT_ROUNDS)): string);
   const dbUser = new Model(user);
   try {
@@ -46,11 +46,11 @@ const createUser = async (user: UserWithPassword): Promise<boolean> => {
   }
 };
 
-const getUsers = async (): Promise<Array<UserModel>> => {
+export const getUsers = async (): Promise<Array<UserModel>> => {
   return await Model.find();
 };
 
-const getUserFromId = async (userId: ObjectId): Promise<?UserModel> => {
+export const getUserFromId = async (userId: ObjectId): Promise<?UserModel> => {
   try {
     return await Model.findOne({ _id: userId });
   } catch (e) {
@@ -58,7 +58,7 @@ const getUserFromId = async (userId: ObjectId): Promise<?UserModel> => {
   }
 };
 
-const getUserFromCredentials =
+export const getUserFromCredentials =
   async (credentials: UserCredentials): Promise<?UserModel> => {
     const user = await Model.findOne({ email: credentials.email });
     if (user != null &&
@@ -67,10 +67,3 @@ const getUserFromCredentials =
     }
     return null;
   };
-
-module.exports = {
-  createUser,
-  getUsers,
-  getUserFromId,
-  getUserFromCredentials
-};

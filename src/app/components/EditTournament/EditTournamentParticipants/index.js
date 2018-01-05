@@ -1,19 +1,32 @@
 // @flow
 import React, { Component } from 'react';
-import { Form, FormButton, FormRadio, FormGroup, FormInput } from
+import { Form, FormButton, FormRadio, FormGroup, FormInput, Message } from
   'semantic-ui-react';
+
+import { createParticipant } from '../../../api/participant';
 
 type Role = 'none' | 'leader' | 'follower' | 'leaderAndFollower';
 
+type Props = {
+  tournamentId: string
+}
 type State = {
   name: string,
   role: Role,
+
+  isValidParticipant: boolean,
+  isValidName: boolean,
+  isValidRole: boolean
 }
 
-class AddParticipants extends Component<{}, State> {
+class AddParticipants extends Component<Props, State> {
   state = {
     name: '',
-    role: 'none'
+    role: 'none',
+
+    isValidParticipant: true,
+    isValidName: true,
+    isValidRole: true
   }
 
   _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) =>
@@ -25,15 +38,27 @@ class AddParticipants extends Component<{}, State> {
       { value }: { value: Role }) =>
       this.setState({ role: value });
 
+  _onSubmit = async () => {
+    const { success, result } = await createParticipant(this.props.tournamentId,
+      { name: this.state.name, role: this.state.role });
+    if (success) {
+      this.setState({ isValidParticipant: true });
+    } else if (result != null) {
+      this.setState({ ...this.state, ...result });
+    }
+  }
+
 
   render() {
+    const { isValidParticipant, isValidName, isValidRole } = this.state;
     return (
-      <Form>
+      <Form error={!isValidParticipant}>
         <FormInput
           label='Name'
           value={this.state.name}
           onChange={this._onChangeName}
         />
+        {!isValidName &&  <Message error content='Invalid name' />}
         <FormGroup id='role-radio' inline>
           <label htmlFor='role-radio'>
             Role
@@ -57,7 +82,8 @@ class AddParticipants extends Component<{}, State> {
             checked={this.state.role === 'leaderAndFollower'}
           />
         </FormGroup>
-        <FormButton type='submit' onClick={() => alert('Submitted!')}>
+        {!isValidRole &&  <Message error content='Must select a role' />}
+        <FormButton type='submit' onClick={this._onSubmit}>
           Add participant
         </FormButton>
       </Form>);

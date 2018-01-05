@@ -71,7 +71,10 @@ class EditTournament extends Component<Props, State> {
 
   _renderRounds = () => <Rounds />
   _renderStaff = () => <Staff />
-  _renderParticipants = () => <EditTournamentParticipants />
+  _renderParticipants = () => (
+    <EditTournamentParticipants
+      tournamentId={this.props.match.params.tournamentId || ''}
+    />);
 
   components = {
     'general': this._renderGeneral,

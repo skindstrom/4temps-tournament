@@ -58,6 +58,11 @@
     "test": {
       "presets": [
         "env"
+      ],
+      "plugins": [
+        [
+          "transform-class-properties"
+        ]
       ]
     }
   }
