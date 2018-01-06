@@ -43,9 +43,11 @@ class EditTournament extends Component<Props, State> {
   }
 
   _getTournament = async (tournamentId: string) => {
-    const tournament = (await getTournament(tournamentId)).result;
-    if (tournament != null) {
+    try {
+      const tournament = await getTournament(tournamentId);
       this.setState({ isLoading: false, tournament });
+    } catch (e) {
+      alert('Could not fetch tournament');
     }
   }
 
@@ -62,21 +64,20 @@ class EditTournament extends Component<Props, State> {
 
     const { tournamentId } = this.props;
     if (tournamentId != null) {
-      const { result } =
-        await updateTournament(tournamentId, this.state.tournament);
+      try {
+        const { tournament, validation } =
+          await updateTournament(tournamentId, this.state.tournament);
 
-      let updatedState = { ...this.state };
-      updatedState.isLoading = false;
-
-      if (result != null) {
-        updatedState.isValidName = result.validation.isValidName;
-        updatedState.isValidDate = result.validation.isValidDate;
-
-        if (result.tournament != null) {
-          updatedState.tournament = result.tournament;
+        if (tournament != null) {
+          this.setState({
+            isLoading: false,
+            isValidName: validation.isValidName,
+            isValidDate: validation.isValidDate
+          });
         }
+      } catch (validation) {
+        this.setState({ isLoading: false, ...validation });
       }
-      this.setState(updatedState);
     }
   }
 

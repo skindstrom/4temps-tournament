@@ -20,22 +20,16 @@ class Home extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.isFetchedCanceled = false;
     this._getTournaments();
   }
 
-  componentWillUnmount() {
-    this.isFetchedCanceled = true;
-  }
-
-  isFetchedCanceled = true;
-
   _getTournaments = async () => {
     this.setState({ isLoading: true });
-    const { result } = await getAllTournaments();
-    const tournaments = result != null ? result : [];
-    if (!this.isFetchedCanceled) {
+    try {
+      const tournaments = await getAllTournaments();
       this.setState({ isLoading: false, tournaments });
+    } catch (e) {
+      this.setState({ isLoading: false, tournaments: [] });
     }
   }
 

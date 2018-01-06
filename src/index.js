@@ -79,6 +79,7 @@ function handleRender(req: $Request, res: $Response) {
   // $FlowFixMe: Add user to req type
   const isAuthenticated = req.session.user != null;
 
+  // $FlowFixMe: A subset is ok
   const store = createReduxStore({ isAuthenticated });
 
   const html = renderToString(

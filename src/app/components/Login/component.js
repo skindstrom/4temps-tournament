@@ -12,7 +12,7 @@ type Props = {
   isValidInput: boolean,
   isValidEmail: boolean,
   isValidPassword: boolean,
-  wasCorrectCredentials: boolean,
+  doesUserExist: boolean,
   isLoading: boolean
 }
 
@@ -69,7 +69,7 @@ class Login extends PureComponent<Props, State> {
           >
             Submit
           </Button>
-          {!this.props.wasCorrectCredentials &&
+          {!this.props.doesUserExist &&
             <Message error content='Invalid email or password' />}
         </Form>
       </div>

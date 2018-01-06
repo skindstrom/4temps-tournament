@@ -1,18 +1,23 @@
 // @flow
 
-async function parseResponse<T>(response: Response): ApiRequest<T> {
-  let result: ?T = null;
-
+async function parseResponse<T>(response: Response): Promise<T> {
+  const { status } = response;
   const contentType = response.headers.get('content-type');
-  if (contentType != null && contentType.indexOf("application/json") !== -1) {
-    result = await response.json();
+  const isCorrectContentType =
+    contentType != null && contentType.indexOf("application/json") !== -1;
+
+  if (status !== 200 && isCorrectContentType) {
+    throw await response.json();
+  } else if (isCorrectContentType) {
+    return await response.json();
   }
 
-  return { success: response.status === 200, result };
+  // $FlowFixMe: There is no body, so it's okay
+  return;
 }
 
 export async function
-apiGetRequest<T>(url: string, deserialize: ?(T) => T): ApiRequest<T> {
+apiGetRequest<T>(url: string, deserialize: ?(T) => T): Promise<T> {
   const response = await parseResponse(await fetch(url,
     {
       headers: {
@@ -22,15 +27,15 @@ apiGetRequest<T>(url: string, deserialize: ?(T) => T): ApiRequest<T> {
       credentials: 'include'
     }));
 
-  if(response.result != null && deserialize != null) {
-    return { success: response.success, result: deserialize(response.result) };
+  if(response != null && deserialize != null) {
+    return deserialize(response);
   }
   return response;
 }
 
 export async function
 apiPostRequest<Body, T>(url: string,
-  body: ?Body, deserialize: ?(T) => T): ApiRequest<T> {
+  body: ?Body, deserialize: ?(T) => T): Promise<T> {
   const response = await parseResponse(await fetch(url,
     {
       headers: {
@@ -42,8 +47,8 @@ apiPostRequest<Body, T>(url: string,
       credentials: 'include'
     }));
 
-  if(response.result != null && deserialize != null) {
-    return { success: response.success, result: deserialize(response.result) };
+  if(response != null && deserialize != null) {
+    return deserialize(response);
   }
   return response;
 }

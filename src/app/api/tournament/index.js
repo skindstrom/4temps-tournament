@@ -16,15 +16,10 @@ import type { UpdateTournamentResponse } from
 
 export const createTournament =
   async (
-    tournament: Tournament): ApiRequest<CreateTournamentResponse> => {
+    tournament: Tournament): Promise<CreateTournamentResponse> => {
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
-      return {
-        success: false,
-        result: {
-          validation, tournamentId: null
-        }
-      };
+      throw validation;
     }
 
     return apiPostRequest('/api/tournament/create', tournament);
@@ -36,33 +31,28 @@ const deserializeTournament = (tour: Tournament): Tournament => {
 };
 
 export const getTournamentsForUser =
-  (): ApiRequest<Array<Tournament>> => {
+  (): Promise<Array<Tournament>> => {
     return apiGetRequest('/api/tournament/get',
       (tours) => (tours.map(deserializeTournament)));
   };
 
-export const getAllTournaments = (): ApiRequest<Array<Tournament>> => {
+export const getAllTournaments = (): Promise<Array<Tournament>> => {
   return apiGetRequest('/api/tournament/get/all',
     (tours) => (tours.map(deserializeTournament)));
 };
 
 export const getTournament =
-  async (tournamentId: string): ApiRequest<Tournament> => {
+  async (tournamentId: string): Promise<Tournament> => {
     return apiGetRequest(`/api/tournament/get/${tournamentId}`,
       deserializeTournament);
   };
 
 export const updateTournament =
   async (tournamentId: string,
-    tournament: Tournament): ApiRequest<UpdateTournamentResponse> => {
+    tournament: Tournament): Promise<UpdateTournamentResponse> => {
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
-      return {
-        success: false,
-        result: {
-          validation, tournament: null
-        }
-      };
+      throw validation;
     }
 
     return apiPostRequest('/api/tournament/update',

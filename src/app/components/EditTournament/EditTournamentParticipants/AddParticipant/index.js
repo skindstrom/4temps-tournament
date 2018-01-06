@@ -30,15 +30,25 @@ class AddParticipantContainer extends Component<Props, State> {
   }
   _onSubmit = async (participant: Participant) => {
     this.setState({ isLoading: true });
-    const { success, result } =
-      await createParticipant(this.props.tournamentId, participant);
 
-    this.setState({
-      isLoading: false,
-      addedSuccessfully: success,
-      isValidParticipant: success,
-      ...result
-    });
+    try {
+      const validation =
+        await createParticipant(this.props.tournamentId, participant);
+
+      this.setState({
+        isLoading: false,
+        addedSuccessfully: true,
+        isValidParticipant: true,
+        ...validation
+      });
+    } catch (validation) {
+      this.setState({
+        isLoading: false,
+        addedSuccessfully: false,
+        isValidParticipant: false,
+        ...validation
+      });
+    }
   }
 
   render() {

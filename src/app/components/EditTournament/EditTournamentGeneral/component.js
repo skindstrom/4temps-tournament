@@ -21,11 +21,6 @@ type Props = {
 
 class EditTournamentGeneral extends Component<Props> {
 
-  shouldComponentUpdate(nextProps: Props) {
-    const { name, date } = this.props;
-    return name !== nextProps.name || date !== nextProps.date;
-  }
-
   _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) => {
     this.props.onChangeName(event.target.value);
   }

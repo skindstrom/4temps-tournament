@@ -29,16 +29,23 @@ class ListParticipants extends Component<Props, State> {
 
   async _getParticipants() {
     this.setState({ isLoading: true });
-    const { success, result } = await getParticipants(this.props.tournamentId);
-    this.setState({
-      isLoading: false,
-      participants: result != null && success ? result : []
-    });
+    try {
+      const participants = await getParticipants(this.props.tournamentId);
+      this.setState({
+        isLoading: false,
+        participants
+      });
+    } catch (e) {
+      this.setState({
+        isLoading: false,
+        participants: []
+      });
+    }
   }
 
-  _renderItem = ({ name, role }: Participant) => {
+  _renderItem = ({ name, role }: Participant, index: number) => {
     return (
-      <TableRow key={name}>
+      <TableRow key={index}>
         <TableCell>{name}</TableCell>
         <TableCell>{this._roleToString(role)}</TableCell>
       </TableRow>

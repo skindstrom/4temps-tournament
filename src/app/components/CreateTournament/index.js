@@ -29,20 +29,13 @@ class CreateTournamentContainer extends Component<Props, State> {
 
   _onSubmit = async (tournament: Tournament) => {
     this.setState({ isLoading: true });
-    const { result } = await createTournament(tournament);
-
-
-    if (result != null) {
-      const { validation, tournamentId } = result;
-      this.setState({ isLoading: false, validation });
-
-      if (validation.isValidTournament && tournamentId != null) {
+    try {
+      const { tournamentId } = await createTournament(tournament);
+      if (tournamentId != null) {
         this.props.history.push(`/tournament/edit/${tournamentId}`);
       }
-    } else {
-      this.setState({ isLoading: false });
-      // TODO: Actually act in accordance
-      alert('Something went wrong');
+    } catch (validation) {
+      this.setState({ isLoading: false, validation });
     }
   };
 

@@ -13,25 +13,25 @@ import type { UserCreateValidationSummary } from
   '../../../validators/validate-user';
 
 export const createUser =
-  async (user: UserWithPassword): ApiRequest<UserCreateValidationSummary> => {
+  async (user: UserWithPassword): Promise<UserCreateValidationSummary> => {
     let result = await validateUser(user);
     if (!result.isValid) {
-      return { success: false, result };
+      throw result;
     }
     return apiPostRequest('/api/user/create', user);
   };
 
 export const loginUser =
   async (
-    credentials: UserCredentials): ApiRequest<UserLoginValidationSummary> => {
+    credentials: UserCredentials): Promise<UserLoginValidationSummary> => {
     let result = await validateUserLogin(credentials);
     if (!result.isValid) {
-      return { success: false, result };
+      throw result;
     }
 
     return apiPostRequest('/api/user/login', credentials);
   };
 
-export const logoutUser = async (): ApiRequest<boolean> => {
+export const logoutUser = async (): Promise<boolean> => {
   return apiPostRequest('/api/user/logout');
 };

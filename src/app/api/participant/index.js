@@ -9,10 +9,10 @@ import type { ParticipantValidationSummary } from
 
 export const createParticipant =
   async (tournamentId: string,
-    participant: Participant): ApiRequest<ParticipantValidationSummary> => {
+    participant: Participant): Promise<ParticipantValidationSummary> => {
     const validation = validateParticipant(participant);
     if (!validation.isValidParticipant) {
-      return { success: false, result: validation };
+      throw validation;
     }
 
     return apiPostRequest('/api/participant/create',
@@ -20,6 +20,6 @@ export const createParticipant =
   };
 
 export const getParticipants =
-  async (tournamentId: string): ApiRequest<Array<Participant>> => {
+  async (tournamentId: string): Promise<Array<Participant>> => {
     return apiGetRequest(`/api/participant/get/tournament/${tournamentId}`);
   };
