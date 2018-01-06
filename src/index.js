@@ -54,6 +54,9 @@ app.use('/public', Express.static(path.join(__dirname, '../public')));
 app.use('/public', Express.static(path.join(__dirname, '../public-build')));
 
 app.use('/api', ApiRoute);
+app.use(/\/api\/.*/, (req: $Request, res: $Response) => {
+  res.sendStatus(404);
+});
 app.use(handleRender);
 
 // TODO: use environment variable for certs

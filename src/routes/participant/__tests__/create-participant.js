@@ -39,10 +39,13 @@ const getTournament =
   });
 
 class Repository implements ParticipantRepository {
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-unused-vars
   createForTournament(tournamentId: string, participant: Participant) {
     return new Promise(resolve => resolve());
   }
+
+  // eslint-disable-next-line no-unused-vars
+  async getForTournament(tournamentId: string) { return []; }
 }
 
 test('Valid participant and tournament has status 200', async () => {

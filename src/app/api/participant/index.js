@@ -1,6 +1,6 @@
 // @flow
 
-import { apiPostRequest } from '../util';
+import { apiPostRequest, apiGetRequest } from '../util';
 import type { ApiRequest } from '../util';
 
 import type { Participant } from '../../../models/participant';
@@ -20,4 +20,7 @@ export const createParticipant =
       { tournamentId, participant });
   };
 
-export default createParticipant;
+export const getParticipants =
+  async (tournamentId: string): ApiRequest<Array<Participant>> => {
+    return apiGetRequest(`/api/participant/get/tournament/${tournamentId}`);
+  };

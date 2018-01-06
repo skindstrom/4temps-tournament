@@ -14,7 +14,8 @@ export type ParticipantDbModel = {
 const schema = new mongoose.Schema({
   tournamentId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    index: true
   },
   name: {
     type: String,
@@ -31,16 +32,22 @@ const Model = mongoose.model('participant', schema);
 export interface ParticipantRepository {
   createForTournament(tournamentId: string,
     participant: Participant): Promise<void>;
+  getForTournament(tournamentId: string): Promise<Array<ParticipantDbModel>>;
 }
 
 class ParticipantRepositoryImpl implements ParticipantRepository {
-  async createForTournament(tournamentId: string,
+  createForTournament(tournamentId: string,
     participant: Participant) {
-    await Model.create({
+    return Model.create({
       tournamentId: new mongoose.Types.ObjectId(tournamentId),
       name: participant.name,
       role: participant.role
     });
+  }
+
+  getForTournament(
+    tournamentId: string): Promise<Array<ParticipantDbModel>> {
+    return Model.find({ tournamentId });
   }
 }
 
