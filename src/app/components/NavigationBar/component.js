@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   Button, Dropdown, DropdownMenu, DropdownItem,
   Menu, MenuItem, MenuMenu
@@ -12,12 +12,7 @@ type Props = {
   onClickLogout: () => Promise<void>,
 }
 
-class NavigationBar extends Component<Props> {
-
-  shouldComponentUpdate(nextProps: Props) {
-    return nextProps.activeName != this.props.activeName
-      || nextProps.isAuthenticated != this.props.isAuthenticated;
-  }
+class NavigationBar extends PureComponent<Props> {
 
   _renderNotAuthenticated = () => {
     return (
@@ -53,6 +48,7 @@ class NavigationBar extends Component<Props> {
   };
 
   render() {
+    const { activeName } = this.props;
     return (
       <Menu>
         <MenuItem as={Link} to='/' name='header' header>
@@ -62,7 +58,7 @@ class NavigationBar extends Component<Props> {
           name='home'
           as={Link}
           to='/'
-          active={this.props.activeName === 'home'}
+          active={activeName === 'home'}
         >
           Home
         </MenuItem>
@@ -72,13 +68,13 @@ class NavigationBar extends Component<Props> {
               as={Link}
               to='/tournament/create'
               text='Create tournament'
-              active={this.props.activeName === 'tournament/create'}
+              active={activeName === 'tournament/create'}
             />
             <DropdownItem
               as={Link}
               to='/tournament/edit'
               text='Edit tournaments'
-              active={this.props.activeName === 'tournament/edit'}
+              active={activeName === 'tournament/edit'}
             />
           </DropdownMenu>
         </Dropdown>

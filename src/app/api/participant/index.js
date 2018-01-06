@@ -1,7 +1,6 @@
 // @flow
 
 import { apiPostRequest, apiGetRequest } from '../util';
-import type { ApiRequest } from '../util';
 
 import type { Participant } from '../../../models/participant';
 import { validateParticipant } from '../../../validators/validate-participant';

@@ -9,7 +9,6 @@ import { loginUser } from '../../api/user';
 import type { UserCredentials } from '../../../models/user';
 
 type Props = {
-  updatedAuthenticationState: () => void,
   location: Location,
   history: RouterHistory
 }
@@ -46,7 +45,6 @@ class LoginContainer extends PureComponent<Props, State> {
 
       if (isValid) {
         window.isAuthenticated = true;
-        this.props.updatedAuthenticationState();
         const referer = this.props.location.search.replace(/\?referer=/, '');
         this.props.history.push(referer);
       }

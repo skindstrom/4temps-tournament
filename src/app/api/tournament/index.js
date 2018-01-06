@@ -6,7 +6,6 @@ import {
   apiGetRequest,
   apiPostRequest,
 } from '../util';
-import type { ApiRequest } from '../util';
 
 import validateTournament from '../../../validators/validate-tournament';
 import type { Tournament } from '../../../models/tournament';

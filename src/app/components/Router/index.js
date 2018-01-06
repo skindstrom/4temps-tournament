@@ -12,38 +12,26 @@ import Login from '../Login';
 import FourOFour from '../FourOFour';
 import PrivateRoute from './private-route';
 
-type Props = {
-  isAuthenticated: boolean,
-  updatedAuthenticationState: () => void
-}
-
-const Router = ({ isAuthenticated, updatedAuthenticationState }: Props) => {
+const Router = () => {
   return (
     <Switch>
       <Route path='/(|home)' exact component={Home} />
       <Route path='/signup' component={SignUp} />
       <Route
         path='/login'
-        render={(props) =>
-          (<Login
-            {...props}
-            updatedAuthenticationState={updatedAuthenticationState}
-          />)}
+        component={Login}
       />
       <PrivateRoute
-        isAuthenticated={isAuthenticated}
         path='/tournament/create'
         exact
         component={CreateTournament}
       />
       <PrivateRoute
-        isAuthenticated={isAuthenticated}
         path='/tournament/edit'
         exact
         component={EditTournamentList}
       />
       <PrivateRoute
-        isAuthenticated={isAuthenticated}
         path='/tournament/edit/:tournamentId'
         component={EditTournament}
       />

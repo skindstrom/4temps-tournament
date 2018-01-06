@@ -2,7 +2,7 @@
 
 /* eslint-disable max-len */
 
-export default (html: string, isAuthenticated: boolean) => {
+export default (html: string, preloadedState: ReduxState) => {
   return `
     <!doctype html>
     <html>
@@ -15,7 +15,7 @@ export default (html: string, isAuthenticated: boolean) => {
       <body>
         <div id="root">${html}</div>
         <script>
-          window.isAuthenticated = ${String(isAuthenticated)}
+          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
         </script>
         <script src="/public/bundle.js"></script>
       </body>

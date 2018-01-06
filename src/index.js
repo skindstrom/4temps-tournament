@@ -15,11 +15,15 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import bodyParser from 'body-parser';
 
+import { Provider } from 'react-redux';
+
 import ApiRoute from './routes';
 import getDbConnection from './data/setup';
 
 import renderHtmlTemplate from './ssr-template';
 import App from './app/components/App';
+
+import createReduxStore from './app/redux-store';
 
 const app = Express();
 
@@ -73,15 +77,19 @@ function handleRender(req: $Request, res: $Response) {
   const context = {};
 
   // $FlowFixMe: Add user to req type
-  const isAuthenticated = () => req.session.user != null;
+  const isAuthenticated = req.session.user != null;
+
+  const store = createReduxStore({ isAuthenticated });
 
   const html = renderToString(
-    <StaticRouter
-      location={req.url}
-      context={context}
-    >
-      <App isAuthenticated={isAuthenticated} />
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter
+        location={req.url}
+        context={context}
+      >
+        <App />
+      </StaticRouter>
+    </Provider>
   );
 
   // redirects
@@ -90,7 +98,7 @@ function handleRender(req: $Request, res: $Response) {
       Location: context.url
     });
   } else {
-    res.write(renderHtmlTemplate(html, isAuthenticated()));
+    res.write(renderHtmlTemplate(html, store.getState()));
   }
   res.end();
 }

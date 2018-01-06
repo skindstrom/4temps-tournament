@@ -3,19 +3,19 @@
 import React from 'react';
 import type { ComponentType } from 'react';
 import { withRouter, Route } from 'react-router-dom';
-import type { Location } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import SignUpOrLogin from '../SignUpOrLogin';
 
 type Props = {
-  location: Location,
+  referer: string,
   path: string,
   component: ComponentType<*>,
   isAuthenticated: boolean,
 }
 
 const PrivateRoute =
-  ({ component: Component, isAuthenticated, ...rest }: Props) => {
+  ({ component: Component, isAuthenticated, referer, ...rest }: Props) => {
     return (
       <Route
         {...rest}
@@ -26,11 +26,23 @@ const PrivateRoute =
               <SignUpOrLogin
                 {...props}
                 header='Please log in or sign up'
-                referer={rest.location.pathname}
+                referer={referer}
               />)}
       />
     );
   };
 
+function mapStateToProps(state: ReduxState,
+  { location }: { location: Location }) {
+  return {
+    isAuthenticated: state.isAuthenticated,
+    referer: location.pathname
+  };
+}
 
-export default withRouter(PrivateRoute);
+const PrivateRouteContainer =
+  // $FlowFixMe
+  withRouter(connect(mapStateToProps)(PrivateRoute));
+
+
+export default PrivateRouteContainer;

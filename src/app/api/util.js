@@ -1,8 +1,5 @@
 // @flow
 
-export type ApiResponse<T> = { success: boolean, result: ?T };
-export type ApiRequest<T> = Promise<ApiResponse<T>>;
-
 async function parseResponse<T>(response: Response): ApiRequest<T> {
   let result: ?T = null;
 

@@ -2,7 +2,6 @@
 import {
   apiPostRequest,
 } from '../util';
-import type { ApiRequest } from '../util';
 
 import validateUser from '../../../validators/validate-user';
 import validateUserLogin from '../../../validators/validate-user-login';

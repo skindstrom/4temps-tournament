@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { Location, RouterHistory } from 'react-router-dom';
 import { logoutUser } from '../../api/user';
@@ -8,61 +8,41 @@ import NavigationBar from './component';
 
 type Props = {
   location: Location,
-  history: RouterHistory,
-  isAuthenticated: boolean,
-  updatedAuthenticationState: () => void
+  history: RouterHistory
+}
+
+function getActivePath(location: string): string {
+  const matches = location.match(/\/(.+)\/?\??.*/);
+  let activeName = 'home';
+  if (matches) {
+    activeName = matches[1];
+  }
+  return activeName;
 }
 
 type State = {
-  activeName: string
+  isAuthenticated: boolean
 }
 
-class NavigationBarContainer extends Component<Props, State> {
-  static _getActivePath = (location: string): string => {
-    const matches = location.match(/\/(.+)\/?\??.*/);
-    let activeName = 'home';
-    if (matches) {
-      activeName = matches[1];
-    }
-    return activeName;
-  }
-
-  state = {
-    activeName:
-      NavigationBarContainer._getActivePath(this.props.location.pathname)
+function mapStateToProps({ isAuthenticated }: State, { location }: Props) {
+  return {
+    activePath: getActivePath(location.pathname),
+    isAuthenticated
   };
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      activeName:
-        NavigationBarContainer._getActivePath(nextProps.location.pathname)
-    });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextState.activeName != this.state.activeName
-      || nextProps.isAuthenticated != this.props.isAuthenticated;
-  }
-
-  _logout = async () => {
-    if (await logoutUser()) {
-      window.isAuthenticated = false;
-      this.props.updatedAuthenticationState();
-      this.props.history.push('/');
-    }
-  }
-
-  render() {
-    return (
-      <NavigationBar
-        activeName={this.state.activeName}
-        isAuthenticated={this.props.isAuthenticated}
-        onClickLogout={this._logout}
-      />
-    );
-  }
 }
 
-const NavigationBarWithRouter = withRouter(NavigationBarContainer);
+function mapDispatchToProps(dispatch: ReduxDispatch,
+  { history }: { history: RouterHistory }) {
+  return {
+    onClickLogout: () =>
+      dispatch(({
+        type: 'LOGOUT_USER',
+        promise: logoutUser()
+      })).then(() => history.push('/'))
+  };
+}
 
-export default NavigationBarWithRouter;
+const NavigationBarContainer =
+  withRouter(connect(mapStateToProps, mapDispatchToProps)(NavigationBar));
+
+export default NavigationBarContainer;
