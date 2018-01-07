@@ -9,20 +9,19 @@ import {
 
 import validateTournament from '../../../validators/validate-tournament';
 import type { Tournament } from '../../../models/tournament';
-import type { CreateTournamentResponse } from
-  '../../../routes/tournament/create-tournament';
 import type { UpdateTournamentResponse } from
   '../../../routes/tournament/update-tournament';
 
 export const createTournament =
   async (
-    tournament: Tournament): Promise<CreateTournamentResponse> => {
+    tournament: Tournament): Promise<Tournament> => {
     let validation = validateTournament(tournament);
     if (!validation.isValidTournament) {
       throw validation;
     }
 
-    return apiPostRequest('/api/tournament/create', tournament);
+    return apiPostRequest('/api/tournament/create', tournament,
+      deserializeTournament);
   };
 
 const deserializeTournament = (tour: Tournament): Tournament => {

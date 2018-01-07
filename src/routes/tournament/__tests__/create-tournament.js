@@ -5,23 +5,24 @@ import { Types } from 'mongoose';
 import { createTournamentRoute } from '../create-tournament';
 import type { Tournament } from '../../../models/tournament';
 
-test('Valid tournament returns 200 and the new tournament id', async () => {
+test('Valid tournament returns 200 and the new tournamentid', async () => {
   const userId = '1';
+
+  const tournamentId = new Types.ObjectId();
   const tournament: Tournament = {
-    _id: '',
+    _id: tournamentId.toString(),
     name: 'best',
     date: moment(),
     type: 'classic'
   };
-  const tournamentId = new Types.ObjectId();
 
   const createTournament = () => new Promise(resolve => resolve(tournamentId));
 
   expect(await createTournamentRoute(userId, tournament, createTournament))
-    .toMatchObject({
+    .toEqual({
       status: 200,
       body: {
-        tournamentId: tournamentId.toString(),
+        ...tournament
       }
     });
 });
@@ -38,16 +39,9 @@ test('Tournament is validated and returns status 400 when invalid',
     const createTournament = () => new Promise(resolve => resolve(null));
 
     expect(await createTournamentRoute('', tournament, createTournament))
-      .toMatchObject({
+      .toEqual({
         status: 400,
-        body: {
-          validation: {
-            isValidTournament: false,
-            isValidName: false,
-            isValidDate: true,
-            isValidType: true
-          }
-        }
+        body: null
       });
   });
 
@@ -59,13 +53,12 @@ test('Returns status 500 when a valid tournament can not be created',
       date: moment(),
       type: 'classic'
     };
-    const createTournament = () => new Promise(resolve => resolve(null));
+    const createTournament = () =>
+      new Promise((resolve, reject) => reject(null));
 
     expect(await createTournamentRoute('', tournament, createTournament))
-      .toMatchObject({
+      .toEqual({
         status: 500,
-        body: {
-          tournamentId: null
-        }
+        body: null
       });
   });

@@ -14,7 +14,7 @@ import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 
 type Props = {
-  onSubmit: (state: State) => Promise<void>,
+  onSubmit: (state: State) => void,
   isLoading: boolean,
   validation: TournamentValidationSummary
 }

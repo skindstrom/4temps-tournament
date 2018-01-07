@@ -33,18 +33,9 @@ const schema = new mongoose.Schema({
 const Model = mongoose.model('tournament', schema);
 
 export const createTournament =
-  async (userId: string, tournament: Tournament): Promise<?ObjectId> => {
-    try {
-      let { date, _id, ...rest } = tournament;
-      if (!mongoose.Types.ObjectId.isValid(_id)) {
-        _id = new mongoose.Types.ObjectId();
-      }
-      const entry =
-        await Model.create({ _id, userId, date: date.toDate(), ...rest });
-      return entry._id;
-    } catch (e) {
-      return null;
-    }
+  async (userId: string, tournament: Tournament): Promise<void> => {
+    let { date, ...rest } = tournament;
+    Model.create({ userId, date: date.toDate(), ...rest });
   };
 
 export const updateTournament =

@@ -8,30 +8,33 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
   switch (type) {
   case 'LOGOUT_USER':
     return handle(state, action, {
-      success: (prevState) => ({ ...prevState, isAuthenticated: false })
+      success: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        isAuthenticated: false
+      })
     });
   case 'LOGIN_USER':
     return handle(state, action, {
-      start: prevState => ({
+      start: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         uiLogin: {
-          ...state.uiLogin,
+          ...prevState.uiLogin,
           isLoading: true,
         }
       }),
-      success: (prevState) => ({
+      success: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         isAuthenticated: true,
         uiLogin: {
-          ...state.uiLogin,
+          ...prevState.uiLogin,
           isLoading: false,
           ...payload
         }
       }),
-      failure: prevState => ({
+      failure: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         uiLogin: {
-          ...state.uiLogin,
+          ...prevState.uiLogin,
           isLoading: false,
           ...payload
         }
@@ -39,60 +42,105 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
     });
   case 'GET_ALL_TOURNAMENTS':
     return handle(state, action, {
-      start: prevState => ({
+      start: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         tournaments: {
-          ...state.tournaments,
+          ...prevState.tournaments,
           isLoading: true
         }
       }),
-      success: prevState => ({
+      success: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         tournaments: {
-          ...state.tournaments,
+          ...prevState.tournaments,
           isLoading: false,
           allIds: payload.map(t => t._id),
           byId: normalize(payload)
         }
       }),
-      failure: prevState => ({
+      failure: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         tournaments: {
-          ...state.tournaments,
+          ...prevState.tournaments,
           isLoading: false,
         }
       })
     });
   case 'GET_USER_TOURNAMENTS':
     return handle(state, action, {
-      start: prevState => ({
+      start: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         tournaments: {
-          ...state.tournaments,
+          ...prevState.tournaments,
           isLoading: true
         }
       }),
-      success: prevState => ({
+      success: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         tournaments: {
-          ...state.tournaments,
+          ...prevState.tournaments,
           isLoading: false,
           forUser: payload.map(t => t._id),
           allIds: [
-            ...state.tournaments.allIds,
+            ...prevState.tournaments.allIds,
             ...payload.map(t => t._id),
           ].filter((id, i, arr) => arr.indexOf(id) === i),
           byId: {
-            ...state.tournaments.byId,
+            ...prevState.tournaments.byId,
             ...normalize(payload)
           }
         }
       }),
-      failure: prevState => ({
+      failure: (prevState: ReduxState): ReduxState => ({
         ...prevState,
         tournaments: {
           ...state.tournaments,
           isLoading: false
+        }
+      }),
+    });
+  case 'CREATE_TOURNAMENT':
+    return handle(state, action, {
+      start: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        tournaments: {
+          ...prevState.tournaments,
+          uiCreateTournament: {
+            ...prevState.tournaments.uiCreateTournament,
+            isLoading: false,
+          }
+        }
+      }),
+      success: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        tournaments: {
+          ...prevState.tournaments,
+          allIds: [...prevState.tournaments.allIds, payload._id],
+          byId: {
+            ...prevState.tournaments.byId,
+            [payload._id]: payload
+          },
+          uiCreateTournament: {
+            ...prevState.tournaments.uiCreateTournament,
+            isLoading: false,
+            validation: {
+              isValidTournament: true,
+              isValidName: true,
+              isValidDate: true,
+              isValidType: true
+            }
+          }
+        }
+      }),
+      failure: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        tournaments: {
+          ...prevState.tournaments,
+          uiCreateTournament: {
+            ...prevState.tournaments.uiCreateTournament,
+            isLoading: false,
+            validation: payload
+          }
         }
       }),
     });
@@ -104,12 +152,23 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
 export function initialState(): ReduxState {
   return {
     isAuthenticated: false,
+
     tournaments: {
       isLoading: true,
 
       forUser: [],
       allIds: [],
-      byId: {}
+      byId: {},
+
+      uiCreateTournament: {
+        isLoading: false,
+        validation: {
+          isValidTournament: true,
+          isValidName: true,
+          isValidDate: true,
+          isValidType: true
+        }
+      }
     },
     uiLogin: {
       isLoading: false,
@@ -118,12 +177,12 @@ export function initialState(): ReduxState {
       isValidEmail: true,
       isValidPassword: true,
       doesUserExist: true
-    }
+    },
   };
 }
 
-function normalize(array: Array<{ _id: string, [string]: mixed}>) {
-  const acc: {[string]: mixed} = {};
+function normalize(array: Array<{ _id: string, [string]: mixed }>) {
+  const acc: { [string]: mixed } = {};
   array.forEach(t => {
     acc[t._id] = t;
   });

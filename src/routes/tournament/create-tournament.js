@@ -7,37 +7,27 @@ import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
 import { createTournament } from '../../data/tournament';
 import type { RouteResult } from '../util';
-import type { TournamentValidationSummary } from
-  '../../validators/validate-tournament';
-
-export type CreateTournamentResponse = {
-  tournamentId: ?string,
-  validation: TournamentValidationSummary
-};
 
 export const createTournamentRoute =
   async (userId: string,
     tournament: Tournament,
     createTournament: (userId: string, tournament: Tournament)
-      => Promise<?ObjectId>): RouteResult<CreateTournamentResponse> => {
+      => Promise<?ObjectId>): RouteResult<?Tournament> => {
 
-    const body: CreateTournamentResponse = {
-      validation: validateTournament(tournament),
-      tournamentId: null
-    };
+    const { isValidTournament } = validateTournament(tournament);
     let status: number = 200;
 
-    if (body.validation.isValidTournament) {
-      const tournamentId = await createTournament(userId, tournament);
-
-      if (tournamentId != null) {
-        body.tournamentId = tournamentId.toString();
-      } else {
+    if (isValidTournament) {
+      try {
+        await createTournament(userId, tournament);
+      } catch (e) {
         status = 500;
       }
     } else {
       status = 400;
     }
+
+    const body = status === 200 ? tournament : null;
 
     return { status, body };
   };
