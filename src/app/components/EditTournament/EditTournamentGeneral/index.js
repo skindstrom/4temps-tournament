@@ -3,95 +3,72 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import type Moment from 'moment';
+import { connect } from 'react-redux';
 
 import type { Tournament } from '../../../../models/tournament';
-import { updateTournament, getTournament } from '../../../api/tournament';
+import { updateTournament, getTournamentsForUser } from
+  '../../../api/tournament';
 
 import EditTournamentGeneral from './component';
 
 type Props = {
-  tournamentId: string
-}
-type State = {
   isLoading: boolean,
-
+  shouldLoad: boolean,
   tournament: Tournament,
 
   isValidName: boolean,
-  isValidDate: boolean
+  isValidDate: boolean,
+
+  getTournament: () => void,
+  onSubmit: (tournament: Tournament) => void
 }
 
-class EditTournament extends Component<Props, State> {
+type State = {
+  name: string,
+  date: Moment
+}
+
+class EditTournamentGeneralContainer extends Component<Props, State> {
   state = {
-    isLoading: true,
-
-    tournament: {
-      _id: this.props.tournamentId,
-      name: '',
-      date: moment(),
-      type: 'none'
-    },
-
-    isValidName: true,
-    isValidDate: true
+    name: this.props.shouldLoad ? '' : this.props.tournament.name,
+    date: this.props.shouldLoad ? moment() : this.props.tournament.date
   }
 
   componentDidMount() {
-    const { tournamentId } = this.props;
-    if (tournamentId != null) {
-      this._getTournament(tournamentId);
+    if (this.props.shouldLoad) {
+      this.props.getTournament();
     }
   }
 
-  _getTournament = async (tournamentId: string) => {
-    try {
-      const tournament = await getTournament(tournamentId);
-      this.setState({ isLoading: false, tournament });
-    } catch (e) {
-      alert('Could not fetch tournament');
+  componentWillReceiveProps({ tournament }: Props) {
+    const { name, date } = tournament;
+    if (!this.props.tournament
+      || (this.props.tournament.name !== name
+        || this.props.tournament.date !== date)) {
+      this.setState({ name, date });
     }
   }
 
-  _onChangeName = (name: string) => this.setState({
-    tournament: { ...this.state.tournament, name }
-  });
+  _onChangeName = (name: string) => this.setState({name});
 
-  _onChangeDate = (date: Moment) => this.setState({
-    tournament: { ...this.state.tournament, date }
-  });
+  _onChangeDate = (date: Moment) => this.setState({date});
 
   _onSubmit = async () => {
-    this.setState({ isLoading: true });
-
-    const { tournamentId } = this.props;
-    if (tournamentId != null) {
-      try {
-        const { tournament, validation } =
-          await updateTournament(tournamentId, this.state.tournament);
-
-        if (tournament != null) {
-          this.setState({
-            isLoading: false,
-            isValidName: validation.isValidName,
-            isValidDate: validation.isValidDate
-          });
-        }
-      } catch (validation) {
-        this.setState({ isLoading: false, ...validation });
-      }
-    }
+    const { name, date } = this.state;
+    const tournament = { ...this.props.tournament, name, date };
+    this.props.onSubmit(tournament);
   }
 
   render() {
     return (
       <EditTournamentGeneral
-        isLoading={this.state.isLoading}
+        isLoading={this.props.isLoading}
 
-        name={this.state.tournament.name}
-        date={this.state.tournament.date}
+        name={this.state.name}
+        date={this.state.date}
 
-        isValidName={this.state.isValidName}
-        isValidDate={this.state.isValidDate}
+        isValidName={this.props.isValidName}
+        isValidDate={this.props.isValidDate}
 
         onChangeName={this._onChangeName}
         onChangeDate={this._onChangeDate}
@@ -100,4 +77,35 @@ class EditTournament extends Component<Props, State> {
   }
 }
 
-export default EditTournament;
+type ConnectedProps = {
+  tournamentId: string
+}
+
+function mapStateToProps({ tournaments }: ReduxState,
+  { tournamentId }: ConnectedProps) {
+  return {
+    ...tournaments.uiEditTournament,
+    shouldLoad: !tournaments.byId[tournamentId],
+    isLoading: tournaments.isLoading || tournaments.uiEditTournament.isLoading,
+    tournament: tournaments.byId[tournamentId]
+  };
+}
+
+function mapDispatchToProps(dispatch: ReduxDispatch,
+  { tournamentId }: ConnectedProps) {
+  return {
+    getTournament: () => dispatch({
+      type: 'GET_USER_TOURNAMENTS',
+      promise: getTournamentsForUser()
+    }),
+    onSubmit: (tournament: Tournament) => dispatch({
+      type: 'EDIT_TOURNAMENT',
+      promise: updateTournament(tournamentId, tournament)
+    })
+  };
+}
+
+const EditTournamentGeneralConnectedContainer =
+  connect(mapStateToProps, mapDispatchToProps)(EditTournamentGeneralContainer);
+
+export default EditTournamentGeneralConnectedContainer;

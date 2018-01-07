@@ -107,7 +107,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
           ...prevState.tournaments,
           uiCreateTournament: {
             ...prevState.tournaments.uiCreateTournament,
-            isLoading: false,
+            isLoading: true,
           }
         }
       }),
@@ -144,6 +144,47 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         }
       }),
     });
+  case 'EDIT_TOURNAMENT':
+    return handle(state, action, {
+      start: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        tournaments: {
+          ...prevState.tournaments,
+          uiEditTournament: {
+            ...prevState.tournaments.uiEditTournament,
+            isLoading: true,
+          }
+        }
+      }),
+      success: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        tournaments: {
+          ...prevState.tournaments,
+          byId: {
+            ...prevState.tournaments.byId,
+            [payload._id]: payload
+          },
+          uiEditTournament: {
+            ...prevState.tournaments.uiEditTournament,
+            isLoading: false,
+            isValidName: true,
+            isValidDate: true
+          }
+        },
+      }),
+      failure: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        tournaments: {
+          ...prevState.tournaments,
+          uiEditTournament: {
+            ...prevState.tournaments.uiEditTournament,
+            isLoading: false,
+            isValidName: payload.isValidName,
+            isValidDate: payload.isValidDate
+          }
+        }
+      }),
+    });
   }
 
   return state;
@@ -168,6 +209,11 @@ export function initialState(): ReduxState {
           isValidDate: true,
           isValidType: true
         }
+      },
+      uiEditTournament: {
+        isLoading: false,
+        isValidName: true,
+        isValidDate: true
       }
     },
     uiLogin: {

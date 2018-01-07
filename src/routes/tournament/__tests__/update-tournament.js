@@ -29,7 +29,6 @@ test(
       type: dbTournament.type
     };
 
-
     const getTournament = (id: string) => {
       if (id === tournamentId.toString()) {
         return new Promise(resolve => resolve(dbTournament));
@@ -48,11 +47,9 @@ test(
         tournament,
         getTournament,
         updateTournament))
-      .toMatchObject({
+      .toEqual({
         status: 200,
-        body: {
-          tournament
-        }
+        body: tournament
       });
   });
 
@@ -67,17 +64,9 @@ test('Tournament is validated and returns status 400 when invalid',
 
     expect(
       await updateTournamentRoute('', '', tournament, nullPromise, nullPromise))
-      .toMatchObject({
+      .toEqual({
         status: 400,
-        body: {
-          tournament: null,
-          validation: {
-            isValidTournament: false,
-            isValidName: false,
-            isValidDate: true,
-            isValidType: true
-          }
-        }
+        body: null
       });
   });
 
@@ -91,8 +80,9 @@ test(`Tournament that doesn't exist returns 404`, async () => {
 
   expect(
     await updateTournamentRoute('', '', tournament, nullPromise, nullPromise))
-    .toMatchObject({
+    .toEqual({
       status: 404,
+      body: null
     });
 });
 
@@ -131,8 +121,9 @@ test(`When tournament can't be updated 500 is returned`, async () => {
       tournament,
       getTournament,
       nullPromise))
-    .toMatchObject({
-      status: 500
+    .toEqual({
+      status: 500,
+      body: null
     });
 });
 
@@ -172,7 +163,8 @@ test(`When tournament is owned by other user be updated 401 is returned`,
         tournament,
         getTournament,
         nullPromise))
-      .toMatchObject({
-        status: 401
+      .toEqual({
+        status: 401,
+        body: null
       });
   });

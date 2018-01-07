@@ -21,6 +21,11 @@ declare type ReduxState = {
     uiCreateTournament: {
       isLoading: boolean,
       validation: TournamentValidationSummary
+    },
+    uiEditTournament: {
+      isLoading: boolean,
+      isValidName: boolean,
+      isValidDate: boolean
     }
   },
 
@@ -33,7 +38,8 @@ declare type ReduxState = {
   },
 };
 declare type ReduxAction = LogoutAction | LoginAction
-  | GetAllTournamentsAction | GetUserTournamentsAction | CreateTournamentAction;
+  | GetAllTournamentsAction | GetUserTournamentsAction
+  | CreateTournamentAction | EditTournamentAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -55,6 +61,8 @@ declare type GetUserTournamentsAction =
 declare type CreateTournamentAction =
   {
     type: 'CREATE_TOURNAMENT',
-    promise: Promise<TournamentValidationSummary>,
+    promise: Promise<Tournament>,
     meta: any
   };
+declare type EditTournamentAction =
+  { type: 'EDIT_TOURNAMENT', promise: Promise<Tournament>};
