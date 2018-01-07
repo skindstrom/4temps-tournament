@@ -1,11 +1,21 @@
 // @flow
 import type { UserLoginValidationSummary } from
   '../src/validators/validate-user-login';
+import type { Tournament } from '../src/models/tournament';
 
 // Redux
 declare type ReduxDispatch = (action: ReduxAction) => any;
 declare type ReduxState = {
   isAuthenticated: boolean,
+  tournaments: {
+    isLoading: boolean,
+
+    allIds: [],
+    byId: {
+      [id: string]: Tournament
+    }
+  },
+
   uiLogin: {
     isLoading: boolean,
     isValid: boolean,
@@ -14,7 +24,8 @@ declare type ReduxState = {
     doesUserExist: boolean
   }
 };
-declare type ReduxAction = LogoutAction | LoginAction;
+declare type ReduxAction = LogoutAction | LoginAction
+  | GetAllTournamentsAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -26,3 +37,6 @@ declare type LoginAction =
     promise: Promise<UserLoginValidationSummary>,
     meta: ?any
   };
+
+declare type GetAllTournamentsAction =
+  { type: 'GET_ALL_TOURNAMENTS', promise: Promise<Array<Tournament>> };

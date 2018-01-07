@@ -27,7 +27,6 @@ class EditTournamentListContainer extends Component<Props, State> {
     try {
       const tournaments = await getTournamentsForUser();
       this.setState({ isLoading: false, tournaments });
-
     } catch (e) {
       this.setState({ isLoading: false, tournaments: [] });
     }

@@ -26,6 +26,7 @@ class EditTournament extends Component<Props, State> {
     isLoading: true,
 
     tournament: {
+      _id: this.props.tournamentId,
       name: '',
       date: moment(),
       type: 'none'

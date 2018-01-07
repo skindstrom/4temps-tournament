@@ -23,6 +23,7 @@ test(
     };
 
     const tournament: Tournament = {
+      _id: tournamentId.toString(),
       name: dbTournament.name,
       date: moment(dbTournament.date),
       type: dbTournament.type
@@ -58,6 +59,7 @@ test(
 test('Tournament is validated and returns status 400 when invalid',
   async () => {
     const tournament: Tournament = {
+      _id: '',
       name: '',
       date: moment(),
       type: 'classic'
@@ -81,6 +83,7 @@ test('Tournament is validated and returns status 400 when invalid',
 
 test(`Tournament that doesn't exist returns 404`, async () => {
   const tournament: Tournament = {
+    _id: '',
     name: 'valid',
     date: moment(),
     type: 'classic'
@@ -106,6 +109,7 @@ test(`When tournament can't be updated 500 is returned`, async () => {
   };
 
   const tournament: Tournament = {
+    _id: tournamentId.toString(),
     name: dbTournament.name,
     date: moment(dbTournament.date),
     type: dbTournament.type
@@ -146,6 +150,7 @@ test(`When tournament is owned by other user be updated 401 is returned`,
     };
 
     const tournament: Tournament = {
+      _id: tournamentId.toString(),
       name: dbTournament.name,
       date: moment(dbTournament.date),
       type: dbTournament.type

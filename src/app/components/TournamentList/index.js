@@ -48,10 +48,10 @@ class TournamentList extends Component<Props, State> {
     return 'Unknown';
   }
 
-  _renderItem = ({ name, date, type }: Tournament) => {
+  _renderItem = ({ _id, name, date, type }: Tournament) => {
     return (
       <ListItem
-        key={date.toISOString()}
+        key={_id}
         header={`${name} - ${this._typeToName(type)}`}
         content={date.format('MM/DD/YYYY')}
       />);

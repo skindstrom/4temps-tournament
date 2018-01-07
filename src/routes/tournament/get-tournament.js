@@ -1,16 +1,14 @@
 // @flow
 import type { $Request, $Response } from 'express';
-import moment from 'moment';
 
 import type { RouteResult } from '../util';
 import { getTournament } from '../../data/tournament';
-import type { Tournament } from '../../models/tournament';
 import type { TournamentModel } from '../../data/tournament';
 
 export const getTournamentRoute = async (tournamentId: string,
   userId: string,
   getTournament: (tournamentId: string)
-    => Promise<?TournamentModel>): RouteResult<?Tournament> => {
+    => Promise<?TournamentModel>): RouteResult<?TournamentModel> => {
 
   const dbTournament = await getTournament(tournamentId);
 
@@ -22,11 +20,7 @@ export const getTournamentRoute = async (tournamentId: string,
 
   return {
     status: 200,
-    body: {
-      name: dbTournament.name,
-      date: moment(dbTournament.date),
-      type: dbTournament.type
-    }
+    body: dbTournament
   };
 };
 

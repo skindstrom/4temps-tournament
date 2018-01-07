@@ -1,15 +1,15 @@
 // @flow
 import type { $Request, $Response } from 'express';
-import moment from 'moment';
 
 import { getTournamentsForUser } from '../../data/tournament';
-import type { Tournament } from '../../models/tournament';
+import type { TournamentModel } from '../../data/tournament';
 
 export default async (req: $Request, res: $Response) => {
-  const tournaments: Array<Tournament> =
-    // $FlowFixMe
-    (await getTournamentsForUser(req.session.user._id))
-      .map(db => ({ name: db.name, date: moment(db.date), type: db.type }));
+  // $FlowFixMe
+  const userId = req.session.user._id;
+
+  const tournaments: Array<TournamentModel> =
+    await getTournamentsForUser(userId);
   res.status(200);
   res.json(tournaments);
 };

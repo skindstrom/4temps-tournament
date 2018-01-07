@@ -7,6 +7,7 @@ import validateTournament from '../validate-tournament';
 
 test('Valid tournament is valid', () => {
   const tournament: Tournament = {
+    _id: '',
     name: '4temps World Championship',
     date: moment(),
     type: 'jj'
@@ -21,6 +22,7 @@ test('Valid tournament is valid', () => {
 
 test('Empty name is invalid', () => {
   const tournament: Tournament = {
+    _id: '',
     name: '',
     date: moment(),
     type: 'jj'
@@ -36,6 +38,7 @@ test('Empty name is invalid', () => {
 describe('Tournament type must be valid', () => {
   test('Tournament type must be set', () => {
     const tournament: Tournament = {
+      _id: '',
       name: 'World championship',
       date: moment(),
       type: 'none'
@@ -48,6 +51,7 @@ describe('Tournament type must be valid', () => {
 
   test('Tournament type may be jj', () => {
     const tournament: Tournament = {
+      _id: '',
       name: 'World championship',
       date: moment(),
       type: 'jj'
@@ -60,6 +64,7 @@ describe('Tournament type must be valid', () => {
 
   test('Tournament type may be classic', () => {
     const tournament: Tournament = {
+      _id: '',
       name: 'World championship',
       date: moment(),
       type: 'classic'
@@ -72,6 +77,7 @@ describe('Tournament type must be valid', () => {
 
   test('Tournament type must adhere to union type', () => {
     const tournament: Tournament = {
+      _id: '',
       name: 'World championship',
       date: moment(),
       // $FlowFixMe (ignored on purpose)
@@ -86,6 +92,7 @@ describe('Tournament type must be valid', () => {
 
 test('Unix epoch is invalid date', () => {
   const tournament: Tournament = {
+    _id: '',
     name: 'World championship',
     date: moment(0),
     type: 'classic'

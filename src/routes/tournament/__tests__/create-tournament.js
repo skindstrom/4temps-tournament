@@ -8,6 +8,7 @@ import type { Tournament } from '../../../models/tournament';
 test('Valid tournament returns 200 and the new tournament id', async () => {
   const userId = '1';
   const tournament: Tournament = {
+    _id: '',
     name: 'best',
     date: moment(),
     type: 'classic'
@@ -28,6 +29,7 @@ test('Valid tournament returns 200 and the new tournament id', async () => {
 test('Tournament is validated and returns status 400 when invalid',
   async () => {
     const tournament: Tournament = {
+      _id: '',
       name: '',
       date: moment(),
       type: 'classic'
@@ -52,6 +54,7 @@ test('Tournament is validated and returns status 400 when invalid',
 test('Returns status 500 when a valid tournament can not be created',
   async () => {
     const tournament: Tournament = {
+      _id: '',
       name: 'best',
       date: moment(),
       type: 'classic'

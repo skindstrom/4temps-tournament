@@ -3,7 +3,6 @@ import moment from 'moment';
 import { Types } from 'mongoose';
 
 import { getTournamentRoute } from '../get-tournament';
-import type { Tournament } from '../../../models/tournament';
 import type { TournamentModel } from '../../../data/tournament';
 
 test('Existing tournament is returned with status 200 if user created it',
@@ -17,12 +16,6 @@ test('Existing tournament is returned with status 200 if user created it',
       date: moment().toDate(),
       type: 'jj',
       userId
-    };
-
-    const tournament: Tournament = {
-      name: dbTournament.name,
-      date: moment(dbTournament.date),
-      type: dbTournament.type
     };
 
     const getTournament = (id: string) => {
@@ -40,7 +33,7 @@ test('Existing tournament is returned with status 200 if user created it',
       userId.toString(), getTournament))
       .toEqual({
         status: 200,
-        body: tournament
+        body: dbTournament
       });
   });
 

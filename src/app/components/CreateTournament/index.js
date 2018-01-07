@@ -2,7 +2,9 @@
 
 import React, { Component } from 'react';
 import type { RouterHistory } from 'react-router-dom';
+import ObjectId from 'bson-objectid';
 import CreateTournament from './component';
+import type { State as ComponentState } from './component';
 import { createTournament } from '../../api/tournament';
 import type { Tournament } from '../../../models/tournament';
 import type { TournamentValidationSummary } from
@@ -27,8 +29,11 @@ class CreateTournamentContainer extends Component<Props, State> {
     }
   }
 
-  _onSubmit = async (tournament: Tournament) => {
+  _onSubmit = async ({ name, date, type }: ComponentState) => {
     this.setState({ isLoading: true });
+    const tournament: Tournament = {
+      _id: ObjectId.generate(), name, date, type
+    };
     try {
       const { tournamentId } = await createTournament(tournament);
       if (tournamentId != null) {

@@ -9,17 +9,21 @@ import type Moment from 'moment';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-import type { Tournament, TournamentType } from '../../../models/tournament';
+import type { TournamentType } from '../../../models/tournament';
 import type { TournamentValidationSummary } from
   '../../../validators/validate-tournament';
 
 type Props = {
-  onSubmit: (tournament: Tournament) => Promise<void>,
+  onSubmit: (state: State) => Promise<void>,
   isLoading: boolean,
   validation: TournamentValidationSummary
 }
 
-type State = Tournament;
+export type State = {
+  name: string,
+  date: Moment,
+  type: TournamentType;
+}
 
 class CreateTournament extends Component<Props, State> {
   state = {

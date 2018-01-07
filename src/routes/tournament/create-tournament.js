@@ -44,6 +44,7 @@ export const createTournamentRoute =
 
 export default async (req: $Request, res: $Response) => {
   const tournament: Tournament = {
+    _id: req.body._id || '',
     name: req.body.name || '',
     date: moment(req.body.date) || moment(0),
     type: req.body.type || 'none'
