@@ -1,40 +1,50 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import type { Tournament } from '../../../models/tournament';
 import TournamentList from '../TournamentList';
 import { getTournamentsForUser } from '../../api/tournament';
 
-type Props = {}
-type State = {
+type Props = {
   isLoading: boolean,
   tournaments: Array<Tournament>,
+  getTournaments: () => void
 }
 
-
-class EditTournamentListContainer extends Component<Props, State> {
-  state = {
-    isLoading: true,
-    tournaments: [],
-  }
-
+class EditTournamentList extends Component<Props> {
   componentDidMount() {
-    this._getTournaments();
-  }
-
-  _getTournaments = async () => {
-    try {
-      const tournaments = await getTournamentsForUser();
-      this.setState({ isLoading: false, tournaments });
-    } catch (e) {
-      this.setState({ isLoading: false, tournaments: [] });
-    }
+    this.props.getTournaments();
   }
 
   render() {
-    return <TournamentList {...this.state} />;
+    return (
+      <TournamentList
+        isLoading={this.props.isLoading}
+        tournaments={this.props.tournaments}
+      />
+    );
   }
 }
+
+function mapStateToProps({ tournaments }: ReduxState) {
+  return {
+    isLoading: tournaments.isLoading,
+    tournaments: tournaments.forUser.map(id => tournaments.byId[id])
+  };
+}
+
+function mapDispatchToProps(dispatch: ReduxDispatch) {
+  return {
+    getTournaments: () => dispatch({
+      type: 'GET_USER_TOURNAMENTS', promise: getTournamentsForUser()
+    })
+  };
+}
+
+const EditTournamentListContainer =
+  connect(mapStateToProps, mapDispatchToProps)(EditTournamentList);
+
 
 export default EditTournamentListContainer;

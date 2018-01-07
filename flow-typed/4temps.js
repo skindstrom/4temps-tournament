@@ -10,7 +10,8 @@ declare type ReduxState = {
   tournaments: {
     isLoading: boolean,
 
-    allIds: [],
+    forUser: Array<string>,
+    allIds: Array<string>,
     byId: {
       [id: string]: Tournament
     }
@@ -25,7 +26,7 @@ declare type ReduxState = {
   }
 };
 declare type ReduxAction = LogoutAction | LoginAction
-  | GetAllTournamentsAction;
+  | GetAllTournamentsAction | GetUserTournamentsAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -40,3 +41,6 @@ declare type LoginAction =
 
 declare type GetAllTournamentsAction =
   { type: 'GET_ALL_TOURNAMENTS', promise: Promise<Array<Tournament>> };
+
+declare type GetUserTournamentsAction =
+  { type: 'GET_USER_TOURNAMENTS', promise: Promise<Array<Tournament>> };

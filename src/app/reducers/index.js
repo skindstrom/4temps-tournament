@@ -63,6 +63,39 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         }
       })
     });
+  case 'GET_USER_TOURNAMENTS':
+    return handle(state, action, {
+      start: prevState => ({
+        ...prevState,
+        tournaments: {
+          ...state.tournaments,
+          isLoading: true
+        }
+      }),
+      success: prevState => ({
+        ...prevState,
+        tournaments: {
+          ...state.tournaments,
+          isLoading: false,
+          forUser: payload.map(t => t._id),
+          allIds: [
+            ...state.tournaments.allIds,
+            ...payload.map(t => t._id),
+          ].filter((id, i, arr) => arr.indexOf(id) === i),
+          byId: {
+            ...state.tournaments.byId,
+            ...normalize(payload)
+          }
+        }
+      }),
+      failure: prevState => ({
+        ...prevState,
+        tournaments: {
+          ...state.tournaments,
+          isLoading: false
+        }
+      }),
+    });
   }
 
   return state;
@@ -74,6 +107,7 @@ export function initialState(): ReduxState {
     tournaments: {
       isLoading: true,
 
+      forUser: [],
       allIds: [],
       byId: {}
     },
