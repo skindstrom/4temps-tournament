@@ -16,11 +16,8 @@ export class CreateParticipantRoute {
   _getTournament: TournamentGetter;
   _participantRepository: ParticipantRepository;
 
-  _tournamentId: string = '';
-  _participant: Participant = {
-    name: '',
-    role: 'none'
-  };
+  _tournamentId: string;
+  _participant: Participant;
 
   constructor(userId: string, getTournament: TournamentGetter,
     participantRepository: ParticipantRepository) {
@@ -47,6 +44,7 @@ export class CreateParticipantRoute {
 
     const participant = body.participant || {};
     this._participant = {
+      _id: participant._id || '',
       name: participant.name || '',
       role: participant.role || 'none'
     };

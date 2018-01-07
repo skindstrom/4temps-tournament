@@ -58,9 +58,6 @@ test('Unauthorized user results in no participants and status 401',
   });
 
 test('Valid user returns the participants with status 200', async () => {
-  const participants = dbParticipants.map(a =>
-    ({ name: a.name, role: a.role }));
-
   const tournament = {
     _id: tournamentId,
     name: 'Tournament name',
@@ -76,6 +73,6 @@ test('Valid user returns the participants with status 200', async () => {
     new Repository(), getTournament);
 
   expect(await route.getParticipantsForTournament(tournamentId.toString()))
-    .toEqual(participants);
+    .toEqual(dbParticipants);
   expect(route.status).toBe(200);
 });

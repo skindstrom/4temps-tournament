@@ -17,7 +17,9 @@ const user = {
 const TOURNAMENT_ID = new Types.ObjectId();
 
 const VALID_BODY = {
-  tournamentId: TOURNAMENT_ID.toString(), participant: {
+  tournamentId: TOURNAMENT_ID.toString(),
+  participant: {
+    _id: '',
     name: 'Test User',
     role: 'leader'
   }

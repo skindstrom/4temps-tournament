@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Form, FormButton, FormRadio, FormGroup, FormInput, Message } from
   'semantic-ui-react';
 
-import type { Participant, Role } from '../../../../../models/participant';
+import type { Role } from '../../../../../models/participant';
 
 type Props = {
   isLoading: boolean,
@@ -14,10 +14,13 @@ type Props = {
   isValidName: boolean,
   isValidRole: boolean,
 
-  onSubmit: (participant: Participant) => Promise<void>
+  onSubmit: (state: State) => Promise<void>
 }
 
-type State = Participant;
+export type State = {
+  name: string,
+  role: Role
+};
 
 class AddParticipant extends Component<Props, State> {
   state = {

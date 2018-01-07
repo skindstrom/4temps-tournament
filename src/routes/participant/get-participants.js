@@ -1,9 +1,9 @@
 // @flow
 import type { $Request, $Response } from 'express';
-import type { ParticipantRepository } from '../../data/participant';
+import type { ParticipantRepository, ParticipantDbModel } from
+  '../../data/participant';
 import ParticipantRepositoryImpl  from '../../data/participant';
 import { getTournament } from '../../data/tournament';
-import type { Participant } from '../../models/participant';
 
 type TournamentGetter = typeof getTournament;
 
@@ -39,10 +39,10 @@ export class GetParticipantsRoute {
   }
 
   async getParticipantsForTournament(
-    tournamentId: string): Promise<Array<Participant>> {
+    tournamentId: string): Promise<Array<ParticipantDbModel>> {
     this._tournamentId = tournamentId;
 
-    let participants: Array<Participant> = [];
+    let participants: Array<ParticipantDbModel> = [];
     if (await this._isUserAuthorized()) {
       participants = await this._getParticipantsForAuthorizedUser();
     } else {
@@ -58,11 +58,10 @@ export class GetParticipantsRoute {
   }
 
   async _getParticipantsForAuthorizedUser() {
-    let participants: Array<Participant> = [];
+    let participants: Array<ParticipantDbModel> = [];
     try {
-      const dbModels =
+      participants =
         await this._participantRepository.getForTournament(this._tournamentId);
-      participants = dbModels.map(a => ({ name: a.name, role: a.role }));
     } catch (e) {
       this.status = 500;
     }

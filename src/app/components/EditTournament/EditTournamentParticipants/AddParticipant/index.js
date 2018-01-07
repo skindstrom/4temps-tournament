@@ -1,9 +1,10 @@
 // @flow
 import React, { Component } from 'react';
+import ObjectId from 'bson-objectid';
 
 import AddParticipant from './component';
+import type { State as ComponentState } from './component';
 import { createParticipant } from '../../../../api/participant';
-import type { Participant } from '../../../../../models/participant';
 
 type Props = {
   tournamentId: string
@@ -28,9 +29,9 @@ class AddParticipantContainer extends Component<Props, State> {
     isValidName: true,
     isValidRole: true
   }
-  _onSubmit = async (participant: Participant) => {
+  _onSubmit = async (state: ComponentState) => {
     this.setState({ isLoading: true });
-
+    const participant = { _id: ObjectId.generate(), ...state };
     try {
       const validation =
         await createParticipant(this.props.tournamentId, participant);

@@ -43,9 +43,9 @@ class ListParticipants extends Component<Props, State> {
     }
   }
 
-  _renderItem = ({ name, role }: Participant, index: number) => {
+  _renderItem = ({ _id, name, role }: Participant) => {
     return (
-      <TableRow key={index}>
+      <TableRow key={_id}>
         <TableCell>{name}</TableCell>
         <TableCell>{this._roleToString(role)}</TableCell>
       </TableRow>

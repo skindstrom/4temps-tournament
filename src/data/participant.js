@@ -38,11 +38,11 @@ export interface ParticipantRepository {
 class ParticipantRepositoryImpl implements ParticipantRepository {
   createForTournament(tournamentId: string,
     participant: Participant) {
-    return Model.create({
-      tournamentId: new mongoose.Types.ObjectId(tournamentId),
-      name: participant.name,
-      role: participant.role
-    });
+    let { _id, name, role } = participant;
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      _id = new mongoose.Types.ObjectId();
+    }
+    return Model.create({ _id, name, role, tournamentId });
   }
 
   getForTournament(
