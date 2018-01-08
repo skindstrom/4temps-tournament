@@ -23,6 +23,10 @@ const dbParticipants = [
   }
 ];
 
+const participants =
+  dbParticipants.map(({ _id, name, role }) =>
+    ({ _id: _id.toString(), name, role }));
+
 class Repository implements ParticipantRepository {
   async createForTournament(tournamentId: string,
     // eslint-disable-next-line no-unused-vars
@@ -73,6 +77,6 @@ test('Valid user returns the participants with status 200', async () => {
     new Repository(), getTournament);
 
   expect(await route.getParticipantsForTournament(tournamentId.toString()))
-    .toEqual(dbParticipants);
+    .toEqual(participants);
   expect(route.status).toBe(200);
 });

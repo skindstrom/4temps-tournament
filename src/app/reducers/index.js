@@ -185,6 +185,38 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         }
       }),
     });
+  case 'GET_PARTICIPANTS':
+    return handle(state, action, {
+      start: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        participants: {
+          ...prevState.participants,
+          isLoading: true
+        }
+      }),
+      success: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        participants: {
+          ...prevState.participants,
+          isLoading: false,
+          forTournament: {
+            ...prevState.participants.forTournament,
+            [payload.tournamentId]: payload.participants.map(p => p._id),
+          },
+          byId: {
+            ...prevState.participants.byId,
+            ...normalize(payload.participants)
+          }
+        }
+      }),
+      failure: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        participants: {
+          ...prevState.participants,
+          isLoading: false
+        }
+      })
+    });
   }
 
   return state;
@@ -215,6 +247,12 @@ export function initialState(): ReduxState {
         isValidName: true,
         isValidDate: true
       }
+    },
+    participants: {
+      isLoading: true,
+
+      forTournament: {},
+      byId: {}
     },
     uiLogin: {
       isLoading: false,

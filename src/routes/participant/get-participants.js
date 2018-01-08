@@ -2,6 +2,7 @@
 import type { $Request, $Response } from 'express';
 import type { ParticipantRepository, ParticipantDbModel } from
   '../../data/participant';
+import type { Participant } from '../../models/participant';
 import ParticipantRepositoryImpl  from '../../data/participant';
 import { getTournament } from '../../data/tournament';
 
@@ -31,15 +32,16 @@ export class GetParticipantsRoute {
     const route = new GetParticipantsRoute(userId,
       new ParticipantRepositoryImpl(), getTournament);
 
+    const tournamentId = req.params.tournamentId;
     const participants =
-      await route.getParticipantsForTournament(req.params.tournamentId);
+      await route.getParticipantsForTournament(tournamentId);
 
     res.status(route.status);
-    res.json(participants);
+    res.json({ tournamentId, participants });
   }
 
   async getParticipantsForTournament(
-    tournamentId: string): Promise<Array<ParticipantDbModel>> {
+    tournamentId: string): Promise<Array<Participant>> {
     this._tournamentId = tournamentId;
 
     let participants: Array<ParticipantDbModel> = [];
@@ -49,7 +51,8 @@ export class GetParticipantsRoute {
       this.status = 401;
     }
 
-    return participants;
+    return participants.map(({ _id, name, role }) =>
+      ({ _id: _id.toString(), name, role }));
   }
 
   async _isUserAuthorized() {

@@ -20,6 +20,9 @@ export const createParticipant =
   };
 
 export const getParticipants =
-  async (tournamentId: string): Promise<Array<Participant>> => {
+  async (tournamentId: string): Promise<{
+    tournamentId: string,
+    participants: Array<Participant>
+  }> => {
     return apiGetRequest(`/api/participant/get/tournament/${tournamentId}`);
   };

@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Container, Loader,
   Table, TableHeader, TableHeaderCell, TableBody, TableRow, TableCell
@@ -9,37 +10,18 @@ import type { Participant, Role } from '../../../../../models/participant';
 import { getParticipants } from '../../../../api/participant';
 
 type Props = {
-  tournamentId: string
-}
-
-type State = {
+  shouldLoad: boolean,
   isLoading: boolean,
-  participants: Array<Participant>
+  participants: Array<Participant>,
+
+  getParticipants: () => void
 }
 
-class ListParticipants extends Component<Props, State> {
-  state = {
-    isLoading: true,
-    participants: []
-  }
-
+class ListParticipants extends Component<Props> {
   componentDidMount() {
-    this._getParticipants();
-  }
-
-  async _getParticipants() {
-    this.setState({ isLoading: true });
-    try {
-      const participants = await getParticipants(this.props.tournamentId);
-      this.setState({
-        isLoading: false,
-        participants
-      });
-    } catch (e) {
-      this.setState({
-        isLoading: false,
-        participants: []
-      });
+    const { shouldLoad, getParticipants } = this.props;
+    if (shouldLoad) {
+      getParticipants();
     }
   }
 
@@ -64,9 +46,10 @@ class ListParticipants extends Component<Props, State> {
   }
 
   render() {
+    const { isLoading, participants } = this.props;
     return (
       <Container>
-        {this.state.isLoading && <Loader active={this.state.isLoading} />}
+        {isLoading && <Loader active={isLoading} />}
         <Table>
           <TableHeader>
             <TableRow>
@@ -75,7 +58,7 @@ class ListParticipants extends Component<Props, State> {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {this.state.participants.map(this._renderItem)}
+            {participants.map(this._renderItem)}
           </TableBody>
         </Table>
       </Container>
@@ -83,4 +66,31 @@ class ListParticipants extends Component<Props, State> {
   }
 }
 
-export default ListParticipants;
+type ConnectedProps = {
+  tournamentId: string
+}
+
+function mapStateToProps({ participants }: ReduxState,
+  { tournamentId }: ConnectedProps) {
+  return {
+    shouldLoad: !participants.forTournament[tournamentId],
+    isLoading: participants.isLoading,
+    participants:
+      (participants.forTournament[tournamentId] || [])
+        .map(id => participants.byId[id]),
+  };
+}
+
+function mapDispatchToProps(dispatch: ReduxDispatch,
+  { tournamentId }: ConnectedProps) {
+  return {
+    getParticipants: () => dispatch(
+      {type: 'GET_PARTICIPANTS', promise: getParticipants(tournamentId)}
+    )
+  };
+}
+
+const ListParticipantsContainer =
+  connect(mapStateToProps, mapDispatchToProps)(ListParticipants);
+
+export default ListParticipantsContainer;
