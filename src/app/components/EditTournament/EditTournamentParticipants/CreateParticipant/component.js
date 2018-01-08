@@ -2,19 +2,17 @@
 import React, { Component } from 'react';
 import { Form, FormButton, FormRadio, FormGroup, FormInput, Message } from
   'semantic-ui-react';
-
+import type { ParticipantValidationSummary } from
+  '../../../../../validators/validate-participant';
 import type { Role } from '../../../../../models/participant';
 
 type Props = {
   isLoading: boolean,
 
-  addedSuccessfully: boolean,
+  createdSuccessfully: boolean,
 
-  isValidParticipant: boolean,
-  isValidName: boolean,
-  isValidRole: boolean,
-
-  onSubmit: (state: State) => Promise<void>
+  validation: ParticipantValidationSummary,
+  onSubmit: (state: State) => void
 }
 
 export type State = {
@@ -22,7 +20,7 @@ export type State = {
   role: Role
 };
 
-class AddParticipant extends Component<Props, State> {
+class CreateParticipant extends Component<Props, State> {
   state = {
     name: '',
     role: 'none',
@@ -41,12 +39,12 @@ class AddParticipant extends Component<Props, State> {
   }
 
   render() {
-    const { isLoading, isValidParticipant, isValidName, isValidRole } =
-      this.props;
+    const { isLoading, validation } = this.props;
+    const { isValidParticipant, isValidName, isValidRole } = validation;
     const { name, role } = this.state;
     return (
       <Form error={!isValidParticipant} loading={isLoading}>
-        {this.props.addedSuccessfully &&
+        {this.props.createdSuccessfully &&
           <Message positive content='Success!' />}
         <FormInput
           label='Name'
@@ -85,4 +83,4 @@ class AddParticipant extends Component<Props, State> {
   }
 }
 
-export default AddParticipant;
+export default CreateParticipant;

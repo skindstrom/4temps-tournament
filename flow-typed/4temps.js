@@ -5,6 +5,8 @@ import type{ Tournament } from '../src/models/tournament';
 import type { TournamentValidationSummary } from
   '../src/validators/validate-tournament';
 import type { Participant } from '../src/models/participant';
+import type { ParticipantValidationSummary } from
+  '../src/validators/validate-participant'
 
 // Redux
 declare type ReduxDispatch = (action: ReduxAction) => any;
@@ -37,6 +39,11 @@ declare type ReduxState = {
     },
     byId: {
       [id: string]: Participant
+    },
+    uiCreateParticipant: {
+      isLoading: boolean,
+      createdSuccessfully: boolean,
+      validation: ParticipantValidationSummary
     }
   },
 
@@ -51,7 +58,7 @@ declare type ReduxState = {
 declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
-  | GetParticipantsAction;
+  | GetParticipantsAction | CreateParticipantAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -83,4 +90,10 @@ declare type GetParticipantsAction =
   {
     type: 'GET_PARTICIPANTS',
     promise: Promise<{ tournamentId: string, participants: Array<Participant> }>
+  };
+
+declare type CreateParticipantAction =
+  {
+    type: 'CREATE_PARTICIPANT',
+    promise: Promise<{ tournamentId: string, participant: Participant }>
   };

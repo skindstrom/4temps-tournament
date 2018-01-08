@@ -4,12 +4,12 @@ import { apiPostRequest, apiGetRequest } from '../util';
 
 import type { Participant } from '../../../models/participant';
 import { validateParticipant } from '../../../validators/validate-participant';
-import type { ParticipantValidationSummary } from
-  '../../../validators/validate-participant';
 
 export const createParticipant =
   async (tournamentId: string,
-    participant: Participant): Promise<ParticipantValidationSummary> => {
+    participant: Participant): Promise<{
+      tournamentId: string, participant: Participant
+    }> => {
     const validation = validateParticipant(participant);
     if (!validation.isValidParticipant) {
       throw validation;

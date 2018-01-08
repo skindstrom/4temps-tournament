@@ -217,6 +217,59 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         }
       })
     });
+  case 'CREATE_PARTICIPANT':
+    return handle(state, action, {
+      start: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        participants: {
+          ...prevState.participants,
+          isLoading: true,
+          uiCreateParticipant: {
+            ...prevState.participants.uiCreateParticipant,
+            isLoading: true
+          }
+        }
+      }),
+      success: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        participants: {
+          ...prevState.participants,
+          isLoading: false,
+          forTournament: {
+            ...prevState.participants.forTournament,
+            [payload.tournamentId]:
+              [...prevState.participants.forTournament[payload.tournamentId],
+                payload.participant._id]
+          },
+          byId: {
+            ...prevState.participants.byId,
+            [payload.participant._id]: payload.participant
+          },
+          uiCreateParticipant: {
+            isLoading: false,
+            createdSuccessfully: true,
+            validation: {
+              isValidParticipant: true,
+              isValidName: true,
+              isValidRole: true
+            }
+          }
+        }
+      }),
+      failure: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        participants: {
+          ...prevState.participants,
+          isLoading: false,
+          uiCreateParticipant: {
+            ...prevState.participants.uiCreateParticipant,
+            isLoading: false,
+            createdSuccessfully: false,
+            validation: payload
+          }
+        }
+      }),
+    });
   }
 
   return state;
@@ -252,7 +305,17 @@ export function initialState(): ReduxState {
       isLoading: true,
 
       forTournament: {},
-      byId: {}
+      byId: {},
+
+      uiCreateParticipant: {
+        isLoading: false,
+        createdSuccessfully: false,
+        validation: {
+          isValidParticipant: true,
+          isValidName: true,
+          isValidRole: true
+        }
+      }
     },
     uiLogin: {
       isLoading: false,

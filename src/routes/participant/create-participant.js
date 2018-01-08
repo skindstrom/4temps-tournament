@@ -36,7 +36,11 @@ export class CreateParticipantRoute {
     route.parseBody(req.body);
     route.createParticipant();
 
-    res.sendStatus(route.status);
+    res.status(route.status);
+    res.json({
+      tournamentId: route._tournamentId,
+      participant: route._participant
+    });
   }
 
   parseBody(body: {tournamentId: ?string, participant: ?Participant}) {
