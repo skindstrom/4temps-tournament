@@ -40,6 +40,30 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         }
       })
     });
+  case 'SIGNUP':
+    return handle(state, action, {
+      start: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        uiSignUp: {
+          ...prevState.uiSignUp,
+          isLoading: true
+        }
+      }),
+      success: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        uiSignUp: {
+          isLoading: false,
+          validation: payload
+        }
+      }),
+      failure: (prevState: ReduxState): ReduxState => ({
+        ...prevState,
+        uiSignUp: {
+          isLoading: false,
+          validation: payload
+        }
+      }),
+    });
   case 'GET_ALL_TOURNAMENTS':
     return handle(state, action, {
       start: (prevState: ReduxState): ReduxState => ({
@@ -325,6 +349,18 @@ export function initialState(): ReduxState {
       isValidPassword: true,
       doesUserExist: true
     },
+    uiSignUp: {
+      isLoading: false,
+
+      validation: {
+        isValid: true,
+        isValidEmail: true,
+        isEmailNotUsed: true,
+        isValidFirstName: true,
+        isValidLastName: true,
+        isValidPassword: true
+      }
+    }
   };
 }
 

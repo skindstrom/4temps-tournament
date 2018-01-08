@@ -1,10 +1,8 @@
 // @flow
-import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import type { Location, RouterHistory } from 'react-router-dom';
 
 import SignUp from './component';
-import type { UserCreateValidationSummary } from
-  '../../../validators/validate-user';
 import type { UserWithPassword } from '../../../models/user';
 import { createUser } from '../../api/user';
 
@@ -13,49 +11,26 @@ type Props = {
   location: Location
 };
 
-type State = {
-  validation: UserCreateValidationSummary,
-  isLoading: boolean
-};
-
-class SignUpContainer extends Component<Props, State> {
-  state = {
-    validation: {
-      isValid: false,
-      isValidEmail: true,
-      isEmailNotUsed: true,
-      isValidFirstName: true,
-      isValidLastName: true,
-      isValidPassword: true
-    },
-    isLoading: false
+function mapStateToProps({ uiSignUp }: ReduxState) {
+  return {
+    ...uiSignUp
   };
-
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return nextState !== this.state;
-  }
-
-  _onSubmit = async (user: UserWithPassword) => {
-    this.setState({ isLoading: true });
-    try {
-      const validation = await createUser(user);
-      this.setState({ isLoading: false, validation});
-
-      this.props.history.push('/login' + this.props.location.search);
-    } catch (validation) {
-      this.setState({ validation, isLoading: false });
-    }
-  };
-
-  render() {
-    return (
-      <SignUp
-        onSubmit={this._onSubmit}
-        validation={this.state.validation}
-        isLoading={this.state.isLoading}
-      />
-    );
-  }
 }
+
+function mapDispatchToProps(dispatch: ReduxDispatch,
+  { history, location }: Props) {
+  return {
+    onSubmit: (user: UserWithPassword) => dispatch({
+      type: 'SIGNUP',
+      promise: createUser(user),
+      meta: {
+        onSuccess: () => history.push('/login' + location.search)
+      }
+    })
+  };
+}
+
+const SignUpContainer =
+  connect(mapStateToProps, mapDispatchToProps)(SignUp);
 
 export default SignUpContainer;

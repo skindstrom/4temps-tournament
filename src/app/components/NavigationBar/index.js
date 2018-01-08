@@ -37,8 +37,11 @@ function mapDispatchToProps(dispatch: ReduxDispatch,
     onClickLogout: () =>
       dispatch(({
         type: 'LOGOUT_USER',
-        promise: logoutUser()
-      })).then(() => history.push('/'))
+        promise: logoutUser(),
+        meta: {
+          onSuccess: () => history.push('/')
+        }
+      }))
   };
 }
 

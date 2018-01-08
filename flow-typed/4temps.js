@@ -6,10 +6,12 @@ import type { TournamentValidationSummary } from
   '../src/validators/validate-tournament';
 import type { Participant } from '../src/models/participant';
 import type { ParticipantValidationSummary } from
-  '../src/validators/validate-participant'
+'../src/validators/validate-participant';
+import type { UserCreateValidationSummary } from
+  '../src/validators/validate-user';
 
 // Redux
-declare type ReduxDispatch = (action: ReduxAction) => any;
+declare type ReduxDispatch = (action: ReduxAction) => mixed;
 declare type ReduxState = {
   isAuthenticated: boolean,
   tournaments: {
@@ -54,21 +56,34 @@ declare type ReduxState = {
     isValidPassword: boolean,
     doesUserExist: boolean
   },
+  uiSignUp: {
+    isLoading: boolean,
+    validation: UserCreateValidationSummary
+  }
 };
 declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
-  | GetParticipantsAction | CreateParticipantAction;
+  | GetParticipantsAction | CreateParticipantAction
+  | SignUpAction;
 
 // Redux Actions
 declare type LogoutAction =
-  { type: 'LOGOUT_USER', promise: Promise<boolean> };
+  {
+    type: 'LOGOUT_USER',
+    promise: Promise<boolean>,
+    meta: {
+      onSuccess: () => mixed
+    }
+  };
 
 declare type LoginAction =
   {
     type: 'LOGIN_USER',
     promise: Promise<UserLoginValidationSummary>,
-    meta: ?any
+    meta: {
+      onSuccess: () => mixed
+    }
   };
 
 declare type GetAllTournamentsAction =
@@ -81,7 +96,9 @@ declare type CreateTournamentAction =
   {
     type: 'CREATE_TOURNAMENT',
     promise: Promise<Tournament>,
-    meta: any
+    meta: {
+      onSuccess: (tournament: Tournament) => mixed
+    }
   };
 declare type EditTournamentAction =
   { type: 'EDIT_TOURNAMENT', promise: Promise<Tournament>};
@@ -96,4 +113,13 @@ declare type CreateParticipantAction =
   {
     type: 'CREATE_PARTICIPANT',
     promise: Promise<{ tournamentId: string, participant: Participant }>
+  };
+
+declare type SignUpAction =
+  {
+    type: 'SIGNUP',
+    promise: Promise<UserCreateValidationSummary>,
+    meta: {
+      onSuccess: () => mixed
+    }
   };
