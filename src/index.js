@@ -3,10 +3,7 @@
 import Express from 'express';
 import Session from 'express-session';
 import ConnectMongo from 'connect-mongo';
-import forceSsl from 'express-force-ssl';
 import Helmet from 'helmet';
-import fs from 'fs';
-import spdy from 'spdy';
 import compression from 'compression';
 import type { $Request, $Response } from 'express';
 import path from 'path';
@@ -38,6 +35,8 @@ app.use(Session({
   secret: 'secret',
   resave: false,
   saveUninitialized: false,
+  /* Trust the reverse proxy for secure cookies */
+  proxy: true,
   cookie: {
     secure: true,
     httpOnly: true,
@@ -47,10 +46,6 @@ app.use(Session({
 }));
 
 app.use(Helmet());
-app.set('forceSSLOptions', {
-  httpsPort: 3001,
-});
-app.use(forceSsl);
 
 // used for files that should be public, e.g. favicon etc.
 app.use('/public', Express.static(path.join(__dirname, '../public')));
@@ -63,12 +58,6 @@ app.use(/\/api\/.*/, (req: $Request, res: $Response) => {
 });
 app.use(handleRender);
 
-// TODO: use environment variable for certs
-const key = fs.readFileSync('encryption/server.key');
-const cert = fs.readFileSync( 'encryption/server.crt');
-
-// TODO: use environment variable for passphrase
-spdy.createServer({ key, cert , passphrase: 'password'}, app).listen(3001);
 app.listen(3000);
 
 
