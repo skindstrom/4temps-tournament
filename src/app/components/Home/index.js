@@ -19,7 +19,7 @@ class Home extends Component<Props> {
   }
 
   render() {
-    return <TournamentList {...this.props} />;
+    return <TournamentList {...this.props} onClick={null} />;
   }
 }
 
