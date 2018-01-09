@@ -38,7 +38,7 @@ app.use(Session({
   /* Trust the reverse proxy for secure cookies */
   proxy: true,
   cookie: {
-    secure: true,
+    secure: process.env.NODE_ENV === 'production', // Only use secure in prod
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
   },
@@ -88,6 +88,7 @@ function handleRender(req: $Request, res: $Response) {
       Location: context.url
     });
   } else {
+    res.type('html');
     res.write(renderHtmlTemplate(html, store.getState()));
   }
   res.end();

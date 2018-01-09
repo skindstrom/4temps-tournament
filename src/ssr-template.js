@@ -14,10 +14,10 @@ export default (html: string, preloadedState: ReduxState) => {
       </head>
       <body>
         <div id="root">${html}</div>
-        <script>
+        <script type="application/javascript">
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
         </script>
-        <script src="/public/bundle.js"></script>
+        <script type="application/javascript" src="/public/bundle.js"></script>
       </body>
     </html>
     `;
