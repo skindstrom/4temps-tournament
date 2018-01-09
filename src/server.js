@@ -29,7 +29,6 @@ app.use(compression());
 app.use(bodyParser.json());
 
 const MongoStore = ConnectMongo(Session);
-// TODO: use environment variable for secret
 app.use(Session({
   name: 'SESSION',
   secret: process.env.COOKIE_SECRET,
