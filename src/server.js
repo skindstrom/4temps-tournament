@@ -11,6 +11,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import bodyParser from 'body-parser';
+import uuid from 'uuid/v4';
 
 import { Provider } from 'react-redux';
 
@@ -44,7 +45,23 @@ app.use(Session({
   store: new MongoStore({mongooseConnection: getDbConnection()})
 }));
 
-app.use(Helmet());
+// Add a CSP nonce to allow inline scripts
+app.use((req: $Request, res: $Response, next) => {
+  res.locals.cspNonce = uuid();
+  return next();
+});
+
+app.use(Helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'",
+      // $FlowFixMe
+      (req: $Request, res: $Response) => `'nonce-${res.locals.cspNonce}'`],
+    styleSrc: ["'self'", 'cdnjs.cloudflare.com', 'fonts.googleapis.com'],
+    fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
+    formAction: ["'self'"]
+  }
+}));
 
 // used for files that should be public, e.g. favicon etc.
 app.use('/public', Express.static(path.join(__dirname, '../public')));
@@ -85,7 +102,9 @@ function handleRender(req: $Request, res: $Response) {
     });
   } else {
     res.type('html');
-    res.write(renderHtmlTemplate(html, store.getState()));
+    res.write(renderHtmlTemplate(html, store.getState(),
+      // $FlowFixMe: It's set a bit higher up
+      res.locals.cspNonce));
   }
   res.end();
 }

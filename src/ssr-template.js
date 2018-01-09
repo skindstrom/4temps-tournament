@@ -2,7 +2,7 @@
 
 /* eslint-disable max-len */
 
-export default (html: string, preloadedState: ReduxState) => {
+export default (html: string, preloadedState: ReduxState, cspNonce: string) => {
   return `
     <!doctype html>
     <html>
@@ -14,7 +14,7 @@ export default (html: string, preloadedState: ReduxState) => {
       </head>
       <body>
         <div id="root">${html}</div>
-        <script type="application/javascript">
+        <script nonce="${cspNonce}" type="application/javascript">
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
         </script>
         <script type="application/javascript" src="/public/bundle.js"></script>
