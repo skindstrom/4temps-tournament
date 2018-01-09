@@ -27,6 +27,18 @@ Once there, run `npm install` to install all the dependencies of the project.
 
 **You're now all set to run the website!**
 
+## Setting up the environment
+Some parts of the application is configured via environment variables.
+These can be set in a `.env` file in the root directory.
+An example `.env` file can be seen below
+```sh
+NODE_ENV=development
+DB_URI=mongodb://localhost/4temps
+COOKIE_SECRET="super secret cookie secret"
+HOSTNAME=localhost
+HTTP_PORT=3000
+```
+
 # Usage
 From the root directory of the project run `npm start` and wait a short while.
 

@@ -2,4 +2,7 @@ node_modules
 lib
 public-build
 
+# don't commit environment variables
+.env
+
 .vscode
