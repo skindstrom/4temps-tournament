@@ -52,7 +52,7 @@ class NavigationBar extends PureComponent<Props> {
     return (
       <Menu>
         <MenuItem as={Link} to='/' name='header' header>
-          4Temps Tournaments
+          4 Temps Tournaments
         </MenuItem>
         <MenuItem
           name='home'
