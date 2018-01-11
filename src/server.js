@@ -5,7 +5,10 @@ import Session from 'express-session';
 import ConnectMongo from 'connect-mongo';
 import Helmet from 'helmet';
 import compression from 'compression';
-import type { $Request, $Response } from 'express';
+import type {
+  $Application as ExpressApplication,
+  $Request, $Response
+} from 'express';
 import path from 'path';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
@@ -23,96 +26,149 @@ import App from './app/components/App';
 
 import createReduxStore from './app/redux-store';
 
-const app = Express();
+class Server {
+  _app: ExpressApplication;
 
-// gzip compression
-app.use(compression());
-app.use(bodyParser.json());
-
-const MongoStore = ConnectMongo(Session);
-app.use(Session({
-  name: 'SESSION',
-  secret: process.env.COOKIE_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  /* Trust the reverse proxy for secure cookies */
-  proxy: true,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production', // Only use secure in prod
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
-  },
-  store: new MongoStore({mongooseConnection: getDbConnection()})
-}));
-
-// Add a CSP nonce to allow inline scripts
-app.use((req: $Request, res: $Response, next) => {
-  res.locals.cspNonce = uuid();
-  return next();
-});
-
-app.use(Helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: ["'self'",
-      // $FlowFixMe
-      (req: $Request, res: $Response) => `'nonce-${res.locals.cspNonce}'`],
-    styleSrc: ["'self'", 'cdnjs.cloudflare.com', 'fonts.googleapis.com'],
-    fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
-    formAction: ["'self'"]
+  constructor() {
+    this._app = Express();
   }
-}));
 
-// used for files that should be public, e.g. favicon etc.
-app.use('/public', Express.static(path.join(__dirname, '../public')));
-// used for files that should be public, but that's generated
-app.use('/public', Express.static(path.join(__dirname, '../public-build')));
+  static start() {
+    const server = Server.initialize();
+    server.listen();
+  }
 
-app.use('/api', ApiRoute);
-app.use(/\/api\/.*/, (req: $Request, res: $Response) => {
-  res.sendStatus(404);
-});
-app.use(handleRender);
+  static initialize() {
+    const server = new Server();
 
-// used for server side rendering of React components
-function handleRender(req: $Request, res: $Response) {
-  const context = {};
+    server._enableCompression();
+    server._enableBodyParsing();
+    server._enableSessions();
+    server._enableSecurePolicies();
+    server._enableRouting();
+    server._enableServerSideRendering();
 
-  // $FlowFixMe: Add user to req type
-  const isAuthenticated = req.session.user != null;
+    return server;
+  }
 
-  // $FlowFixMe: A subset is ok
-  const store = createReduxStore({ isAuthenticated });
+  listen = () => {
+    let hostname = process.env.HOSTNAME;
+    if (hostname == null) {
+      hostname = 'localhost';
+    }
+    const port = parseInt(process.env.HTTP_PORT);
+    this._app.listen(port, hostname);
+  }
 
-  const html = renderToString(
-    <Provider store={store}>
-      <StaticRouter
-        location={req.url}
-        context={context}
-      >
-        <App />
-      </StaticRouter>
-    </Provider>
-  );
+  _enableCompression = () => {
+    this._app.use(compression());
+  }
 
-  // redirects
-  if (context.url) {
-    res.writeHead(301, {
-      Location: context.url
+  _enableBodyParsing = () => {
+    this._app.use(bodyParser.json());
+  }
+
+  _enableSessions = () => {
+    const MongoStore = ConnectMongo(Session);
+    this._app.use(Session({
+      name: 'SESSION',
+      secret: process.env.COOKIE_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      // Trust the reverse proxy for secure cookies
+      proxy: true,
+      cookie: {
+        // Only use secure in prod
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
+      },
+      store: new MongoStore({ mongooseConnection: getDbConnection() })
+    }));
+  }
+
+  _enableSecurePolicies = () => {
+    this._addCspNonceToResponse();
+    this._app.use(Helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'",
+            (req: $Request, res: $Response) =>
+              // $FlowFixMe
+              `'nonce-${res.locals.cspNonce}'`],
+          styleSrc: ["'self'", 'cdnjs.cloudflare.com', 'fonts.googleapis.com'],
+          fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
+          formAction: ["'self'"]
+        }
+      }}));
+  }
+
+  _addCspNonceToResponse = () => {
+    // Add a CSP nonce to allow inline scripts
+    this._app.use((req: $Request, res: $Response, next) => {
+      res.locals.cspNonce = uuid();
+      return next();
     });
-  } else {
-    res.type('html');
-    res.write(renderHtmlTemplate(html, store.getState(),
-      // $FlowFixMe: It's set a bit higher up
-      res.locals.cspNonce));
   }
-  res.end();
+
+  _enableRouting = () => {
+    this._enablePublicDirectoryRouting();
+    this._enableApiRouting();
+  }
+
+  _enablePublicDirectoryRouting = () => {
+    // used for files that should be public, e.g. favicon etc.
+    this._app.use('/public', Express.static(path.join(__dirname, '../public')));
+    // used for files that should be public, but that's generated
+    this._app.use('/public',
+      Express.static(path.join(__dirname, '../public-build')));
+  }
+
+  _enableApiRouting = () => {
+    this._app.use('/api', ApiRoute);
+    this._app.use(/\/api\/.*/, (req: $Request, res: $Response) => {
+      res.sendStatus(404);
+    });
+  }
+
+  _enableServerSideRendering = () => {
+    this._app.use(this._renderRequest);
+  }
+
+  _renderRequest = (req: $Request, res: $Response) => {
+    const context = {};
+
+    // $FlowFixMe: Add user to req type
+    const isAuthenticated = req.session.user != null;
+
+    // $FlowFixMe: A subset is ok
+    const store = createReduxStore({ isAuthenticated });
+
+    const html = renderToString(
+      <Provider store={store}>
+        <StaticRouter
+          location={req.url}
+          context={context}
+        >
+          <App />
+        </StaticRouter>
+      </Provider>
+    );
+
+    // redirects
+    if (context.url) {
+      res.writeHead(301, {
+        Location: context.url
+      });
+    } else {
+      res.type('html');
+      res.write(renderHtmlTemplate(html, store.getState(),
+        // $FlowFixMe: It's set a bit higher up
+        res.locals.cspNonce));
+    }
+    res.end();
+  }
 }
 
-export default function startServer() {
-  let hostname = process.env.HOSTNAME;
-  if (hostname == null) {
-    hostname = 'localhost';
-  }
-  app.listen(parseInt(process.env.HTTP_PORT), hostname);
-}
+export default Server.start;
