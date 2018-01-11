@@ -1,45 +1,31 @@
 // @flow
 
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import type { Tournament } from '../../../models/tournament';
+import PreloadContainer from '../PreloadContainer';
 import TournamentList from '../TournamentList';
 import { getAllTournaments } from '../../api/tournament';
 
-type Props = {
-  isLoading: boolean,
-  tournaments: Array<Tournament>,
-  getTournaments: () => void
-}
-
-class Home extends Component<Props> {
-  componentDidMount() {
-    this.props.getTournaments();
-  }
-
-  render() {
-    return <TournamentList {...this.props} onClick={null} />;
-  }
-}
-
 function mapStateToProps({ tournaments }: ReduxState) {
   return {
+    shouldLoad: tournaments.isInvalidated,
     isLoading: tournaments.isLoading,
+    Child: TournamentList,
     tournaments: tournaments.allIds.map(id => tournaments.byId[id])
   };
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch) {
   return {
-    getTournaments: () => dispatch({
+    load: () => dispatch({
       type: 'GET_ALL_TOURNAMENTS',
       promise: getAllTournaments()
-    })
+    }),
+    onClick: null
   };
 }
 
 const HomeContainer =
-  connect(mapStateToProps, mapDispatchToProps)(Home);
+  connect(mapStateToProps, mapDispatchToProps)(PreloadContainer);
 
 export default HomeContainer;

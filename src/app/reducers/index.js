@@ -77,6 +77,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         ...prevState,
         tournaments: {
           ...prevState.tournaments,
+          isInvalidated: false,
           isLoading: false,
           allIds: payload.map(t => t._id),
           byId: normalize(payload)
@@ -87,6 +88,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         tournaments: {
           ...prevState.tournaments,
           isLoading: false,
+          isInvalidated: false,
         }
       })
     });
@@ -96,7 +98,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         ...prevState,
         tournaments: {
           ...prevState.tournaments,
-          isLoading: true
+          isLoading: true,
         }
       }),
       success: (prevState: ReduxState): ReduxState => ({
@@ -104,6 +106,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         tournaments: {
           ...prevState.tournaments,
           isLoading: false,
+          didLoadUserTournaments: true,
           forUser: payload.map(t => t._id),
           allIds: [
             ...prevState.tournaments.allIds,
@@ -119,6 +122,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
         ...prevState,
         tournaments: {
           ...state.tournaments,
+          didLoadUserTournaments: true,
           isLoading: false
         }
       }),
@@ -305,6 +309,8 @@ export function initialState(): ReduxState {
 
     tournaments: {
       isLoading: true,
+      isInvalidated: true,
+      didLoadUserTournaments: false,
 
       forUser: [],
       allIds: [],

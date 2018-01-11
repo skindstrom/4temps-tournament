@@ -16,6 +16,8 @@ declare type ReduxState = {
   isAuthenticated: boolean,
   tournaments: {
     isLoading: boolean,
+    isInvalidated: boolean,
+    didLoadUserTournaments: boolean,
 
     forUser: Array<string>,
     allIds: Array<string>,
@@ -28,7 +30,6 @@ declare type ReduxState = {
       validation: TournamentValidationSummary
     },
     uiEditTournament: {
-      isLoading: boolean,
       isValidName: boolean,
       isValidDate: boolean
     }

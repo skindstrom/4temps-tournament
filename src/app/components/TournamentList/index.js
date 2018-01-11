@@ -23,23 +23,36 @@ type State = {
   futureTournaments: Array<Tournament>
 }
 
+function getPreviousTournaments(tournaments: Array<Tournament>) {
+  const now = moment();
+  return sortTournaments(tournaments)
+    .filter(tour => tour.date.isSameOrBefore(now));
+}
+
+function getFutureTournaments(tournaments: Array<Tournament>) {
+  const now = moment();
+  return sortTournaments(tournaments)
+    .filter(tour => tour.date.isSameOrAfter(now));
+}
+
+function sortTournaments(tournaments: Array<Tournament>) {
+  // sort by latest date first
+  return tournaments.sort(
+    (a: Tournament, b: Tournament) =>
+      a.date.isSameOrBefore(b.date) ? 1 : -1);
+}
+
 class TournamentList extends Component<Props, State> {
   state = {
-    previousTournaments: [],
-    futureTournaments: []
+    previousTournaments: getPreviousTournaments(this.props.tournaments),
+    futureTournaments: getFutureTournaments(this.props.tournaments),
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    // sort by latest date first
-    const tournaments = nextProps.tournaments.sort(
-      (a: Tournament, b: Tournament) =>
-        a.date.isSameOrBefore(b.date) ? 1 : -1);
-
-    const now = moment();
-    const previousTournaments = tournaments
-      .filter(tour => tour.date.isSameOrBefore(now));
-    const futureTournaments = tournaments
-      .filter(tour => tour.date.isSameOrAfter(now));
+    const previousTournaments =
+      getPreviousTournaments(nextProps.tournaments);
+    const futureTournaments =
+      getFutureTournaments(nextProps.tournaments);
 
     this.setState({ previousTournaments, futureTournaments });
   }
