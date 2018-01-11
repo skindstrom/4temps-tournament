@@ -16,15 +16,11 @@ import { StaticRouter } from 'react-router-dom';
 import bodyParser from 'body-parser';
 import uuid from 'uuid/v4';
 
-import { Provider } from 'react-redux';
-
 import ApiRoute from './routes';
 import getDbConnection from './data/setup';
 
 import renderHtmlTemplate from './ssr-template';
-import App from './app/components/App';
-
-import createReduxStore from './app/redux-store';
+import { appWithPreloadedState, getReduxState } from './app/components/App';
 
 class Server {
   _app: ExpressApplication;
@@ -142,18 +138,13 @@ class Server {
     // $FlowFixMe: Add user to req type
     const isAuthenticated = req.session.user != null;
 
-    // $FlowFixMe: A subset is ok
-    const store = createReduxStore({ isAuthenticated });
-
     const html = renderToString(
-      <Provider store={store}>
-        <StaticRouter
-          location={req.url}
-          context={context}
-        >
-          <App />
-        </StaticRouter>
-      </Provider>
+      <StaticRouter
+        location={req.url}
+        context={context}
+      >
+        {appWithPreloadedState({ isAuthenticated })}
+      </StaticRouter>
     );
 
     // redirects
@@ -163,7 +154,7 @@ class Server {
       });
     } else {
       res.type('html');
-      res.write(renderHtmlTemplate(html, store.getState(),
+      res.write(renderHtmlTemplate(html, getReduxState(),
         // $FlowFixMe: It's set a bit higher up
         res.locals.cspNonce));
     }
