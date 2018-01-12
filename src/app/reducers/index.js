@@ -145,6 +145,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
             ...prevState.tournaments.byId,
             [payload._id]: payload
           },
+          forUser: [...prevState.tournaments.forUser, payload._id],
           uiCreateTournament: {
             ...prevState.tournaments.uiCreateTournament,
             isLoading: false,
