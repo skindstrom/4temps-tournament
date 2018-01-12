@@ -19,6 +19,13 @@ class PreloadContainer extends Component<Props> {
     }
   }
 
+  componentWillReceiveProps(nextProps: Props) {
+    const { load, shouldLoad } = nextProps;
+    if (shouldLoad && shouldLoad !== this.props.shouldLoad) {
+      load();
+    }
+  }
+
   render() {
     const { shouldLoad, Child, ...rest } = this.props;
     if (shouldLoad) {

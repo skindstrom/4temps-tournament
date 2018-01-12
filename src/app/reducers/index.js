@@ -8,10 +8,7 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
   switch (type) {
   case 'LOGOUT_USER':
     return handle(state, action, {
-      success: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        isAuthenticated: false
-      })
+      success: (): ReduxState => initialState(),
     });
   case 'LOGIN_USER':
     return handle(state, action, {
