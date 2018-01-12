@@ -1,4 +1,9 @@
-.wrapper {
+.center {
+    display: flex;
+    justify-content: center;
+}
+.width {
+    flex: 1;
     max-width: 500px;
     margin: 20px;
 }

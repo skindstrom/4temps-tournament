@@ -18,7 +18,7 @@ const SignUpOrLogin = ({ header, onClickSignUp, onClickLogin }: Props) => {
       centered
     >
       <GridRow>
-        <Header as='h3'>
+        <Header as='h1'>
           {header}
         </Header>
       </GridRow>

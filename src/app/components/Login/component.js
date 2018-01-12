@@ -38,40 +38,42 @@ class Login extends PureComponent<Props, State> {
 
   render() {
     return (
-      <div styleName="wrapper">
-        <Header as='h1'>
-          Log in
-        </Header>
-        <Form
-          loading={this.props.isLoading}
-          error={!this.props.isValidInput}
-        >
-          <FormInput
-            label='Email'
-            placeholder='john@gmail.com'
-            value={this.state.email}
-            onChange={this._onEmailChange}
-          />
-          {!this.props.isValidEmail &&
-            <Message error content='Invalid email address' />}
-          <FormInput
-            type='password'
-            label='Password'
-            placeholder='P4ssw0rd'
-            value={this.state.password}
-            onChange={this._onPasswordChange}
-          />
-          {!this.props.isValidPassword &&
-            <Message error content='Invalid password' />}
-          <Button
-            type='submit'
-            onClick={this._onSubmit}
+      <div styleName='center'>
+        <div styleName='width'>
+          <Header as='h1'>
+            Log in
+          </Header>
+          <Form
+            loading={this.props.isLoading}
+            error={!this.props.isValidInput}
           >
-            Submit
-          </Button>
-          {!this.props.doesUserExist &&
-            <Message error content='Invalid email or password' />}
-        </Form>
+            <FormInput
+              label='Email'
+              placeholder='john@gmail.com'
+              value={this.state.email}
+              onChange={this._onEmailChange}
+            />
+            {!this.props.isValidEmail &&
+              <Message error content='Invalid email address' />}
+            <FormInput
+              type='password'
+              label='Password'
+              placeholder='P4ssw0rd'
+              value={this.state.password}
+              onChange={this._onPasswordChange}
+            />
+            {!this.props.isValidPassword &&
+              <Message error content='Invalid password' />}
+            <Button
+              type='submit'
+              onClick={this._onSubmit}
+            >
+              Submit
+            </Button>
+            {!this.props.doesUserExist &&
+              <Message error content='Invalid email or password' />}
+          </Form>
+        </div>
       </div>
     );
   }
