@@ -15,6 +15,7 @@
     "build:client": "BABEL_ENV=client webpack --config config/webpack.prod.js",
     "start:prod": "node lib/index.js",
     "test": "jest src",
+    "test:watch": "jest --watch src",
     "lint": "npm-run-all -p lint:eslint lint:flow",
     "lint:fix": "eslint src/** --fix",
     "lint:eslint": "eslint src/**",

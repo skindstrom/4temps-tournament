@@ -6,7 +6,7 @@ import type { TournamentValidationSummary } from
   '../src/validators/validate-tournament';
 import type { Participant } from '../src/models/participant';
 import type { ParticipantValidationSummary } from
-'../src/validators/validate-participant';
+  '../src/validators/validate-participant';
 import type { UserCreateValidationSummary } from
   '../src/validators/validate-user';
 
@@ -50,18 +50,26 @@ declare type ReduxState = {
     }
   },
 
-  uiLogin: {
-    isLoading: boolean,
-    isValid: boolean,
-    isValidEmail: boolean,
-    isValidPassword: boolean,
-    doesUserExist: boolean
-  },
+  uiLogin: UiLoginReduxState,
   uiSignUp: {
     isLoading: boolean,
     validation: UserCreateValidationSummary
   }
 };
+
+declare type UiLoginReduxState = {
+  isLoading: boolean,
+  isValid: boolean,
+  isValidEmail: boolean,
+  isValidPassword: boolean,
+  doesUserExist: boolean
+}
+
+declare type ReduxPackAction = {
+  type: string,
+  payload: any
+}
+
 declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
