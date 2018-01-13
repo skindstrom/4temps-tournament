@@ -1,15 +1,12 @@
 // @flow
 import { handle } from 'redux-pack';
+import isAuthenticated from './is-authenticated';
 
 function reducer(state: ReduxState = initialState(), action: ReduxAction) {
   // $FlowFixMe
   const { type, payload } = action;
 
   switch (type) {
-  case 'LOGOUT_USER':
-    return handle(state, action, {
-      success: (): ReduxState => initialState(),
-    });
   case 'LOGIN_USER':
     return handle(state, action, {
       start: (prevState: ReduxState): ReduxState => ({
@@ -21,7 +18,6 @@ function reducer(state: ReduxState = initialState(), action: ReduxAction) {
       }),
       success: (prevState: ReduxState): ReduxState => ({
         ...prevState,
-        isAuthenticated: true,
         uiLogin: {
           ...prevState.uiLogin,
           isLoading: false,
@@ -377,4 +373,11 @@ function normalize(array: Array<{ _id: string, [string]: mixed }>) {
   return acc;
 }
 
-export default reducer;
+function combinedReducer(state: ReduxState, action: ReduxAction) {
+  return {
+    ...reducer(state, action),
+    isAuthenticated: isAuthenticated(state.isAuthenticated, action)
+  };
+}
+
+export default combinedReducer;
