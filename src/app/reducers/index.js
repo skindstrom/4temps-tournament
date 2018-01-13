@@ -2,35 +2,12 @@
 import { handle } from 'redux-pack';
 import isAuthenticated from './is-authenticated';
 import uiLogin from './ui-login';
+import uiSignup from './ui-signup';
 
 function reducer(state: ReduxState = initialState(), action: ReduxPackAction) {
   const { type, payload } = action;
 
   switch (type) {
-  case 'SIGNUP':
-    return handle(state, action, {
-      start: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        uiSignUp: {
-          ...prevState.uiSignUp,
-          isLoading: true
-        }
-      }),
-      success: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        uiSignUp: {
-          isLoading: false,
-          validation: payload
-        }
-      }),
-      failure: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        uiSignUp: {
-          isLoading: false,
-          validation: payload
-        }
-      }),
-    });
   case 'GET_ALL_TOURNAMENTS':
     return handle(state, action, {
       start: (prevState: ReduxState): ReduxState => ({
@@ -352,6 +329,7 @@ function combinedReducer(state: ReduxState, action: ReduxPackAction) {
     ...reducer(state, action),
     isAuthenticated: isAuthenticated(state.isAuthenticated, action),
     uiLogin: uiLogin(state.uiLogin, action),
+    uiSignUp: uiSignup(state.uiSignUp, action),
   };
 }
 

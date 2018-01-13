@@ -51,10 +51,7 @@ declare type ReduxState = {
   },
 
   uiLogin: UiLoginReduxState,
-  uiSignUp: {
-    isLoading: boolean,
-    validation: UserCreateValidationSummary
-  }
+  uiSignUp: UiSignUpReduxState
 };
 
 declare type UiLoginReduxState = {
@@ -63,6 +60,11 @@ declare type UiLoginReduxState = {
   isValidEmail: boolean,
   isValidPassword: boolean,
   doesUserExist: boolean
+}
+
+declare type UiSignUpReduxState = {
+  isLoading: boolean,
+  validation: UserCreateValidationSummary
 }
 
 declare type ReduxPackAction = {

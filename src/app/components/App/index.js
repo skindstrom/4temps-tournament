@@ -9,7 +9,7 @@ import Router from '../Router';
 import NavigationBar from '../NavigationBar';
 import reducer, { initialState } from '../../reducers';
 
-let store: Store<ReduxState, ReduxAction>;
+let store: Store<ReduxState, ReduxPackAction>;
 
 export function getReduxState(): ReduxState {
   if (store) {
