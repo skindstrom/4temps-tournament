@@ -1,5 +1,6 @@
 // @flow
 import { handle } from 'redux-pack';
+import normalize from './normalize';
 
 function tournaments(state: TournamentReduxState = getInitialState(),
   action: ReduxPackAction) {
@@ -141,15 +142,6 @@ function editTournament(state: TournamentReduxState,
       }
     }),
   });
-}
-
-function normalize(array: Array<{ _id: string, [string]: mixed }>) {
-  const acc: { [string]: mixed } = {};
-  array.forEach(t => {
-    acc[t._id] = t;
-  });
-
-  return acc;
 }
 
 export default tournaments;

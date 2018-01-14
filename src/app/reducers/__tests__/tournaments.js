@@ -41,7 +41,7 @@ describe('Tournament reducer', () => {
       .toEqual(getInitialState());
   });
 
-  test('Invalid does not change state', () => {
+  test('Invalid action does not change state', () => {
     expect(reducer(getInitialState(),
       makePackAction(LIFECYCLE.START, 'INVALID_ACTION')))
       .toEqual(getInitialState());
@@ -87,11 +87,15 @@ describe('Tournament reducer', () => {
 
   test('GET_ALL_TOURNAMENTS failure sets isLoading to false and' +
     'isInvalidated to true', () => {
-      expect(
-        reducer(getInitialState(),
-          makePackAction(LIFECYCLE.FAILURE, 'GET_ALL_TOURNAMENTS')))
-        .toEqual({ ...getInitialState(), isLoading: false, isInvalidated: false });
-    });
+    expect(
+      reducer(getInitialState(),
+        makePackAction(LIFECYCLE.FAILURE, 'GET_ALL_TOURNAMENTS')))
+      .toEqual({
+        ...getInitialState(),
+        isLoading: false,
+        isInvalidated: false
+      });
+  });
 
   test('GET_USER_TOURNAMENTS start sets loading to true', () => {
     expect(
@@ -168,7 +172,10 @@ describe('Tournament reducer', () => {
       allIds: ['1'],
       byId: {
         '1': {
-          _id: '1', name: 'ANOTHER NAME, SAME ID', date: moment(), type: 'classic'
+          _id: '1',
+          name: 'ANOTHER NAME, SAME ID',
+          date: moment(),
+          type: 'classic'
         }
       }
     };

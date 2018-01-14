@@ -15,21 +15,7 @@ declare type ReduxDispatch = (action: ReduxAction) => mixed;
 declare type ReduxState = {
   isAuthenticated: boolean,
   tournaments: TournamentReduxState,
-  participants: {
-    isLoading: boolean,
-
-    forTournament: {
-      [id: string]: Array<string>
-    },
-    byId: {
-      [id: string]: Participant
-    },
-    uiCreateParticipant: {
-      isLoading: boolean,
-      createdSuccessfully: boolean,
-      validation: ParticipantValidationSummary
-    }
-  },
+  participants: ParticipantReduxState,
 
   uiLogin: UiLoginReduxState,
   uiSignUp: UiSignUpReduxState
@@ -66,6 +52,22 @@ declare type TournamentReduxState = {
   uiEditTournament: {
     isValidName: boolean,
     isValidDate: boolean
+  }
+}
+
+declare type ParticipantReduxState = {
+  isLoading: boolean,
+
+  forTournament: {
+    [id: string]: Array<string>
+  },
+  byId: {
+    [id: string]: Participant
+  },
+  uiCreateParticipant: {
+    isLoading: boolean,
+    createdSuccessfully: boolean,
+    validation: ParticipantValidationSummary
   }
 }
 

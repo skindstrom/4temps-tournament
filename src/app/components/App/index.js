@@ -7,7 +7,7 @@ import type { Store } from 'redux';
 
 import Router from '../Router';
 import NavigationBar from '../NavigationBar';
-import reducer, { initialState } from '../../reducers';
+import reducer, { getInitialState } from '../../reducers';
 
 let store: Store<ReduxState, ReduxPackAction>;
 
@@ -15,7 +15,7 @@ export function getReduxState(): ReduxState {
   if (store) {
     return store.getState();
   }
-  return initialState();
+  return getInitialState();
 }
 
 export function appWithPreloadedState(preloadedState: mixed) {
@@ -28,7 +28,7 @@ export function appWithPreloadedState(preloadedState: mixed) {
 }
 
 function initializeStore(preloadedState: mixed) {
-  const state = { ...initialState(), ...preloadedState };
+  const state: ReduxState = { ...getInitialState(), ...preloadedState };
   return createStore(reducer, state,
     applyMiddleware(reduxPackMiddleware));
 }
