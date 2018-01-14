@@ -17,8 +17,10 @@ declare type ReduxState = {
   tournaments: TournamentReduxState,
   participants: ParticipantReduxState,
 
-  uiLogin: UiLoginReduxState,
-  uiSignUp: UiSignUpReduxState
+  ui: {
+    login: UiLoginReduxState,
+    signUp: UiSignUpReduxState
+  }
 };
 
 declare type UiLoginReduxState = {

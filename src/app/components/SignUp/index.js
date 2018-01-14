@@ -11,9 +11,9 @@ type Props = {
   location: Location
 };
 
-function mapStateToProps({ uiSignUp }: ReduxState) {
+function mapStateToProps({ ui }: ReduxState) {
   return {
-    ...uiSignUp
+    ...ui.signUp
   };
 }
 

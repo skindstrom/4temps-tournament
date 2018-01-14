@@ -2,8 +2,8 @@
 
 import { LIFECYCLE } from 'redux-pack';
 
-import reducer, { getInitialState } from '../ui-signup';
-import makePackAction from '../test-utils';
+import reducer, { getInitialState } from '../signup';
+import makePackAction from '../../test-utils';
 
 
 test('Default state is that everything is valid and not loading', () => {

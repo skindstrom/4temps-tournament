@@ -16,7 +16,7 @@ type Props = {
 
 function mapStateToProps(state: ReduxState) {
   return {
-    ...state.uiLogin,
+    ...state.ui.login,
   };
 }
 

@@ -15,7 +15,7 @@ function tournaments(state: TournamentReduxState = getInitialState(),
   case 'EDIT_TOURNAMENT':
     return editTournament(state, action);
   case 'LOGOUT_USER':
-    return logoutUser(state, action);    
+    return logoutUser(state, action);
   default:
     return state;
   }
@@ -148,7 +148,6 @@ function editTournament(state: TournamentReduxState,
 
 function logoutUser(state: TournamentReduxState,
   action: ReduxPackAction): TournamentReduxState {
-  
   return handle(state, action, {
     success: prevState => ({ ...prevState, forUser: [] })
   });
