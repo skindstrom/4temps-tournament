@@ -14,26 +14,7 @@ import type { UserCreateValidationSummary } from
 declare type ReduxDispatch = (action: ReduxAction) => mixed;
 declare type ReduxState = {
   isAuthenticated: boolean,
-  tournaments: {
-    isLoading: boolean,
-    isInvalidated: boolean,
-    didLoadUserTournaments: boolean,
-
-    forUser: Array<string>,
-    allIds: Array<string>,
-    byId: {
-      [id: string]: Tournament
-    },
-
-    uiCreateTournament: {
-      isLoading: boolean,
-      validation: TournamentValidationSummary
-    },
-    uiEditTournament: {
-      isValidName: boolean,
-      isValidDate: boolean
-    }
-  },
+  tournaments: TournamentReduxState,
   participants: {
     isLoading: boolean,
 
@@ -65,6 +46,27 @@ declare type UiLoginReduxState = {
 declare type UiSignUpReduxState = {
   isLoading: boolean,
   validation: UserCreateValidationSummary
+}
+
+declare type TournamentReduxState = {
+  isLoading: boolean,
+  isInvalidated: boolean,
+  didLoadUserTournaments: boolean,
+
+  forUser: Array<string>,
+  allIds: Array<string>,
+  byId: {
+    [id: string]: Tournament
+  },
+
+  uiCreateTournament: {
+    isLoading: boolean,
+    validation: TournamentValidationSummary
+  },
+  uiEditTournament: {
+    isValidName: boolean,
+    isValidDate: boolean
+  }
 }
 
 declare type ReduxPackAction = {

@@ -3,161 +3,12 @@ import { handle } from 'redux-pack';
 import isAuthenticated from './is-authenticated';
 import uiLogin from './ui-login';
 import uiSignup from './ui-signup';
+import tournaments from './tournaments';
 
 function reducer(state: ReduxState = initialState(), action: ReduxPackAction) {
   const { type, payload } = action;
 
   switch (type) {
-  case 'GET_ALL_TOURNAMENTS':
-    return handle(state, action, {
-      start: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          isLoading: true
-        }
-      }),
-      success: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          isInvalidated: false,
-          isLoading: false,
-          allIds: payload.map(t => t._id),
-          byId: normalize(payload)
-        }
-      }),
-      failure: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          isLoading: false,
-          isInvalidated: false,
-        }
-      })
-    });
-  case 'GET_USER_TOURNAMENTS':
-    return handle(state, action, {
-      start: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          isLoading: true,
-        }
-      }),
-      success: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          isLoading: false,
-          didLoadUserTournaments: true,
-          forUser: payload.map(t => t._id),
-          allIds: [
-            ...prevState.tournaments.allIds,
-            ...payload.map(t => t._id),
-          ].filter((id, i, arr) => arr.indexOf(id) === i),
-          byId: {
-            ...prevState.tournaments.byId,
-            ...normalize(payload)
-          }
-        }
-      }),
-      failure: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...state.tournaments,
-          didLoadUserTournaments: true,
-          isLoading: false
-        }
-      }),
-    });
-  case 'CREATE_TOURNAMENT':
-    return handle(state, action, {
-      start: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          uiCreateTournament: {
-            ...prevState.tournaments.uiCreateTournament,
-            isLoading: true,
-          }
-        }
-      }),
-      success: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          allIds: [...prevState.tournaments.allIds, payload._id],
-          byId: {
-            ...prevState.tournaments.byId,
-            [payload._id]: payload
-          },
-          forUser: [...prevState.tournaments.forUser, payload._id],
-          uiCreateTournament: {
-            ...prevState.tournaments.uiCreateTournament,
-            isLoading: false,
-            validation: {
-              isValidTournament: true,
-              isValidName: true,
-              isValidDate: true,
-              isValidType: true
-            }
-          }
-        }
-      }),
-      failure: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          uiCreateTournament: {
-            ...prevState.tournaments.uiCreateTournament,
-            isLoading: false,
-            validation: payload
-          }
-        }
-      }),
-    });
-  case 'EDIT_TOURNAMENT':
-    return handle(state, action, {
-      start: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          uiEditTournament: {
-            ...prevState.tournaments.uiEditTournament,
-            isLoading: true,
-          }
-        }
-      }),
-      success: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          byId: {
-            ...prevState.tournaments.byId,
-            [payload._id]: payload
-          },
-          uiEditTournament: {
-            ...prevState.tournaments.uiEditTournament,
-            isLoading: false,
-            isValidName: true,
-            isValidDate: true
-          }
-        },
-      }),
-      failure: (prevState: ReduxState): ReduxState => ({
-        ...prevState,
-        tournaments: {
-          ...prevState.tournaments,
-          uiEditTournament: {
-            ...prevState.tournaments.uiEditTournament,
-            isLoading: false,
-            isValidName: payload.isValidName,
-            isValidDate: payload.isValidDate
-          }
-        }
-      }),
-    });
   case 'GET_PARTICIPANTS':
     return handle(state, action, {
       start: (prevState: ReduxState): ReduxState => ({
@@ -325,11 +176,16 @@ function normalize(array: Array<{ _id: string, [string]: mixed }>) {
 }
 
 function combinedReducer(state: ReduxState, action: ReduxPackAction) {
+  const newState = reducer(state, action);
   return {
-    ...reducer(state, action),
+    ...newState,
     isAuthenticated: isAuthenticated(state.isAuthenticated, action),
     uiLogin: uiLogin(state.uiLogin, action),
     uiSignUp: uiSignup(state.uiSignUp, action),
+    tournaments: {
+      ...newState.tournaments,
+      ...tournaments(state.tournaments, action),
+    }
   };
 }
 
