@@ -11,8 +11,8 @@ type Props = {
   history: RouterHistory
 }
 
-function mapStateToProps({ tournaments }: ReduxState) {
-  return tournaments.uiCreateTournament;
+function mapStateToProps({ ui }: ReduxState) {
+  return ui.createTournament;
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {

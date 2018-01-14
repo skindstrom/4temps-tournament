@@ -19,7 +19,9 @@ declare type ReduxState = {
 
   ui: {
     login: UiLoginReduxState,
-    signUp: UiSignUpReduxState
+    signUp: UiSignUpReduxState,
+    createTournament: UiCreateTournamentReduxState,
+    editTournament: UiEditTournamentReduxState,
   }
 };
 
@@ -46,15 +48,16 @@ declare type TournamentReduxState = {
   byId: {
     [id: string]: Tournament
   },
+}
 
-  uiCreateTournament: {
-    isLoading: boolean,
-    validation: TournamentValidationSummary
-  },
-  uiEditTournament: {
-    isValidName: boolean,
-    isValidDate: boolean
-  }
+declare type UiCreateTournamentReduxState = {
+  isLoading: boolean,
+  validation: TournamentValidationSummary
+}
+
+declare type UiEditTournamentReduxState = {
+  isValidName: boolean,
+  isValidDate: boolean
 }
 
 declare type ParticipantReduxState = {

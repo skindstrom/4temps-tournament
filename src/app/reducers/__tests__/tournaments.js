@@ -18,21 +18,6 @@ describe('Tournament reducer', () => {
       forUser: [],
       allIds: [],
       byId: {},
-
-      uiCreateTournament: {
-        isLoading: false,
-        validation: {
-          isValidTournament: true,
-          isValidName: true,
-          isValidDate: true,
-          isValidType: true
-        }
-      },
-
-      uiEditTournament: {
-        isValidName: true,
-        isValidDate: true
-      }
     };
 
     expect(getInitialState()).toEqual(defaults);
@@ -215,19 +200,6 @@ describe('Tournament reducer', () => {
       });
   });
 
-  test('CREATE_TOURNAMENT start sets isLoading to true', () => {
-    const state = getInitialState();
-    expect(
-      reducer(state, makePackAction(LIFECYCLE.START, 'CREATE_TOURNAMENT')))
-      .toEqual({
-        ...state,
-        uiCreateTournament: {
-          ...state.uiCreateTournament,
-          isLoading: true
-        }
-      });
-  });
-
   test('CREATE_TOURNAMENT success adds the new tournament', () => {
     const state = getInitialState();
 
@@ -250,72 +222,7 @@ describe('Tournament reducer', () => {
         allIds,
         byId,
         forUser,
-        uiCreateTournament: {
-          ...state.uiCreateTournament,
-          isLoading: false
-        }
       });
-  });
-
-  test('CREATE_TOURNAMENT success resets validation', () => {
-    const state = {
-      ...getInitialState(),
-      uiCreateTournament: {
-        isLoading: true,
-        validation: {
-          isValidTournament: false,
-          isValidName: true,
-          isValidDate: false,
-          isValidType: true
-        }
-      }
-    };
-
-    const payload: Tournament = {
-      _id: '1',
-      name: 't1',
-      date: moment(),
-      type: 'jj'
-    };
-
-    expect(
-      reducer(state,
-        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_TOURNAMENT', payload)))
-      .toMatchObject({
-        uiCreateTournament: getInitialState().uiCreateTournament
-      });
-  });
-
-  test('CREATE_TOURNAMENT failure sets validation', () => {
-    const state = getInitialState();
-
-    const payload: TournamentValidationSummary = {
-      isValidTournament: false,
-      isValidName: false,
-      isValidDate: true,
-      isValidType: false
-    };
-
-    expect(
-      reducer(state,
-        makePackAction(LIFECYCLE.FAILURE, 'CREATE_TOURNAMENT', payload)))
-      .toEqual({
-        ...state,
-        uiCreateTournament: {
-          ...state.uiCreateTournament,
-          isLoading: false,
-          validation: payload
-        }
-      });
-  });
-
-  test('EDIT_TOURNAMENT starts has no effect', () => {
-    const state = getInitialState();
-
-    expect(
-      reducer(state,
-        makePackAction(LIFECYCLE.START, 'EDIT_TOURNAMENT')))
-      .toEqual(state);
   });
 
   test('EDIT_TOURNAMENT success sets the new tournament', () => {
@@ -350,63 +257,6 @@ describe('Tournament reducer', () => {
         byId: {
           '1': payload
         },
-      });
-  });
-
-  test('EDIT_TOURNAMENT success resets validation', () => {
-    const tournament: Tournament = {
-      _id: '1',
-      name: 't1',
-      date: moment(),
-      type: 'jj'
-    };
-
-    const allIds = ['1'];
-    const forUser = allIds;
-    const byId = { '1': tournament };
-
-    const state = {
-      ...getInitialState(),
-      allIds,
-      forUser,
-      byId
-    };
-
-    const payload = {
-      ...tournament,
-      name: 'new name'
-    };
-
-    expect(
-      reducer(state,
-        makePackAction(LIFECYCLE.SUCCESS, 'EDIT_TOURNAMENT', payload)))
-      .toMatchObject({
-        uiEditTournament: {
-          isValidName: true,
-          isValidDate: true
-        }
-      });
-  });
-
-  test('EDIT_TOURNAMENT failure sets validation', () => {
-    const state = getInitialState();
-
-    const payload: TournamentValidationSummary = {
-      isValidTournament: false,
-      isValidName: false,
-      isValidDate: true,
-      isValidType: false
-    };
-
-    expect(
-      reducer(state,
-        makePackAction(LIFECYCLE.FAILURE, 'EDIT_TOURNAMENT', payload)))
-      .toEqual({
-        ...state,
-        uiEditTournament: {
-          isValidName: payload.isValidName,
-          isValidDate: payload.isValidDate,
-        }
       });
   });
 

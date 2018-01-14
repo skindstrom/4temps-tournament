@@ -30,21 +30,6 @@ export function getInitialState(): TournamentReduxState {
     forUser: [],
     allIds: [],
     byId: {},
-
-    uiCreateTournament: {
-      isLoading: false,
-      validation: {
-        isValidTournament: true,
-        isValidName: true,
-        isValidDate: true,
-        isValidType: true
-      }
-    },
-
-    uiEditTournament: {
-      isValidName: true,
-      isValidDate: true
-    }
   };
 }
 
@@ -94,28 +79,12 @@ function createTournament(state: TournamentReduxState,
   const { payload } = action;
 
   return handle(state, action, {
-    start: prevState => ({
-      ...prevState,
-      uiCreateTournament: {
-        ...prevState.uiCreateTournament,
-        isLoading: true
-      }
-    }),
     success: prevState => ({
       ...prevState,
       allIds: [...prevState.allIds, payload._id],
       byId: { ...prevState.byId, [payload._id]: payload },
       forUser: [...prevState.forUser, payload._id],
-      uiCreateTournament: getInitialState().uiCreateTournament
     }),
-    failure: prevState => ({
-      ...prevState,
-      uiCreateTournament: {
-        ...prevState.uiCreateTournament,
-        isLoading: false,
-        validation: payload
-      }
-    })
   });
 }
 
@@ -131,17 +100,6 @@ function editTournament(state: TournamentReduxState,
         ...prevState.byId,
         [payload._id]: payload
       },
-      uiEditTournament: {
-        isValidName: true,
-        isValidDate: true
-      }
-    }),
-    failure: prevState => ({
-      ...prevState,
-      uiEditTournament: {
-        isValidName: payload.isValidName,
-        isValidDate: payload.isValidDate,
-      }
     }),
   });
 }

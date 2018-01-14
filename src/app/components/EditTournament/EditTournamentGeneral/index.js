@@ -12,10 +12,10 @@ type ConnectedProps = {
   tournamentId: string
 }
 
-function mapStateToProps({ tournaments }: ReduxState,
+function mapStateToProps({ tournaments, ui }: ReduxState,
   { tournamentId }: ConnectedProps) {
   return {
-    ...tournaments.uiEditTournament,
+    ...ui.editTournament,
     tournament: tournaments.byId[tournamentId],
 
     shouldLoad: !tournaments.byId[tournamentId],
