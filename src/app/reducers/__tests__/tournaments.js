@@ -409,4 +409,13 @@ describe('Tournament reducer', () => {
         }
       });
   });
+
+  test('LOGOUT_USER success resets forUser list', () => {
+    const state = { ...getInitialState(), forUser: ['1', '2'] };
+
+    expect(
+      reducer(state,
+        makePackAction(LIFECYCLE.SUCCESS, 'LOGOUT_USER')))
+      .toEqual(getInitialState());
+  });
 });

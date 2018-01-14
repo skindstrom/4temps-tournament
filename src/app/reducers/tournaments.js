@@ -14,6 +14,8 @@ function tournaments(state: TournamentReduxState = getInitialState(),
     return createTournament(state, action);
   case 'EDIT_TOURNAMENT':
     return editTournament(state, action);
+  case 'LOGOUT_USER':
+    return logoutUser(state, action);    
   default:
     return state;
   }
@@ -141,6 +143,14 @@ function editTournament(state: TournamentReduxState,
         isValidDate: payload.isValidDate,
       }
     }),
+  });
+}
+
+function logoutUser(state: TournamentReduxState,
+  action: ReduxPackAction): TournamentReduxState {
+  
+  return handle(state, action, {
+    success: prevState => ({ ...prevState, forUser: [] })
   });
 }
 
