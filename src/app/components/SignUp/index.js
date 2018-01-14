@@ -12,9 +12,7 @@ type Props = {
 };
 
 function mapStateToProps({ ui }: ReduxState) {
-  return {
-    ...ui.signUp
-  };
+  return ui.signUp;
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch,

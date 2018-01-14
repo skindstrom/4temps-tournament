@@ -14,10 +14,8 @@ type Props = {
   history: RouterHistory
 }
 
-function mapStateToProps(state: ReduxState) {
-  return {
-    ...state.ui.login,
-  };
+function mapStateToProps({ ui }: ReduxState) {
+  return ui.login;
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch,

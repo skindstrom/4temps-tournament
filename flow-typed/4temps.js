@@ -20,8 +20,11 @@ declare type ReduxState = {
   ui: {
     login: UiLoginReduxState,
     signUp: UiSignUpReduxState,
+
     createTournament: UiCreateTournamentReduxState,
     editTournament: UiEditTournamentReduxState,
+
+    createParticipant: UiCreateParticipantReduxState,
   }
 };
 
@@ -69,11 +72,12 @@ declare type ParticipantReduxState = {
   byId: {
     [id: string]: Participant
   },
-  uiCreateParticipant: {
-    isLoading: boolean,
-    createdSuccessfully: boolean,
-    validation: ParticipantValidationSummary
-  }
+}
+
+declare type UiCreateParticipantReduxState = {
+  isLoading: boolean,
+  createdSuccessfully: boolean,
+  validation: ParticipantValidationSummary
 }
 
 declare type ReduxPackAction = {

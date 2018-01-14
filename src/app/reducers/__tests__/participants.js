@@ -12,15 +12,6 @@ describe('Participant reducer', () => {
       isLoading: false,
       forTournament: {},
       byId: {},
-      uiCreateParticipant: {
-        isLoading: false,
-        createdSuccessfully: false,
-        validation: {
-          isValidParticipant: true,
-          isValidName: true,
-          isValidRole: true
-        }
-      }
     };
 
     expect(reducer(undefined,
@@ -116,20 +107,6 @@ describe('Participant reducer', () => {
       });
   });
 
-  test('CREATE_PARTICIPANT start sets isLoading to true', () => {
-    const state = getInitialState();
-
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.START, 'CREATE_PARTICIPANT')))
-      .toEqual({
-        ...state,
-        uiCreateParticipant: {
-          ...state.uiCreateParticipant,
-          isLoading: true
-        }
-      });
-  });
-
   test('CREATE_PARTICIPANT success sets the new participant', () => {
     const participant = { _id: '1', name: 'p1', role: 'leader' };
 
@@ -146,11 +123,6 @@ describe('Participant reducer', () => {
         ...state,
         forTournament,
         byId,
-        uiCreateParticipant: {
-          ...state.uiCreateParticipant,
-          createdSuccessfully: true,
-          isLoading: false
-        }
       });
   });
 
@@ -184,57 +156,6 @@ describe('Participant reducer', () => {
         ...state,
         forTournament,
         byId,
-        uiCreateParticipant: {
-          ...state.uiCreateParticipant,
-          createdSuccessfully: true,
-          isLoading: false
-        }
-      });
-  });
-
-  test('CREATE_PARTICIPANT success resets validation', () => {
-    const tournamentId = 'tournament_id';
-    const participant = { _id: 'new', name: 'p1', role: 'leader' };
-    const payload = { tournamentId, participant };
-
-    const state = {
-      ...getInitialState(),
-      uiCreateParticipant: {
-        ...getInitialState().uiCreateParticipant,
-        validation: {
-          isValidParticipant: false,
-          isValidName: true,
-          isValidRole: false
-        }
-      }
-    };
-
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
-      .toMatchObject({
-        uiCreateParticipant: {
-          createdSuccessfully: true,
-          validation: getInitialState().uiCreateParticipant.validation
-        }
-      });
-  });
-
-  test('CREATE_PARTICIPANT failure sets validation', () => {
-    const payload = {
-      isValidParticipant: false,
-      isValidName: true,
-      isValidRole: false
-    };
-    const state = getInitialState();
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.FAILURE, 'CREATE_PARTICIPANT', payload)))
-      .toEqual({
-        ...state,
-        uiCreateParticipant: {
-          ...state.uiCreateParticipant,
-          createdSuccessfully: false,
-          validation: payload
-        }
       });
   });
 });

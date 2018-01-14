@@ -10,10 +10,8 @@ type Props = {
   tournamentId: string
 }
 
-function mapStateToProps({ participants }: ReduxState) {
-  return {
-    ...participants.uiCreateParticipant
-  };
+function mapStateToProps({ ui }: ReduxState) {
+  return ui.createParticipant;
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {

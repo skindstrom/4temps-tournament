@@ -23,15 +23,6 @@ export function getInitialState(): ParticipantReduxState {
     isLoading: false,
     forTournament: {},
     byId: {},
-    uiCreateParticipant: {
-      isLoading: false,
-      createdSuccessfully: false,
-      validation: {
-        isValidParticipant: true,
-        isValidName: true,
-        isValidRole: true
-      }
-    }
   };
 }
 
@@ -63,13 +54,6 @@ function createParticipant(state: ParticipantReduxState,
   const { payload } = action;
 
   return handle(state, action, {
-    start: prevState => ({
-      ...prevState,
-      uiCreateParticipant: {
-        ...prevState.uiCreateParticipant,
-        isLoading: true
-      }
-    }),
     success: prevState => ({
       ...prevState,
       forTournament: {
@@ -81,22 +65,8 @@ function createParticipant(state: ParticipantReduxState,
       byId: {
         ...prevState.byId,
         [payload.participant._id]: payload.participant
-      },
-      uiCreateParticipant: {
-        createdSuccessfully: true,
-        isLoading: false,
-        validation: getInitialState().uiCreateParticipant.validation
       }
     }),
-    failure: prevState => ({
-      ...prevState,
-      uiCreateParticipant: {
-        ...prevState.uiCreateParticipant,
-        isLoading: false,
-        createdSuccessfully: false,
-        validation: payload
-      }
-    })
   });
 }
 
