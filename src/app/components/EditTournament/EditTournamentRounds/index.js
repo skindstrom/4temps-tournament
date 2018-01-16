@@ -2,9 +2,11 @@
 
 import React, { Component } from 'react';
 import {
-  Header, Divider, Button,
+  Header, Divider, Button, Message,
   Form, FormGroup, FormInput, FormRadio, FormButton
 } from 'semantic-ui-react';
+
+import validateRound from '../../../../validators/validate-round';
 
 type CriterionType = 'none' | 'both' | 'one' | 'follower' | 'leader';
 
@@ -27,7 +29,9 @@ type State = {
   tieRule: TieRule,
   roundScoringRule: RoundScoringRule,
   multipleDanceScoringRule: MultipleDanceScoringRule,
-  criteria: Array<Criterion>
+  criteria: Array<Criterion>,
+
+  validation: RoundValidationSummary
 }
 
 class EditTournamentRounds extends Component<{}, State> {
@@ -44,7 +48,29 @@ class EditTournamentRounds extends Component<{}, State> {
       minValue: null,
       maxValue: null,
       type: 'none'
-    }]
+    }],
+
+    validation: {
+      isValidRound: true,
+      isValidDanceCount: true,
+      isValidMinPairCount: true,
+      isValidMaxPairCount: true,
+      isMaxPairGreaterOrEqualToMinPair: true,
+      isValidTieRule: true,
+      isValidRoundScoringRule: true,
+      isValidMultipleDanceScoringRule: true,
+      isValidAmountOfCriteria: true,
+      isValidCriteria: true,
+      criteriaValidation: [{
+        isValidCriterion: true,
+        isValidName: true,
+        isValidMinValue: true,
+        isValidMaxValue: true,
+        isValidValueCombination: true,
+        isValidType: true,
+        isValidDescription: true
+      }]
+    }
   }
 
   _onChangeDanceCount = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -81,7 +107,7 @@ class EditTournamentRounds extends Component<{}, State> {
   }
 
   _renderDanceRule = () => {
-    const { danceCount, multipleDanceScoringRule } = this.state;
+    const { danceCount, multipleDanceScoringRule, validation } = this.state;
     if (danceCount != null && danceCount > 1) {
       return (
         <span>
@@ -110,6 +136,8 @@ class EditTournamentRounds extends Component<{}, State> {
               checked={multipleDanceScoringRule === 'worst'}
             />
           </FormGroup>
+          {!validation.isValidMultipleDanceScoringRule &&
+            <Message error content='Must pick at least one rule' />}
         </span>
       );
     }
@@ -130,7 +158,26 @@ class EditTournamentRounds extends Component<{}, State> {
           [key]: this._parseCount(event)
         }, index);
       };
+    const onChangeRadio = (event, { value }) =>
+      this._onChangeCriterion({
+        ...criterion,
+        type: value
+      }, index);
+
     const { type } = criterion;
+    const { validation } = this.state;
+
+    const criterionValidation = index < validation.criteriaValidation.length ?
+      validation.criteriaValidation[index] : {
+        isValidCriterion: true,
+        isValidName: true,
+        isValidMinValue: true,
+        isValidMaxValue: true,
+        isValidValueCombination: true,
+        isValidType: true,
+        isValidDescription: true
+      };
+
     return (
       <div key={index}>
         <FormGroup widths='equal'>
@@ -139,12 +186,14 @@ class EditTournamentRounds extends Component<{}, State> {
             placeholder='Style'
             value={criterion.name}
             onChange={onChangeString('name')}
+            error={!criterionValidation.isValidName}
           />
           <FormInput
             label='Description'
             placeholder='How well they incorporate their own style...'
             value={criterion.description}
             onChange={onChangeString('description')}
+            error={!criterionValidation.isValidDescription}
           />
         </FormGroup>
         <FormGroup widths='equal'>
@@ -154,6 +203,8 @@ class EditTournamentRounds extends Component<{}, State> {
             type='number'
             value={this._countOrEmptyString(criterion.minValue)}
             onChange={onChangeInt('minValue')}
+            error={!criterionValidation.isValidMinValue
+              || !criterionValidation.isValidValueCombination}
           />
           <FormInput
             label='Maximum value'
@@ -161,34 +212,38 @@ class EditTournamentRounds extends Component<{}, State> {
             type='number'
             value={this._countOrEmptyString(criterion.maxValue)}
             onChange={onChangeInt('maxValue')}
+            error={!criterionValidation.isValidMaxValue
+              || !criterionValidation.isValidValueCombination}
           />
         </FormGroup>
         <FormGroup widths='equal'>
           <FormRadio
             label='Criterion affects both dancers'
             value='both'
-            onChange={onChangeString('type')}
+            onChange={onChangeRadio}
             checked={type === 'both'}
           />
           <FormRadio
             label='Affects one dancer'
             value='one'
-            onChange={onChangeString('type')}
+            onChange={onChangeRadio}
             checked={type === 'one'}
           />
           <FormRadio
             label='Affects only leaders'
             value='leader'
-            onChange={onChangeString('type')}
+            onChange={onChangeRadio}
             checked={type === 'leader'}
           />
           <FormRadio
             label='Affects only follower'
             value='leader'
-            onChange={onChangeString('type')}
+            onChange={onChangeRadio}
             checked={type === 'leader'}
           />
         </FormGroup>
+        {!criterionValidation.isValidType &&
+          <Message error content='Must pick a type' />}
         <Divider />
       </div>
     );
@@ -202,20 +257,29 @@ class EditTournamentRounds extends Component<{}, State> {
 
   _addCriterion = () => this.setState({
     criteria:
-      [{
-        name: '',
-        description: '',
-        minValue: null,
-        maxValue: null,
-        type: 'none'
-      },
-      ...this.state.criteria]
+      [
+        ...this.state.criteria,
+        {
+          name: '',
+          description: '',
+          minValue: null,
+          maxValue: null,
+          type: 'none'
+        },
+      ]
   })
 
+  _onSubmit = () => {
+    const { validation, ...rest } = this.state;
+    const round = { _id: '', ...rest };
+
+    this.setState({ validation: validateRound(round) });
+  }
+
   render() {
-    const { tieRule, roundScoringRule, multipleDanceScoringRule } = this.state;
+    const { tieRule, roundScoringRule, validation } = this.state;
     return (
-      <Form >
+      <Form error={!validation.isValidRound}>
         <FormGroup widths='equal'>
           <FormInput
             label='Amount of dances'
@@ -223,6 +287,7 @@ class EditTournamentRounds extends Component<{}, State> {
             type='number'
             value={this._countOrEmptyString(this.state.danceCount)}
             onChange={this._onChangeDanceCount}
+            error={!validation.isValidDanceCount}
           />
           <FormInput
             label='Minimum amount of pairs'
@@ -230,6 +295,8 @@ class EditTournamentRounds extends Component<{}, State> {
             type='number'
             value={this._countOrEmptyString(this.state.minPairCount)}
             onChange={this._onChangeMinPairCount}
+            error={!validation.isValidMinPairCount
+              || !validation.isMaxPairGreaterOrEqualToMinPair}
           />
           <FormInput
             label='Maximum amount of pairs'
@@ -237,6 +304,8 @@ class EditTournamentRounds extends Component<{}, State> {
             type='number'
             value={this._countOrEmptyString(this.state.maxPairCount)}
             onChange={this._onChangeMaxPairCount}
+            error={!validation.isValidMaxPairCount
+              || !validation.isMaxPairGreaterOrEqualToMinPair}
           />
         </FormGroup>
         {this._renderDanceRule()}
@@ -259,6 +328,8 @@ class EditTournamentRounds extends Component<{}, State> {
             checked={tieRule === 'all'}
           />
         </FormGroup>
+        {!validation.isValidTieRule &&
+          <Message error content='Must pick at least one rule' />}
         <span className='field'>
           <label htmlFor='judge-merge'>
             How are the judges scores merged?
@@ -278,17 +349,20 @@ class EditTournamentRounds extends Component<{}, State> {
             checked={roundScoringRule === 'averageWithoutOutliers'}
           />
         </FormGroup>
+        {!validation.isValidRoundScoringRule &&
+          <Message error content='Must pick at least one rule' />}
         <Divider />
         <Header as='h2'>
           Criteria
           <Button
+            attached
             floated='right'
             content='Add another criterion'
             onClick={this._addCriterion}
           />
         </Header>
         {this._renderCriteria()}
-        <FormButton type='submit'>Submit</FormButton>
+        <FormButton type='submit' onClick={this._onSubmit}>Submit</FormButton>
       </Form>
     );
   }
