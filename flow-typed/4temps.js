@@ -10,6 +10,53 @@ import type { ParticipantValidationSummary } from
 import type { UserCreateValidationSummary } from
   '../src/validators/validate-user';
 
+
+// Base types
+
+
+type RoundCriterion = {
+  name: string,
+  minValue: ?number,
+  maxValue: ?number,
+  description: string,
+  type: 'none' | 'both' | 'one' | 'follower' | 'leader'
+}
+
+declare type Round = {
+  _id: string,
+  danceCount: ?number,
+  minPairCount: ?number,
+  maxPairCount: ?number,
+  tieRule: 'none' | 'random' | 'all',
+  roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
+  multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
+  criteria: Array<RoundCriterion>
+}
+
+// Validation types
+declare type RoundValidationSummary = {
+  isValidRound: boolean,
+  isValidDanceCount: boolean,
+  isValidMinPairCount: boolean,
+  isValidMaxPairCount: boolean,
+  isMaxPairGreaterOrEqualToMinPair: boolean,
+  isValidTieRule: boolean,
+  isValidRoundScoringRule: boolean,
+  isValidMultipleDanceScoringRule: boolean,
+  isValidAmountOfCriteria: boolean,
+  isValidCriteria: boolean,
+  criteriaValidation: Array<{
+    isValidCriterion: boolean,
+    isValidName: boolean,
+    isValidMinValue: boolean,
+    isValidMaxValue: boolean,
+    isValidValueCombination: boolean,
+    isValidType: boolean,
+    isValidDescription: boolean
+  }>
+}
+
+
 // Redux
 declare type ReduxDispatch = (action: ReduxAction) => mixed;
 declare type ReduxState = {
@@ -125,7 +172,7 @@ declare type CreateTournamentAction =
     }
   };
 declare type EditTournamentAction =
-  { type: 'EDIT_TOURNAMENT', promise: Promise<Tournament>};
+  { type: 'EDIT_TOURNAMENT', promise: Promise<Tournament> };
 
 declare type GetParticipantsAction =
   {
