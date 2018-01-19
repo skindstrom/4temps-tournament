@@ -52,8 +52,7 @@ class Server {
     if (hostname == null) {
       hostname = 'localhost';
     }
-    const port = parseInt(process.env.HTTP_PORT);
-    this._app.listen(port, hostname);
+    this._app.listen(3000, hostname);
   }
 
   _enableCompression = () => {

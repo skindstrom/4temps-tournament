@@ -1,10 +1,28 @@
 language: node_js
+
+services:
+  - "docker"
+
+addons:
+  apt:
+    packages:
+      # Update docker to latest version
+      - docker-ce
+
 node_js:
+  # Latest stable node release
   - "node"
+
 script:
   - "npm run test"
   - "npm run lint"
   - "npm run build"
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      ./scripts/deploy-docker.sh
+    fi
+
 cache:
   directories:
     - "node_modules"
