@@ -113,11 +113,15 @@ class Server {
   }
 
   _enablePublicDirectoryRouting = () => {
-    // used for files that should be public, e.g. favicon etc.
-    this._app.use('/public', Express.static(path.join(__dirname, '../public')));
+    // used for files that should be public, but is static
+    this._app.use('/public', Express.static(path.join(__dirname, '../public'), {
+      maxAge: 1000 * 60 * 60 // 1 hour
+    }));
     // used for files that should be public, but that's generated
     this._app.use('/public',
-      Express.static(path.join(__dirname, '../public-build')));
+      Express.static(path.join(__dirname, '../public-build'), {
+        maxAge: 1000 * 60 * 60 // 1 hour
+      }));
   }
 
   _enableApiRouting = () => {
