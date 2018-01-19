@@ -14,8 +14,8 @@ script:
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_SECRET";
     docker build -t 4temps .;
-    docker tag 4temps:latest kindstrom/4temps:${TRAVIS_BRANCH};
-    docker push kindstrom/4temps:${TRAVIS_BRANCH};
+    docker tag 4temps:latest kindstrom/4temps:latest;
+    docker push kindstrom/4temps:latest;
 
 cache:
   directories:
