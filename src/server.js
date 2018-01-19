@@ -48,11 +48,10 @@ class Server {
   }
 
   listen = () => {
-    let hostname = process.env.HOSTNAME;
-    if (hostname == null) {
-      hostname = 'localhost';
-    }
-    this._app.listen(3000, hostname);
+    this._app.listen(3000, () => {
+      // eslint-disable-next-line no-console
+      console.log('Application started');
+    });
   }
 
   _enableCompression = () => {
