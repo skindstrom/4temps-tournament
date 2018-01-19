@@ -3,7 +3,14 @@ language: node_js
 services:
   - "docker"
 
+addons:
+  apt:
+    packages:
+      # Update docker to latest version
+      - docker-ce
+
 node_js:
+  # Latest stable node release
   - "node"
 
 script:
@@ -12,10 +19,9 @@ script:
   - "npm run build"
 
 after_success:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_SECRET";
-    docker build -t 4temps .;
-    docker tag 4temps:latest kindstrom/4temps:latest;
-    docker push kindstrom/4temps:latest;
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      ./scripts/deploy-docker.sh
+    fi
 
 cache:
   directories:
