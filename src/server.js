@@ -63,6 +63,11 @@ class Server {
   }
 
   _enableSessions = () => {
+    if (process.env.NODE_ENV === 'production') {
+      // trust 1 hop of reverse proxy
+      this._app.set('trust proxy', 1);
+    }
+
     const MongoStore = ConnectMongo(Session);
     this._app.use(Session({
       name: 'SESSION',
