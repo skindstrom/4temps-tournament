@@ -2,6 +2,7 @@
 
 import Express from 'express';
 import Session from 'express-session';
+import forceSsl from 'express-force-ssl';
 import ConnectMongo from 'connect-mongo';
 import Helmet from 'helmet';
 import compression from 'compression';
@@ -39,6 +40,7 @@ class Server {
 
     server._enableCompression();
     server._enableBodyParsing();
+    server._forceSsl();
     server._enableSessions();
     server._enableSecurePolicies();
     server._enableRouting();
@@ -62,8 +64,25 @@ class Server {
     this._app.use(bodyParser.json());
   }
 
+  _forceSsl = () => {
+    if (this._isProduction()) {
+      this._app.set('forceSSLOptions', {
+        enable301Redirects: true,
+        // trust X-FORWARD-PROTO from reverse proxy
+        trustXFPHeader: true,
+        httpsPort: 443,
+        sslRequiredMessage: 'SSL Required.'
+      });
+      this._app.use(forceSsl);
+    }
+  }
+
+  _isProduction = () => {
+    return process.env.NODE_ENV === 'production';
+  }
+
   _enableSessions = () => {
-    if (process.env.NODE_ENV === 'production') {
+    if (this._isProduction()) {
       // trust 1 hop of reverse proxy
       this._app.set('trust proxy', 1);
     }
@@ -75,10 +94,10 @@ class Server {
       resave: false,
       saveUninitialized: false,
       // Trust the reverse proxy for secure cookies
-      proxy: true,
+      proxy: this._isProduction(),
       cookie: {
         // Only use secure in prod
-        secure: process.env.NODE_ENV === 'production',
+        secure: this._isProduction(),
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
       },
