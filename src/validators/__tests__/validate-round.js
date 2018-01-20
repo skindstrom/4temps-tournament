@@ -126,24 +126,47 @@ describe('Round validator', () => {
       .toMatchObject({ isValidRound: false, isValidRoundScoringRule: false });
   });
 
-  test('Multiple dances scoring rule must be set', () => {
-    expect(validateRound(createRound({ multipleDanceScoringRule: 'none' })))
-      .toMatchObject({
-        isValidRound: false,
-        isValidMultipleDanceScoringRule: false
+  test('Multiple dances scoring rule may not be set if the dance count is 1',
+    () => {
+      ['none', 'average', 'best', 'worst'].map(multipleDanceScoringRule => {
+        expect(validateRound(createRound({
+          multipleDanceScoringRule,
+          danceCount: 1
+        })))
+          .toMatchObject({
+            isValidRound: true,
+            isValidMultipleDanceScoringRule: true
+          });
       });
-
-    ['average', 'best', 'worst'].map(multipleDanceScoringRule => {
-      expect(validateRound(createRound({ multipleDanceScoringRule })))
-        .toMatchObject({
-          isValidRound: true,
-          isValidMultipleDanceScoringRule: true
-        });
     });
-  });
+
+  test(
+    'Multiple dances scoring rule must be set if dance count is higher than 1',
+    () => {
+      expect(validateRound(createRound({
+        multipleDanceScoringRule: 'none',
+        danceCount: 2
+      })))
+        .toMatchObject({
+          isValidRound: false,
+          isValidMultipleDanceScoringRule: false
+        });
+
+      ['average', 'best', 'worst'].map(multipleDanceScoringRule => {
+        expect(validateRound(createRound({
+          multipleDanceScoringRule,
+          danceCount: 2
+        })))
+          .toMatchObject({
+            isValidRound: true,
+            isValidMultipleDanceScoringRule: true
+          });
+      });
+    });
+
   test('Multiple dances scoring rule must have a valid value', () => {
     expect(validateRound(createRound({
-      multipleDanceScoringRule: 'bogus_value'
+      multipleDanceScoringRule: 'bogus_value',
     })))
       .toMatchObject({
         isValidRound: false,
@@ -152,7 +175,7 @@ describe('Round validator', () => {
   });
 
   test('Having no criteria is invalid', () => {
-    expect(validateRound(createRound({criteria: [] })))
+    expect(validateRound(createRound({ criteria: [] })))
       .toMatchObject({
         isValidRound: false,
         isValidAmountOfCriteria: false

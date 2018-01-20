@@ -1,14 +1,13 @@
 // @flow
 
-function validateRound(
-  { danceCount,
+function validateRound(round: Round): RoundValidationSummary {
+  const { danceCount,
     minPairCount,
     maxPairCount,
     tieRule,
     roundScoringRule,
-    multipleDanceScoringRule,
     criteria
-  }: Round): RoundValidationSummary {
+  } = round;
 
   const isValidDanceCount = danceCount != null && danceCount >= 1;
   const isValidMinPairCount = minPairCount != null && minPairCount >= 1;
@@ -24,9 +23,7 @@ function validateRound(
     || roundScoringRule === 'averageWithoutOutliers';
 
   const isValidMultipleDanceScoringRule =
-    multipleDanceScoringRule === 'average'
-    || multipleDanceScoringRule === 'best'
-    || multipleDanceScoringRule === 'worst';
+    validateMultipleDanceScoringRule(round);
 
   const isValidAmountOfCriteria = criteria.length > 0;
 
@@ -49,6 +46,19 @@ function validateRound(
     isValidCriteria,
     criteriaValidation,
   };
+}
+
+function validateMultipleDanceScoringRule({
+  danceCount,
+  multipleDanceScoringRule }: Round) {
+  const isValidRule = multipleDanceScoringRule === 'average'
+    || multipleDanceScoringRule === 'best'
+    || multipleDanceScoringRule === 'worst';
+
+  const isValidEnum = isValidRule || multipleDanceScoringRule === 'none';
+  danceCount = danceCount || 0;
+
+  return isValidRule || isValidEnum && danceCount <= 1;
 }
 
 function validateCriteria(criteria: Array<RoundCriterion>) {
