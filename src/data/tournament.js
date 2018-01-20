@@ -80,3 +80,13 @@ export const getTournament =
       return null;
     }
   };
+
+export interface TournamentRepository {
+  get(id: string): Promise<?TournamentModel>;
+}
+
+export class TournamentRepositoryImpl implements TournamentRepository {
+  get(id: string) {
+    return getTournament(id);
+  }
+}

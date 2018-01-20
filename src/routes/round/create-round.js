@@ -1,20 +1,10 @@
 // @flow
 
 import ObjectId from 'bson-objectid';
+import type { RoundRepository, RoundDbModel } from '../../data/round';
 import validateRound from '../../validators/validate-round';
-import type { TournamentModel } from '../../data/tournament';
+import type { TournamentRepository } from '../../data/tournament';
 import type { UserModel } from '../../data/user';
-
-export type RoundDbModel = Round & { tournamentId: string };
-
-export interface RoundRepository {
-  create(round: RoundDbModel): void;
-  getAll(): Array<RoundDbModel>;
-}
-
-export interface TournamentRepository {
-  get(id: string): Promise<?TournamentModel>;
-}
 
 export interface ApiRequest {
   session: { user: UserModel };
@@ -75,7 +65,8 @@ class CreateRoundRouteHandler {
   _userOwnsTournament = async (): Promise<boolean> => {
     try {
       const tournament =
-        await this._tournamentRepository.get(this._round.tournamentId);
+        await this._tournamentRepository.get(
+          this._round.tournamentId.toString());
 
       if (tournament == null) {
         throw { status: 404 };

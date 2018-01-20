@@ -2,12 +2,11 @@
 
 import ObjectID from 'bson-objectid';
 import { CreateRoundRoute } from '../create-round';
-import type {
-  ApiRequest,
-  ApiResponse, RoundRepository, RoundDbModel, TournamentRepository
-} from '../create-round';
+import type { ApiRequest, ApiResponse} from '../create-round';
+import type { RoundRepository, RoundDbModel } from '../../../data/round';
 import type { UserModel } from '../../../data/user';
-import type { TournamentModel } from '../../../data/tournament';
+import type { TournamentModel, TournamentRepository } from
+  '../../../data/tournament';
 
 const USER_ID = ObjectID.generate();
 const TOURNAMENT_ID = ObjectID.generate();
@@ -49,12 +48,13 @@ class Response implements ApiResponse {
 class RoundRepositoryDummy implements RoundRepository {
   _rounds: Array<RoundDbModel> = [];
 
-  create = (round: RoundDbModel) => {
+  create = async (round: RoundDbModel) => {
     this._rounds.push(round);
   }
 
-  getAll = () => {
-    return this._rounds;
+  getForTournament = async (id: string) => {
+    return this._rounds.filter(({ tournamentId }) =>
+      tournamentId.toString() == id);
   }
 }
 
@@ -166,7 +166,7 @@ describe('/api/round/create route', () => {
       round: {}
     }), new Response());
 
-    expect(repository.getAll()).toHaveLength(0);
+    expect(repository._rounds).toHaveLength(0);
   });
 
   test('A valid round gets added to the repository', async () => {
@@ -176,7 +176,7 @@ describe('/api/round/create route', () => {
     const round = createValidRound();
     await route.route(requestWithRound(round), new Response());
 
-    expect(repository.getAll()[0]).toMatchObject(round);
+    expect(repository._rounds[0]).toMatchObject(round);
   });
 
   test('A valid round has an ID generated', async () => {
@@ -186,7 +186,7 @@ describe('/api/round/create route', () => {
     const round = createValidRound();
     await route.route(requestWithRound(round), new Response());
 
-    expect(repository.getAll()[0]._id.length).toBeGreaterThan(0);
+    expect(repository._rounds[0]._id.length).toBeGreaterThan(0);
   });
 
   test('A round tracks the tournament it belongs to', async () => {
@@ -195,7 +195,7 @@ describe('/api/round/create route', () => {
 
     await route.route(requestWithRound(createValidRound()), new Response());
 
-    expect(repository.getAll()[0].tournamentId).toEqual(TOURNAMENT_ID);
+    expect(repository._rounds[0].tournamentId).toEqual(TOURNAMENT_ID);
   });
 
   test('Error during creation returns status 500', async () => {
