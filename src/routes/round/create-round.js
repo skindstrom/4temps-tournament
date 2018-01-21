@@ -6,16 +6,6 @@ import validateRound from '../../validators/validate-round';
 import type { TournamentRepository } from '../../data/tournament';
 import type { UserModel } from '../../data/user';
 
-export interface ApiRequest {
-  session: { user: UserModel };
-  body: { [string]: mixed };
-}
-
-export interface ApiResponse {
-  sendStatus(statusCode: number): ApiResponse;
-  json(body?: mixed): ApiResponse;
-}
-
 export class CreateRoundRoute {
   _roundRepository: RoundRepository;
   _tournamentRepository: TournamentRepository;
@@ -26,7 +16,7 @@ export class CreateRoundRoute {
     this._tournamentRepository = tournamentRepository;
   }
 
-  route = async (req: ApiRequest, res: ApiResponse) => {
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     const handler = new CreateRoundRouteHandler(this._roundRepository,
       this._tournamentRepository);
     try {

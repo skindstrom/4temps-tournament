@@ -10,6 +10,11 @@ export type RoundDbModel = Round & {
 
 
 const schema = new mongoose.Schema({
+  tournamentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    index: true
+  },
   danceCount: { type: Number, required: true },
   minPairCount: { type: Number, required: true },
   maxPairCount: { type: Number, required: true },
@@ -31,11 +36,16 @@ const Model = mongoose.model('round', schema);
 
 export interface RoundRepository {
   create(round: RoundDbModel): Promise<void>;
+  getForTournament(tournamentId: string): Promise<Array<RoundDbModel>>;
 }
 
 export class RoundRepositoryImpl implements RoundRepository {
   async create(round: RoundDbModel) {
     return Model.create(round);
+  }
+
+  async getForTournament(tournamentId: string) {
+    return Model.find({ tournamentId });
   }
 }
 

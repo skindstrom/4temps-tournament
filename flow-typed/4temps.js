@@ -10,12 +10,13 @@ import type { ParticipantValidationSummary } from
 import type { UserCreateValidationSummary } from
   '../src/validators/validate-user';
 import type { RoundDbModel } from '../src/data/round';
+import type { UserModel } from '../src/data/user';
 
 
 // Base types
 
 
-type RoundCriterion = {
+declare type RoundCriterion = {
   name: string,
   minValue: ?number,
   maxValue: ?number,
@@ -32,6 +33,18 @@ declare type Round = {
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
   criteria: Array<RoundCriterion>
+}
+
+// Express interface
+declare interface ServerApiRequest {
+  session: { user: UserModel };
+  body: { [string]: mixed };
+  query: { [name: string]: string };
+}
+
+declare interface ServerApiResponse {
+  sendStatus(statusCode: number): ServerApiResponse;
+  json(body?: mixed): ServerApiResponse;
 }
 
 // Validation types
