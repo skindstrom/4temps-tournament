@@ -11,9 +11,10 @@ type Props = {
 
 function RoundList({ rounds }: Props) {
   return (
-    <Table>
+    <Table fixed>
       <TableHeader>
         <TableRow>
+          <TableHeaderCell>Name</TableHeaderCell>
           <TableHeaderCell>Dance count</TableHeaderCell>
           <TableHeaderCell>Minimum amount of pairs</TableHeaderCell>
           <TableHeaderCell>Maximum amount of pairs</TableHeaderCell>
@@ -30,9 +31,13 @@ function RoundList({ rounds }: Props) {
   );
 }
 
-function RoundListItem({ danceCount, minPairCount, maxPairCount }: Round) {
+function RoundListItem(
+  { name, danceCount, minPairCount, maxPairCount }: Round) {
   return (
     <TableRow>
+      <TableCell>
+        {name}
+      </TableCell>
       <TableCell>
         {danceCount}
       </TableCell>

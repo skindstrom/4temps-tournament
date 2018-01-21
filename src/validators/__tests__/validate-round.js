@@ -5,6 +5,7 @@ import validateRound from '../validate-round';
 function createRound(vals: mixed): Round {
   return {
     _id: '',
+    name: 'name',
     danceCount: 1,
     minPairCount: 1,
     maxPairCount: 1000,
@@ -28,6 +29,10 @@ function createCriterion(vals: mixed): RoundCriterion {
 }
 
 describe('Round validator', () => {
+  test('Empty name is invalid', () => {
+    expect(validateRound(createRound({ name: '' })))
+      .toMatchObject({ isValidRound: false, isValidName: false });
+  });
   test('null dance count is invalid', () => {
     expect(validateRound(createRound({ danceCount: null })))
       .toMatchObject({ isValidRound: false, isValidDanceCount: false });

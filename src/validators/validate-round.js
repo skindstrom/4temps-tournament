@@ -1,7 +1,9 @@
 // @flow
 
 function validateRound(round: Round): RoundValidationSummary {
-  const { danceCount,
+  const {
+    name,
+    danceCount,
     minPairCount,
     maxPairCount,
     tieRule,
@@ -9,6 +11,7 @@ function validateRound(round: Round): RoundValidationSummary {
     criteria
   } = round;
 
+  const isValidName = name.length > 0;
   const isValidDanceCount = danceCount != null && danceCount >= 1;
   const isValidMinPairCount = minPairCount != null && minPairCount >= 1;
   const isValidMaxPairCount = maxPairCount != null && maxPairCount >= 1;
@@ -30,11 +33,12 @@ function validateRound(round: Round): RoundValidationSummary {
   const { isValidCriteria, criteriaValidation } = validateCriteria(criteria);
 
   return {
-    isValidRound: isValidDanceCount && isValidMinPairCount
+    isValidRound: isValidName && isValidDanceCount && isValidMinPairCount
       && isValidMaxPairCount && isMaxPairGreaterOrEqualToMinPair
       && isValidTieRule && isValidRoundScoringRule
       && isValidMultipleDanceScoringRule && isValidAmountOfCriteria
       && isValidCriteria,
+    isValidName,
     isValidDanceCount,
     isValidMinPairCount,
     isValidMaxPairCount,

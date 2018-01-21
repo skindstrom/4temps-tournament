@@ -26,6 +26,7 @@ declare type RoundCriterion = {
 
 declare type Round = {
   _id: string,
+  name: string,
   danceCount: ?number,
   minPairCount: ?number,
   maxPairCount: ?number,
@@ -50,6 +51,7 @@ declare interface ServerApiResponse {
 // Validation types
 declare type RoundValidationSummary = {
   isValidRound: boolean,
+  isValidName: boolean,
   isValidDanceCount: boolean,
   isValidMinPairCount: boolean,
   isValidMaxPairCount: boolean,

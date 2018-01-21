@@ -92,6 +92,7 @@ export function generateId() {
 
 export function createValidRound(): { [string]: mixed } {
   return {
+    name: 'name',
     danceCount: 1,
     minPairCount: 1,
     maxPairCount: 2,

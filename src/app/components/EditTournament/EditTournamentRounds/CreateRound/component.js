@@ -34,6 +34,7 @@ class EditTournamentRounds extends Component<Props, State> {
   state = {
     // eslint-disable-next-line
     _id: '',
+    name: '',
     danceCount: null,
     minPairCount: null,
     maxPairCount: null,
@@ -47,6 +48,10 @@ class EditTournamentRounds extends Component<Props, State> {
       maxValue: null,
       type: 'none'
     }],
+  }
+
+  _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    this.setState({ name: event.target.value });
   }
 
   _onChangeDanceCount = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -257,6 +262,12 @@ class EditTournamentRounds extends Component<Props, State> {
       <Form error={!validation.isValidRound} loading={this.props.isLoading}>
         {this.props.createdSuccessfully &&
           <Message positive content='Success!' />}
+        <FormInput
+          label='Name'
+          value={this.state.name}
+          onChange={this._onChangeName}
+          error={!validation.isValidName}
+        />
         <FormGroup widths='equal'>
           <FormInput
             label='Amount of dances'

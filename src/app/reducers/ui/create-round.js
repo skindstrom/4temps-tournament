@@ -30,6 +30,7 @@ export function getInitialState(): UiCreateRoundReduxState {
     isLoading: false,
     createdSuccessfully: false,
     validation: {
+      isValidName: true,
       isValidRound: true,
       isValidDanceCount: true,
       isValidMinPairCount: true,

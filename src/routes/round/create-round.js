@@ -73,6 +73,7 @@ class CreateRoundRouteHandler {
   parseBody = (body: any) => {
     const round = {
       _id: '',
+      name: '',
       danceCount: null,
       minPairCount: null,
       maxPairCount: null,
