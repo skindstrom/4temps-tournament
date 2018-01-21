@@ -9,6 +9,7 @@ import type { ParticipantValidationSummary } from
   '../src/validators/validate-participant';
 import type { UserCreateValidationSummary } from
   '../src/validators/validate-user';
+import type { RoundDbModel } from '../src/data/round';
 
 
 // Base types
@@ -72,6 +73,7 @@ declare type ReduxState = {
     editTournament: UiEditTournamentReduxState,
 
     createParticipant: UiCreateParticipantReduxState,
+    createRound: UiCreateRoundReduxState
   }
 };
 
@@ -127,6 +129,12 @@ declare type UiCreateParticipantReduxState = {
   validation: ParticipantValidationSummary
 }
 
+declare type UiCreateRoundReduxState = {
+  isLoading: boolean,
+  createdSuccessfully: boolean,
+  validation: RoundValidationSummary
+}
+
 declare type ReduxPackAction = {
   type: string,
   payload: any
@@ -136,7 +144,7 @@ declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
   | GetParticipantsAction | CreateParticipantAction
-  | SignUpAction;
+  | SignUpAction | CreateRoundAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -194,3 +202,9 @@ declare type SignUpAction =
       onSuccess: () => mixed
     }
   };
+
+declare type CreateRoundAction =
+  {
+    type: 'CREATE_ROUND',
+    promise: Promise<RoundDbModel>
+  }
