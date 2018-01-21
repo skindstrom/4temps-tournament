@@ -25,14 +25,12 @@ import { appWithPreloadedState, getReduxState } from './app/components/App';
 
 class Server {
   _app: ExpressApplication;
+  // This is the nodejs http server, but I can't seem to import the type
+  // $FlowFixMe
+  _server: any;
 
   constructor() {
     this._app = Express();
-  }
-
-  static start() {
-    const server = Server.initialize();
-    server.listen();
   }
 
   static initialize() {
@@ -50,10 +48,14 @@ class Server {
   }
 
   listen = () => {
-    this._app.listen(3000, () => {
+    this._server = this._app.listen(3000, () => {
       // eslint-disable-next-line no-console
       console.log('Application started');
     });
+  }
+
+  stop = (onClose: () => void) => {
+    this._server.close(onClose);
   }
 
   _enableCompression = () => {
@@ -188,4 +190,4 @@ class Server {
   }
 }
 
-export default Server.start;
+export default Server;
