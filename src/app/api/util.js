@@ -6,14 +6,22 @@ async function parseResponse<T>(response: Response): Promise<T> {
   const isCorrectContentType =
     contentType != null && contentType.indexOf("application/json") !== -1;
 
-  if (status !== 200 && isCorrectContentType) {
-    throw await response.json();
-  } else if (isCorrectContentType) {
-    return await response.json();
+  if (status !== 200) {
+    if (isCorrectContentType) {
+      throw await response.json();
+    }
+    throw 'Failure from API';
   }
-
-  // $FlowFixMe: There is no body, so it's okay
-  return;
+  if (status === 200 && isCorrectContentType) {
+    return await response.json();
+  } else if (status !== 200 && isCorrectContentType) {
+    throw await response.json();
+  } else if (status !== 200) {
+    throw 'API Failure';
+  } else {
+    // $FlowFixMe
+    return;
+  }
 }
 
 export async function

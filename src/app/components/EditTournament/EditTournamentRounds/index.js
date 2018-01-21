@@ -1,28 +1,25 @@
 // @flow
 
-import { connect } from 'react-redux';
-import { createRound } from '../../../api/round';
-import Component from './component';
+import React from 'react';
+import { Button, Container, Modal } from 'semantic-ui-react';
 
-type Props = {
-  tournamentId: string
+import CreateRound from './CreateRound';
+import ListRounds from './ListRounds';
+
+
+
+function EditTournamentRounds({ tournamentId }: { tournamentId: string }) {
+  return (
+    <Container>
+      <Modal defaultOpen={false} trigger={<Button>Add round</Button>}>
+        <Modal.Header>Add round</Modal.Header>
+        <Modal.Content>
+          <CreateRound tournamentId={tournamentId} />
+        </Modal.Content>
+      </Modal>
+      <ListRounds tournamentId={tournamentId} />
+    </Container>
+  );
 }
 
-function mapStateToProps({ ui }: ReduxState) {
-  return ui.createRound;
-}
-
-function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
-  return {
-    onSubmit: (round: Round) =>
-      dispatch({
-        type: 'CREATE_ROUND',
-        promise: createRound(tournamentId, round)
-      })
-  };
-}
-
-const EditTournamentRoundsContainer =
-  connect(mapStateToProps, mapDispatchToProps)(Component);
-
-export default EditTournamentRoundsContainer;
+export default EditTournamentRounds;

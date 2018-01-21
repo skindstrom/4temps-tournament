@@ -1,18 +1,23 @@
 // @flow
 
-import { apiPostRequest } from '../util';
+import { apiPostRequest, apiGetRequest } from '../util';
 
 import validateRound from '../../../validators/validate-round';
 import type { RoundDbModel } from '../../../data/round';
 
-export const createRound =
-  async (tournamentId: string, round: Round): Promise<RoundDbModel> => {
-    const validation = validateRound(round);
-    if (!validation.isValidRound) {
-      throw validation;
-    }
+export async function createRound(
+  tournamentId: string, round: Round): Promise<RoundDbModel> {
+  const validation = validateRound(round);
+  if (!validation.isValidRound) {
+    throw validation;
+  }
 
-    return apiPostRequest('/api/participant/create');
-  };
+  return apiPostRequest('/api/round/create', { tournamentId, round });
+}
 
-export default createRound;
+export async function getRounds(tournamentId: string): Promise<{
+  tournamentId: string,
+  rounds: Array<RoundDbModel>
+}> {
+  return apiGetRequest(`/api/round/get?tournamentId=${tournamentId}`);
+}

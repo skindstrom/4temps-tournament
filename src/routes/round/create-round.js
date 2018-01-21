@@ -49,7 +49,7 @@ class CreateRoundRouteHandler {
       throw { status: 401 };
     }
 
-    this._create();
+    await this._create();
   }
 
   _userOwnsTournament = async (): Promise<boolean> => {
@@ -100,7 +100,7 @@ class CreateRoundRouteHandler {
     return validateRound(this._round).isValidRound;
   };
 
-  _create = () => {
+  _create = async () => {
     this._round._id = this._generateId();
     try {
       this._roundRepository.create(this._round);

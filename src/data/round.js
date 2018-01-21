@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
       minValue: Number,
       maxValue: Number,
       description: String,
-      type: String
+      type: { type: String }
     }
   ]
 });

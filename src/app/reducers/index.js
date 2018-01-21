@@ -6,6 +6,7 @@ import { LIFECYCLE } from 'redux-pack';
 import isAuthenticated from './is-authenticated';
 import tournaments from './tournaments';
 import participants from './participants';
+import rounds from './rounds';
 import ui from './ui';
 
 import makePackAction from './test-utils';
@@ -15,6 +16,7 @@ const reducer: Reducer<ReduxState, ReduxPackAction> =
     isAuthenticated,
     tournaments,
     participants,
+    rounds,
     ui
   });
 
