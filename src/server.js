@@ -2,7 +2,6 @@
 
 import Express from 'express';
 import Session from 'express-session';
-import forceSsl from 'express-force-ssl';
 import ConnectMongo from 'connect-mongo';
 import Helmet from 'helmet';
 import compression from 'compression';
@@ -68,14 +67,16 @@ class Server {
 
   _forceSsl = () => {
     if (this._isProduction()) {
-      this._app.set('forceSSLOptions', {
-        enable301Redirects: true,
-        // trust X-FORWARD-PROTO from reverse proxy
-        trustXFPHeader: true,
-        httpsPort: 443,
-        sslRequiredMessage: 'SSL Required.'
+      this._app.use((req: $Request, res, next) => {
+        // allow /health to not be https
+        if (req.originalUrl === '/health-check') {
+          next();
+        } else {
+          const redirectUrl = 'https://' + String(req.header('Host')) +
+            req.originalUrl;
+          res.redirect(301, redirectUrl);
+        }
       });
-      this._app.use(forceSsl);
     }
   }
 
@@ -135,6 +136,7 @@ class Server {
   _enableRouting = () => {
     this._enablePublicDirectoryRouting();
     this._enableApiRouting();
+    this._enableHealthCheckRouting();
   }
 
   _enablePublicDirectoryRouting = () => {
@@ -154,6 +156,14 @@ class Server {
     this._app.use(/\/api\/.*/, (req: $Request, res: $Response) => {
       res.sendStatus(404);
     });
+  }
+
+  _enableHealthCheckRouting = () => {
+    this._app.use('/health-check',
+      (req: $Request, res: $Response) => {
+        res.status(200);
+        res.send(`I'm all healthy!`);
+      });
   }
 
   _enableServerSideRendering = () => {
