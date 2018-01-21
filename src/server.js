@@ -68,8 +68,9 @@ class Server {
   _forceSsl = () => {
     if (this._isProduction()) {
       this._app.use((req: $Request, res, next) => {
-        // allow /health to not be https
-        if (req.originalUrl === '/health-check') {
+        const forwardedProto = req.header('X-Forwarded-Proto');
+
+        if (req.originalUrl === '/health-check' || forwardedProto === 'https') {
           next();
         } else {
           const redirectUrl = 'https://' + String(req.header('Host')) +
