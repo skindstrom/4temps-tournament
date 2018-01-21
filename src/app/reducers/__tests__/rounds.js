@@ -39,23 +39,6 @@ describe('Rounds reducer', () => {
   });
 
   test('GET_ROUNDS action success sets rounds', () => {
-    const roundWithId = (id) => ({
-      _id: id,
-      danceCount: 1,
-      minPairCount: 1,
-      maxPairCount: 2,
-      tieRule: 'random',
-      roundScoringRule: 'average',
-      multipleDanceScoringRule: 'worst',
-      criteria: [{
-        name: 'style',
-        minValue: 1,
-        maxValue: 2,
-        description: 'style...',
-        type: 'one'
-      }]
-    });
-
     const tournamentId = '123';
     const rounds = [roundWithId('1'), roundWithId('2'), roundWithId('3')];
     const payload = { tournamentId, rounds };
@@ -85,4 +68,42 @@ describe('Rounds reducer', () => {
       makePackAction(LIFECYCLE.FAILURE, 'GET_ROUNDS')))
       .toMatchObject({ ...state, isLoading: false });
   });
+
+  test('CREATE_ROUND success sets the new round', () => {
+    const tournamentId = '123';
+    const payload = { ...roundWithId('3'), tournamentId };
+
+    const expectedState = {
+      ...getInitialState(),
+      forTournament: {
+        [tournamentId]: [payload._id]
+      },
+      byId: {
+        [payload._id]: payload
+      }
+    };
+
+    expect(reducer(getInitialState(),
+      makePackAction(LIFECYCLE.SUCCESS, 'CREATE_ROUND', payload)))
+      .toMatchObject(expectedState);
+  });
 });
+
+function roundWithId(id) {
+  return {
+    _id: id,
+    danceCount: 1,
+    minPairCount: 1,
+    maxPairCount: 2,
+    tieRule: 'random',
+    roundScoringRule: 'average',
+    multipleDanceScoringRule: 'worst',
+    criteria: [{
+      name: 'style',
+      minValue: 1,
+      maxValue: 2,
+      description: 'style...',
+      type: 'one'
+    }]
+  };
+}

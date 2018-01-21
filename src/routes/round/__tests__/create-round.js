@@ -155,4 +155,14 @@ describe('/api/round/create route', () => {
 
     expect(response.status).toBe(404);
   });
+
+  test('Valid round returns body', async () => {
+    const round = Test.createValidRound();
+    const route = createRoute();
+    const response = new Test.Response();
+
+    await route.route(requestWithRound(round), response);
+
+    expect(response.body).toMatchObject(round);
+  });
 });
