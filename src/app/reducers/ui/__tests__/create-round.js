@@ -6,6 +6,16 @@ import reducer, { getInitialState } from '../create-round';
 import makePackAction from '../../test-utils';
 
 describe('Create round UI reducer', () => {
+  test('Undefined returns default state', () => {
+    const state = getInitialState();
+
+    [LIFECYCLE.START, LIFECYCLE.SUCCESS, LIFECYCLE.FAILURE]
+      .map(lifecycle =>
+        expect(
+          reducer(undefined, makePackAction(lifecycle, 'INVALID_ACTION')))
+          .toEqual(state));
+  });
+
   test('Invalid action does not change state', () => {
     const state = getInitialState();
 

@@ -4,6 +4,7 @@ import { handle } from 'redux-pack';
 function createRound(state: UiCreateRoundReduxState = getInitialState(),
   action: ReduxPackAction) {
   const { type, payload } = action;
+
   switch (type) {
   case 'CREATE_ROUND':
     return handle(state, action, {
@@ -19,8 +20,9 @@ function createRound(state: UiCreateRoundReduxState = getInitialState(),
         validation: payload
       })
     });
+  default:
+    return state;
   }
-  return state;
 }
 
 export function getInitialState(): UiCreateRoundReduxState {

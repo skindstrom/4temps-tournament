@@ -11,8 +11,8 @@ import createRound from './create-round';
 export default combineReducers({
   login,
   signUp,
+  createRound,
   createTournament,
   editTournament,
   createParticipant,
-  createRound
 });
