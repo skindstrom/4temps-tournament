@@ -21,7 +21,7 @@ class GetRoundRoute {
       handler.parseQuery(req.query);
       const rounds = await handler.getRounds();
 
-      res.json(rounds);
+      res.json({ tournamentId: handler._tournamentId, rounds });
     } catch (e) {
       res.sendStatus(e.status);
     }

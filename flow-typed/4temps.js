@@ -75,20 +75,54 @@ declare type RoundValidationSummary = {
 declare type ReduxDispatch = (action: ReduxAction) => mixed;
 declare type ReduxState = {
   isAuthenticated: boolean,
-  tournaments: TournamentReduxState,
-  participants: ParticipantReduxState,
+  tournaments: TournamentsReduxState,
+  participants: ParticipantsReduxState,
+  rounds: RoundsReduxState,
 
   ui: {
     login: UiLoginReduxState,
     signUp: UiSignUpReduxState,
 
-    createTournament: UiCreateTournamentReduxState,
-    editTournament: UiEditTournamentReduxState,
+    createTournament: UiCreateTournamentsReduxState,
+    editTournament: UiEditTournamentsReduxState,
 
-    createParticipant: UiCreateParticipantReduxState,
+    createParticipant: UiCreateParticipantsReduxState,
     createRound: UiCreateRoundReduxState
   }
 };
+
+declare type TournamentsReduxState = {
+  isLoading: boolean,
+  isInvalidated: boolean,
+  didLoadUserTournaments: boolean,
+
+  forUser: Array<string>,
+  allIds: Array<string>,
+  byId: {
+    [id: string]: Tournament
+  },
+}
+
+declare type ParticipantsReduxState = {
+  isLoading: boolean,
+
+  forTournament: {
+    [id: string]: Array<string>
+  },
+  byId: {
+    [id: string]: Participant
+  },
+}
+
+declare type RoundsReduxState = {
+  isLoading: boolean,
+  forTournament: {
+    [id: string]: Array<string>
+  },
+  byId: {
+    [id: string]: Round
+  }
+}
 
 declare type UiLoginReduxState = {
   isLoading: boolean,
@@ -103,40 +137,17 @@ declare type UiSignUpReduxState = {
   validation: UserCreateValidationSummary
 }
 
-declare type TournamentReduxState = {
-  isLoading: boolean,
-  isInvalidated: boolean,
-  didLoadUserTournaments: boolean,
-
-  forUser: Array<string>,
-  allIds: Array<string>,
-  byId: {
-    [id: string]: Tournament
-  },
-}
-
-declare type UiCreateTournamentReduxState = {
+declare type UiCreateTournamentsReduxState = {
   isLoading: boolean,
   validation: TournamentValidationSummary
 }
 
-declare type UiEditTournamentReduxState = {
+declare type UiEditTournamentsReduxState = {
   isValidName: boolean,
   isValidDate: boolean
 }
 
-declare type ParticipantReduxState = {
-  isLoading: boolean,
-
-  forTournament: {
-    [id: string]: Array<string>
-  },
-  byId: {
-    [id: string]: Participant
-  },
-}
-
-declare type UiCreateParticipantReduxState = {
+declare type UiCreateParticipantsReduxState = {
   isLoading: boolean,
   createdSuccessfully: boolean,
   validation: ParticipantValidationSummary
@@ -157,7 +168,7 @@ declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
   | GetParticipantsAction | CreateParticipantAction
-  | SignUpAction | CreateRoundAction;
+  | SignUpAction | CreateRoundAction | GetRoundsAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -220,4 +231,10 @@ declare type CreateRoundAction =
   {
     type: 'CREATE_ROUND',
     promise: Promise<RoundDbModel>
+  }
+
+declare type GetRoundsAction =
+  {
+    type: 'GET_ROUNDS',
+    promise: Promise<{ tournamentId: string, rounds: Array<RoundDbModel> }>
   }

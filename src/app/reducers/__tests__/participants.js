@@ -8,7 +8,7 @@ import type { Participant } from '../../../models/participant';
 
 describe('Participant reducer', () => {
   test('Default value are no participants', () => {
-    const state: ParticipantReduxState = {
+    const state: ParticipantsReduxState = {
       isLoading: false,
       forTournament: {},
       byId: {},

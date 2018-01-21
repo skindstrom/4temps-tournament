@@ -7,7 +7,7 @@ import makePackAction from '../../test-utils';
 
 describe('Create participant UI reducer', () => {
   test('Default value is not loading and valid', () => {
-    const state: UiCreateParticipantReduxState = {
+    const state: UiCreateParticipantsReduxState = {
       isLoading: false,
       createdSuccessfully: false,
       validation: {

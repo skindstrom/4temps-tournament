@@ -2,7 +2,7 @@
 import { handle } from 'redux-pack';
 import normalize from './normalize';
 
-function tournaments(state: TournamentReduxState = getInitialState(),
+function tournaments(state: TournamentsReduxState = getInitialState(),
   action: ReduxPackAction) {
   const { type } = action;
   switch (type) {
@@ -21,7 +21,7 @@ function tournaments(state: TournamentReduxState = getInitialState(),
   }
 }
 
-export function getInitialState(): TournamentReduxState {
+export function getInitialState(): TournamentsReduxState {
   return {
     isLoading: false,
     isInvalidated: true,
@@ -33,8 +33,8 @@ export function getInitialState(): TournamentReduxState {
   };
 }
 
-function getAllTournaments(state: TournamentReduxState,
-  action: ReduxPackAction): TournamentReduxState {
+function getAllTournaments(state: TournamentsReduxState,
+  action: ReduxPackAction): TournamentsReduxState {
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
@@ -53,8 +53,8 @@ function getAllTournaments(state: TournamentReduxState,
   });
 }
 
-function getUserTournaments(state: TournamentReduxState,
-  action: ReduxPackAction): TournamentReduxState {
+function getUserTournaments(state: TournamentsReduxState,
+  action: ReduxPackAction): TournamentsReduxState {
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
@@ -73,8 +73,8 @@ function getUserTournaments(state: TournamentReduxState,
   });
 }
 
-function createTournament(state: TournamentReduxState,
-  action: ReduxPackAction): TournamentReduxState {
+function createTournament(state: TournamentsReduxState,
+  action: ReduxPackAction): TournamentsReduxState {
 
   const { payload } = action;
 
@@ -88,8 +88,8 @@ function createTournament(state: TournamentReduxState,
   });
 }
 
-function editTournament(state: TournamentReduxState,
-  action: ReduxPackAction): TournamentReduxState {
+function editTournament(state: TournamentsReduxState,
+  action: ReduxPackAction): TournamentsReduxState {
 
   const { payload } = action;
 
@@ -104,8 +104,8 @@ function editTournament(state: TournamentReduxState,
   });
 }
 
-function logoutUser(state: TournamentReduxState,
-  action: ReduxPackAction): TournamentReduxState {
+function logoutUser(state: TournamentsReduxState,
+  action: ReduxPackAction): TournamentsReduxState {
   return handle(state, action, {
     success: prevState => ({ ...prevState, forUser: [] })
   });

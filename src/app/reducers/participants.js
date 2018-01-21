@@ -3,8 +3,8 @@
 import { handle } from 'redux-pack';
 import normalize from './normalize';
 
-function participants(state: ParticipantReduxState = getInitialState(),
-  action: ReduxPackAction): ParticipantReduxState {
+function participants(state: ParticipantsReduxState = getInitialState(),
+  action: ReduxPackAction): ParticipantsReduxState {
 
   const { type } = action;
 
@@ -18,7 +18,7 @@ function participants(state: ParticipantReduxState = getInitialState(),
   }
 }
 
-export function getInitialState(): ParticipantReduxState {
+export function getInitialState(): ParticipantsReduxState {
   return {
     isLoading: false,
     forTournament: {},
@@ -26,7 +26,7 @@ export function getInitialState(): ParticipantReduxState {
   };
 }
 
-function getParticipants(state: ParticipantReduxState,
+function getParticipants(state: ParticipantsReduxState,
   action: ReduxPackAction) {
 
   const { payload } = action;
@@ -48,8 +48,8 @@ function getParticipants(state: ParticipantReduxState,
   });
 }
 
-function createParticipant(state: ParticipantReduxState,
-  action: ReduxPackAction): ParticipantReduxState {
+function createParticipant(state: ParticipantsReduxState,
+  action: ReduxPackAction): ParticipantsReduxState {
 
   const { payload } = action;
 

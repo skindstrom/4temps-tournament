@@ -62,6 +62,7 @@ describe('/api/round/get?tournamentId=', () => {
 
   test('No errors returns the rounds', async () => {
     const tournament = createTournament();
+    const tournamentId = tournament._id.toString();
     const tournamentRepository =
       createTournamentRepositoryWithTournament(tournament);
 
@@ -71,11 +72,9 @@ describe('/api/round/get?tournamentId=', () => {
     const response = new Response();
     const route = createRoute(tournamentRepository, roundRepository);
 
-    await route.route(Request.withQuery({
-      tournamentId: tournament._id.toString()
-    }), response);
+    await route.route(Request.withQuery({ tournamentId }), response);
 
-    expect(response.body).toEqual(rounds);
+    expect(response.body).toEqual({ tournamentId, rounds });
   });
 });
 

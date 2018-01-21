@@ -2,8 +2,8 @@
 
 import { handle } from 'redux-pack';
 
-function participants(state: UiCreateParticipantReduxState = getInitialState(),
-  action: ReduxPackAction): UiCreateParticipantReduxState {
+function participants(state: UiCreateParticipantsReduxState = getInitialState(),
+  action: ReduxPackAction): UiCreateParticipantsReduxState {
 
   const { type } = action;
 
@@ -15,7 +15,7 @@ function participants(state: UiCreateParticipantReduxState = getInitialState(),
   }
 }
 
-export function getInitialState(): UiCreateParticipantReduxState {
+export function getInitialState(): UiCreateParticipantsReduxState {
   return {
     isLoading: false,
     createdSuccessfully: false,
@@ -27,8 +27,8 @@ export function getInitialState(): UiCreateParticipantReduxState {
   };
 }
 
-function createParticipant(state: UiCreateParticipantReduxState,
-  action: ReduxPackAction): UiCreateParticipantReduxState {
+function createParticipant(state: UiCreateParticipantsReduxState,
+  action: ReduxPackAction): UiCreateParticipantsReduxState {
 
   const { payload } = action;
 

@@ -8,7 +8,7 @@ import makePackAction from '../../test-utils';
 describe('Edit tournament UI reducer', () => {
 
   test('Default value is no tournaments', () => {
-    const defaults: UiEditTournamentReduxState = {
+    const defaults: UiEditTournamentsReduxState = {
       isValidName: true,
       isValidDate: true
     };

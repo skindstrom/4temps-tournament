@@ -10,7 +10,7 @@ import type { Tournament } from '../../../models/tournament';
 describe('Tournament reducer', () => {
 
   test('Default value is no tournaments', () => {
-    const defaults: TournamentReduxState = {
+    const defaults: TournamentsReduxState = {
       isLoading: false,
       isInvalidated: true,
       didLoadUserTournaments: false,
