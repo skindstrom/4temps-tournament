@@ -65,7 +65,7 @@ describe('/api/round/create route', () => {
     const route = createRoute();
     const response = new Test.Response();
 
-    await route.route(requestWithRound(Test.createValidRound()), response);
+    await route.route(requestWithRound(Test.createRound()), response);
 
     expect(response.status).toBe(200);
   });
@@ -86,7 +86,7 @@ describe('/api/round/create route', () => {
     const repository = new Test.RoundRepositoryImpl();
     const route = createRoute(repository);
 
-    const round = Test.createValidRound();
+    const round = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
 
     expect(repository._rounds[0]).toMatchObject(round);
@@ -96,7 +96,7 @@ describe('/api/round/create route', () => {
     const repository = new Test.RoundRepositoryImpl();
     const route = createRoute(repository);
 
-    const round = Test.createValidRound();
+    const round = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
 
     expect(repository._rounds[0]._id.length).toBeGreaterThan(0);
@@ -106,7 +106,7 @@ describe('/api/round/create route', () => {
     const repository = new Test.RoundRepositoryImpl();
     const route = createRoute(repository);
 
-    await route.route(requestWithRound(Test.createValidRound()),
+    await route.route(requestWithRound(Test.createRound()),
       new Test.Response());
 
     expect(repository._rounds[0].tournamentId).toEqual(Test.TOURNAMENT_ID);
@@ -121,7 +121,7 @@ describe('/api/round/create route', () => {
     const route = createRoute(new ThrowingRepository());
     const response = new Test.Response();
 
-    await route.route(requestWithRound(Test.createValidRound()), response);
+    await route.route(requestWithRound(Test.createRound()), response);
 
     expect(response.status).toBe(500);
   });
@@ -136,7 +136,7 @@ describe('/api/round/create route', () => {
 
     const body = {
       tournamentId: Test.TOURNAMENT_ID.toString(),
-      round: Test.createValidRound()
+      round: Test.createRound()
     };
     await route.route(Test.Request.withBody(body), response);
 
@@ -149,7 +149,7 @@ describe('/api/round/create route', () => {
 
     const body = {
       tournamentId: Test.generateId(), // another tournament id
-      round: Test.createValidRound()
+      round: Test.createRound()
     };
     await route.route(Test.Request.withBody(body), response);
 
@@ -157,7 +157,7 @@ describe('/api/round/create route', () => {
   });
 
   test('Valid round returns body', async () => {
-    const round = Test.createValidRound();
+    const round = Test.createRound();
     const route = createRoute();
     const response = new Test.Response();
 

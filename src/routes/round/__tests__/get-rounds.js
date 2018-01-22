@@ -5,7 +5,7 @@ import {
   TournamentRepositoryImpl as TournamentRepository,
   RoundRepositoryImpl as RoundRepository,
   TOURNAMENT_ID, USER_ID,
-  generateId, createValidRound
+  generateId, createRound, createTournament
 } from '../test-utils';
 import GetRoundRoute from '../get-rounds';
 import type { TournamentModel } from '../../../data/tournament';
@@ -84,16 +84,6 @@ function createRoute(
   return new GetRoundRoute(tournamentRepository, roundRepository);
 }
 
-function createTournament() {
-  return {
-    _id: TOURNAMENT_ID,
-    userId: USER_ID,
-    name: 'name',
-    date: new Date(),
-    type: 'jj'
-  };
-}
-
 function createTournamentRepositoryWithTournament(tournament: TournamentModel) {
   const repository = new TournamentRepository();
   repository.tournaments[tournament._id.toString()] = tournament;
@@ -107,7 +97,7 @@ function createRoundRepositoryWithRounds(rounds: Array<RoundDbModel>) {
 }
 
 function createRounds(tournamentId: string): Array<RoundDbModel> {
-  const dbRound = { ...createValidRound(), _id: '23', tournamentId, };
+  const dbRound = { ...createRound(), _id: '23', tournamentId, };
   // $FlowFixMe
   return [dbRound, dbRound, dbRound];
 }

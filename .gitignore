@@ -6,3 +6,5 @@ public-build
 .env
 
 .vscode
+
+coverage

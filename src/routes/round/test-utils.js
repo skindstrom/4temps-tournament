@@ -72,7 +72,7 @@ export class RoundRepositoryImpl implements RoundRepository {
 export class TournamentRepositoryImpl implements TournamentRepository {
   tournaments: { [id: string]: TournamentModel } = {};
   async get(id: string): Promise<?TournamentModel> {
-    return this.tournaments[id];
+    return this.tournaments[id] || null;
   }
 }
 
@@ -90,7 +90,7 @@ export function generateId() {
   return ObjectId.generate();
 }
 
-export function createValidRound(): { [string]: mixed } {
+export function createRound(): { [string]: mixed } {
   return {
     name: 'name',
     danceCount: 1,
@@ -106,5 +106,15 @@ export function createValidRound(): { [string]: mixed } {
       description: 'style...',
       type: 'one'
     }]
+  };
+}
+
+export function createTournament() {
+  return {
+    _id: TOURNAMENT_ID,
+    userId: USER_ID,
+    name: 'name',
+    date: new Date(),
+    type: 'jj'
   };
 }
