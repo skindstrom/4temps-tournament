@@ -8,3 +8,5 @@ public-build
 .vscode
 
 coverage
+tags
+.tern-port

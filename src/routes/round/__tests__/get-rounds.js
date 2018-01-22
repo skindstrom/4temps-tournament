@@ -4,7 +4,6 @@ import {
   Request, Response,
   TournamentRepositoryImpl as TournamentRepository,
   RoundRepositoryImpl as RoundRepository,
-  TOURNAMENT_ID, USER_ID,
   generateId, createRound, createTournament
 } from '../test-utils';
 import GetRoundRoute from '../get-rounds';
@@ -66,8 +65,9 @@ describe('/api/round/get?tournamentId=', () => {
     const tournamentRepository =
       createTournamentRepositoryWithTournament(tournament);
 
-    const rounds = createRounds(tournament._id.toString());
-    const roundRepository = createRoundRepositoryWithRounds(rounds);
+    const rounds = createRounds(tournamentId);
+    const roundRepository =
+      createRoundRepositoryWithRounds(tournamentId, rounds);
 
     const response = new Response();
     const route = createRoute(tournamentRepository, roundRepository);
@@ -90,9 +90,10 @@ function createTournamentRepositoryWithTournament(tournament: TournamentModel) {
   return repository;
 }
 
-function createRoundRepositoryWithRounds(rounds: Array<RoundDbModel>) {
+function createRoundRepositoryWithRounds(
+  tournamentId: string, rounds: Array<RoundDbModel>) {
   const repository = new RoundRepository();
-  rounds.forEach(r => repository.create(r));
+  rounds.forEach(r => repository.create(tournamentId, r));
   return repository;
 }
 

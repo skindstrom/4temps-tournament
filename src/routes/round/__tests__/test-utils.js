@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import {
   Request, Response, createUser, generateId, createRound, createTournament,
-  RoundRepositoryImpl, TournamentRepositoryImpl
+  RoundRepositoryImpl, TournamentRepositoryImpl, TOURNAMENT_ID
 } from '../test-utils';
 import validateUser from '../../../validators/validate-user';
 import validateRound from '../../../validators/validate-round';
@@ -103,6 +103,16 @@ describe('Round route test helpers', () => {
     test('Get returns null if the tournament does not exist', async () => {
       expect(await repo.get('a very nice id')).toBeNull();
     });
+
+    test('Create adds the tournaments', async () => {
+      const tournament = createTournament();
+      const id = tournament._id.toString();
+
+      repo.create(tournament);
+
+      expect(await repo.get(id)).toEqual(tournament);
+      expect(repo.tournaments[id]).toEqual(tournament);
+    });
   });
 
   describe('Round repository', () => {
@@ -110,25 +120,32 @@ describe('Round route test helpers', () => {
 
     beforeEach(() => { repo = new RoundRepositoryImpl(); });
 
+    test('Get with empty repo returns empty array', async () => {
+      expect(await repo.getForTournament(generateId().toString)).toEqual([]);
+    });
+
     test('Create adds a round', async () => {
       const round = createRound();
-      repo.create(round);
+      const id = TOURNAMENT_ID.toString();
+      repo.create(id, round);
 
-      expect(repo._rounds).toEqual([round]);
+      expect(repo._rounds[id]).toEqual([round]);
     });
 
     test('Get for tournament returns only rounds for a specific tournament',
       async () => {
-        const round1 = { ...createRound(), tournamentId: generateId() };
-        const round2 = { ...createRound(), tournamentId: generateId() };
+        const id1 = generateId();
+        const id2 = generateId();
+        const round1 = createRound();
+        const round2 = createRound();
 
-        repo.create(round1);
-        repo.create(round2);
+        repo.create(id1, round1);
+        repo.create(id2, round2);
 
 
-        expect(await repo.getForTournament(round1.tournamentId))
+        expect(await repo.getForTournament(id1))
           .toEqual([round1]);
-        expect(await repo.getForTournament(round2.tournamentId))
+        expect(await repo.getForTournament(id2))
           .toEqual([round2]);
       });
   });

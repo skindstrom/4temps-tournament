@@ -79,17 +79,19 @@ describe('/api/round/create route', () => {
       round: {}
     }), new Test.Response());
 
-    expect(repository._rounds).toHaveLength(0);
+    expect(await repository.getForTournament(Test.TOURNAMENT_ID.toString()))
+      .toHaveLength(0);
   });
 
   test('A valid round gets added to the repository', async () => {
     const repository = new Test.RoundRepositoryImpl();
     const route = createRoute(repository);
 
-    const round = Test.createRound();
+    const {_id, ...round} = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
 
-    expect(repository._rounds[0]).toMatchObject(round);
+    expect(repository._rounds[Test.TOURNAMENT_ID.toString()])
+      .toMatchObject([round]);
   });
 
   test('A valid round has an ID generated', async () => {
@@ -99,17 +101,9 @@ describe('/api/round/create route', () => {
     const round = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
 
-    expect(repository._rounds[0]._id.length).toBeGreaterThan(0);
-  });
-
-  test('A round tracks the tournament it belongs to', async () => {
-    const repository = new Test.RoundRepositoryImpl();
-    const route = createRoute(repository);
-
-    await route.route(requestWithRound(Test.createRound()),
-      new Test.Response());
-
-    expect(repository._rounds[0].tournamentId).toEqual(Test.TOURNAMENT_ID);
+    expect(
+      repository._rounds[Test.TOURNAMENT_ID.toString()][0]._id.length)
+      .toBeGreaterThan(0);
   });
 
   test('Error during creation returns status 500', async () => {
@@ -156,13 +150,14 @@ describe('/api/round/create route', () => {
     expect(response.status).toBe(404);
   });
 
-  test('Valid round returns body', async () => {
-    const round = Test.createRound();
+  test('Valid round returns tournamentId and round', async () => {
+    const tournamentId = Test.TOURNAMENT_ID.toString();
+    const {_id, ...round} = Test.createRound();
     const route = createRoute();
     const response = new Test.Response();
 
     await route.route(requestWithRound(round), response);
 
-    expect(response.body).toMatchObject(round);
+    expect(response.body).toMatchObject({tournamentId, round});
   });
 });

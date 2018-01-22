@@ -60,11 +60,11 @@ function createRound(
         ...prevState.forTournament,
         [payload.tournamentId]: [
           ...(prevState.forTournament[payload.tournamentId] || []),
-          payload._id]
+          payload.round._id]
       },
       byId: {
         ...prevState.byId,
-        [payload._id]: payload
+        [payload.round._id]: payload.round
       }
     }),
   });

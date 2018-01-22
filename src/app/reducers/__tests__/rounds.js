@@ -71,15 +71,15 @@ describe('Rounds reducer', () => {
 
   test('CREATE_ROUND success sets the new round', () => {
     const tournamentId = '123';
-    const payload = { ...roundWithId('3'), tournamentId };
+    const payload = { round: roundWithId('3'), tournamentId };
 
     const expectedState = {
       ...getInitialState(),
       forTournament: {
-        [tournamentId]: [payload._id]
+        [tournamentId]: [payload.round._id]
       },
       byId: {
-        [payload._id]: payload
+        [payload.round._id]: payload.round
       }
     };
 

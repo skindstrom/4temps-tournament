@@ -1,10 +1,11 @@
 // @flow
 
 import ObjectId from 'bson-objectid';
-import type { RoundRepository, RoundDbModel } from '../../data/round';
+import type { RoundRepository } from '../../data/round';
 import validateRound from '../../validators/validate-round';
 import type { TournamentRepository } from '../../data/tournament';
 import type { UserModel } from '../../data/user';
+import parseRound from './utils';
 
 export class CreateRoundRoute {
   _roundRepository: RoundRepository;
@@ -22,7 +23,10 @@ export class CreateRoundRoute {
     try {
       handler.parseBody(req.body);
       await handler.executeForUser(req.session.user);
-      res.json(handler._round);
+      res.json({
+        tournamentId: handler.getTournamentId(),
+        round: handler.getCreatedRound()
+      });
     } catch (e) {
       res.sendStatus(e.status);
     }
@@ -33,13 +37,22 @@ class CreateRoundRouteHandler {
   _roundRepository: RoundRepository;
   _tournamentRepository: TournamentRepository;
 
-  _round: RoundDbModel;
+  _tournamentId: string;
+  _round: Round;
   _user: UserModel;
 
   constructor(roundRepository: RoundRepository,
     tournamentRepository: TournamentRepository) {
     this._roundRepository = roundRepository;
     this._tournamentRepository = tournamentRepository;
+  }
+
+  getTournamentId = () => {
+    return this._tournamentId;
+  }
+
+  getCreatedRound = () => {
+    return this._round;
   }
 
   async executeForUser(user: UserModel) {
@@ -55,8 +68,7 @@ class CreateRoundRouteHandler {
   _userOwnsTournament = async (): Promise<boolean> => {
     try {
       const tournament =
-        await this._tournamentRepository.get(
-          this._round.tournamentId.toString());
+        await this._tournamentRepository.get(this._tournamentId);
 
       if (tournament == null) {
         throw { status: 404 };
@@ -69,33 +81,31 @@ class CreateRoundRouteHandler {
     }
   }
 
-  // $FlowFixMe
-  parseBody = (body: any) => {
-    const round = {
-      _id: '',
-      name: '',
-      danceCount: null,
-      minPairCount: null,
-      maxPairCount: null,
-      tieRule: 'none',
-      roundScoringRule: 'none',
-      multipleDanceScoringRule: 'none',
-      tournamentId: body.tournamentId || '',
-      criteria: [],
-    };
-
-    for (const key in body.round) {
-      if (key in round && body.round[key] != undefined) {
-        round[key] = body.round[key];
-      }
-    }
-
-    this._round = round;
+  parseBody = (body: mixed) => {
+    this._round = this._parseRound(body);
+    this._tournamentId = this._parseTournamentId(body);
 
     if (!this._isValidRound()) {
       throw { status: 400 };
     }
   }
+
+  _parseRound = (body: mixed) => {
+    if (typeof body === 'object' && body != null) {
+      return parseRound(body.round);
+    } else {
+      throw {status: 400};
+    }
+  }
+
+  _parseTournamentId = (body: mixed) => {
+    if (typeof body === 'object'
+      && body != null && typeof body.tournamentId === 'string') {
+      return body.tournamentId;
+    } else {
+      throw {status: 400};
+    }
+  };
 
   _isValidRound = () => {
     return validateRound(this._round).isValidRound;
@@ -104,7 +114,7 @@ class CreateRoundRouteHandler {
   _create = async () => {
     this._round._id = this._generateId();
     try {
-      this._roundRepository.create(this._round);
+      this._roundRepository.create(this._tournamentId, this._round);
     } catch (e) {
       throw { status: 500 };
     }

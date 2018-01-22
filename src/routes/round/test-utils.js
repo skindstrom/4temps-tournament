@@ -1,79 +1,107 @@
 // @flow
 
 import ObjectId from 'bson-objectid';
-import type { UserModel } from '../../data/user';
-import type { RoundRepository } from '../../data/round';
-import type { TournamentModel, TournamentRepository } from
-  '../../data/tournament';
+import type {
+  UserModel
+} from '../../data/user';
+import type {
+  RoundRepository
+} from '../../data/round';
+import type {
+  TournamentModel,
+  TournamentRepository
+} from '../../data/tournament';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
 
-type Body = { [name: string]: mixed };
-type Query = { [name: string]: string };
+type Body = {
+    [name: string]: mixed
+};
+type Query = {
+    [name: string]: string
+};
 
 export class Request implements ServerApiRequest {
-  body: Body;
-  session: { user: UserModel };
-  query: Query;
+    body: Body;
+    session: {
+        user: UserModel
+    };
+    query: Query;
 
-  constructor(user: UserModel, body: Body, query: Query) {
-    this.session = { user };
-    this.body = body;
-    this.query = query;
-  }
+    constructor(user: UserModel, body: Body, query: Query) {
+      this.session = {
+        user
+      };
+      this.body = body;
+      this.query = query;
+    }
 
-  static withBody(body: Body) {
-    return Request.withUserAndBody(createUser(), body);
-  }
+    static withBody(body: Body) {
+      return Request.withUserAndBody(createUser(), body);
+    }
 
-  static withUserAndBody(user: UserModel, body: Body) {
-    return new Request(user, body, {});
-  }
+    static withUserAndBody(user: UserModel, body: Body) {
+      return new Request(user, body, {});
+    }
 
-  static withQuery(query: Query) {
-    return Request.withUserAndQuery(createUser(), query);
-  }
+    static withQuery(query: Query) {
+      return Request.withUserAndQuery(createUser(), query);
+    }
 
-  static withUserAndQuery(user: UserModel, query: Query) {
-    return new Request(user, {}, query);
-  }
+    static withUserAndQuery(user: UserModel, query: Query) {
+      return new Request(user, {}, query);
+    }
 }
 
 export class Response implements ServerApiResponse {
-  status: number;
-  body: ?mixed;
+    status: number;
+    body: ? mixed;
 
-  sendStatus(statusCode: number): ServerApiResponse {
-    this.status = statusCode;
-    return this;
-  }
+    sendStatus(statusCode: number): ServerApiResponse {
+      this.status = statusCode;
+      return this;
+    }
 
-  json(body?: mixed): ServerApiResponse {
-    this.status = 200;
-    this.body = body;
-    return this;
-  }
+    json(body ?: mixed): ServerApiResponse {
+      this.status = 200;
+      this.body = body;
+      return this;
+    }
 }
 
 export class RoundRepositoryImpl implements RoundRepository {
-  _rounds: Array<RoundDbModel> = [];
+    _rounds: {[id: string]: Array<Round>} = {};
 
-  create = async (round: RoundDbModel) => {
-    this._rounds.push(round);
-  }
+    create = async (tournamentId: string, round: Round) => {
+      if (this._rounds[tournamentId] === undefined) {
+        this._rounds[tournamentId] = [round];
+      } else {
+        this._rounds[tournamentId].push(round);
+      }
+    }
 
-  getForTournament = async (id: string) => {
-    return this._rounds.filter(({ tournamentId }) =>
-      tournamentId.toString() == id);
-  }
+    getForTournament = async (id: string) => {
+      return this._rounds[id] == undefined ? [] : this._rounds[id];
+    }
+
+    update = async (id: string, rounds: Array<Round>) => {
+      this._rounds[id] = rounds;
+    }
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
-  tournaments: { [id: string]: TournamentModel } = {};
-  async get(id: string): Promise<?TournamentModel> {
-    return this.tournaments[id] || null;
-  }
+    tournaments: {
+        [id: string]: TournamentModel
+    } = {};
+
+    get = async(id: string): Promise<? TournamentModel> => {
+      return this.tournaments[id] || null;
+    }
+
+    create = (tournament: TournamentModel) => {
+      this.tournaments[tournament._id.toString()] = tournament;
+    }
 }
 
 export function createUser(): UserModel {
@@ -90,8 +118,9 @@ export function generateId() {
   return ObjectId.generate();
 }
 
-export function createRound(): { [string]: mixed } {
+export function createRound(): Round {
   return {
+    _id: '',
     name: 'name',
     danceCount: 1,
     minPairCount: 1,
