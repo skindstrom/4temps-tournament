@@ -21,3 +21,7 @@ export async function getRounds(tournamentId: string): Promise<{
 }> {
   return apiGetRequest(`/api/round/get?tournamentId=${tournamentId}`);
 }
+
+export async function updateRounds(tournamentId: string, rounds: Array<Round>) {
+  return apiPostRequest('/api/round/update', {tournamentId, rounds});
+}
