@@ -6,9 +6,11 @@ import { Button, Container, Modal } from 'semantic-ui-react';
 import CreateRound from './CreateRound';
 import ListRounds from './ListRounds';
 
+type Props = {
+  tournamentId: string,
+}
 
-
-function EditTournamentRounds({ tournamentId }: { tournamentId: string }) {
+function EditTournamentRounds({tournamentId}: Props) {
   return (
     <Container>
       <Modal defaultOpen={false} trigger={<Button>Add round</Button>}>

@@ -15,6 +15,7 @@ const schema = new mongoose.Schema({
     index: true
   },
   rounds: [{
+    name: String,
     danceCount: {
       type: Number,
       required: true
@@ -61,19 +62,19 @@ export interface RoundRepository {
 
 export class RoundRepositoryImpl implements RoundRepository {
   async create(tournamentId: string, round: Round) {
-    Model.findOneAndUpdate({tournamentId}, {
+    await Model.findOneAndUpdate({tournamentId}, {
       $push: {
         rounds: round
       }
-    });
+    }, {upsert: true});
   }
 
   async getForTournament(tournamentId: string) {
-    return (await Model.find({tournamentId}).rounds) || [];
+    return (await Model.findOne({tournamentId})).rounds || [];
   }
 
   async update(tournamentId: string, rounds: Array<Round> ) {
-    Model.update({tournamentId}, { $set: {rounds} });
+    await Model.update({tournamentId}, { $set: {rounds} });
   }
 }
 
