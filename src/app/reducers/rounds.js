@@ -12,6 +12,8 @@ function rounds(state: RoundsReduxState = getInitialState(),
     return getRounds(state, action);
   case 'CREATE_ROUND':
     return createRound(state, action);
+  case 'UPDATE_ROUNDS':
+    return updateRounds(state, action);
   default:
     return state;
   }
@@ -67,6 +69,28 @@ function createRound(
         [payload.round._id]: payload.round
       }
     }),
+  });
+}
+
+function updateRounds(
+  state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
+
+  const {payload} = action;
+
+  return handle(state, action, {
+    start: prevState => ({...prevState, isLoading: true}),
+    success: prevState => ({
+      ...prevState,
+      forTournament: {
+        ...prevState.forTournament,
+        [payload.tournamentId]: payload.rounds.map(({_id}) => _id),
+      },
+      byId: {
+        ...prevState.byId,
+        ...normalize(payload.rounds)
+      }
+    }),
+    failure: prevState => ({...prevState, isLoading: false}),
   });
 }
 

@@ -3,10 +3,9 @@
 import { apiPostRequest, apiGetRequest } from '../util';
 
 import validateRound from '../../../validators/validate-round';
-import type { RoundDbModel } from '../../../data/round';
 
 export async function createRound(
-  tournamentId: string, round: Round): Promise<RoundDbModel> {
+  tournamentId: string, round: Round): Promise<Round> {
   const validation = validateRound(round);
   if (!validation.isValidRound) {
     throw validation;
@@ -17,7 +16,7 @@ export async function createRound(
 
 export async function getRounds(tournamentId: string): Promise<{
   tournamentId: string,
-  rounds: Array<RoundDbModel>
+  rounds: Array<Round>
 }> {
   return apiGetRequest(`/api/round/get?tournamentId=${tournamentId}`);
 }

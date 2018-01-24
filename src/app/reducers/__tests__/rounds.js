@@ -87,6 +87,40 @@ describe('Rounds reducer', () => {
       makePackAction(LIFECYCLE.SUCCESS, 'CREATE_ROUND', payload)))
       .toMatchObject(expectedState);
   });
+
+  test('UPDATE_ROUNDS action start sets isLoading to true', () => {
+    expect(
+      reducer(
+        getInitialState(), makePackAction(LIFECYCLE.START, 'UPDATE_ROUNDS')))
+      .toMatchObject({...getInitialState(), isLoading: true});
+  });
+
+  test('UPDATE_ROUNDS action success sets the new rounds', () => {
+    const tournamentId = '123';
+    const roundId = '3';
+    const payload = { rounds: [roundWithId(roundId)], tournamentId };
+
+    const expectedState = {
+      ...getInitialState(),
+      forTournament: {
+        [tournamentId]: [roundId]
+      },
+      byId: {
+        [roundId]: payload.rounds[0]
+      }
+    };
+
+    expect(reducer(getInitialState(),
+      makePackAction(LIFECYCLE.SUCCESS, 'UPDATE_ROUNDS', payload)))
+      .toMatchObject(expectedState);
+  });
+
+  test('UPDATE_ROUNDS action failure sets isLoading to false', () => {
+    expect(
+      reducer(
+        getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'UPDATE_ROUNDS')))
+      .toMatchObject({...getInitialState(), isLoading: false});
+  });
 });
 
 function roundWithId(id) {
