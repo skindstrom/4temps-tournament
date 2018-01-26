@@ -30,6 +30,7 @@ router.post('/update', isUserAuthenticated, updateRoundsRoute.route);
 
 const deleteRoundRoute =
   new DeleteRoundRoute(tournamentRepository, roundRepository);
-router.delete('/delete/:roundId', isUserAuthenticated, deleteRoundRoute.route);
+router.delete('/delete/:tournamentId/:roundId', isUserAuthenticated,
+  deleteRoundRoute.route);
 
 export default router;

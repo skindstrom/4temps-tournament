@@ -29,8 +29,10 @@ export async function updateRounds(
   return apiPostRequest('/api/round/update', {tournamentId, rounds});
 }
 
-export async function deleteRound(roundId: string): Promise<{
-  tournamentId: string,
-  roundId: string}> {
-  return apiDeleteRequest(`/api/round/delete/${roundId}`);
+export async function deleteRound(
+  tournamentId: string, roundId: string): Promise<{
+    tournamentId: string,
+    roundId: string}> {
+  return apiDeleteRequest(
+    `/api/round/delete/${tournamentId}/${roundId}`);
 }

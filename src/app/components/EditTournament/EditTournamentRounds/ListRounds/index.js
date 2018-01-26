@@ -27,7 +27,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
     ),
     deleteFromRounds: (deleteId: string) => dispatch({
       type: 'DELETE_ROUND',
-      promise: deleteRound(deleteId)
+      promise: deleteRound(tournamentId, deleteId)
     })
   };
 }

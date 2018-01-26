@@ -180,14 +180,14 @@ describe('Round route test helpers', () => {
       const round = {...createRound(), _id: generateId().toString()};
       const id = TOURNAMENT_ID.toString();
       await repo.create(id, round);
-      await repo.delete(round._id.toString());
+      await repo.delete(id, round._id.toString());
 
       expect(repo._rounds[id]).toEqual([]);
     });
 
     test('Deleting non-existant round throws', async (done) => {
       try {
-        await repo.delete(createRound()._id);
+        await repo.delete(generateId().toString(), createRound()._id);
       } catch (e) {
         done();
       }

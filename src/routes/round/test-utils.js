@@ -95,17 +95,6 @@ export class RoundRepositoryImpl implements RoundRepository {
     }
   }
 
-  getTournamentId = async (id: string) => {
-    for (const key in this._rounds) {
-      for (const round of this._rounds[key]) {
-        if (round._id == id) {
-          return key;
-        }
-      }
-    }
-    return '';
-  }
-
   getForTournament = async (id: string) => {
     return this._rounds[id] == undefined ? [] : this._rounds[id];
   }
@@ -114,8 +103,7 @@ export class RoundRepositoryImpl implements RoundRepository {
     this._rounds[id] = rounds;
   }
 
-  delete = async (roundId: string) => {
-    const tournamentId = await this.getTournamentId(roundId);
+  delete = async (tournamentId: string, roundId: string) => {
     this._rounds[tournamentId] =
       this._rounds[tournamentId].filter(({_id}) => _id != roundId);
   }

@@ -54,10 +54,9 @@ const Model = mongoose.model('round', schema);
 
 export interface RoundRepository {
   create(tournamentId: string, round: Round): Promise<void>;
-  getTournamentId(roundId: string): Promise<string>;
   getForTournament(tournamentId: string): Promise<Array<Round>>;
   update(tournamentId: string, rounds: Array<Round>): Promise<void>;
-  delete(roundId: string): Promise<void>;
+  delete(tournamentId: string, roundId: string): Promise<void>;
 }
 
 export class RoundRepositoryImpl implements RoundRepository {
@@ -94,7 +93,7 @@ export class RoundRepositoryImpl implements RoundRepository {
     }
   }
 
-  async delete(roundId: string) {
+  async delete(tournamentId: string, roundId: string) {
     await this._updateIndices(roundId);
     await Model.remove({_id: roundId});
   }

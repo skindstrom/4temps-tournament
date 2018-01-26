@@ -62,8 +62,11 @@ class DeleteRoundRouteHandler {
     if (typeof params === 'object'
       && params != null
       && params.roundId != null
-      && typeof params.roundId === 'string') {
+      && typeof params.roundId === 'string'
+      && params.tournamentId != null
+      && typeof params.tournamentId === 'string') {
       this._roundId = params.roundId;
+      this._tournamentId = params.tournamentId;
     } else {
       throw {status: 400};
     }
@@ -78,9 +81,6 @@ class DeleteRoundRouteHandler {
   }
 
   isUserAuthorized = async () => {
-    this._tournamentId =
-      await this._roundRepository.getTournamentId(this._roundId);
-
     const tournament =
       await this._tournamentRepository.get(this._tournamentId);
 
@@ -91,7 +91,7 @@ class DeleteRoundRouteHandler {
   };
 
   deleteRound = async () => {
-    this._roundRepository.delete(this._roundId);
+    this._roundRepository.delete(this._tournamentId, this._roundId);
   }
 
 }

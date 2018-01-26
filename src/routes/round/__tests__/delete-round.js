@@ -27,11 +27,20 @@ describe('/api/round/delete', () => {
   test('Invalid params returns status 400', async() => {
     await route.route(Request.withParams({}), response);
     expect(response.status).toBe(400);
+
+    await route.route(Request.withParams({tournamentId: '123'}), response);
+    expect(response.status).toBe(400);
+
+    await route.route(Request.withParams({roundId: '123'}), response);
+    expect(response.status).toBe(400);
   });
 
   test('If round does not exist, status 404 is returned', async () => {
     await route.route(
-      Request.withParams({roundId: generateId()}), response);
+      Request.withParams({
+        roundId: generateId(),
+        tournamentId: generateId()
+      }), response);
 
     expect(response.status).toBe(404);
   });
@@ -39,12 +48,15 @@ describe('/api/round/delete', () => {
   test('If user does not own the tournament, status 401 is returned',
     async() => {
       const tournament = {...createTournament(), userId: generateId()};
-      const round = {...createRound(), _id: generateId().toString()};
+      const round = {...createRound(), _id: generateId()};
 
       await tournamentRepository.create(tournament);
       await roundRepository.create(tournament._id.toString(), round);
 
-      await route.route(Request.withParams({roundId: round._id}), response);
+      await route.route(Request.withParams({
+        roundId: round._id.toString(),
+        tournamentId: tournament._id.toString()
+      }), response);
 
       expect(response.status).toBe(401);
     });
@@ -54,13 +66,19 @@ describe('/api/round/delete', () => {
       const tournament = {...createTournament()};
       const round = {...createRound(), _id: generateId().toString()};
 
+      const roundId = round._id.toString();
+      const tournamentId = tournament._id.toString();
+
       await tournamentRepository.create(tournament);
       await roundRepository.create(tournament._id.toString(), round);
 
       tournamentRepository.get = () => {throw {};};
 
       route = new DeleteRoundRoute(tournamentRepository, roundRepository);
-      await route.route(Request.withParams({roundId: round._id}), response);
+      await route.route(Request.withParams({
+        roundId,
+        tournamentId
+      }), response);
 
       expect(response.status).toBe(500);
     });
@@ -69,13 +87,19 @@ describe('/api/round/delete', () => {
     const tournament = {...createTournament()};
     const round = {...createRound(), _id: generateId().toString()};
 
+    const roundId = round._id.toString();
+    const tournamentId = tournament._id.toString();
+
     await tournamentRepository.create(tournament);
     await roundRepository.create(tournament._id.toString(), round);
 
     roundRepository.delete = () => {throw {};};
 
     route = new DeleteRoundRoute(tournamentRepository, roundRepository);
-    await route.route(Request.withParams({roundId: round._id}), response);
+    await route.route(Request.withParams({
+      roundId,
+      tournamentId
+    }), response);
 
     expect(response.status).toBe(500);
   });
@@ -90,7 +114,8 @@ describe('/api/round/delete', () => {
       await tournamentRepository.create(tournament);
       await roundRepository.create(tournamentId, round);
 
-      await route.route(Request.withParams({roundId }), response);
+      await route.route(
+        Request.withParams({ roundId, tournamentId }), response);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({tournamentId, roundId});
