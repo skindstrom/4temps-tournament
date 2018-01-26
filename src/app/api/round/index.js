@@ -1,6 +1,6 @@
 // @flow
 
-import { apiPostRequest, apiGetRequest } from '../util';
+import { apiPostRequest, apiGetRequest, apiDeleteRequest } from '../util';
 
 import validateRound from '../../../validators/validate-round';
 
@@ -27,4 +27,10 @@ export async function updateRounds(
     rounds: Array<Round>
   }> {
   return apiPostRequest('/api/round/update', {tournamentId, rounds});
+}
+
+export async function deleteRound(roundId: string): Promise<{
+  tournamentId: string,
+  roundId: string}> {
+  return apiDeleteRequest(`/api/round/delete/${roundId}`);
 }

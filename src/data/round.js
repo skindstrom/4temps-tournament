@@ -95,7 +95,19 @@ export class RoundRepositoryImpl implements RoundRepository {
   }
 
   async delete(roundId: string) {
+    await this._updateIndices(roundId);
     await Model.remove({_id: roundId});
+  }
+
+  async _updateIndices(roundId: string) {
+    const tournamentId = await this.getTournamentId(roundId);
+    const rounds = await Model.find({tournamentId});
+    const toBeDeleted = await Model.findOne({_id: roundId});
+    for (const round of rounds) {
+      if (round.index > toBeDeleted.index) {
+        await Model.update({_id: round._id}, {index: round.index - 1});
+      }
+    }
   }
 }
 

@@ -7,7 +7,7 @@ import {
 
 type Props = {
   rounds: Array<Round>,
-  deleteFromRounds: (id: string, rounds: Array<Round>) => void
+  deleteFromRounds: (id: string) => void
 }
 
 function RoundList({ rounds, deleteFromRounds }: Props) {
@@ -26,7 +26,7 @@ function RoundList({ rounds, deleteFromRounds }: Props) {
         {rounds.map(round =>
           (<RoundListItem
             key={round._id}
-            onClickDelete={() => deleteFromRounds(round._id, rounds)}
+            onClickDelete={() => deleteFromRounds(round._id)}
             {...round}
           />))}
       </TableBody>

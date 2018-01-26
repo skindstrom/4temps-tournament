@@ -171,7 +171,8 @@ declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
   | GetParticipantsAction | CreateParticipantAction
-  | SignUpAction | CreateRoundAction | GetRoundsAction | UpdateRoundsAction;
+  | SignUpAction | CreateRoundAction | GetRoundsAction | UpdateRoundsAction
+  | DeleteRoundAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -246,4 +247,10 @@ declare type UpdateRoundsAction =
   {
     type: 'UPDATE_ROUNDS',
     promise: Promise<{ tournamentId: string, rounds: Array<Round> }>
+  }
+
+declare type DeleteRoundAction =
+  {
+    type: 'DELETE_ROUND',
+    promise: Promise<{tournamentId: string, roundId: string}>
   }

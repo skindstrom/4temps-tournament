@@ -121,11 +121,50 @@ describe('Rounds reducer', () => {
         getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'UPDATE_ROUNDS')))
       .toMatchObject({...getInitialState(), isLoading: false});
   });
+
+  test('DELETE_ROUND action start sets isLoading to true', () => {
+    expect(
+      reducer(
+        getInitialState(), makePackAction(LIFECYCLE.START, 'DELETE_ROUND')))
+      .toMatchObject({...getInitialState(), isLoading: true});
+  });
+
+  test('DELETE_ROUND action success removes the round', () => {
+    const tournamentId = '123';
+    const roundId = '3';
+    const round = roundWithId(roundId);
+
+    const payload = {tournamentId, roundId};
+
+    const initialState: RoundsReduxState = {
+      ...getInitialState(),
+      forTournament: {
+        [tournamentId]: [roundId]
+      },
+      byId: {
+        [roundId]: round
+      }
+    };
+
+    const expected = getInitialState();
+
+    expect(reducer(initialState,
+      makePackAction(LIFECYCLE.SUCCESS, 'DELETE_ROUND', payload)))
+      .toMatchObject(expected);
+  });
+
+  test('DELETE_ROUND action failure sets isLoading to false', () => {
+    expect(
+      reducer(
+        getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'DELETE_ROUND')))
+      .toMatchObject({...getInitialState(), isLoading: false});
+  });
 });
 
-function roundWithId(id) {
+function roundWithId(id: string): Round {
   return {
     _id: id,
+    name: 'name',
     danceCount: 1,
     minPairCount: 1,
     maxPairCount: 2,

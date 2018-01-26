@@ -60,3 +60,20 @@ apiPostRequest<Body, T>(url: string,
   }
   return response;
 }
+
+export async function
+apiDeleteRequest<T>(url: string, deserialize: ?(T) => T): Promise<T> {
+  const response = await parseResponse(await fetch(url,
+    {
+      headers: {
+        'Accept': 'application/json',
+      },
+      method: 'DELETE',
+      credentials: 'include'
+    }));
+
+  if(response != null && deserialize != null) {
+    return deserialize(response);
+  }
+  return response;
+}

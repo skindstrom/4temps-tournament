@@ -80,17 +80,19 @@ describe('/api/round/delete', () => {
     expect(response.status).toBe(500);
   });
 
-  test('Successful delete returns status 200',
+  test('Successful delete returns status 200 and the deleted id',
     async () => {
       const tournament = createTournament();
       const tournamentId = tournament._id.toString();
-      const round = createRound();
+      const roundId = generateId().toString();
+      const round = {...createRound(), _id: roundId};
 
       await tournamentRepository.create(tournament);
       await roundRepository.create(tournamentId, round);
 
-      await route.route(Request.withParams({roundId: round._id}), response);
+      await route.route(Request.withParams({roundId }), response);
 
       expect(response.status).toBe(200);
+      expect(response.body).toEqual({tournamentId, roundId});
     });
 });
