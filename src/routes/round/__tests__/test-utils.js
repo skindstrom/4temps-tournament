@@ -132,6 +132,17 @@ describe('Round route test helpers', () => {
       expect(repo._rounds[id]).toEqual([round]);
     });
 
+    test('Create adds a round at the end', async () => {
+      const round1 = createRound();
+      const round2 = createRound();
+      const id = TOURNAMENT_ID.toString();
+
+      await repo.create(id, round1);
+      await repo.create(id, round2);
+
+      expect(repo._rounds[id]).toEqual([round1, round2]);
+    });
+
     test('Get for tournament returns only rounds for a specific tournament',
       async () => {
         const id1 = generateId();

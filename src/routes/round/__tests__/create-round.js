@@ -90,8 +90,21 @@ describe('/api/round/create route', () => {
     const {_id, ...round} = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
 
-    expect(repository._rounds[Test.TOURNAMENT_ID.toString()])
+    expect(await repository.getForTournament(Test.TOURNAMENT_ID.toString()))
       .toMatchObject([round]);
+  });
+
+  test('A valid round gets added to the end of the repository', async () => {
+    const tournamentId = Test.TOURNAMENT_ID.toString();
+    const repository = new Test.RoundRepositoryImpl();
+    await repository.create(tournamentId, Test.createRound());
+    const route = createRoute(repository);
+
+    const {_id, ...round} = Test.createRound();
+    await route.route(requestWithRound(round), new Test.Response());
+
+    expect((await repository.getForTournament(tournamentId))[1])
+      .toMatchObject(round);
   });
 
   test('A valid round has an ID generated', async () => {
