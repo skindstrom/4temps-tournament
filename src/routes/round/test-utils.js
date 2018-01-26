@@ -21,20 +21,20 @@ type Body = {
 type Query = {
     [name: string]: string
 };
+type Params = Query;
 
 export class Request implements ServerApiRequest {
-    body: Body;
+    body: Body = {};
     session: {
         user: UserModel
     };
-    query: Query;
+    query: Query = {};
+    params: Params = {};
 
-    constructor(user: UserModel, body: Body, query: Query) {
+    constructor(user: UserModel) {
       this.session = {
         user
       };
-      this.body = body;
-      this.query = query;
     }
 
     static withBody(body: Body) {
@@ -42,7 +42,9 @@ export class Request implements ServerApiRequest {
     }
 
     static withUserAndBody(user: UserModel, body: Body) {
-      return new Request(user, body, {});
+      const req = new Request(user);
+      req.body = body;
+      return req;
     }
 
     static withQuery(query: Query) {
@@ -50,7 +52,19 @@ export class Request implements ServerApiRequest {
     }
 
     static withUserAndQuery(user: UserModel, query: Query) {
-      return new Request(user, {}, query);
+      const req = new Request(user);
+      req.query = query;
+      return req;
+    }
+
+    static withParams(params: Params) {
+      return Request.withUserAndParams(createUser(), params);
+    }
+
+    static withUserAndParams(user: UserModel, params: Params) {
+      const req = new Request(user);
+      req.params = params;
+      return req;
     }
 }
 
@@ -71,23 +85,40 @@ export class Response implements ServerApiResponse {
 }
 
 export class RoundRepositoryImpl implements RoundRepository {
-    _rounds: {[id: string]: Array<Round>} = {};
+  _rounds: {[id: string]: Array<Round>} = {};
 
-    create = async (tournamentId: string, round: Round) => {
-      if (this._rounds[tournamentId] === undefined) {
-        this._rounds[tournamentId] = [round];
-      } else {
-        this._rounds[tournamentId].push(round);
+  create = async (tournamentId: string, round: Round) => {
+    if (this._rounds[tournamentId] === undefined) {
+      this._rounds[tournamentId] = [round];
+    } else {
+      this._rounds[tournamentId].push(round);
+    }
+  }
+
+  getTournamentId = async (id: string) => {
+    for (const key in this._rounds) {
+      for (const round of this._rounds[key]) {
+        if (round._id == id) {
+          return key;
+        }
       }
     }
+    return '';
+  }
 
-    getForTournament = async (id: string) => {
-      return this._rounds[id] == undefined ? [] : this._rounds[id];
-    }
+  getForTournament = async (id: string) => {
+    return this._rounds[id] == undefined ? [] : this._rounds[id];
+  }
 
-    update = async (id: string, rounds: Array<Round>) => {
-      this._rounds[id] = rounds;
-    }
+  update = async (id: string, rounds: Array<Round>) => {
+    this._rounds[id] = rounds;
+  }
+
+  delete = async (roundId: string) => {
+    const tournamentId = await this.getTournamentId(roundId);
+    this._rounds[tournamentId] =
+      this._rounds[tournamentId].filter(({_id}) => _id != roundId);
+  }
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {

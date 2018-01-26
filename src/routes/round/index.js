@@ -6,9 +6,10 @@ import isUserAuthenticated from '../auth-middleware';
 
 import { RoundRepositoryImpl } from '../../data/round';
 import { TournamentRepositoryImpl } from '../../data/tournament';
-import { CreateRoundRoute } from './create-round';
+import CreateRoundRoute from './create-round';
 import GetRoundsRoute from './get-rounds';
 import UpdateRoundsRoute from './update-rounds';
+import DeleteRoundRoute from './delete-round';
 
 const router = Router();
 
@@ -26,5 +27,9 @@ router.get('/get', isUserAuthenticated, getRoundsRoute.route);
 const updateRoundsRoute =
   new UpdateRoundsRoute(tournamentRepository, roundRepository);
 router.post('/update', isUserAuthenticated, updateRoundsRoute.route);
+
+const deleteRoundRoute =
+  new DeleteRoundRoute(tournamentRepository, roundRepository);
+router.delete('/delete/:roundId', isUserAuthenticated, deleteRoundRoute.route);
 
 export default router;

@@ -4,7 +4,8 @@ import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 
 export type RoundDbModel = Round & {
-    _id: ObjectId,
+  tournamentId: ObjectId,
+  index: number
 };
 
 
@@ -53,8 +54,10 @@ const Model = mongoose.model('round', schema);
 
 export interface RoundRepository {
   create(tournamentId: string, round: Round): Promise<void>;
+  getTournamentId(roundId: string): Promise<string>;
   getForTournament(tournamentId: string): Promise<Array<Round>>;
   update(tournamentId: string, rounds: Array<Round>): Promise<void>;
+  delete(roundId: string): Promise<void>;
 }
 
 export class RoundRepositoryImpl implements RoundRepository {
@@ -63,6 +66,10 @@ export class RoundRepositoryImpl implements RoundRepository {
     const index = rounds.length;
 
     await Model.create({tournamentId, index , ...round});
+  }
+
+  async getTournamentId(roundId: string) {
+    return (await Model.findOne({_id: roundId})).tournamentId.toString();
   }
 
   async getForTournament(tournamentId: string) {
@@ -85,6 +92,10 @@ export class RoundRepositoryImpl implements RoundRepository {
       const round = newRounds[i];
       await Model.update({_id: round._id}, {...round, index: i});
     }
+  }
+
+  async delete(roundId: string) {
+    await Model.remove({_id: roundId});
   }
 }
 

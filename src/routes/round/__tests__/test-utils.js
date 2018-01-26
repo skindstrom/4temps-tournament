@@ -36,6 +36,7 @@ describe('Round route test helpers', () => {
   describe('Request helpers', () => {
     let body = { test: 'body' };
     let query = { test: 'query' };
+    let params = {test: 'params'};
     let user = createUser();
 
 
@@ -64,6 +65,21 @@ describe('Round route test helpers', () => {
       const req = Request.withUserAndQuery(user, query);
 
       expect(req.query).toEqual(query);
+      expect(req.session.user).toEqual(user);
+    });
+
+    test('Request create with params sets params and default user',
+      async () => {
+        const req = Request.withParams(params);
+
+        expect(req.params).toEqual(params);
+        expect(req.session.user).toEqual(user);
+      });
+
+    test('Request create with userAndparams sets params and user', () => {
+      const req = Request.withUserAndParams(user, params);
+
+      expect(req.params).toEqual(params);
       expect(req.session.user).toEqual(user);
     });
   });
@@ -159,5 +175,22 @@ describe('Round route test helpers', () => {
         expect(await repo.getForTournament(id2))
           .toEqual([round2]);
       });
+
+    test('Delete removes an existing round', async () => {
+      const round = {...createRound(), _id: generateId().toString()};
+      const id = TOURNAMENT_ID.toString();
+      await repo.create(id, round);
+      await repo.delete(round._id.toString());
+
+      expect(repo._rounds[id]).toEqual([]);
+    });
+
+    test('Deleting non-existant round throws', async (done) => {
+      try {
+        await repo.delete(createRound()._id);
+      } catch (e) {
+        done();
+      }
+    });
   });
 });

@@ -41,6 +41,7 @@ declare interface ServerApiRequest {
   session: { user: UserModel };
   body: { [string]: mixed };
   query: { [name: string]: string };
+  params: {[param: string]: string};
 }
 
 declare interface ServerApiResponse {

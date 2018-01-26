@@ -1,6 +1,6 @@
 // @flow
 
-import { CreateRoundRoute } from '../create-round';
+import CreateRoundRoute from '../create-round';
 import type { RoundRepository } from '../../../data/round';
 import type { TournamentRepository } from '../../../data/tournament';
 

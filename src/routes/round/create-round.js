@@ -7,7 +7,7 @@ import type { TournamentRepository } from '../../data/tournament';
 import type { UserModel } from '../../data/user';
 import parseRound from './utils';
 
-export class CreateRoundRoute {
+class CreateRoundRoute {
   _roundRepository: RoundRepository;
   _tournamentRepository: TournamentRepository;
 
