@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import type { Reducer } from 'redux';
 import { LIFECYCLE } from 'redux-pack';
 
-import isAuthenticated from './is-authenticated';
+import user from './user';
 import tournaments from './tournaments';
 import participants from './participants';
 import rounds from './rounds';
@@ -13,7 +13,7 @@ import makePackAction from './test-utils';
 
 const reducer: Reducer<ReduxState, ReduxPackAction> =
   combineReducers({
-    isAuthenticated,
+    user,
     tournaments,
     participants,
     rounds,

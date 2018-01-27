@@ -77,7 +77,7 @@ declare type RoundValidationSummary = {
 // Redux
 declare type ReduxDispatch = (action: ReduxAction) => mixed;
 declare type ReduxState = {
-  isAuthenticated: boolean,
+  user: UserReduxState,
   tournaments: TournamentsReduxState,
   participants: ParticipantsReduxState,
   rounds: RoundsReduxState,
@@ -93,6 +93,10 @@ declare type ReduxState = {
     createRound: UiCreateRoundReduxState
   }
 };
+
+declare type UserReduxState = {
+  id: string
+}
 
 declare type TournamentsReduxState = {
   isLoading: boolean,

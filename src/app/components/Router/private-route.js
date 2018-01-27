@@ -32,10 +32,10 @@ const PrivateRoute =
     );
   };
 
-function mapStateToProps(state: ReduxState,
+function mapStateToProps({user}: ReduxState,
   { location }: { location: Location }) {
   return {
-    isAuthenticated: state.isAuthenticated,
+    isAuthenticated: user.id !== '',
     referer: location.pathname
   };
 }

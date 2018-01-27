@@ -174,15 +174,17 @@ class Server {
   _renderRequest = (req: $Request, res: $Response) => {
     const context = {};
 
-    // $FlowFixMe: Add user to req type
-    const isAuthenticated = req.session.user != null;
+    const user = {
+      // $FlowFixMe: Add user to req type
+      id: req.session.user._id
+    };
 
     const html = renderToString(
       <StaticRouter
         location={req.url}
         context={context}
       >
-        {appWithPreloadedState({ isAuthenticated })}
+        {appWithPreloadedState({ user })}
       </StaticRouter>
     );
 

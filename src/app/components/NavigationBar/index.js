@@ -20,14 +20,10 @@ function getActivePath(location: string): string {
   return activeName;
 }
 
-type State = {
-  isAuthenticated: boolean
-}
-
-function mapStateToProps({ isAuthenticated }: State, { location }: Props) {
+function mapStateToProps({ user }: ReduxState, { location }: Props) {
   return {
     activePath: getActivePath(location.pathname),
-    isAuthenticated
+    isAuthenticated: user.id !== ''
   };
 }
 
