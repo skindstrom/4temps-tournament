@@ -10,7 +10,8 @@ test('Valid tournament is valid', () => {
     _id: '',
     name: '4temps World Championship',
     date: moment(),
-    type: 'jj'
+    type: 'jj',
+    judges: []
   };
   const validation = validateTournament(tournament);
 
@@ -25,7 +26,8 @@ test('Empty name is invalid', () => {
     _id: '',
     name: '',
     date: moment(),
-    type: 'jj'
+    type: 'jj',
+    judges: []
   };
   const validation = validateTournament(tournament);
 
@@ -41,7 +43,8 @@ describe('Tournament type must be valid', () => {
       _id: '',
       name: 'World championship',
       date: moment(),
-      type: 'none'
+      type: 'none',
+      judges: []
     };
     const validation = validateTournament(tournament);
 
@@ -54,7 +57,8 @@ describe('Tournament type must be valid', () => {
       _id: '',
       name: 'World championship',
       date: moment(),
-      type: 'jj'
+      type: 'jj',
+      judges: []
     };
     const validation = validateTournament(tournament);
 
@@ -67,7 +71,8 @@ describe('Tournament type must be valid', () => {
       _id: '',
       name: 'World championship',
       date: moment(),
-      type: 'classic'
+      type: 'classic',
+      judges: []
     };
     const validation = validateTournament(tournament);
 
@@ -81,7 +86,8 @@ describe('Tournament type must be valid', () => {
       name: 'World championship',
       date: moment(),
       // $FlowFixMe (ignored on purpose)
-      type: 'some other type'
+      type: 'some other type',
+      judges: []
     };
     const validation = validateTournament(tournament);
 
@@ -95,7 +101,8 @@ test('Unix epoch is invalid date', () => {
     _id: '',
     name: 'World championship',
     date: moment(0),
-    type: 'classic'
+    type: 'classic',
+    judges: []
   };
   const validation = validateTournament(tournament);
 

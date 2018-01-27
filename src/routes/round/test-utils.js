@@ -163,6 +163,7 @@ export function createTournament() {
     userId: USER_ID,
     name: 'name',
     date: new Date(),
-    type: 'jj'
+    type: 'jj',
+    judges: []
   };
 }

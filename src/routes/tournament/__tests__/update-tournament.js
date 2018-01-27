@@ -19,14 +19,16 @@ test(
       name: 'best',
       date: moment().toDate(),
       type: 'jj',
-      userId
+      userId,
+      judges: []
     };
 
     const tournament: Tournament = {
       _id: tournamentId.toString(),
       name: dbTournament.name,
       date: moment(dbTournament.date),
-      type: dbTournament.type
+      type: dbTournament.type,
+      judges: []
     };
 
     const getTournament = (id: string) => {
@@ -59,7 +61,8 @@ test('Tournament is validated and returns status 400 when invalid',
       _id: '',
       name: '',
       date: moment(),
-      type: 'classic'
+      type: 'classic',
+      judges: []
     };
 
     expect(
@@ -75,7 +78,8 @@ test(`Tournament that doesn't exist returns 404`, async () => {
     _id: '',
     name: 'valid',
     date: moment(),
-    type: 'classic'
+    type: 'classic',
+    judges: []
   };
 
   expect(
@@ -95,14 +99,16 @@ test(`When tournament can't be updated 500 is returned`, async () => {
     name: 'best',
     date: moment().toDate(),
     type: 'jj',
-    userId
+    userId,
+    judges: []
   };
 
   const tournament: Tournament = {
     _id: tournamentId.toString(),
     name: dbTournament.name,
     date: moment(dbTournament.date),
-    type: dbTournament.type
+    type: dbTournament.type,
+    judges: []
   };
 
 
@@ -137,14 +143,16 @@ test(`When tournament is owned by other user be updated 401 is returned`,
       name: 'best',
       date: moment().toDate(),
       type: 'jj',
-      userId: new Types.ObjectId()
+      userId: new Types.ObjectId(),
+      judges: []
     };
 
     const tournament: Tournament = {
       _id: tournamentId.toString(),
       name: dbTournament.name,
       date: moment(dbTournament.date),
-      type: dbTournament.type
+      type: dbTournament.type,
+      judges: []
     };
 
 

@@ -51,7 +51,8 @@ test('Unauthorized user results in no participants and status 401',
         name: 'Tournament name',
         userId: new mongoose.Types.ObjectId(), // another user id
         type: 'jj',
-        date: new Date()
+        date: new Date(),
+        judges: []
       }));
     const route = new GetParticipantsRoute(userId.toString(),
       new Repository(), getTournament);
@@ -67,7 +68,8 @@ test('Valid user returns the participants with status 200', async () => {
     name: 'Tournament name',
     userId,
     type: 'jj',
-    date: new Date()
+    date: new Date(),
+    judges: []
   };
 
   const getTournament =

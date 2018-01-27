@@ -33,7 +33,8 @@ const getTournament =
         userId: USER_ID,
         name: '',
         date: new Date(),
-        type: 'jj'
+        type: 'jj',
+        judges: []
       });
     } else {
       resolve(null);

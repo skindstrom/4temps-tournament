@@ -21,7 +21,8 @@ function createTournamentRepositoryWithDefaultTournament() {
     userId: Test.USER_ID,
     name: 'tour',
     date: new Date(),
-    type: 'jj'
+    type: 'jj',
+    judges: []
   };
   return tournamentRepo;
 }

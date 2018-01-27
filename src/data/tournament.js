@@ -8,7 +8,8 @@ export type TournamentModel = {
   userId: ObjectId,
   name: string,
   date: Date,
-  type: TournamentType
+  type: TournamentType,
+  judges: Array<string>
 }
 
 const schema = new mongoose.Schema({

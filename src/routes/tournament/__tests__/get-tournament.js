@@ -15,7 +15,8 @@ test('Existing tournament is returned with status 200 if user created it',
       name: 'Best Tournament',
       date: moment().toDate(),
       type: 'jj',
-      userId
+      userId,
+      judges: []
     };
 
     const getTournament = (id: string) => {
@@ -58,7 +59,8 @@ test('Returns 401 and null tournament if tournament was not created by user',
       name: 'Best Tournament',
       date: moment().toDate(),
       type: 'jj',
-      userId: new Types.ObjectId()
+      userId: new Types.ObjectId(),
+      judges: []
     };
 
     const getTournament = () => new Promise(resolve => resolve(dbTournament));

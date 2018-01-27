@@ -7,5 +7,6 @@ export type Tournament = {
   _id: string,
   name: string,
   date: Moment,
-  type: TournamentType
+  type: TournamentType,
+  judges: Array<string>
 }

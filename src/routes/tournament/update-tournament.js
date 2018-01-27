@@ -45,7 +45,8 @@ export default async (req: $Request, res: $Response) => {
     _id: req.body.tournament._id || '',
     name: req.body.tournament.name || '',
     date: moment(req.body.tournament.date) || moment(0),
-    type: req.body.tournament.type || 'none'
+    type: req.body.tournament.type || 'none',
+    judges: req.body.judges || []
   };
 
   // $FlowFixMe
