@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 import { Container, Menu, MenuItem } from 'semantic-ui-react';
 import type { RouterHistory, Location, Match } from 'react-router-dom';
 
-import EditTournamentGeneral from './EditTournamentGeneral';
-import EditTournamentParticipants from './EditTournamentParticipants';
-import EditTournamentRounds from './EditTournamentRounds';
+import General from './General';
+import Participants from './Participants';
+import Rounds from './Rounds';
 
 type TabName = 'general' | 'rounds' | 'staff' | 'participants';
 type Props = {
@@ -64,19 +64,19 @@ class EditTournament extends Component<Props, State> {
 
   _renderGeneral = () => {
     return (
-      <EditTournamentGeneral
+      <General
         tournamentId={this._getTournamentId()}
       />);
   }
 
   _renderRounds = () => (
-    <EditTournamentRounds
+    <Rounds
       tournamentId={this._getTournamentId()}
     />);
 
   _renderStaff = () => <Staff />
   _renderParticipants = () => (
-    <EditTournamentParticipants
+    <Participants
       tournamentId={this._getTournamentId()}
     />);
 
