@@ -30,7 +30,7 @@ const getTournament =
     if (id === TOURNAMENT_ID.toString()) {
       resolve({
         _id: TOURNAMENT_ID,
-        userId: USER_ID,
+        creatorId: USER_ID,
         name: '',
         date: new Date(),
         type: 'jj',

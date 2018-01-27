@@ -176,7 +176,7 @@ class Server {
 
     const user = {
       // $FlowFixMe: Add user to req type
-      id: req.session.user._id
+      id: req.session.user != null ? req.session.user._id : ''
     };
 
     const html = renderToString(

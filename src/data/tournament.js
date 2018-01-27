@@ -5,7 +5,7 @@ import type { Tournament, TournamentType } from '../models/tournament';
 
 export type TournamentModel = {
   _id: ObjectId,
-  userId: ObjectId,
+  creatorId: ObjectId,
   name: string,
   date: Date,
   type: TournamentType,
@@ -13,7 +13,7 @@ export type TournamentModel = {
 }
 
 const schema = new mongoose.Schema({
-  userId: {
+  creatorId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
@@ -36,7 +36,7 @@ const Model = mongoose.model('tournament', schema);
 export const createTournament =
   async (userId: string, tournament: Tournament): Promise<void> => {
     let { date, ...rest } = tournament;
-    Model.create({ userId, date: date.toDate(), ...rest });
+    Model.create({ creatorId: userId, date: date.toDate(), ...rest });
   };
 
 export const updateTournament =
@@ -59,7 +59,7 @@ export const updateTournament =
 export const getTournamentsForUser =
   async (userId: string): Promise<Array<TournamentModel>> => {
     try {
-      return await Model.find({ userId });
+      return await Model.find({ creatorId: userId });
     } catch (e) {
       return [];
     }

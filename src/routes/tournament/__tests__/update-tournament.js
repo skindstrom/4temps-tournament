@@ -11,7 +11,7 @@ const nullPromise = () => new Promise(resolve => resolve(null));
 test(
   'Valid tournament with correct user returns new tournament with status 200',
   async () => {
-    const userId = new Types.ObjectId();
+    const creatorId = new Types.ObjectId();
     const tournamentId = new Types.ObjectId();
 
     const dbTournament: TournamentModel = {
@@ -19,7 +19,7 @@ test(
       name: 'best',
       date: moment().toDate(),
       type: 'jj',
-      userId,
+      creatorId,
       judges: []
     };
 
@@ -28,7 +28,8 @@ test(
       name: dbTournament.name,
       date: moment(dbTournament.date),
       type: dbTournament.type,
-      judges: []
+      judges: [],
+      creatorId: ''
     };
 
     const getTournament = (id: string) => {
@@ -44,7 +45,7 @@ test(
 
     expect(
       await updateTournamentRoute(
-        userId.toString(),
+        creatorId.toString(),
         tournamentId.toString(),
         tournament,
         getTournament,
@@ -62,7 +63,8 @@ test('Tournament is validated and returns status 400 when invalid',
       name: '',
       date: moment(),
       type: 'classic',
-      judges: []
+      judges: [],
+      creatorId: ''
     };
 
     expect(
@@ -79,7 +81,8 @@ test(`Tournament that doesn't exist returns 404`, async () => {
     name: 'valid',
     date: moment(),
     type: 'classic',
-    judges: []
+    judges: [],
+    creatorId: ''
   };
 
   expect(
@@ -91,7 +94,7 @@ test(`Tournament that doesn't exist returns 404`, async () => {
 });
 
 test(`When tournament can't be updated 500 is returned`, async () => {
-  const userId = new Types.ObjectId();
+  const creatorId = new Types.ObjectId();
   const tournamentId = new Types.ObjectId();
 
   const dbTournament: TournamentModel = {
@@ -99,7 +102,7 @@ test(`When tournament can't be updated 500 is returned`, async () => {
     name: 'best',
     date: moment().toDate(),
     type: 'jj',
-    userId,
+    creatorId,
     judges: []
   };
 
@@ -108,7 +111,8 @@ test(`When tournament can't be updated 500 is returned`, async () => {
     name: dbTournament.name,
     date: moment(dbTournament.date),
     type: dbTournament.type,
-    judges: []
+    judges: [],
+    creatorId: ''
   };
 
 
@@ -122,7 +126,7 @@ test(`When tournament can't be updated 500 is returned`, async () => {
 
   expect(
     await updateTournamentRoute(
-      userId.toString(),
+      creatorId.toString(),
       tournamentId.toString(),
       tournament,
       getTournament,
@@ -135,7 +139,7 @@ test(`When tournament can't be updated 500 is returned`, async () => {
 
 test(`When tournament is owned by other user be updated 401 is returned`,
   async () => {
-    const userId = new Types.ObjectId();
+    const creatorId = new Types.ObjectId();
     const tournamentId = new Types.ObjectId();
 
     const dbTournament: TournamentModel = {
@@ -143,7 +147,7 @@ test(`When tournament is owned by other user be updated 401 is returned`,
       name: 'best',
       date: moment().toDate(),
       type: 'jj',
-      userId: new Types.ObjectId(),
+      creatorId: new Types.ObjectId(),
       judges: []
     };
 
@@ -152,7 +156,8 @@ test(`When tournament is owned by other user be updated 401 is returned`,
       name: dbTournament.name,
       date: moment(dbTournament.date),
       type: dbTournament.type,
-      judges: []
+      judges: [],
+      creatorId: ''
     };
 
 
@@ -166,7 +171,7 @@ test(`When tournament is owned by other user be updated 401 is returned`,
 
     expect(
       await updateTournamentRoute(
-        userId.toString(),
+        creatorId.toString(),
         tournamentId.toString(),
         tournament,
         getTournament,

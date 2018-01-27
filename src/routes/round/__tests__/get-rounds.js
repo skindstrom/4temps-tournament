@@ -31,7 +31,7 @@ describe('/api/round/get?tournamentId=', () => {
 
   test('Invalid user returns status 401', async () => {
     const tournament = createTournament();
-    tournament.userId = generateId(); // other user
+    tournament.creatorId = generateId(); // other user
 
     const repository = new TournamentRepository();
     repository.tournaments[tournament._id.toString()] = tournament;

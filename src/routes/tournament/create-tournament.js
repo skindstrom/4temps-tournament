@@ -39,6 +39,8 @@ export default async (req: $Request, res: $Response) => {
     date: moment(req.body.date) || moment(0),
     type: req.body.type || 'none',
     judges: req.body.judges || [],
+    // $FlowFixMe
+    creatorId: req.session.user._id
   };
 
   // $FlowFixMe

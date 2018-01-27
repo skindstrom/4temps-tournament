@@ -73,7 +73,7 @@ export class CreateParticipantRoute {
   async _isValidTournament() {
     const tournament = await this._getTournament(this._tournamentId);
     return tournament != null
-      && tournament.userId.toString() === this._userId;
+      && tournament.creatorId.toString() === this._userId;
   }
 
   async _createForValidInput() {
@@ -102,7 +102,7 @@ export class CreateParticipantRoute {
     const tournament = await this._getTournament(this._tournamentId);
     if (tournament == null) {
       status = 404; // tournament does not exist
-    } else if (tournament.userId.toString() != this._userId) {
+    } else if (tournament.creatorId.toString() != this._userId) {
       status = 401; // user is not owner of tournament
     }
     return status;

@@ -5,7 +5,7 @@ import { GetParticipantsRoute } from '../get-participants';
 import type { ParticipantRepository } from '../../../data/participant';
 import type { Participant } from '../../../models/participant';
 
-const userId = new mongoose.Types.ObjectId();
+const creatorId = new mongoose.Types.ObjectId();
 const tournamentId = new mongoose.Types.ObjectId();
 
 const dbParticipants = [
@@ -49,12 +49,12 @@ test('Unauthorized user results in no participants and status 401',
       () => new Promise(resolve => resolve({
         _id: tournamentId,
         name: 'Tournament name',
-        userId: new mongoose.Types.ObjectId(), // another user id
+        creatorId: new mongoose.Types.ObjectId(), // another user id
         type: 'jj',
         date: new Date(),
         judges: []
       }));
-    const route = new GetParticipantsRoute(userId.toString(),
+    const route = new GetParticipantsRoute(creatorId.toString(),
       new Repository(), getTournament);
 
     expect(await route.getParticipantsForTournament(tournamentId.toString()))
@@ -66,7 +66,7 @@ test('Valid user returns the participants with status 200', async () => {
   const tournament = {
     _id: tournamentId,
     name: 'Tournament name',
-    userId,
+    creatorId,
     type: 'jj',
     date: new Date(),
     judges: []
@@ -75,7 +75,7 @@ test('Valid user returns the participants with status 200', async () => {
   const getTournament =
     () => new Promise(resolve => resolve(tournament));
 
-  const route = new GetParticipantsRoute(userId.toString(),
+  const route = new GetParticipantsRoute(creatorId.toString(),
     new Repository(), getTournament);
 
   expect(await route.getParticipantsForTournament(tournamentId.toString()))

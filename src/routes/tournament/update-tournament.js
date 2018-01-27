@@ -24,7 +24,7 @@ export const updateTournamentRoute = async (
     if (dbTournament == null) {
       status = 404;
     }
-    else if (dbTournament.userId.toString() != userId) {
+    else if (dbTournament.creatorId.toString() != userId) {
       status = 401;
     } else {
       if (await updateTournament(tournamentId, tournament) == null) {
@@ -46,7 +46,8 @@ export default async (req: $Request, res: $Response) => {
     name: req.body.tournament.name || '',
     date: moment(req.body.tournament.date) || moment(0),
     type: req.body.tournament.type || 'none',
-    judges: req.body.judges || []
+    judges: req.body.judges || [],
+    creatorId: req.body.creatorId
   };
 
   // $FlowFixMe

@@ -14,7 +14,8 @@ test('Valid tournament returns 200 and the new tournamentid', async () => {
     name: 'best',
     date: moment(),
     type: 'classic',
-    judges: []
+    judges: [],
+    creatorId: ''
   };
 
   const createTournament = () => new Promise(resolve => resolve(tournamentId));
@@ -35,7 +36,8 @@ test('Tournament is validated and returns status 400 when invalid',
       name: '',
       date: moment(),
       type: 'classic',
-      judges: []
+      judges: [],
+      creatorId: ''
     };
 
     const createTournament = () => new Promise(resolve => resolve(null));
@@ -54,7 +56,8 @@ test('Returns status 500 when a valid tournament can not be created',
       name: 'best',
       date: moment(),
       type: 'classic',
-      judges: []
+      judges: [],
+      creatorId: ''
     };
     const createTournament = () =>
       new Promise((resolve, reject) => reject(null));

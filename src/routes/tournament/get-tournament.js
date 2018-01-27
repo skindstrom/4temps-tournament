@@ -14,7 +14,7 @@ export const getTournamentRoute = async (tournamentId: string,
 
   if (dbTournament == null) {
     return { status: 404, body: null };
-  } else if (dbTournament.userId.toString() != userId) {
+  } else if (dbTournament.creatorId.toString() != userId) {
     return { status: 401, body: null };
   }
 

@@ -81,8 +81,8 @@ describe('/api/round/update', () => {
 
   test('If user does not own the tournament, status 401 is returned',
     async() => {
-      const tournament = {...createTournament(),
-        userId: generateId()
+      const tournament: Tournament = {...createTournament(),
+        creatorId: generateId()
       };
       tournamentRepository.create(tournament);
 

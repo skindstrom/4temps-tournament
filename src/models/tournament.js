@@ -5,7 +5,7 @@ export type TournamentType = 'none' | 'jj' | 'classic';
 
 export type Tournament = {
   _id: string,
-//  creator: string,
+  creatorId: string,
   name: string,
   date: Moment,
   type: TournamentType,

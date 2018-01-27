@@ -48,10 +48,12 @@ describe('Tournament reducer', () => {
   test('GET_ALL_TOURNAMENTS success sets flags and tournaments', () => {
     const payload: Array<Tournament> = [
       {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: []
+        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
+        creatorId: ''
       },
       {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: []
+        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
+        creatorId: ''
       }
     ];
 
@@ -92,10 +94,12 @@ describe('Tournament reducer', () => {
   test('GET_USER_TOURNAMENTS success sets forUser and tournaments', () => {
     const payload: Array<Tournament> = [
       {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: []
+        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
+        creatorId: ''
       },
       {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: []
+        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
+        creatorId: ''
       }
     ];
 
@@ -128,10 +132,12 @@ describe('Tournament reducer', () => {
 
     const payload: Array<Tournament> = [
       {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: []
+        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
+        creatorId: ''
       },
       {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: []
+        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
+        creatorId: ''
       }
     ];
 
@@ -160,17 +166,20 @@ describe('Tournament reducer', () => {
           _id: '1',
           name: 'ANOTHER NAME, SAME ID',
           date: moment(),
-          type: 'classic'
+          type: 'classic',
+          creatorId: ''
         }
       }
     };
 
     const payload: Array<Tournament> = [
       {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: []
+        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
+        creatorId: ''
       },
       {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: []
+        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
+        creatorId: ''
       }
     ];
 
@@ -208,7 +217,8 @@ describe('Tournament reducer', () => {
       name: 't1',
       date: moment(),
       type: 'jj',
-      judges: []
+      judges: [],
+      creatorId: ''
     };
 
     const allIds = ['1'];
@@ -232,7 +242,8 @@ describe('Tournament reducer', () => {
       name: 't1',
       date: moment(),
       type: 'jj',
-      judges: []
+      judges: [],
+      creatorId: ''
     };
 
     const allIds = ['1'];

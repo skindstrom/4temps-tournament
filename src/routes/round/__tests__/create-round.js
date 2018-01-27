@@ -18,7 +18,7 @@ function createTournamentRepositoryWithDefaultTournament() {
   const tournamentRepo = new Test.TournamentRepositoryImpl();
   tournamentRepo.tournaments[Test.TOURNAMENT_ID.toString()] = {
     _id: Test.TOURNAMENT_ID,
-    userId: Test.USER_ID,
+    creatorId: Test.USER_ID,
     name: 'tour',
     date: new Date(),
     type: 'jj',
@@ -137,7 +137,8 @@ describe('/api/round/create route', () => {
   test('Returns status 401 if user does not own tournament', async () => {
     const repo = createTournamentRepositoryWithDefaultTournament();
     // change user id of tournament
-    repo.tournaments[Test.TOURNAMENT_ID.toString()].userId = Test.generateId();
+    repo.tournaments[Test.TOURNAMENT_ID.toString()].creatorId =
+      Test.generateId();
 
     const route = createRoute(new Test.RoundRepositoryImpl(), repo);
     const response = new Test.Response();

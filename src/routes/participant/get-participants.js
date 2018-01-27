@@ -57,7 +57,8 @@ export class GetParticipantsRoute {
 
   async _isUserAuthorized() {
     const tournament = await this._tournamentGetter(this._tournamentId);
-    return tournament != null && tournament.userId.toString() === this._userId;
+    return tournament != null
+      && tournament.creatorId.toString() === this._userId;
   }
 
   async _getParticipantsForAuthorizedUser() {

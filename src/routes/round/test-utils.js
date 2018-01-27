@@ -160,7 +160,7 @@ export function createRound(): Round {
 export function createTournament() {
   return {
     _id: TOURNAMENT_ID,
-    userId: USER_ID,
+    creatorId: USER_ID,
     name: 'name',
     date: new Date(),
     type: 'jj',

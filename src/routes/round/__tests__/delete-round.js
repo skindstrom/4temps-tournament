@@ -47,8 +47,10 @@ describe('/api/round/delete', () => {
 
   test('If user does not own the tournament, status 401 is returned',
     async() => {
-      const tournament = {...createTournament(), userId: generateId()};
-      const round = {...createRound(), _id: generateId()};
+      const tournament: Tournament = {...createTournament(),
+        creatorId: generateId()
+      };
+      const round: Round = {...createRound(), _id: generateId()};
 
       await tournamentRepository.create(tournament);
       await roundRepository.create(tournament._id.toString(), round);

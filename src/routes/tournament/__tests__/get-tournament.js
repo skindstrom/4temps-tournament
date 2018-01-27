@@ -7,7 +7,7 @@ import type { TournamentModel } from '../../../data/tournament';
 
 test('Existing tournament is returned with status 200 if user created it',
   async () => {
-    const userId = new Types.ObjectId();
+    const creatorId = new Types.ObjectId();
     const tournamentId = new Types.ObjectId();
 
     const dbTournament: TournamentModel = {
@@ -15,7 +15,7 @@ test('Existing tournament is returned with status 200 if user created it',
       name: 'Best Tournament',
       date: moment().toDate(),
       type: 'jj',
-      userId,
+      creatorId,
       judges: []
     };
 
@@ -31,7 +31,7 @@ test('Existing tournament is returned with status 200 if user created it',
 
     expect(await getTournamentRoute(
       tournamentId.toString(),
-      userId.toString(), getTournament))
+      creatorId.toString(), getTournament))
       .toEqual({
         status: 200,
         body: dbTournament
@@ -59,7 +59,7 @@ test('Returns 401 and null tournament if tournament was not created by user',
       name: 'Best Tournament',
       date: moment().toDate(),
       type: 'jj',
-      userId: new Types.ObjectId(),
+      creatorId: new Types.ObjectId(),
       judges: []
     };
 
