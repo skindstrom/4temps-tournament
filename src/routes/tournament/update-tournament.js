@@ -45,7 +45,7 @@ export const updateTournamentRoute = async (
 
 export default async (req: ServerApiRequest, res: ServerApiResponse) => {
   // $FlowFixMe
-  const requestBody: any = req.requestBody;
+  const requestBody: any = req.body;
 
   const tournament: Tournament = {
     _id: requestBody.tournament._id || '',
