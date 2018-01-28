@@ -30,28 +30,24 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  judges: [String]
 });
 
 const Model = mongoose.model('tournament', schema);
 
 export const createTournament =
   async (userId: string, tournament: Tournament): Promise<void> => {
-    let { date, ...rest } = tournament;
-    Model.create({ creatorId: userId, date: date.toDate(), ...rest });
+    await Model.create(mapToDbModel({...tournament, creatorId: userId}));
   };
 
 export const updateTournament =
   async (tournamentId: string,
-    tournament: Tournament): Promise<?TournamentModel> => {
+    tournament: Tournament): Promise<?Tournament> => {
     try {
-      return Model.update({ _id: tournamentId }, {
-        $set: {
-          name:
-            tournament.name,
-          date: tournament.date.toDate(),
-          type: tournament.type
-        }
+      await Model.update({ _id: tournamentId }, {
+        $set: mapToDbModel(tournament)
       });
+      return tournament;
     } catch (e) {
       return null;
     }

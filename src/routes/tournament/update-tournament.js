@@ -1,12 +1,10 @@
 // @flow
-import type { $Request, $Response } from 'express';
 import moment from 'moment';
 
 import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
 import { getTournament, updateTournament } from '../../data/tournament';
 import type { RouteResult } from '../util';
-import type { TournamentModel } from '../../data/tournament';
 
 export const updateTournamentRoute = async (
   userId: string,
@@ -14,20 +12,25 @@ export const updateTournamentRoute = async (
   tournament: Tournament,
   getTournament: (tournamentId: string) => Promise<?Tournament>,
   updateTournament: (tournamentId: string, tournament: Tournament)
-    => Promise<?TournamentModel>): RouteResult<?Tournament> => {
+    => Promise<?Tournament>): RouteResult<?Tournament> => {
 
   const { isValidTournament } = validateTournament(tournament);
   let status: number = 200;
   if (isValidTournament) {
     const dbTournament = await getTournament(tournamentId);
 
+
     if (dbTournament == null) {
       status = 404;
     }
-    else if (dbTournament.creatorId.toString() != userId) {
+    else if (dbTournament.creatorId != userId) {
       status = 401;
     } else {
-      if (await updateTournament(tournamentId, tournament) == null) {
+      const newTournament = {
+        ...tournament,
+        creatorId: dbTournament.creatorId
+      };
+      if (await updateTournament(tournamentId, newTournament) == null) {
         status = 500;
       }
     }
@@ -40,19 +43,22 @@ export const updateTournamentRoute = async (
   return { status, body };
 };
 
-export default async (req: $Request, res: $Response) => {
+export default async (req: ServerApiRequest, res: ServerApiResponse) => {
+  // $FlowFixMe
+  const requestBody: any = req.requestBody;
+
   const tournament: Tournament = {
-    _id: req.body.tournament._id || '',
-    name: req.body.tournament.name || '',
-    date: moment(req.body.tournament.date) || moment(0),
-    type: req.body.tournament.type || 'none',
-    judges: req.body.judges || [],
-    creatorId: req.body.creatorId
+    _id: requestBody.tournament._id || '',
+    name: requestBody.tournament.name || '',
+    date: moment(requestBody.tournament.date) || moment(0),
+    type: requestBody.tournament.type || 'none',
+    judges: requestBody.judges || [],
+    creatorId: requestBody.creatorId
   };
 
   // $FlowFixMe
   const userId: string = req.session.user._id;
-  const tournamentId: string = req.body.tournamentId || '';
+  const tournamentId: string = requestBody.tournamentId || '';
 
   const { status, body } =
     await updateTournamentRoute(userId, tournamentId, tournament,
