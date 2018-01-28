@@ -2,9 +2,6 @@
 
 import ObjectId from 'bson-objectid';
 import moment from 'moment';
-import {
-  mapToDomainModel
-} from '../data/tournament';
 import type {
   UserModel
 } from '../data/user';
@@ -12,7 +9,6 @@ import type {
   RoundRepository
 } from '../data/round';
 import type {
-  TournamentModel,
   TournamentRepository
 } from '../data/tournament';
 import type {
@@ -131,20 +127,16 @@ export class RoundRepositoryImpl implements RoundRepository {
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
-    tournaments: {
-        [id: string]: TournamentModel
+    _tournaments: {
+        [id: string]: Tournament
     } = {};
 
     get = async(id: string): Promise<?Tournament> => {
-      const tournament = this.tournaments[id];
-      if (tournament != null) {
-        return mapToDomainModel(tournament);
-      }
-      return null;
+      return this._tournaments[id] || null;
     }
 
-    create = (tournament: TournamentModel) => {
-      this.tournaments[tournament._id.toString()] = tournament;
+    create = (tournament: Tournament) => {
+      this._tournaments[tournament._id] = tournament;
     }
 }
 

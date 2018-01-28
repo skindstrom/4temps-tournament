@@ -7,7 +7,6 @@ import {
   generateId, createRound, createTournament
 } from '../../test-utils';
 import GetRoundRoute from '../get-rounds';
-import type { TournamentModel } from '../../../data/tournament';
 import type { RoundDbModel } from '../../../data/round';
 
 describe('/api/round/get?tournamentId=', () => {
@@ -34,7 +33,7 @@ describe('/api/round/get?tournamentId=', () => {
     tournament.creatorId = generateId(); // other user
 
     const repository = new TournamentRepository();
-    repository.tournaments[tournament._id.toString()] = tournament;
+    await repository.create(tournament);
 
     const route = createRoute(repository);
     const response = new Response();
@@ -47,7 +46,8 @@ describe('/api/round/get?tournamentId=', () => {
 
   test('No errors results in status 200', async () => {
     const tournament = createTournament();
-    const repository = createTournamentRepositoryWithTournament(tournament);
+    const repository =
+      await createTournamentRepositoryWithTournament(tournament);
 
     const response = new Response();
     const route = createRoute(repository);
@@ -63,7 +63,7 @@ describe('/api/round/get?tournamentId=', () => {
     const tournament = createTournament();
     const tournamentId = tournament._id.toString();
     const tournamentRepository =
-      createTournamentRepositoryWithTournament(tournament);
+      await createTournamentRepositoryWithTournament(tournament);
 
     const rounds = createRounds(tournamentId);
     const roundRepository =
@@ -84,9 +84,11 @@ function createRoute(
   return new GetRoundRoute(tournamentRepository, roundRepository);
 }
 
-function createTournamentRepositoryWithTournament(tournament: TournamentModel) {
+async function createTournamentRepositoryWithTournament(
+  tournament: Tournament) {
+
   const repository = new TournamentRepository();
-  repository.tournaments[tournament._id.toString()] = tournament;
+  await repository.create(tournament);
   return repository;
 }
 

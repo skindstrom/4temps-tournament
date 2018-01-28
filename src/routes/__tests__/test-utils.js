@@ -111,24 +111,13 @@ describe('Round route test helpers', () => {
 
     test('Get returns the tournament with the given id if exists', async () => {
       const tournament = createTournament();
-      const id = tournament._id.toString();
-      repo.tournaments[id] = tournament;
+      await repo.create(tournament);
 
-      expect(await repo.get(id)).toEqual(tournament);
+      expect(await repo.get(tournament._id)).toEqual(tournament);
     });
 
     test('Get returns null if the tournament does not exist', async () => {
       expect(await repo.get('a very nice id')).toBeNull();
-    });
-
-    test('Create adds the tournaments', async () => {
-      const tournament = createTournament();
-      const id = tournament._id.toString();
-
-      repo.create(tournament);
-
-      expect(await repo.get(id)).toEqual(tournament);
-      expect(repo.tournaments[id]).toEqual(tournament);
     });
   });
 

@@ -4,7 +4,7 @@ import type { ObjectId } from 'mongoose';
 import moment from 'moment';
 import type { Tournament, TournamentType } from '../models/tournament';
 
-export type TournamentModel = {
+type TournamentModel = {
   _id: ObjectId,
   creatorId: ObjectId,
   name: string,
@@ -54,7 +54,7 @@ export const updateTournament =
   };
 
 export const getTournamentsForUser =
-  async (userId: string): Promise<Array<TournamentModel>> => {
+  async (userId: string): Promise<Array<Tournament>> => {
     try {
       return await Model.find({ creatorId: userId });
     } catch (e) {
@@ -62,7 +62,7 @@ export const getTournamentsForUser =
     }
   };
 
-export const getTournaments = async (): Promise<Array<TournamentModel>> => {
+export const getTournaments = async (): Promise<Array<Tournament>> => {
   try {
     return await Model.find();
   } catch (e) {
@@ -89,7 +89,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   }
 }
 
-export function mapToDbModel(tournament: Tournament): TournamentModel {
+function mapToDbModel(tournament: Tournament): TournamentModel {
   const {_id, name, date, type, judges, creatorId} = tournament;
   return {
     name,
@@ -101,7 +101,7 @@ export function mapToDbModel(tournament: Tournament): TournamentModel {
   };
 }
 
-export function mapToDomainModel(tournament: TournamentModel): Tournament {
+function mapToDomainModel(tournament: TournamentModel): Tournament {
   const {_id, name, date, type, judges, creatorId} = tournament;
   return {
     _id: _id.toString(),

@@ -6,24 +6,21 @@ import type { TournamentRepository } from '../../../data/tournament';
 
 import * as Test from '../../test-utils';
 
-function createRoute(roundRepo: RoundRepository =
+async function createRoute(roundRepo: RoundRepository =
   new Test.RoundRepositoryImpl(), tournamentRepo: ?TournamentRepository) {
   if (!tournamentRepo) {
-    tournamentRepo = createTournamentRepositoryWithDefaultTournament();
+    tournamentRepo =
+      await createTournamentRepositoryWithTournament(
+        Test.createTournament());
   }
   return new CreateRoundRoute(roundRepo, tournamentRepo);
 }
 
-function createTournamentRepositoryWithDefaultTournament() {
+async function createTournamentRepositoryWithTournament(
+  tournament: Tournament) {
+
   const tournamentRepo = new Test.TournamentRepositoryImpl();
-  tournamentRepo.tournaments[Test.TOURNAMENT_ID.toString()] = {
-    _id: Test.TOURNAMENT_ID,
-    creatorId: Test.USER_ID,
-    name: 'tour',
-    date: new Date(),
-    type: 'jj',
-    judges: []
-  };
+  await tournamentRepo.create(tournament);
   return tournamentRepo;
 }
 
@@ -37,7 +34,7 @@ function requestWithRound(round: mixed): ServerApiRequest {
 describe('/api/round/create route', () => {
   test('Empty body returns status 400', async () => {
     const response = new Test.Response();
-    const route = createRoute();
+    const route = await createRoute();
 
     await route.route(requestWithRound({}), response);
 
@@ -46,7 +43,7 @@ describe('/api/round/create route', () => {
 
   test('Invalid round returns status 400', async () => {
     const response = new Test.Response();
-    const route = createRoute();
+    const route = await createRoute();
 
     await route.route(requestWithRound({
       _id: '',
@@ -63,7 +60,7 @@ describe('/api/round/create route', () => {
   });
 
   test('Valid round returns status 200', async () => {
-    const route = createRoute();
+    const route = await createRoute();
     const response = new Test.Response();
 
     await route.route(requestWithRound(Test.createRound()), response);
@@ -73,7 +70,7 @@ describe('/api/round/create route', () => {
 
   test('An invalid round does not cause a round to be created', async () => {
     const repository = new Test.RoundRepositoryImpl();
-    const route = createRoute(repository);
+    const route = await createRoute(repository);
 
     await route.route(requestWithRound({
       tournamentId: '',
@@ -86,7 +83,7 @@ describe('/api/round/create route', () => {
 
   test('A valid round gets added to the repository', async () => {
     const repository = new Test.RoundRepositoryImpl();
-    const route = createRoute(repository);
+    const route = await createRoute(repository);
 
     const {_id, ...round} = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
@@ -99,7 +96,7 @@ describe('/api/round/create route', () => {
     const tournamentId = Test.TOURNAMENT_ID.toString();
     const repository = new Test.RoundRepositoryImpl();
     await repository.create(tournamentId, Test.createRound());
-    const route = createRoute(repository);
+    const route = await createRoute(repository);
 
     const {_id, ...round} = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
@@ -110,7 +107,7 @@ describe('/api/round/create route', () => {
 
   test('A valid round has an ID generated', async () => {
     const repository = new Test.RoundRepositoryImpl();
-    const route = createRoute(repository);
+    const route = await createRoute(repository);
 
     const round = Test.createRound();
     await route.route(requestWithRound(round), new Test.Response());
@@ -126,7 +123,7 @@ describe('/api/round/create route', () => {
         throw {};
       }
     }
-    const route = createRoute(new ThrowingRepository());
+    const route = await createRoute(new ThrowingRepository());
     const response = new Test.Response();
 
     await route.route(requestWithRound(Test.createRound()), response);
@@ -135,12 +132,13 @@ describe('/api/round/create route', () => {
   });
 
   test('Returns status 401 if user does not own tournament', async () => {
-    const repo = createTournamentRepositoryWithDefaultTournament();
-    // change user id of tournament
-    repo.tournaments[Test.TOURNAMENT_ID.toString()].creatorId =
-      Test.generateId();
+    const repo =
+      await createTournamentRepositoryWithTournament({
+        ...Test.createTournament(),
+        creatorId: Test.generateId().toString
+      });
 
-    const route = createRoute(new Test.RoundRepositoryImpl(), repo);
+    const route = await createRoute(new Test.RoundRepositoryImpl(), repo);
     const response = new Test.Response();
 
     const body = {
@@ -153,7 +151,7 @@ describe('/api/round/create route', () => {
   });
 
   test('Returns status 404 if tournament does not exist', async () => {
-    const route = createRoute();
+    const route = await createRoute();
     const response = new Test.Response();
 
     const body = {
@@ -168,7 +166,7 @@ describe('/api/round/create route', () => {
   test('Valid round returns tournamentId and round', async () => {
     const tournamentId = Test.TOURNAMENT_ID.toString();
     const {_id, ...round} = Test.createRound();
-    const route = createRoute();
+    const route = await createRoute();
     const response = new Test.Response();
 
     await route.route(requestWithRound(round), response);

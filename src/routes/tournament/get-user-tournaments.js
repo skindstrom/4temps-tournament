@@ -1,14 +1,11 @@
 // @flow
-import type { $Request, $Response } from 'express';
-
 import { getTournamentsForUser } from '../../data/tournament';
-import type { TournamentModel } from '../../data/tournament';
 
-export default async (req: $Request, res: $Response) => {
+export default async (req: ServerApiRequest, res: ServerApiResponse) => {
   // $FlowFixMe
   const userId = req.session.user._id;
 
-  const tournaments: Array<TournamentModel> =
+  const tournaments: Array<Tournament> =
     await getTournamentsForUser(userId);
   res.status(200);
   res.json(tournaments);
