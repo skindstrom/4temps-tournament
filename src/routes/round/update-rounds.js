@@ -91,7 +91,7 @@ class UpdateRoundsRouteHandler {
       throw {status: 404};
     }
 
-    return tournament.creatorId == this._user._id;
+    return tournament.creatorId == this._user._id.toString();
   };
 
   updateRounds = async () => {

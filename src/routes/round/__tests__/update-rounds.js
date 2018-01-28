@@ -29,17 +29,17 @@ describe('/api/round/update', () => {
 
   test('Invalid body returns status 400', async() => {
     await route.route(Request.withBody({}), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
 
     await route.route(Request.withBody({
       tournamentId: '123'
     }), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
 
     await route.route(Request.withBody({
       rounds: []
     }), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('Invalid round returns status 400', async() => {
@@ -52,7 +52,7 @@ describe('/api/round/update', () => {
         tournamentId: 'id',
         rounds: [round]
       }), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('Invalid tournamentId type returns status 400', async() => {
@@ -65,7 +65,7 @@ describe('/api/round/update', () => {
         tournamentId: 'id',
         rounds: [round]
       }), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('If tournament does not exist, status 404 is returned', async() => {
@@ -76,7 +76,7 @@ describe('/api/round/update', () => {
 
     await route.route(Request.withUserAndBody(user, body), response);
 
-    expect(response.status).toBe(404);
+    expect(response.getStatus()).toBe(404);
   });
 
   test('If user does not own the tournament, status 401 is returned',
@@ -93,7 +93,7 @@ describe('/api/round/update', () => {
 
       await route.route(Request.withUserAndBody(user, body), response);
 
-      expect(response.status).toBe(401);
+      expect(response.getStatus()).toBe(401);
     });
 
   test('If tournament could not get fetched, status 500 is returned',
@@ -111,7 +111,7 @@ describe('/api/round/update', () => {
 
       await route.route(Request.withUserAndBody(user, body), response);
 
-      expect(response.status).toBe(500);
+      expect(response.getStatus()).toBe(500);
     });
 
   test('If rounds could not get updated, status 500 is returned', async() => {
@@ -128,7 +128,7 @@ describe('/api/round/update', () => {
     };
     await route.route(Request.withUserAndBody(user, body), response);
 
-    expect(response.status).toBe(500);
+    expect(response.getStatus()).toBe(500);
   });
 
   test('Successful update returns status 200 and the updated rounds',
@@ -143,7 +143,7 @@ describe('/api/round/update', () => {
       };
       await route.route(Request.withUserAndBody(user, body), response);
 
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(body);
+      expect(response.getStatus()).toBe(200);
+      expect(response.getBody()).toEqual(body);
     });
 });

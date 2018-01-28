@@ -1,37 +1,43 @@
 // @flow
-import type { $Request, $Response } from 'express';
-
 import type { RouteResult } from '../util';
-import { getTournament } from '../../data/tournament';
-import type { TournamentModel } from '../../data/tournament';
+import type { TournamentRepository } from '../../data/tournament';
 
-export const getTournamentRoute = async (tournamentId: string,
+export default class GetTournamentRoute {
+  _tournamentRepository: TournamentRepository;
+
+  constructor(tournamentRepository: TournamentRepository) {
+    this._tournamentRepository = tournamentRepository;
+  }
+
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
+    const tournamentId = req.params.tournamentId;
+    // $FlowFixMe
+    const userId: string = req.session.user._id;
+
+    const { status, body } =
+      await getTournamentRoute(
+        tournamentId, userId, this._tournamentRepository);
+
+    res.status(status);
+    res.json(body);
+  }
+}
+
+export async function getTournamentRoute(
+  tournamentId: string,
   userId: string,
-  getTournament: (tournamentId: string)
-    => Promise<?TournamentModel>): RouteResult<?TournamentModel> => {
+  tournamentRepository: TournamentRepository): RouteResult<?Tournament> {
 
-  const dbTournament = await getTournament(tournamentId);
+  const tournament = await tournamentRepository.get(tournamentId);
 
-  if (dbTournament == null) {
+  if (tournament == null) {
     return { status: 404, body: null };
-  } else if (dbTournament.creatorId.toString() != userId) {
+  } else if (tournament.creatorId.toString() != userId) {
     return { status: 401, body: null };
   }
 
   return {
     status: 200,
-    body: dbTournament
+    body: tournament
   };
-};
-
-export default async (req: $Request, res: $Response) => {
-  const tournamentId = req.params.tournamentId;
-  // $FlowFixMe
-  const userId: string = req.session.user._id;
-
-  const { status, body } =
-    await getTournamentRoute(tournamentId, userId, getTournament);
-
-  res.status(status);
-  res.json(body);
-};
+}

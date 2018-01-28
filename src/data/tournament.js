@@ -1,6 +1,7 @@
 // @flow
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
+import moment from 'moment';
 import type { Tournament, TournamentType } from '../models/tournament';
 
 export type TournamentModel = {
@@ -74,22 +75,46 @@ export const getTournaments = async (): Promise<Array<TournamentModel>> => {
 };
 
 export const getTournament =
-  async (tournamentId: string): Promise<?TournamentModel> => {
+  async (tournamentId: string): Promise<?Tournament> => {
     try {
-      return await Model.findOne({ _id: tournamentId });
+      return mapToDomainModel(await Model.findOne({ _id: tournamentId }));
     } catch (e) {
       return null;
     }
   };
 
 export interface TournamentRepository {
-  get(id: string): Promise<?TournamentModel>;
+  get(id: string): Promise<?Tournament>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
   get(id: string) {
     return getTournament(id);
   }
+}
+
+export function mapToDbModel(tournament: Tournament): TournamentModel {
+  const {_id, name, date, type, judges, creatorId} = tournament;
+  return {
+    name,
+    type,
+    judges,
+    _id: new mongoose.Types.ObjectId(_id),
+    creatorId: new mongoose.Types.ObjectId(creatorId),
+    date: date.toDate(),
+  };
+}
+
+export function mapToDomainModel(tournament: TournamentModel): Tournament {
+  const {_id, name, date, type, judges, creatorId} = tournament;
+  return {
+    _id: _id.toString(),
+    name,
+    type,
+    judges,
+    creatorId: creatorId.toString(),
+    date: moment(date),
+  };
 }
 
 export default TournamentRepositoryImpl;

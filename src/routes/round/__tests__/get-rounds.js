@@ -17,7 +17,7 @@ describe('/api/round/get?tournamentId=', () => {
 
     await route.route(Request.withQuery({}), response);
 
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('Non-existing tournamentId results in 404 ', async () => {
@@ -26,7 +26,7 @@ describe('/api/round/get?tournamentId=', () => {
 
     await route.route(Request.withQuery({tournamentId: 'other'}), response);
 
-    expect(response.status).toBe(404);
+    expect(response.getStatus()).toBe(404);
   });
 
   test('Invalid user returns status 401', async () => {
@@ -42,7 +42,7 @@ describe('/api/round/get?tournamentId=', () => {
     await route.route(
       Request.withQuery({ tournamentId: tournament._id.toString() }), response);
 
-    expect(response.status).toBe(401);
+    expect(response.getStatus()).toBe(401);
   });
 
   test('No errors results in status 200', async () => {
@@ -56,7 +56,7 @@ describe('/api/round/get?tournamentId=', () => {
       tournamentId: tournament._id.toString()
     }), response);
 
-    expect(response.status).toBe(200);
+    expect(response.getStatus()).toBe(200);
   });
 
   test('No errors returns the rounds', async () => {
@@ -74,7 +74,7 @@ describe('/api/round/get?tournamentId=', () => {
 
     await route.route(Request.withQuery({ tournamentId }), response);
 
-    expect(response.body).toEqual({ tournamentId, rounds });
+    expect(response.getBody()).toEqual({ tournamentId, rounds });
   });
 });
 

@@ -74,7 +74,7 @@ class CreateRoundRouteHandler {
         throw { status: 404 };
       }
 
-      return tournament.creatorId == this._user._id;
+      return tournament.creatorId == this._user._id.toString();
     } catch (e) {
       if (e.status) throw e;
       throw { status: 500 };

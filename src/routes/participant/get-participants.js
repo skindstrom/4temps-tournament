@@ -1,43 +1,51 @@
 // @flow
-import type { $Request, $Response } from 'express';
 import type { ParticipantRepository, ParticipantDbModel } from
   '../../data/participant';
 import type { Participant } from '../../models/participant';
-import ParticipantRepositoryImpl from '../../data/participant';
-import { getTournament } from '../../data/tournament';
-
-type TournamentGetter = typeof getTournament;
+import type {TournamentRepository} from '../../data/tournament';
 
 export class GetParticipantsRoute {
+  _participantRepository: ParticipantRepository;
+  _tournamentRepository: TournamentRepository;
+
+  constructor(
+    tournamentRepository: TournamentRepository,
+    participantRepository: ParticipantRepository) {
+    this._tournamentRepository = tournamentRepository;
+    this._participantRepository = participantRepository;
+  }
+
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
+    // $FlowFixMe
+    const userId: string = req.session.user._id;
+
+    const handler = new GetParticipantsRouteHandler(userId,
+      this._tournamentRepository, this._participantRepository);
+
+    const tournamentId = req.params.tournamentId;
+    const participants =
+      await handler.getParticipantsForTournament(tournamentId);
+
+    res.status(handler.status);
+    res.json({ tournamentId, participants });
+  }
+}
+
+export class GetParticipantsRouteHandler {
   status: number = 200;
 
   _userId: string;
   _participantRepository: ParticipantRepository;
-  _tournamentGetter: TournamentGetter;
+  _tournamentRepository: TournamentRepository;
 
   _tournamentId: string;
 
   constructor(userId: string,
-    participantRepository: ParticipantRepository,
-    tournamentGetter: TournamentGetter) {
+    tournamentRepository: TournamentRepository,
+    participantRepository: ParticipantRepository) {
     this._userId = userId;
+    this._tournamentRepository = tournamentRepository;
     this._participantRepository = participantRepository;
-    this._tournamentGetter = tournamentGetter;
-  }
-
-  static async routeRequest(req: $Request, res: $Response) {
-    // $FlowFixMe
-    const userId: string = req.session.user._id;
-
-    const route = new GetParticipantsRoute(userId,
-      new ParticipantRepositoryImpl(), getTournament);
-
-    const tournamentId = req.params.tournamentId;
-    const participants =
-      await route.getParticipantsForTournament(tournamentId);
-
-    res.status(route.status);
-    res.json({ tournamentId, participants });
   }
 
   async getParticipantsForTournament(
@@ -56,7 +64,7 @@ export class GetParticipantsRoute {
   }
 
   async _isUserAuthorized() {
-    const tournament = await this._tournamentGetter(this._tournamentId);
+    const tournament = await this._tournamentRepository.get(this._tournamentId);
     return tournament != null
       && tournament.creatorId.toString() === this._userId;
   }
@@ -74,4 +82,4 @@ export class GetParticipantsRoute {
   }
 }
 
-export default GetParticipantsRoute.routeRequest;
+export default GetParticipantsRoute;

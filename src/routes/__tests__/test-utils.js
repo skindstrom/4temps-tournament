@@ -90,15 +90,15 @@ describe('Round route test helpers', () => {
 
     test('sendStatus sets status', () => {
       res.sendStatus(123);
-      expect(res.status).toBe(123);
+      expect(res.getStatus()).toBe(123);
     });
 
     test('json sets status to 200 and body', () => {
       const body = { test: 'sweet' };
       res.json(body);
 
-      expect(res.status).toBe(200);
-      expect(res.body).toEqual(body);
+      expect(res.getStatus()).toBe(200);
+      expect(res.getBody()).toEqual(body);
     });
   });
 

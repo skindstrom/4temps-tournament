@@ -41,7 +41,7 @@ describe('/api/round/create route', () => {
 
     await route.route(requestWithRound({}), response);
 
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('Invalid round returns status 400', async () => {
@@ -59,7 +59,7 @@ describe('/api/round/create route', () => {
       criteria: undefined
     }), response);
 
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('Valid round returns status 200', async () => {
@@ -68,7 +68,7 @@ describe('/api/round/create route', () => {
 
     await route.route(requestWithRound(Test.createRound()), response);
 
-    expect(response.status).toBe(200);
+    expect(response.getStatus()).toBe(200);
   });
 
   test('An invalid round does not cause a round to be created', async () => {
@@ -131,7 +131,7 @@ describe('/api/round/create route', () => {
 
     await route.route(requestWithRound(Test.createRound()), response);
 
-    expect(response.status).toBe(500);
+    expect(response.getStatus()).toBe(500);
   });
 
   test('Returns status 401 if user does not own tournament', async () => {
@@ -149,7 +149,7 @@ describe('/api/round/create route', () => {
     };
     await route.route(Test.Request.withBody(body), response);
 
-    expect(response.status).toBe(401);
+    expect(response.getStatus()).toBe(401);
   });
 
   test('Returns status 404 if tournament does not exist', async () => {
@@ -162,7 +162,7 @@ describe('/api/round/create route', () => {
     };
     await route.route(Test.Request.withBody(body), response);
 
-    expect(response.status).toBe(404);
+    expect(response.getStatus()).toBe(404);
   });
 
   test('Valid round returns tournamentId and round', async () => {
@@ -173,6 +173,6 @@ describe('/api/round/create route', () => {
 
     await route.route(requestWithRound(round), response);
 
-    expect(response.body).toMatchObject({tournamentId, round});
+    expect(response.getBody()).toMatchObject({tournamentId, round});
   });
 });

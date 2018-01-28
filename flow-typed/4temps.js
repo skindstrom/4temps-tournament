@@ -45,6 +45,7 @@ declare interface ServerApiRequest {
 }
 
 declare interface ServerApiResponse {
+  status(statusCode: number): ServerApiResponse;
   sendStatus(statusCode: number): ServerApiResponse;
   json(body?: mixed): ServerApiResponse;
 }

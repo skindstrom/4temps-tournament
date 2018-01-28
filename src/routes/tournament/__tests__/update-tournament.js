@@ -29,12 +29,12 @@ test(
       date: moment(dbTournament.date),
       type: dbTournament.type,
       judges: [],
-      creatorId: ''
+      creatorId: creatorId.toString()
     };
 
     const getTournament = (id: string) => {
       if (id === tournamentId.toString()) {
-        return new Promise(resolve => resolve(dbTournament));
+        return new Promise(resolve => resolve(tournament));
       } else {
         return new Promise(resolve => resolve(null));
       }
@@ -94,31 +94,22 @@ test(`Tournament that doesn't exist returns 404`, async () => {
 });
 
 test(`When tournament can't be updated 500 is returned`, async () => {
-  const creatorId = new Types.ObjectId();
-  const tournamentId = new Types.ObjectId();
+  const creatorId = new Types.ObjectId().toString();
+  const tournamentId = new Types.ObjectId().toString();
 
-  const dbTournament: TournamentModel = {
+  const tournament: Tournament = {
     _id: tournamentId,
     name: 'best',
-    date: moment().toDate(),
+    date: moment(),
     type: 'jj',
     creatorId,
     judges: []
   };
 
-  const tournament: Tournament = {
-    _id: tournamentId.toString(),
-    name: dbTournament.name,
-    date: moment(dbTournament.date),
-    type: dbTournament.type,
-    judges: [],
-    creatorId: ''
-  };
-
 
   const getTournament = (id: string) => {
     if (id === tournamentId.toString()) {
-      return new Promise(resolve => resolve(dbTournament));
+      return new Promise(resolve => resolve(tournament));
     } else {
       return new Promise(resolve => resolve(null));
     }
@@ -126,8 +117,8 @@ test(`When tournament can't be updated 500 is returned`, async () => {
 
   expect(
     await updateTournamentRoute(
-      creatorId.toString(),
-      tournamentId.toString(),
+      tournament.creatorId,
+      tournament._id,
       tournament,
       getTournament,
       nullPromise))
@@ -139,31 +130,22 @@ test(`When tournament can't be updated 500 is returned`, async () => {
 
 test(`When tournament is owned by other user be updated 401 is returned`,
   async () => {
-    const creatorId = new Types.ObjectId();
-    const tournamentId = new Types.ObjectId();
-
-    const dbTournament: TournamentModel = {
-      _id: tournamentId,
-      name: 'best',
-      date: moment().toDate(),
-      type: 'jj',
-      creatorId: new Types.ObjectId(),
-      judges: []
-    };
+    const creatorId = new Types.ObjectId().toString();
+    const tournamentId = new Types.ObjectId().toString();
 
     const tournament: Tournament = {
-      _id: tournamentId.toString(),
-      name: dbTournament.name,
-      date: moment(dbTournament.date),
-      type: dbTournament.type,
-      judges: [],
-      creatorId: ''
+      _id: tournamentId,
+      name: 'best',
+      date: moment(),
+      type: 'jj',
+      creatorId: new Types.ObjectId().toString(),
+      judges: []
     };
 
 
     const getTournament = (id: string) => {
       if (id === tournamentId.toString()) {
-        return new Promise(resolve => resolve(dbTournament));
+        return new Promise(resolve => resolve(tournament));
       } else {
         return new Promise(resolve => resolve(null));
       }

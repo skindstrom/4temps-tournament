@@ -1,6 +1,10 @@
 // @flow
 
 import ObjectId from 'bson-objectid';
+import moment from 'moment';
+import {
+  mapToDomainModel
+} from '../data/tournament';
 import type {
   UserModel
 } from '../data/user';
@@ -73,19 +77,32 @@ export class Request implements ServerApiRequest {
 }
 
 export class Response implements ServerApiResponse {
-    status: number;
-    body: ? mixed;
+  _status: number;
+  _body: ? mixed;
 
-    sendStatus(statusCode: number): ServerApiResponse {
-      this.status = statusCode;
-      return this;
-    }
+  getStatus() {
+    return this._status;
+  }
 
-    json(body ?: mixed): ServerApiResponse {
-      this.status = 200;
-      this.body = body;
-      return this;
-    }
+  getBody() {
+    return this._body;
+  }
+
+  status(statusCode: number): ServerApiResponse {
+    this._status = statusCode;
+    return this;
+  }
+
+  sendStatus(statusCode: number): ServerApiResponse {
+    this._status = statusCode;
+    return this;
+  }
+
+  json(body ?: mixed): ServerApiResponse {
+    this._status = 200;
+    this._body = body;
+    return this;
+  }
 }
 
 export class RoundRepositoryImpl implements RoundRepository {
@@ -118,8 +135,12 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         [id: string]: TournamentModel
     } = {};
 
-    get = async(id: string): Promise<? TournamentModel> => {
-      return this.tournaments[id] || null;
+    get = async(id: string): Promise<?Tournament> => {
+      const tournament = this.tournaments[id];
+      if (tournament != null) {
+        return mapToDomainModel(tournament);
+      }
+      return null;
     }
 
     create = (tournament: TournamentModel) => {
@@ -175,12 +196,12 @@ export function createRound(): Round {
   };
 }
 
-export function createTournament() {
+export function createTournament(): Tournament {
   return {
-    _id: TOURNAMENT_ID,
-    creatorId: USER_ID,
+    _id: TOURNAMENT_ID.toString(),
+    creatorId: USER_ID.toString(),
     name: 'name',
-    date: new Date(),
+    date: moment(),
     type: 'jj',
     judges: []
   };

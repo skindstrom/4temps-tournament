@@ -1,75 +1,51 @@
 // @flow
-import moment from 'moment';
-import { Types } from 'mongoose';
-
 import { getTournamentRoute } from '../get-tournament';
-import type { TournamentModel } from '../../../data/tournament';
+import {
+  generateId,
+  createTournament,
+  TournamentRepositoryImpl as TournamentRepository
+} from '../../test-utils';
 
-test('Existing tournament is returned with status 200 if user created it',
-  async () => {
-    const creatorId = new Types.ObjectId();
-    const tournamentId = new Types.ObjectId();
+describe('/api/tournament/get', () => {
+  const tournament = createTournament();
+  let tournamentRepository: TournamentRepository;
 
-    const dbTournament: TournamentModel = {
-      _id: tournamentId,
-      name: 'Best Tournament',
-      date: moment().toDate(),
-      type: 'jj',
-      creatorId,
-      judges: []
-    };
-
-    const getTournament = (id: string) => {
-      return new Promise(resolve => {
-        if (id === tournamentId.toString()) {
-          resolve(dbTournament);
-        } else {
-          resolve(null);
-        }
-      });
-    };
-
-    expect(await getTournamentRoute(
-      tournamentId.toString(),
-      creatorId.toString(), getTournament))
-      .toEqual({
-        status: 200,
-        body: dbTournament
-      });
+  beforeEach(async () => {
+    tournamentRepository = new TournamentRepository();
+    await tournamentRepository.create(tournament);
   });
 
-test('Returns 404 and null tournament if tournament does not exist',
-  async () => {
-    const getTournament = () => new Promise(resolve => resolve(null));
+  test('Existing tournament is returned with status 200 if user created it',
+    async () => {
+      expect(await getTournamentRoute(
+        tournament._id,
+        tournament.creatorId,
+        tournamentRepository))
+        .toEqual({
+          status: 200,
+          body: tournament
+        });
+    });
 
-    expect(await getTournamentRoute('', '', getTournament))
-      .toEqual({
-        status: 404,
-        body: null
-      });
-  });
+  test('Returns 404 and null tournament if tournament does not exist',
+    async () => {
+      expect(await getTournamentRoute(
+        generateId().toString(), generateId().toString(), tournamentRepository))
+        .toEqual({
+          status: 404,
+          body: null
+        });
+    });
 
-test('Returns 401 and null tournament if tournament was not created by user',
-  async () => {
-    const userId = '';
-    const tournamentId = new Types.ObjectId();
-
-    const dbTournament: TournamentModel = {
-      _id: tournamentId,
-      name: 'Best Tournament',
-      date: moment().toDate(),
-      type: 'jj',
-      creatorId: new Types.ObjectId(),
-      judges: []
-    };
-
-    const getTournament = () => new Promise(resolve => resolve(dbTournament));
-
-    expect(await getTournamentRoute(
-      tournamentId.toString(),
-      userId, getTournament))
-      .toEqual({
-        status: 401,
-        body: null
-      });
-  });
+  test('Returns 401 and null tournament if tournament was not created by user',
+    async () => {
+      expect(await getTournamentRoute(
+        tournament._id,
+        generateId().toString(),
+        tournamentRepository))
+        .toEqual({
+          status: 401,
+          body: null
+        });
+    });
+});

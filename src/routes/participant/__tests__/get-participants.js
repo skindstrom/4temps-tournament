@@ -1,84 +1,59 @@
 // @flow
-import mongoose from 'mongoose';
-
-import { GetParticipantsRoute } from '../get-participants';
-import type { ParticipantRepository } from '../../../data/participant';
+import { GetParticipantsRouteHandler } from '../get-participants';
 import type { Participant } from '../../../models/participant';
+import {
+  TOURNAMENT_ID, USER_ID, generateId,
+  createTournament,
+  ParticipantRepositoryImpl as ParticipantRepository,
+  TournamentRepositoryImpl as TournamentRepository
+} from '../../test-utils';
 
-const creatorId = new mongoose.Types.ObjectId();
-const tournamentId = new mongoose.Types.ObjectId();
+describe('/api/participant/get', () => {
+  let tournamentRepository: TournamentRepository;
+  let participantRepository: ParticipantRepository;
 
-const dbParticipants = [
-  {
-    _id: new mongoose.Types.ObjectId(),
-    tournamentId,
-    name: 'Participant Name',
-    role: 'leader'
-  },
-  {
-    _id: new mongoose.Types.ObjectId(),
-    tournamentId,
-    name: 'Another Participant',
-    role: 'follower'
-  }
-];
+  beforeEach(async () => {
+    tournamentRepository = new TournamentRepository();
+    await tournamentRepository.create(createTournament());
 
-const participants =
-  dbParticipants.map(({ _id, name, role }) =>
-    ({ _id: _id.toString(), name, role }));
-
-class Repository implements ParticipantRepository {
-  async createForTournament(tournamentId: string,
-    // eslint-disable-next-line no-unused-vars
-    participant: Participant) {
-    return;
-  }
-
-  async getForTournament(id: string) {
-    if (id === tournamentId.toString()) {
-      return dbParticipants;
-    }
-    return [];
-  }
-}
-
-
-test('Unauthorized user results in no participants and status 401',
-  async () => {
-    const getTournament =
-      () => new Promise(resolve => resolve({
-        _id: tournamentId,
-        name: 'Tournament name',
-        creatorId: new mongoose.Types.ObjectId(), // another user id
-        type: 'jj',
-        date: new Date(),
-        judges: []
-      }));
-    const route = new GetParticipantsRoute(creatorId.toString(),
-      new Repository(), getTournament);
-
-    expect(await route.getParticipantsForTournament(tournamentId.toString()))
-      .toEqual([]);
-    expect(route.status).toBe(401);
+    participantRepository = new ParticipantRepository();
   });
 
-test('Valid user returns the participants with status 200', async () => {
-  const tournament = {
-    _id: tournamentId,
-    name: 'Tournament name',
-    creatorId,
-    type: 'jj',
-    date: new Date(),
-    judges: []
-  };
+  test('Unauthorized user results in no participants and status 401',
+    async () => {
+      const route = new GetParticipantsRouteHandler(generateId().toString(),
+        tournamentRepository, participantRepository);
 
-  const getTournament =
-    () => new Promise(resolve => resolve(tournament));
+      expect(await route.getParticipantsForTournament(TOURNAMENT_ID.toString()))
+        .toEqual([]);
+      expect(route.status).toBe(401);
+    });
 
-  const route = new GetParticipantsRoute(creatorId.toString(),
-    new Repository(), getTournament);
+  test('Valid user returns the participants with status 200', async () => {
 
-  expect(await route.getParticipantsForTournament(tournamentId.toString()))
-    .toEqual(participants);
-  expect(route.status).toBe(200);
+    const participants: Array<Participant> = [
+      {
+        _id: 'id1',
+        name: 'Participant Name',
+        role: 'leader'
+      },
+      {
+        _id: 'id2',
+        name: 'Another Participant',
+        role: 'follower'
+      }
+    ];
+
+    for (const p of participants) {
+      await participantRepository.createForTournament(
+        TOURNAMENT_ID.toString(), p);
+    }
+
+    const route = new GetParticipantsRouteHandler(USER_ID.toString(),
+      tournamentRepository, participantRepository);
+
+    expect(await route.getParticipantsForTournament(TOURNAMENT_ID.toString()))
+      .toEqual(participants);
+    expect(route.status).toBe(200);
+  });
 });

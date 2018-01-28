@@ -26,13 +26,13 @@ describe('/api/round/delete', () => {
 
   test('Invalid params returns status 400', async() => {
     await route.route(Request.withParams({}), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
 
     await route.route(Request.withParams({tournamentId: '123'}), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
 
     await route.route(Request.withParams({roundId: '123'}), response);
-    expect(response.status).toBe(400);
+    expect(response.getStatus()).toBe(400);
   });
 
   test('If round does not exist, status 404 is returned', async () => {
@@ -42,7 +42,7 @@ describe('/api/round/delete', () => {
         tournamentId: generateId()
       }), response);
 
-    expect(response.status).toBe(404);
+    expect(response.getStatus()).toBe(404);
   });
 
   test('If user does not own the tournament, status 401 is returned',
@@ -60,7 +60,7 @@ describe('/api/round/delete', () => {
         tournamentId: tournament._id.toString()
       }), response);
 
-      expect(response.status).toBe(401);
+      expect(response.getStatus()).toBe(401);
     });
 
   test('If tournament could not get fetched, status 500 is returned',
@@ -82,7 +82,7 @@ describe('/api/round/delete', () => {
         tournamentId
       }), response);
 
-      expect(response.status).toBe(500);
+      expect(response.getStatus()).toBe(500);
     });
 
   test('If a round could not get deleted, status 500 is returned', async() => {
@@ -103,7 +103,7 @@ describe('/api/round/delete', () => {
       tournamentId
     }), response);
 
-    expect(response.status).toBe(500);
+    expect(response.getStatus()).toBe(500);
   });
 
   test('Successful delete returns status 200 and the deleted id',
@@ -119,7 +119,7 @@ describe('/api/round/delete', () => {
       await route.route(
         Request.withParams({ roundId, tournamentId }), response);
 
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual({tournamentId, roundId});
+      expect(response.getStatus()).toBe(200);
+      expect(response.getBody()).toEqual({tournamentId, roundId});
     });
 });

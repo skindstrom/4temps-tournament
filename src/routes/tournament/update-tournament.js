@@ -12,7 +12,7 @@ export const updateTournamentRoute = async (
   userId: string,
   tournamentId: string,
   tournament: Tournament,
-  getTournament: (tournamentId: string) => Promise<?TournamentModel>,
+  getTournament: (tournamentId: string) => Promise<?Tournament>,
   updateTournament: (tournamentId: string, tournament: Tournament)
     => Promise<?TournamentModel>): RouteResult<?Tournament> => {
 
