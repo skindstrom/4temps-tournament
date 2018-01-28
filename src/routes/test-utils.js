@@ -3,14 +3,18 @@
 import ObjectId from 'bson-objectid';
 import type {
   UserModel
-} from '../../data/user';
+} from '../data/user';
 import type {
   RoundRepository
-} from '../../data/round';
+} from '../data/round';
 import type {
   TournamentModel,
   TournamentRepository
-} from '../../data/tournament';
+} from '../data/tournament';
+import type {
+  ParticipantRepository,
+  ParticipantDbModel
+} from '../data/participant';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
@@ -121,6 +125,19 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     create = (tournament: TournamentModel) => {
       this.tournaments[tournament._id.toString()] = tournament;
     }
+}
+
+export class ParticipantRepositoryImpl implements ParticipantRepository {
+  participants: Array<ParticipantDbModel> = [];
+
+  createForTournament =
+    async (tournamentId: string, participant: Participant) => {
+      this.participants.push({tournamentId, ...participant});
+  }
+
+  getForTournament = async (tournamentId: string) => {
+    return this.participants.filter(p => p.tournamentId == tournamentId);
+  }
 }
 
 export function createUser(): UserModel {

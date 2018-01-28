@@ -8,7 +8,7 @@ import {
   RoundRepositoryImpl as RoundRepository,
   createTournament,
   createRound
-} from '../test-utils';
+} from '../../test-utils';
 import DeleteRoundRoute from '../delete-round';
 
 describe('/api/round/delete', () => {
