@@ -200,7 +200,7 @@ describe('Round route test helpers', () => {
 
     beforeEach(() => {
       repo = new ParticipantRepositoryImpl();
-    })
+    });
 
     test('The repository is empty at first', async () => {
       expect(

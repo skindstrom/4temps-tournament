@@ -3,7 +3,7 @@ import type { $Request, $Response } from 'express';
 import type { ParticipantRepository, ParticipantDbModel } from
   '../../data/participant';
 import type { Participant } from '../../models/participant';
-import ParticipantRepositoryImpl  from '../../data/participant';
+import ParticipantRepositoryImpl from '../../data/participant';
 import { getTournament } from '../../data/tournament';
 
 type TournamentGetter = typeof getTournament;

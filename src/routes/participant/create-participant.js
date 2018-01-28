@@ -1,46 +1,57 @@
 // @flow
 
 import type { $Request, $Response } from 'express';
-import { getTournament } from '../../data/tournament';
+import type { TournamentRepository } from '../../data/tournament';
 import type { ParticipantRepository } from '../../data/participant';
-import ParticipantRepositoryImpl from '../../data/participant';
 import type { Participant } from '../../models/participant';
 import { validateParticipant } from '../../validators/validate-participant';
 
-type TournamentGetter = typeof getTournament;
-
 export class CreateParticipantRoute {
+  _tournamentRepository: TournamentRepository;
+  _participantRepository: ParticipantRepository;
+
+  constructor(
+    tournamentRepository: TournamentRepository,
+    participantRepository: ParticipantRepository) {
+
+    this._tournamentRepository = tournamentRepository;
+    this._participantRepository = participantRepository;
+  }
+
+  route = async (req: $Request, res: $Response) => {
+    // $FlowFixMe
+    const userId: string = req.session.user._id;
+
+    const handler =
+      new CreateParticipantRouteHandler(
+        userId, this._tournamentRepository, this._participantRepository);
+
+    handler.parseBody(req.body);
+    await handler.createParticipant();
+
+    res.status(handler.status);
+    res.json({
+      tournamentId: handler._tournamentId,
+      participant: handler._participant
+    });
+  }
+}
+
+export class CreateParticipantRouteHandler {
   status: number = 200;
 
   _userId: string;
-  _getTournament: TournamentGetter;
+  _tournamentRepository: TournamentRepository;
   _participantRepository: ParticipantRepository;
 
   _tournamentId: string;
   _participant: Participant;
 
-  constructor(userId: string, getTournament: TournamentGetter,
+  constructor(userId: string, tournamentRepository: TournamentRepository,
     participantRepository: ParticipantRepository) {
     this._userId = userId;
-    this._getTournament = getTournament;
+    this._tournamentRepository = tournamentRepository;
     this._participantRepository = participantRepository;
-  }
-
-  static async routeRequest(req: $Request, res: $Response) {
-    // $FlowFixMe
-    const userId: string = req.session.user._id;
-
-    const route = new CreateParticipantRoute(userId, getTournament,
-      new ParticipantRepositoryImpl());
-
-    route.parseBody(req.body);
-    route.createParticipant();
-
-    res.status(route.status);
-    res.json({
-      tournamentId: route._tournamentId,
-      participant: route._participant
-    });
   }
 
   parseBody(body: {tournamentId: ?string, participant: ?Participant}) {
@@ -71,7 +82,7 @@ export class CreateParticipantRoute {
   }
 
   async _isValidTournament() {
-    const tournament = await this._getTournament(this._tournamentId);
+    const tournament = await this._tournamentRepository.get(this._tournamentId);
     return tournament != null
       && tournament.creatorId.toString() === this._userId;
   }
@@ -99,7 +110,7 @@ export class CreateParticipantRoute {
 
   async _reasonForInvalidTournament() {
     let status = 500;
-    const tournament = await this._getTournament(this._tournamentId);
+    const tournament = await this._tournamentRepository.get(this._tournamentId);
     if (tournament == null) {
       status = 404; // tournament does not exist
     } else if (tournament.creatorId.toString() != this._userId) {
@@ -109,4 +120,4 @@ export class CreateParticipantRoute {
   }
 }
 
-export default CreateParticipantRoute.routeRequest;
+export default CreateParticipantRoute;

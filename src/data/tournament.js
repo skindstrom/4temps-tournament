@@ -91,3 +91,5 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     return getTournament(id);
   }
 }
+
+export default TournamentRepositoryImpl;

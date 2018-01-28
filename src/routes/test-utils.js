@@ -133,10 +133,11 @@ export class ParticipantRepositoryImpl implements ParticipantRepository {
   createForTournament =
     async (tournamentId: string, participant: Participant) => {
       this.participants.push({tournamentId, ...participant});
-  }
+    }
 
   getForTournament = async (tournamentId: string) => {
-    return this.participants.filter(p => p.tournamentId == tournamentId);
+    return this.participants.filter(
+      p => p.tournamentId.toString() == tournamentId);
   }
 }
 

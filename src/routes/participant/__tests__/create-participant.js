@@ -1,97 +1,77 @@
 // @flow
 
-import { Types } from 'mongoose';
-import { CreateParticipantRoute } from '../create-participant';
-import type { ParticipantRepository } from '../../../data/participant';
-import type { Participant } from '../../../models/participant';
+import { CreateParticipantRouteHandler } from '../create-participant';
+import {
+  TOURNAMENT_ID, generateId,
+  createUser, createTournament,
+  TournamentRepositoryImpl as TournamentRepository,
+  ParticipantRepositoryImpl as ParticipantRepository
+} from '../../test-utils';
 
-const USER_ID = new Types.ObjectId();
-const user = {
-  _id: USER_ID,
-  email: 'test@gmail.com',
-  firstName: 'John',
-  lastName: 'Smith',
-  password: 'password'
-};
+describe('/api/participant/create', () => {
 
-const TOURNAMENT_ID = new Types.ObjectId();
-
-const VALID_BODY = {
-  tournamentId: TOURNAMENT_ID.toString(),
-  participant: {
-    _id: '',
-    name: 'Test User',
-    role: 'leader'
-  }
-};
-
-const getTournament =
-  (id: string) => new Promise(resolve => {
-    if (id === TOURNAMENT_ID.toString()) {
-      resolve({
-        _id: TOURNAMENT_ID,
-        creatorId: USER_ID,
-        name: '',
-        date: new Date(),
-        type: 'jj',
-        judges: []
-      });
-    } else {
-      resolve(null);
-    }
-  });
-
-class Repository implements ParticipantRepository {
-  // eslint-disable-next-line no-unused-vars
-  createForTournament(tournamentId: string, participant: Participant) {
-    return new Promise(resolve => resolve());
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  async getForTournament(tournamentId: string) { return []; }
-}
-
-test('Valid participant and tournament has status 200', async () => {
-  const route =
-    new CreateParticipantRoute(USER_ID.toString(),
-      getTournament, new Repository());
-
-  route.parseBody(VALID_BODY);
-
-  await route.createParticipant();
-  expect(route.status).toBe(200);
-});
-
-test('Invalid participant has status 400', async () => {
-  const route =
-    new CreateParticipantRoute(user.toString(),
-      getTournament, new Repository());
-
-  route.parseBody({
+  const user = createUser();
+  const VALID_BODY = {
     tournamentId: TOURNAMENT_ID.toString(),
-    participant: null
+    participant: {
+      _id: '',
+      name: 'Test User',
+      role: 'leader'
+    }
+  };
+
+  let tournamentRepository: TournamentRepository;
+  let participantRepository: ParticipantRepository;
+
+  beforeEach(async () => {
+    tournamentRepository = new TournamentRepository();
+    await tournamentRepository.create(createTournament());
+
+    participantRepository = new ParticipantRepository();
   });
-  await route.createParticipant();
-  expect(route.status).toBe(400);
-});
 
-test('Wrong user has status 401', async () => {
-  const otherUserId = new Types.ObjectId().toString();
-  const route =
-    new CreateParticipantRoute(otherUserId,
-      getTournament, new Repository());
+  test('Valid participant and tournament has status 200', async () => {
+    const route =
+      new CreateParticipantRouteHandler(user._id.toString(),
+        tournamentRepository, participantRepository);
 
-  route.parseBody(VALID_BODY);
-  await route.createParticipant();
-  expect(route.status).toBe(401);
-});
+    route.parseBody(VALID_BODY);
 
-test('Null tournament has status 400', async () => {
-  const route =
-    new CreateParticipantRoute(USER_ID.toString(),
-      () => new Promise(resolve => resolve(null)), new Repository());
+    await route.createParticipant();
+    expect(route.status).toBe(200);
+  });
 
-  route.parseBody(VALID_BODY);
-  await route.createParticipant();
-  expect(route.status).toBe(404);
+  test('Invalid participant has status 400', async () => {
+    const route =
+      new CreateParticipantRouteHandler(user._id.toString(),
+        tournamentRepository, participantRepository);
+
+    route.parseBody({
+      ...VALID_BODY,
+      participant: null
+    });
+    await route.createParticipant();
+    expect(route.status).toBe(400);
+  });
+
+  test('Wrong user has status 401', async () => {
+    const otherUserId = new generateId();
+    const route =
+      new CreateParticipantRouteHandler(otherUserId,
+        tournamentRepository, participantRepository);
+
+    route.parseBody(VALID_BODY);
+    await route.createParticipant();
+    expect(route.status).toBe(401);
+  });
+
+  test('Non-existing tournament has status 404', async () => {
+    const route =
+      new CreateParticipantRouteHandler(user._id.toString(),
+        tournamentRepository, participantRepository);
+
+    route.parseBody({...VALID_BODY, tournamentId: generateId().toString()});
+    await route.createParticipant();
+    expect(route.status).toBe(404);
+  });
 });
