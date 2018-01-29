@@ -3,7 +3,7 @@ import { createTournamentRoute } from '../create-tournament';
 import {
   createTournament,
   TournamentRepositoryImpl as TournamentRepository
-} from '../../test-utils';
+} from '../../../test-utils';
 
 describe('/api/tournament/create', () => {
   const tournament = createTournament();

@@ -8,9 +8,9 @@ import {
   RoundRepositoryImpl, TournamentRepositoryImpl, ParticipantRepositoryImpl,
   TOURNAMENT_ID
 } from '../test-utils';
-import validateUser from '../../validators/validate-user';
-import validateRound from '../../validators/validate-round';
-import validateTournament from '../../validators/validate-tournament';
+import validateUser from '../validators/validate-user';
+import validateRound from '../validators/validate-round';
+import validateTournament from '../validators/validate-tournament';
 
 describe('Round route test helpers', () => {
 

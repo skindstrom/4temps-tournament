@@ -2,7 +2,7 @@
 import {
   createTournament, generateId,
   TournamentRepositoryImpl as TournamentRepository
-} from '../../test-utils';
+} from '../../../test-utils';
 import { updateTournamentRoute } from '../update-tournament';
 
 describe('/api/tournament/update', () => {

@@ -86,7 +86,7 @@ function mapToDbModel(tournament: Tournament): TournamentModel {
 }
 
 function mapToDomainModel(tournament: TournamentModel): Tournament {
-  const {_id, name, date, type, judges, creatorId} = tournament;
+  const {_id, name, date, type, judges, creatorId } = tournament;
   return {
     _id: _id.toString(),
     name,
@@ -94,6 +94,7 @@ function mapToDomainModel(tournament: TournamentModel): Tournament {
     judges,
     creatorId: creatorId.toString(),
     date: moment(date),
+    participants: []
   };
 }
 

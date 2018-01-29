@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
         promise: createTournament({
           _id: ObjectId.generate(),
           creatorId: '',
-          name, date, type, judges: []
+          name, date, type, judges: [], participants: []
         }),
         meta: {
           onSuccess: ({ _id }: { _id: string }) =>

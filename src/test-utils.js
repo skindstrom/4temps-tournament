@@ -4,17 +4,17 @@ import ObjectId from 'bson-objectid';
 import moment from 'moment';
 import type {
   UserModel
-} from '../data/user';
+} from './data/user';
 import type {
   RoundRepository
-} from '../data/round';
+} from './data/round';
 import type {
   TournamentRepository
-} from '../data/tournament';
+} from './data/tournament';
 import type {
   ParticipantRepository,
   ParticipantDbModel
-} from '../data/participant';
+} from './data/participant';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();

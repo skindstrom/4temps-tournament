@@ -5,7 +5,7 @@ import {
   TournamentRepositoryImpl as TournamentRepository,
   RoundRepositoryImpl as RoundRepository,
   generateId, createRound, createTournament
-} from '../../test-utils';
+} from '../../../test-utils';
 import GetRoundRoute from '../get-rounds';
 import type { RoundDbModel } from '../../../data/round';
 

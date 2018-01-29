@@ -1,11 +1,11 @@
 // @flow
 
 import { LIFECYCLE } from 'redux-pack';
-import moment from 'moment';
 
 import reducer, { getInitialState } from '../tournaments';
 import makePackAction from '../test-utils';
 import type { Tournament } from '../../../models/tournament';
+import {createTournament} from '../../../test-utils';
 
 describe('Tournament reducer', () => {
 
@@ -47,14 +47,8 @@ describe('Tournament reducer', () => {
 
   test('GET_ALL_TOURNAMENTS success sets flags and tournaments', () => {
     const payload: Array<Tournament> = [
-      {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
-        creatorId: ''
-      },
-      {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
-        creatorId: ''
-      }
+      {...createTournament(), _id: '1'},
+      {...createTournament(), _id: '2'}
     ];
 
     const allIds = ['1', '2'];
@@ -93,14 +87,8 @@ describe('Tournament reducer', () => {
 
   test('GET_USER_TOURNAMENTS success sets forUser and tournaments', () => {
     const payload: Array<Tournament> = [
-      {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
-        creatorId: ''
-      },
-      {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
-        creatorId: ''
-      }
+      {...createTournament(), _id: '1'},
+      {...createTournament(), _id: '2'}
     ];
 
     const allIds = ['1', '2'];
@@ -124,21 +112,13 @@ describe('Tournament reducer', () => {
       ...getInitialState(),
       allIds: ['3'],
       byId: {
-        '3': {
-          _id: '3', name: 't3', date: moment(), type: 'classic', judges: []
-        }
+        '3': {...createTournament(), _id: '3'}
       }
     };
 
     const payload: Array<Tournament> = [
-      {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
-        creatorId: ''
-      },
-      {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
-        creatorId: ''
-      }
+      {...createTournament(), _id: '1'},
+      {...createTournament(), _id: '2'}
     ];
 
     const allIds = [...prevState.allIds, '1', '2'];
@@ -163,24 +143,15 @@ describe('Tournament reducer', () => {
       allIds: ['1'],
       byId: {
         '1': {
+          ...createTournament(),
           _id: '1',
-          name: 'ANOTHER NAME, SAME ID',
-          date: moment(),
-          type: 'classic',
-          creatorId: ''
         }
       }
     };
 
     const payload: Array<Tournament> = [
-      {
-        _id: '1', name: 't1', date: moment(), type: 'jj', judges: [],
-        creatorId: ''
-      },
-      {
-        _id: '2', name: 't2', date: moment(), type: 'classic', judges: [],
-        creatorId: ''
-      }
+      {...createTournament(), _id: '1'},
+      {...createTournament(), _id: '2'}
     ];
 
     const allIds = ['1', '2'];
@@ -212,18 +183,11 @@ describe('Tournament reducer', () => {
   test('CREATE_TOURNAMENT success adds the new tournament', () => {
     const state = getInitialState();
 
-    const payload: Tournament = {
-      _id: '1',
-      name: 't1',
-      date: moment(),
-      type: 'jj',
-      judges: [],
-      creatorId: ''
-    };
+    const payload = createTournament();
 
-    const allIds = ['1'];
+    const allIds = [payload._id];
     const forUser = allIds;
-    const byId = { '1': payload };
+    const byId = { [payload._id]: payload };
 
     expect(
       reducer(state,
@@ -237,18 +201,11 @@ describe('Tournament reducer', () => {
   });
 
   test('EDIT_TOURNAMENT success sets the new tournament', () => {
-    const tournament: Tournament = {
-      _id: '1',
-      name: 't1',
-      date: moment(),
-      type: 'jj',
-      judges: [],
-      creatorId: ''
-    };
+    const tournament = createTournament();
 
-    const allIds = ['1'];
+    const allIds = [tournament._id];
     const forUser = allIds;
-    const byId = { '1': tournament };
+    const byId = { [tournament._id]: tournament };
 
     const state = {
       ...getInitialState(),
@@ -268,12 +225,12 @@ describe('Tournament reducer', () => {
       .toEqual({
         ...state,
         byId: {
-          '1': payload
+          [tournament._id]: payload
         },
       });
   });
 
-  test('LOGOUT_USER success resets forUser list', () => {
+  test('LOGOUT_USER success resets user tournaments', () => {
     const state = {
       ...getInitialState(),
       forUser: ['1', '2'],

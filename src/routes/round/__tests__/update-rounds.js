@@ -9,7 +9,7 @@ import {
   RoundRepositoryImpl as RoundRepository,
   createTournament,
   createRound
-} from '../../test-utils';
+} from '../../../test-utils';
 import UpdateRoundsRoute from '../update-rounds';
 
 describe('/api/round/update', () => {

@@ -4,7 +4,7 @@ import {
   generateId,
   createTournament,
   TournamentRepositoryImpl as TournamentRepository
-} from '../../test-utils';
+} from '../../../test-utils';
 
 describe('/api/tournament/get', () => {
   const tournament = createTournament();

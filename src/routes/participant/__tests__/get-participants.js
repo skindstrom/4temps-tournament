@@ -6,7 +6,7 @@ import {
   createTournament,
   ParticipantRepositoryImpl as ParticipantRepository,
   TournamentRepositoryImpl as TournamentRepository
-} from '../../test-utils';
+} from '../../../test-utils';
 
 describe('/api/participant/get', () => {
   let tournamentRepository: TournamentRepository;

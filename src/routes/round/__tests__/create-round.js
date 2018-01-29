@@ -4,7 +4,7 @@ import CreateRoundRoute from '../create-round';
 import type { RoundRepository } from '../../../data/round';
 import type { TournamentRepository } from '../../../data/tournament';
 
-import * as Test from '../../test-utils';
+import * as Test from '../../../test-utils';
 
 async function createRoute(roundRepo: RoundRepository =
   new Test.RoundRepositoryImpl(), tournamentRepo: ?TournamentRepository) {

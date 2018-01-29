@@ -1,5 +1,6 @@
 // @flow
 import type Moment from 'moment';
+import type {Participant} from './participant';
 
 export type TournamentType = 'none' | 'jj' | 'classic';
 
@@ -9,5 +10,6 @@ export type Tournament = {
   name: string,
   date: Moment,
   type: TournamentType,
-  judges: Array<string>
+  judges: Array<string>,
+  participants: Array<Participant>
 }
