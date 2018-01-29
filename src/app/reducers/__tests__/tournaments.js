@@ -274,7 +274,11 @@ describe('Tournament reducer', () => {
   });
 
   test('LOGOUT_USER success resets forUser list', () => {
-    const state = { ...getInitialState(), forUser: ['1', '2'] };
+    const state = {
+      ...getInitialState(),
+      forUser: ['1', '2'],
+      didLoadUserTournaments: true
+    };
 
     expect(
       reducer(state,

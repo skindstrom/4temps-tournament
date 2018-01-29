@@ -107,7 +107,11 @@ function editTournament(state: TournamentsReduxState,
 function logoutUser(state: TournamentsReduxState,
   action: ReduxPackAction): TournamentsReduxState {
   return handle(state, action, {
-    success: prevState => ({ ...prevState, forUser: [] })
+    success: prevState => ({
+      ...prevState,
+      forUser: [],
+      didLoadUserTournaments: false
+    })
   });
 }
 
