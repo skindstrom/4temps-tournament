@@ -1,70 +1,57 @@
 // @flow
-import moment from 'moment';
-import { Types } from 'mongoose';
-
 import { createTournamentRoute } from '../create-tournament';
-import type { Tournament } from '../../../models/tournament';
+import {
+  createTournament,
+  TournamentRepositoryImpl as TournamentRepository
+} from '../../test-utils';
 
-test('Valid tournament returns 200 and the new tournamentid', async () => {
-  const userId = '1';
+describe('/api/tournament/create', () => {
+  const tournament = createTournament();
+  let repository: TournamentRepository;
 
-  const tournamentId = new Types.ObjectId();
-  const tournament: Tournament = {
-    _id: tournamentId.toString(),
-    name: 'best',
-    date: moment(),
-    type: 'classic',
-    judges: [],
-    creatorId: ''
-  };
+  beforeEach(() => {
+    repository = new TournamentRepository();
+  });
 
-  const createTournament = () => new Promise(resolve => resolve(tournamentId));
+  test('Valid tournament returns 200 and the new tournamentid', async () => {
+    expect(
+      await createTournamentRoute(
+        tournament.creatorId, tournament, repository))
+      .toEqual({
+        status: 200,
+        body: tournament
+      });
+  });
 
-  expect(await createTournamentRoute(userId, tournament, createTournament))
-    .toEqual({
-      status: 200,
-      body: {
-        ...tournament
-      }
+  test('Valid tournament gets created', async () => {
+    await createTournamentRoute(
+      tournament.creatorId, tournament, repository);
+    expect(await repository.get(tournament._id))
+      .toEqual(tournament);
+  });
+
+  test('Tournament is validated and returns status 400 when invalid',
+    async () => {
+      const invalidTournament = {...tournament, name: ''};
+      expect(
+        await createTournamentRoute(
+          tournament.creatorId, invalidTournament, repository))
+        .toEqual({
+          status: 400,
+          body: null
+        });
+    });
+
+  test('Returns status 500 when a valid tournament can not be created',
+    async () => {
+      // $FlowFixMe
+      repository.create = () => new Promise((resolve, reject) => reject());
+      expect(
+        await createTournamentRoute(
+          tournament.creatorId, tournament, repository))
+        .toEqual({
+          status: 500,
+          body: null
+        });
     });
 });
-
-test('Tournament is validated and returns status 400 when invalid',
-  async () => {
-    const tournament: Tournament = {
-      _id: '',
-      name: '',
-      date: moment(),
-      type: 'classic',
-      judges: [],
-      creatorId: ''
-    };
-
-    const createTournament = () => new Promise(resolve => resolve(null));
-
-    expect(await createTournamentRoute('', tournament, createTournament))
-      .toEqual({
-        status: 400,
-        body: null
-      });
-  });
-
-test('Returns status 500 when a valid tournament can not be created',
-  async () => {
-    const tournament: Tournament = {
-      _id: '',
-      name: 'best',
-      date: moment(),
-      type: 'classic',
-      judges: [],
-      creatorId: ''
-    };
-    const createTournament = () =>
-      new Promise((resolve, reject) => reject(null));
-
-    expect(await createTournamentRoute('', tournament, createTournament))
-      .toEqual({
-        status: 500,
-        body: null
-      });
-  });

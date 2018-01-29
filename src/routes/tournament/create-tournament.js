@@ -1,54 +1,66 @@
 // @flow
-import type { $Request, $Response } from 'express';
 import moment from 'moment';
-import type { ObjectId } from 'mongoose';
 
 import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
-import { createTournament } from '../../data/tournament';
+import type { TournamentRepository } from '../../data/tournament';
 import type { RouteResult } from '../util';
 
-export const createTournamentRoute =
-  async (userId: string,
-    tournament: Tournament,
-    createTournament: (userId: string, tournament: Tournament)
-      => Promise<?ObjectId>): RouteResult<?Tournament> => {
+class CreateTournamentRoute {
+  _repository: TournamentRepository;
 
-    const { isValidTournament } = validateTournament(tournament);
-    let status: number = 200;
+  constructor(repository: TournamentRepository) {
+    this._repository = repository;
+  }
 
-    if (isValidTournament) {
-      try {
-        await createTournament(userId, tournament);
-      } catch (e) {
-        status = 500;
-      }
-    } else {
-      status = 400;
-    }
-
-    const body = status === 200 ? tournament : null;
-
-    return { status, body };
-  };
-
-export default async (req: $Request, res: $Response) => {
-  const tournament: Tournament = {
-    _id: req.body._id || '',
-    name: req.body.name || '',
-    date: moment(req.body.date) || moment(0),
-    type: req.body.type || 'none',
-    judges: req.body.judges || [],
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     // $FlowFixMe
-    creatorId: req.session.user._id
-  };
+    const requestBody: any = req.body;
+    const tournament: Tournament = {
+      _id: requestBody._id || '',
+      name: requestBody.name || '',
+      date: moment(requestBody.date) || moment(0),
+      type: requestBody.type || 'none',
+      judges: requestBody.judges || [],
+      // $FlowFixMe
+      creatorId: req.session.user._id
+    };
 
-  // $FlowFixMe
-  const userId: string = req.session.user._id;
+    // $FlowFixMe
+    const userId: string = req.session.user._id;
 
-  const { status, body } =
-    await createTournamentRoute(userId, tournament, createTournament);
+    const { status, body } =
+      await createTournamentRoute(
+        userId, tournament, this._repository);
 
-  res.status(status);
-  res.json(body);
-};
+    res.status(status);
+    res.json(body);
+
+  }
+}
+
+export async function createTournamentRoute(
+  userId: string,
+  tournament: Tournament,
+  repository: TournamentRepository
+): RouteResult<?Tournament> {
+
+  const { isValidTournament } = validateTournament(tournament);
+  let status: number = 200;
+
+  if (isValidTournament) {
+    try {
+      await repository.create(tournament);
+    } catch (e) {
+      status = 500;
+    }
+  } else {
+    status = 400;
+  }
+
+  const body = status === 200 ? tournament : null;
+
+  return { status, body };
+}
+
+export default CreateTournamentRoute;

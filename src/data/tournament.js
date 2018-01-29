@@ -35,11 +35,6 @@ const schema = new mongoose.Schema({
 
 const Model = mongoose.model('tournament', schema);
 
-export const createTournament =
-  async (userId: string, tournament: Tournament): Promise<void> => {
-    await Model.create(mapToDbModel({...tournament, creatorId: userId}));
-  };
-
 export const updateTournament =
   async (tournamentId: string,
     tournament: Tournament): Promise<?Tournament> => {
@@ -80,10 +75,14 @@ export const getTournament =
   };
 
 export interface TournamentRepository {
+  create(tournament: Tournament): Promise<void>;
   get(id: string): Promise<?Tournament>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
+  async create(tournament: Tournament) {
+    await Model.create(mapToDbModel(tournament));
+  }
   get(id: string) {
     return getTournament(id);
   }

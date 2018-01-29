@@ -135,7 +135,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       return this._tournaments[id] || null;
     }
 
-    create = (tournament: Tournament) => {
+    create = async (tournament: Tournament) => {
       this._tournaments[tournament._id] = tournament;
     }
 }
