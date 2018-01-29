@@ -1,24 +1,44 @@
 // @flow
-import moment from 'moment';
-
 import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
-import { getTournament, updateTournament } from '../../data/tournament';
+import type { TournamentRepository } from '../../data/tournament';
 import type { RouteResult } from '../util';
+import parseTournament from './parse-tournament';
 
-export const updateTournamentRoute = async (
+export default class UpdateTournamentRoute {
+  _repository: TournamentRepository;
+
+  constructor(repository: TournamentRepository) {
+    this._repository = repository;
+  }
+
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
+    // $FlowFixMe
+    const requestBody: any = req.body;
+
+    const tournament = parseTournament(requestBody.tournament);
+
+    // $FlowFixMe
+    const userId: string = req.session.user._id;
+
+    const { status, body } =
+      await updateTournamentRoute(
+        userId, tournament, this._repository);
+
+    res.status(status);
+    res.json(body);
+  };
+}
+
+export async function updateTournamentRoute(
   userId: string,
-  tournamentId: string,
   tournament: Tournament,
-  getTournament: (tournamentId: string) => Promise<?Tournament>,
-  updateTournament: (tournamentId: string, tournament: Tournament)
-    => Promise<?Tournament>): RouteResult<?Tournament> => {
+  repository: TournamentRepository): RouteResult<?Tournament> {
 
   const { isValidTournament } = validateTournament(tournament);
   let status: number = 200;
   if (isValidTournament) {
-    const dbTournament = await getTournament(tournamentId);
-
+    const dbTournament = await repository.get(tournament._id);
 
     if (dbTournament == null) {
       status = 404;
@@ -30,7 +50,9 @@ export const updateTournamentRoute = async (
         ...tournament,
         creatorId: dbTournament.creatorId
       };
-      if (await updateTournament(tournamentId, newTournament) == null) {
+      try {
+        await repository.update(newTournament);
+      } catch (e) {
         status = 500;
       }
     }
@@ -41,29 +63,4 @@ export const updateTournamentRoute = async (
   const body = status === 200 ? tournament : null;
 
   return { status, body };
-};
-
-export default async (req: ServerApiRequest, res: ServerApiResponse) => {
-  // $FlowFixMe
-  const requestBody: any = req.body;
-
-  const tournament: Tournament = {
-    _id: requestBody.tournament._id || '',
-    name: requestBody.tournament.name || '',
-    date: moment(requestBody.tournament.date) || moment(0),
-    type: requestBody.tournament.type || 'none',
-    judges: requestBody.judges || [],
-    creatorId: requestBody.creatorId
-  };
-
-  // $FlowFixMe
-  const userId: string = req.session.user._id;
-  const tournamentId: string = requestBody.tournamentId || '';
-
-  const { status, body } =
-    await updateTournamentRoute(userId, tournamentId, tournament,
-      getTournament, updateTournament);
-
-  res.status(status);
-  res.json(body);
-};
+}

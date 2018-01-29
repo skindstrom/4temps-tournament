@@ -136,6 +136,35 @@ describe('Round route test helpers', () => {
 
       expect(await repo.getAll()).toEqual([t1, t2]);
     });
+
+    test('getForUser returns only a users tournaments ', async () => {
+      const creatorId = generateId().toString();
+      const t1 = {
+        ...createTournament(),
+        creatorId,
+        _id: generateId().toString()
+      };
+      const t2 = {
+        ...createTournament(),
+        creatorId: generateId().toString(),
+        _id: generateId().toString()
+      };
+
+      await repo.create(t1);
+      await repo.create(t2);
+
+      expect(await repo.getForUser(creatorId)).toEqual([t1]);
+    });
+
+    test('Update sets the new values', async () => {
+      const tournament = createTournament();
+      await repo.create(tournament);
+
+      const newTournament = {...tournament, name: 'a very cool name'};
+      await repo.update(newTournament);
+
+      expect(await repo.get(newTournament._id)).toEqual(newTournament);
+    });
   });
 
   describe('Round repository', () => {

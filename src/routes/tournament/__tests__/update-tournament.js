@@ -1,21 +1,18 @@
 // @flow
-import {createTournament, generateId} from '../../test-utils';
+import {
+  createTournament, generateId,
+  TournamentRepositoryImpl as TournamentRepository
+} from '../../test-utils';
 import { updateTournamentRoute } from '../update-tournament';
 
 describe('/api/tournament/update', () => {
-  const nullPromise = () => new Promise(resolve => resolve(null));
   const tournament = createTournament();
-  const getTournament = (id: string) => {
-    if (id === tournament._id) {
-      return new Promise(resolve => resolve(tournament));
-    } else {
-      return new Promise(resolve => resolve(null));
-    }
-  };
+  let repository: TournamentRepository;
 
-  const updateTournament = () =>
-    new Promise(resolve => resolve(tournament));
-
+  beforeEach(async () => {
+    repository = new TournamentRepository();
+    await repository.create(tournament);
+  });
 
   test(
     'Valid tournament with correct user returns new tournament with status 200',
@@ -23,10 +20,8 @@ describe('/api/tournament/update', () => {
       expect(
         await updateTournamentRoute(
           tournament.creatorId,
-          tournament._id,
           tournament,
-          getTournament,
-          updateTournament))
+          repository))
         .toEqual({
           status: 200,
           body: tournament
@@ -35,10 +30,11 @@ describe('/api/tournament/update', () => {
 
   test('Tournament is validated and returns status 400 when invalid',
     async () => {
-
       expect(
-        await updateTournamentRoute(tournament.creatorId, tournament._id,
-          {...tournament, name: ''}, getTournament, updateTournament))
+        await updateTournamentRoute(
+          tournament.creatorId,
+          {...tournament, name: ''},
+          repository))
         .toEqual({
           status: 400,
           body: null
@@ -50,10 +46,8 @@ describe('/api/tournament/update', () => {
     expect(
       await updateTournamentRoute(
         tournament.creatorId,
-        otherId,
-        {...tournament, tournamentId: otherId},
-        getTournament,
-        updateTournament))
+        {...tournament, _id: otherId},
+        repository))
       .toEqual({
         status: 404,
         body: null
@@ -61,13 +55,12 @@ describe('/api/tournament/update', () => {
   });
 
   test(`When tournament can't be updated 500 is returned`, async () => {
+    repository.update = () => {throw 0;};
     expect(
       await updateTournamentRoute(
         tournament.creatorId,
-        tournament._id,
         tournament,
-        getTournament,
-        nullPromise))
+        repository))
       .toEqual({
         status: 500,
         body: null
@@ -80,10 +73,8 @@ describe('/api/tournament/update', () => {
       expect(
         await updateTournamentRoute(
           otherId,
-          tournament._id,
           tournament,
-          getTournament,
-          updateTournament))
+          repository))
         .toEqual({
           status: 401,
           body: null

@@ -137,7 +137,15 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     return Object.keys(this._tournaments).map(key => this._tournaments[key]);
   }
 
+  getForUser = async (userId: string) => {
+    return (await this.getAll()).filter(({creatorId}) => creatorId === userId);
+  }
+
   create = async (tournament: Tournament) => {
+    this._tournaments[tournament._id] = tournament;
+  }
+
+  update = async (tournament: Tournament) => {
     this._tournaments[tournament._id] = tournament;
   }
 }

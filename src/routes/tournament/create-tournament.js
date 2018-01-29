@@ -1,10 +1,9 @@
 // @flow
-import moment from 'moment';
-
 import validateTournament from '../../validators/validate-tournament';
 import type { Tournament } from '../../models/tournament';
 import type { TournamentRepository } from '../../data/tournament';
 import type { RouteResult } from '../util';
+import parseTournament from './parse-tournament';
 
 class CreateTournamentRoute {
   _repository: TournamentRepository;
@@ -14,20 +13,16 @@ class CreateTournamentRoute {
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
-    // $FlowFixMe
-    const requestBody: any = req.body;
-    const tournament: Tournament = {
-      _id: requestBody._id || '',
-      name: requestBody.name || '',
-      date: moment(requestBody.date) || moment(0),
-      type: requestBody.type || 'none',
-      judges: requestBody.judges || [],
-      // $FlowFixMe
-      creatorId: req.session.user._id
-    };
 
     // $FlowFixMe
     const userId: string = req.session.user._id;
+
+    // $FlowFixMe
+    const requestBody: any = req.body;
+    const tournament = {
+      ...parseTournament(requestBody),
+      creatorId: userId
+    };
 
     const { status, body } =
       await createTournamentRoute(

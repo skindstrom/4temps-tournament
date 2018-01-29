@@ -35,28 +35,6 @@ const schema = new mongoose.Schema({
 
 const Model = mongoose.model('tournament', schema);
 
-export const updateTournament =
-  async (tournamentId: string,
-    tournament: Tournament): Promise<?Tournament> => {
-    try {
-      await Model.update({ _id: tournamentId }, {
-        $set: mapToDbModel(tournament)
-      });
-      return tournament;
-    } catch (e) {
-      return null;
-    }
-  };
-
-export const getTournamentsForUser =
-  async (userId: string): Promise<Array<Tournament>> => {
-    try {
-      return await Model.find({ creatorId: userId });
-    } catch (e) {
-      return [];
-    }
-  };
-
 export const getTournament =
   async (tournamentId: string): Promise<?Tournament> => {
     try {
@@ -70,6 +48,8 @@ export interface TournamentRepository {
   create(tournament: Tournament): Promise<void>;
   get(id: string): Promise<?Tournament>;
   getAll(): Promise<Array<Tournament>>;
+  getForUser(userId: string): Promise<Array<Tournament>>;
+  update(tournament: Tournament): Promise<void>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
@@ -85,6 +65,18 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     } catch (e) {
       return [];
     }
+  }
+  async getForUser(userId: string) {
+    try {
+      return await Model.find({ creatorId: userId });
+    } catch (e) {
+      return [];
+    }
+  }
+  async update(tournament: Tournament) {
+    await Model.update({ _id: tournament._id }, {
+      $set: mapToDbModel(tournament)
+    });
   }
 }
 
