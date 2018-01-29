@@ -6,17 +6,11 @@ import type { Participant, Role } from '../models/participant';
 
 export type ParticipantDbModel = {
   _id: ObjectId,
-  tournamentId: ObjectId,
   name: string,
   role: Role
 }
 
-const schema = new mongoose.Schema({
-  tournamentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    index: true
-  },
+export const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -42,7 +36,7 @@ class ParticipantRepositoryImpl implements ParticipantRepository {
     if (!mongoose.Types.ObjectId.isValid(participant._id)) {
       participant._id = new mongoose.Types.ObjectId().toString();
     }
-    await Model.create(mapToDbModel(tournamentId, participant));
+    await Model.create(mapToOldDbModel(tournamentId, participant));
   }
 
   async getForTournament(
@@ -52,13 +46,24 @@ class ParticipantRepositoryImpl implements ParticipantRepository {
   }
 }
 
-function mapToDomainModel(participant: ParticipantDbModel): Participant {
+export function mapToDomainModel(
+  participant: ParticipantDbModel): Participant {
   const {_id, name, role} = participant;
   return { _id: _id.toString(), name, role };
 }
 
-function mapToDbModel(
-  tournamentId: string, participant: Participant): ParticipantDbModel {
+export function mapToDbModel(
+  participant: Participant): ParticipantDbModel {
+  const {_id, name, role} = participant;
+  return {
+    _id: new mongoose.Types.ObjectId(_id),
+    name,
+    role
+  };
+}
+
+function mapToOldDbModel(
+  tournamentId: string, participant: Participant) {
   const {_id, name, role} = participant;
   return {
     _id: new mongoose.Types.ObjectId(_id),

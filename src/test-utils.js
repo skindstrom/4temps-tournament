@@ -147,6 +147,11 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   update = async (tournament: Tournament) => {
     this._tournaments[tournament._id] = tournament;
   }
+
+  createParticipant =
+    async (tournamentId: string, participant: Participant) => {
+      this._tournaments[tournamentId].participants.push(participant);
+    }
 }
 
 export class ParticipantRepositoryImpl implements ParticipantRepository {
@@ -207,6 +212,15 @@ export function createTournament(): Tournament {
     name: 'name',
     date: moment(),
     type: 'jj',
-    judges: []
+    judges: [],
+    participants: []
+  };
+}
+
+export function createParticipant(): Participant {
+  return {
+    _id: generateId().toString(),
+    name: 'John Smith',
+    role: 'both'
   };
 }

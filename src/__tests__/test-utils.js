@@ -6,7 +6,7 @@ import moment from 'moment';
 import {
   Request, Response, createUser, generateId, createRound, createTournament,
   RoundRepositoryImpl, TournamentRepositoryImpl, ParticipantRepositoryImpl,
-  TOURNAMENT_ID
+  TOURNAMENT_ID, createParticipant
 } from '../test-utils';
 import validateUser from '../validators/validate-user';
 import validateRound from '../validators/validate-round';
@@ -164,6 +164,17 @@ describe('Round route test helpers', () => {
       await repo.update(newTournament);
 
       expect(await repo.get(newTournament._id)).toEqual(newTournament);
+    });
+
+    test('Create participant adds participant', async () => {
+      const tournament = createTournament();
+      await repo.create(tournament);
+
+      const participant = createParticipant();
+      await repo.createParticipant(tournament._id, participant);
+
+      expect(await repo.get(tournament._id))
+        .toEqual({...tournament, participants: [participant]});
     });
   });
 
