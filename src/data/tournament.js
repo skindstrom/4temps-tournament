@@ -65,8 +65,10 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     }
   }
   async update(tournament: Tournament) {
+    // don't overwrite anything sensitive for now
+    const {name, date} = mapToDbModel(tournament);
     await Model.update({ _id: tournament._id }, {
-      $set: mapToDbModel(tournament)
+      $set: {name, date}
     });
   }
 }
