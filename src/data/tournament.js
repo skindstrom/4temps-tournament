@@ -57,14 +57,6 @@ export const getTournamentsForUser =
     }
   };
 
-export const getTournaments = async (): Promise<Array<Tournament>> => {
-  try {
-    return await Model.find();
-  } catch (e) {
-    return [];
-  }
-};
-
 export const getTournament =
   async (tournamentId: string): Promise<?Tournament> => {
     try {
@@ -77,6 +69,7 @@ export const getTournament =
 export interface TournamentRepository {
   create(tournament: Tournament): Promise<void>;
   get(id: string): Promise<?Tournament>;
+  getAll(): Promise<Array<Tournament>>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
@@ -85,6 +78,13 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   }
   get(id: string) {
     return getTournament(id);
+  }
+  async getAll() {
+    try {
+      return await Model.find();
+    } catch (e) {
+      return [];
+    }
   }
 }
 

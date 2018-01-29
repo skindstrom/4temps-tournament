@@ -127,17 +127,19 @@ export class RoundRepositoryImpl implements RoundRepository {
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
-    _tournaments: {
-        [id: string]: Tournament
-    } = {};
+  _tournaments: {[string]: Tournament} = {};
 
-    get = async(id: string): Promise<?Tournament> => {
-      return this._tournaments[id] || null;
-    }
+  get = async (id: string) => {
+    return this._tournaments[id] || null;
+  }
 
-    create = async (tournament: Tournament) => {
-      this._tournaments[tournament._id] = tournament;
-    }
+  getAll = async () => {
+    return Object.keys(this._tournaments).map(key => this._tournaments[key]);
+  }
+
+  create = async (tournament: Tournament) => {
+    this._tournaments[tournament._id] = tournament;
+  }
 }
 
 export class ParticipantRepositoryImpl implements ParticipantRepository {

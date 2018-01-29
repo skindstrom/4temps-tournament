@@ -119,6 +119,23 @@ describe('Round route test helpers', () => {
     test('Get returns null if the tournament does not exist', async () => {
       expect(await repo.get('a very nice id')).toBeNull();
     });
+
+    test('getAll returns all tournaments', async () => {
+      const create = async () => {
+        const tour = {
+          ...createTournament(),
+          _id: generateId().toString(),
+          creatorId: generateId.toString()
+        };
+        await repo.create(tour);
+        return tour;
+      };
+
+      const t1 = await create();
+      const t2 = await create();
+
+      expect(await repo.getAll()).toEqual([t1, t2]);
+    });
   });
 
   describe('Round repository', () => {
