@@ -1,6 +1,5 @@
 // @flow
-import type { ParticipantRepository, ParticipantDbModel } from
-  '../../data/participant';
+import type { ParticipantRepository } from '../../data/participant';
 import type { Participant } from '../../models/participant';
 import type {TournamentRepository} from '../../data/tournament';
 
@@ -52,15 +51,14 @@ export class GetParticipantsRouteHandler {
     tournamentId: string): Promise<Array<Participant>> {
     this._tournamentId = tournamentId;
 
-    let participants: Array<ParticipantDbModel> = [];
+    let participants: Array<Participant> = [];
     if (await this._isUserAuthorized()) {
       participants = await this._getParticipantsForAuthorizedUser();
     } else {
       this.status = 401;
     }
 
-    return participants.map(({ _id, name, role }) =>
-      ({ _id: _id.toString(), name, role }));
+    return participants;
   }
 
   async _isUserAuthorized() {
@@ -70,7 +68,7 @@ export class GetParticipantsRouteHandler {
   }
 
   async _getParticipantsForAuthorizedUser() {
-    let participants: Array<ParticipantDbModel> = [];
+    let participants: Array<Participant> = [];
     try {
       participants =
         await this._participantRepository.getForTournament(this._tournamentId);

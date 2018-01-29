@@ -252,10 +252,10 @@ describe('Round route test helpers', () => {
         role: 'leader'
       };
 
-      repo.createForTournament(id, participant);
+      await repo.createForTournament(id, participant);
       expect(
         await repo.getForTournament(id))
-        .toEqual([{...participant, tournamentId: id}]);
+        .toEqual([participant]);
     });
 
     test('Only gets for the given tournament', async () => {
@@ -272,12 +272,12 @@ describe('Round route test helpers', () => {
         role: 'leader'
       };
 
-      repo.createForTournament(id, participant1);
-      repo.createForTournament(generateId().toString(), participant2);
+      await repo.createForTournament(id, participant1);
+      await repo.createForTournament(generateId().toString(), participant2);
 
       expect(
         await repo.getForTournament(id))
-        .toEqual([{...participant1, tournamentId: id}]);
+        .toEqual([participant1]);
     });
   });
 });

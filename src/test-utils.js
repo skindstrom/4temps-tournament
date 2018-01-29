@@ -13,7 +13,6 @@ import type {
 } from './data/tournament';
 import type {
   ParticipantRepository,
-  ParticipantDbModel
 } from './data/participant';
 
 export const USER_ID = generateId();
@@ -151,16 +150,19 @@ export class TournamentRepositoryImpl implements TournamentRepository {
 }
 
 export class ParticipantRepositoryImpl implements ParticipantRepository {
-  participants: Array<ParticipantDbModel> = [];
+  participants: {[tournamentId: string]: Array<Participant>} = {};
 
   createForTournament =
     async (tournamentId: string, participant: Participant) => {
-      this.participants.push({tournamentId, ...participant});
+      if (!this.participants[tournamentId]) {
+        this.participants[tournamentId] = [participant];
+      } else {
+        this.participants[tournamentId].push(participant);
+      }
     }
 
   getForTournament = async (tournamentId: string) => {
-    return this.participants.filter(
-      p => p.tournamentId.toString() == tournamentId);
+    return this.participants[tournamentId] || [];
   }
 }
 

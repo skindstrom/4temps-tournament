@@ -32,23 +32,40 @@ const Model = mongoose.model('participant', schema);
 export interface ParticipantRepository {
   createForTournament(tournamentId: string,
     participant: Participant): Promise<void>;
-  getForTournament(tournamentId: string): Promise<Array<ParticipantDbModel>>;
+  getForTournament(tournamentId: string): Promise<Array<Participant>>;
 }
 
 class ParticipantRepositoryImpl implements ParticipantRepository {
-  createForTournament(tournamentId: string,
+  async createForTournament(
+    tournamentId: string,
     participant: Participant) {
-    let { _id, name, role } = participant;
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      _id = new mongoose.Types.ObjectId();
+    if (!mongoose.Types.ObjectId.isValid(participant._id)) {
+      participant._id = new mongoose.Types.ObjectId().toString();
     }
-    return Model.create({ _id, name, role, tournamentId });
+    await Model.create(mapToDbModel(tournamentId, participant));
   }
 
-  getForTournament(
-    tournamentId: string): Promise<Array<ParticipantDbModel>> {
-    return Model.find({ tournamentId });
+  async getForTournament(
+    tournamentId: string): Promise<Array<Participant>> {
+
+    return (await Model.find({ tournamentId })).map(mapToDomainModel);
   }
+}
+
+function mapToDomainModel(participant: ParticipantDbModel): Participant {
+  const {_id, name, role} = participant;
+  return { _id: _id.toString(), name, role };
+}
+
+function mapToDbModel(
+  tournamentId: string, participant: Participant): ParticipantDbModel {
+  const {_id, name, role} = participant;
+  return {
+    _id: new mongoose.Types.ObjectId(_id),
+    tournamentId: new mongoose.Types.ObjectId(tournamentId),
+    name,
+    role
+  };
 }
 
 export default ParticipantRepositoryImpl;
