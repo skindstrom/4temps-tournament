@@ -35,15 +35,6 @@ const schema = new mongoose.Schema({
 
 const Model = mongoose.model('tournament', schema);
 
-export const getTournament =
-  async (tournamentId: string): Promise<?Tournament> => {
-    try {
-      return mapToDomainModel(await Model.findOne({ _id: tournamentId }));
-    } catch (e) {
-      return null;
-    }
-  };
-
 export interface TournamentRepository {
   create(tournament: Tournament): Promise<void>;
   get(id: string): Promise<?Tournament>;
@@ -56,8 +47,8 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   async create(tournament: Tournament) {
     await Model.create(mapToDbModel(tournament));
   }
-  get(id: string) {
-    return getTournament(id);
+  async get(id: string) {
+    return mapToDomainModel(await Model.findOne({ _id: id }));
   }
   async getAll() {
     try {
