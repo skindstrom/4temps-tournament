@@ -74,7 +74,7 @@ describe('/api/round/create route', () => {
   test('Returns status 401 if user does not own tournament', async () => {
     const otherTournament = {
       ...createTournament(),
-      creatorId: generateId().toString() // other user
+      creatorId: generateId() // other user
     };
     await repo.create(otherTournament);
 
@@ -95,7 +95,7 @@ describe('/api/round/create route', () => {
     const response = new Response();
 
     const body = {
-      tournamentId: generateId().toString(), // another tournament id
+      tournamentId: generateId(), // another tournament id
       round: createRound()
     };
     await route.route(Request.withBody(body), response);
@@ -106,7 +106,7 @@ describe('/api/round/create route', () => {
 
 function requestWithRound(round: mixed): ServerApiRequest {
   return Request.withBody({
-    tournamentId: TOURNAMENT_ID.toString(),
+    tournamentId: TOURNAMENT_ID,
     round: round
   });
 }

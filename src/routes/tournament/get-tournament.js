@@ -32,7 +32,7 @@ export async function getTournamentRoute(
 
   if (tournament == null) {
     return { status: 404, body: null };
-  } else if (tournament.creatorId.toString() != userId) {
+  } else if (tournament.creatorId != userId) {
     return { status: 401, body: null };
   }
 

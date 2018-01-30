@@ -123,8 +123,8 @@ describe('Round route test helpers', () => {
       const create = async () => {
         const tour = {
           ...createTournament(),
-          _id: generateId().toString(),
-          creatorId: generateId.toString()
+          _id: generateId(),
+          creatorId: generateId
         };
         await repo.create(tour);
         return tour;
@@ -137,16 +137,16 @@ describe('Round route test helpers', () => {
     });
 
     test('getForUser returns only a users tournaments ', async () => {
-      const creatorId = generateId().toString();
+      const creatorId = generateId();
       const t1 = {
         ...createTournament(),
         creatorId,
-        _id: generateId().toString()
+        _id: generateId()
       };
       const t2 = {
         ...createTournament(),
-        creatorId: generateId().toString(),
-        _id: generateId().toString()
+        creatorId: generateId(),
+        _id: generateId()
       };
 
       await repo.create(t1);

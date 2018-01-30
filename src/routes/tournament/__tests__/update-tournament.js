@@ -42,7 +42,7 @@ describe('/api/tournament/update', () => {
     });
 
   test(`Tournament that doesn't exist returns 404`, async () => {
-    const otherId = generateId().toString();
+    const otherId = generateId();
     expect(
       await updateTournamentRoute(
         tournament.creatorId,
@@ -69,7 +69,7 @@ describe('/api/tournament/update', () => {
 
   test(`When tournament is owned by other user be updated 401 is returned`,
     async () => {
-      const otherId = generateId().toString();
+      const otherId = generateId();
       expect(
         await updateTournamentRoute(
           otherId,

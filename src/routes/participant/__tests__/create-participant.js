@@ -11,7 +11,7 @@ describe('/api/participant/create', () => {
 
   const user = createUser();
   const VALID_BODY = {
-    tournamentId: TOURNAMENT_ID.toString(),
+    tournamentId: TOURNAMENT_ID,
     participant: {
       name: 'Test User',
       role: 'leader'
@@ -41,8 +41,8 @@ describe('/api/participant/create', () => {
 
   test('Invalid participant has status 400', async () => {
     const route =
-      new CreateParticipantRouteHandler(user._id.toString(),
-        tournamentRepository);
+      new CreateParticipantRouteHandler(
+        user._id.toString(), tournamentRepository);
 
     route.parseBody({
       ...VALID_BODY,
@@ -68,7 +68,7 @@ describe('/api/participant/create', () => {
       new CreateParticipantRouteHandler(user._id.toString(),
         tournamentRepository);
 
-    route.parseBody({...VALID_BODY, tournamentId: generateId().toString()});
+    route.parseBody({...VALID_BODY, tournamentId: generateId()});
     await route.createParticipant();
     expect(route.status).toBe(404);
   });

@@ -146,7 +146,7 @@ export function createUser(): UserModel {
 }
 
 export function generateId() {
-  return ObjectId.generate();
+  return ObjectId.generate().toString();
 }
 
 export function createRound(): Round {
@@ -171,8 +171,8 @@ export function createRound(): Round {
 
 export function createTournament(): Tournament {
   return {
-    _id: TOURNAMENT_ID.toString(),
-    creatorId: USER_ID.toString(),
+    _id: TOURNAMENT_ID,
+    creatorId: USER_ID,
     name: 'name',
     date: moment(),
     type: 'jj',
@@ -184,7 +184,7 @@ export function createTournament(): Tournament {
 
 export function createParticipant(): Participant {
   return {
-    _id: generateId().toString(),
+    _id: generateId(),
     name: 'John Smith',
     role: 'both'
   };

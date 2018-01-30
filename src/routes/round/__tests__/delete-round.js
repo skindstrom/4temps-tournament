@@ -12,7 +12,7 @@ import DeleteRoundRoute from '../delete-round';
 
 describe('/api/round/delete', () => {
   const tournament = createTournament();
-  const round = {...createRound(), _id: generateId().toString()};
+  const round = {...createRound(), _id: generateId()};
   const tournamentId = tournament._id;
   const roundId = round._id;
 
@@ -43,8 +43,8 @@ describe('/api/round/delete', () => {
   test('If round does not exist, status 404 is returned', async () => {
     await route.route(
       Request.withParams({
-        roundId: generateId().toString(),
-        tournamentId: generateId().toString()
+        roundId: generateId(),
+        tournamentId: generateId()
       }), response);
 
     expect(response.getStatus()).toBe(404);
@@ -54,7 +54,7 @@ describe('/api/round/delete', () => {
     async() => {
       await tournamentRepository.create({
         ...createTournament(),
-        creatorId: generateId().toString()
+        creatorId: generateId()
       });
 
       await route.route(Request.withParams({
