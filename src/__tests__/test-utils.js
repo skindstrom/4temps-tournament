@@ -198,5 +198,16 @@ describe('Round route test helpers', () => {
       expect(await repo.get(tournament._id))
         .toEqual({...tournament, rounds: []});
     });
+
+    test('Add judge adds a judge', async () => {
+      const tournament = createTournament();
+      await repo.create(tournament);
+
+      const judge = '123';
+      await repo.addJudge(tournament._id, judge);
+
+      expect(await repo.get(tournament._id))
+        .toEqual({...tournament, judges: [judge]});
+    });
   });
 });

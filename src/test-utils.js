@@ -133,6 +133,11 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         this._tournaments[tournamentId].rounds
           .filter(({_id}) => _id !== roundId);
     }
+
+  addJudge =
+    async (tournamentId: string, judge: string) => {
+      this._tournaments[tournamentId].judges.push(judge);
+    }
 }
 
 export function createUser(): UserModel {
