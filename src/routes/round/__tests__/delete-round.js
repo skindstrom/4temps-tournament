@@ -5,23 +5,28 @@ import {
   Request,
   Response,
   TournamentRepositoryImpl as TournamentRepository,
-  RoundRepositoryImpl as RoundRepository,
   createTournament,
   createRound
 } from '../../../test-utils';
 import DeleteRoundRoute from '../delete-round';
 
 describe('/api/round/delete', () => {
+  const tournament = createTournament();
+  const round = {...createRound(), _id: generateId().toString()};
+  const tournamentId = tournament._id;
+  const roundId = round._id;
+
   let response: Response;
   let tournamentRepository: TournamentRepository;
-  let roundRepository: RoundRepository;
   let route: DeleteRoundRoute;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     response = new Response();
     tournamentRepository = new TournamentRepository();
-    roundRepository = new RoundRepository();
-    route = new DeleteRoundRoute(tournamentRepository, roundRepository);
+
+    tournamentRepository.create(tournament);
+
+    route = new DeleteRoundRoute(tournamentRepository);
   });
 
   test('Invalid params returns status 400', async() => {
@@ -38,8 +43,8 @@ describe('/api/round/delete', () => {
   test('If round does not exist, status 404 is returned', async () => {
     await route.route(
       Request.withParams({
-        roundId: generateId(),
-        tournamentId: generateId()
+        roundId: generateId().toString(),
+        tournamentId: generateId().toString()
       }), response);
 
     expect(response.getStatus()).toBe(404);
@@ -47,17 +52,14 @@ describe('/api/round/delete', () => {
 
   test('If user does not own the tournament, status 401 is returned',
     async() => {
-      const tournament: Tournament = {...createTournament(),
-        creatorId: generateId()
-      };
-      const round: Round = {...createRound(), _id: generateId()};
-
-      await tournamentRepository.create(tournament);
-      await roundRepository.create(tournament._id.toString(), round);
+      await tournamentRepository.create({
+        ...createTournament(),
+        creatorId: generateId().toString()
+      });
 
       await route.route(Request.withParams({
-        roundId: round._id.toString(),
-        tournamentId: tournament._id.toString()
+        roundId,
+        tournamentId
       }), response);
 
       expect(response.getStatus()).toBe(401);
@@ -65,18 +67,8 @@ describe('/api/round/delete', () => {
 
   test('If tournament could not get fetched, status 500 is returned',
     async () => {
-      const tournament = {...createTournament()};
-      const round = {...createRound(), _id: generateId().toString()};
-
-      const roundId = round._id.toString();
-      const tournamentId = tournament._id.toString();
-
-      await tournamentRepository.create(tournament);
-      await roundRepository.create(tournament._id.toString(), round);
-
       tournamentRepository.get = () => {throw {};};
 
-      route = new DeleteRoundRoute(tournamentRepository, roundRepository);
       await route.route(Request.withParams({
         roundId,
         tournamentId
@@ -86,18 +78,7 @@ describe('/api/round/delete', () => {
     });
 
   test('If a round could not get deleted, status 500 is returned', async() => {
-    const tournament = {...createTournament()};
-    const round = {...createRound(), _id: generateId().toString()};
-
-    const roundId = round._id.toString();
-    const tournamentId = tournament._id.toString();
-
-    await tournamentRepository.create(tournament);
-    await roundRepository.create(tournament._id.toString(), round);
-
-    roundRepository.delete = () => {throw {};};
-
-    route = new DeleteRoundRoute(tournamentRepository, roundRepository);
+    tournamentRepository.deleteRound = () => {throw 'Fake error!';};
     await route.route(Request.withParams({
       roundId,
       tournamentId
@@ -108,14 +89,6 @@ describe('/api/round/delete', () => {
 
   test('Successful delete returns status 200 and the deleted id',
     async () => {
-      const tournament = createTournament();
-      const tournamentId = tournament._id.toString();
-      const roundId = generateId().toString();
-      const round = {...createRound(), _id: roundId};
-
-      await tournamentRepository.create(tournament);
-      await roundRepository.create(tournamentId, round);
-
       await route.route(
         Request.withParams({ roundId, tournamentId }), response);
 

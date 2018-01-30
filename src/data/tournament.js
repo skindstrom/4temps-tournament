@@ -9,6 +9,12 @@ import {
   mapToDomainModel as mapParticipantToDomainModel,
   mapToDbModel as mapParticipantToDbModel
 } from './participant';
+import type {RoundDbModel} from './round';
+import {
+  schema as RoundSchema,
+  mapToDomainModel as mapRoundToDomainModel,
+  mapToDbModel as mapRoundToDbModel
+} from './round';
 
 type TournamentModel = {
   _id: ObjectId,
@@ -17,7 +23,8 @@ type TournamentModel = {
   date: Date,
   type: TournamentType,
   judges: Array<string>,
-  participants: Array<ParticipantDbModel>
+  participants: Array<ParticipantDbModel>,
+  rounds: Array<RoundDbModel>
 }
 
 const schema = new mongoose.Schema({
@@ -38,7 +45,8 @@ const schema = new mongoose.Schema({
     required: true
   },
   judges: [String],
-  participants: [ParticipantSchema]
+  participants: [ParticipantSchema],
+  rounds: [RoundSchema]
 });
 
 const Model = mongoose.model('tournament', schema);
@@ -52,6 +60,10 @@ export interface TournamentRepository {
 
   createParticipant(
     tournamentId: string, participant: Participant): Promise<void>;
+
+  createRound(
+    tournamentId: string, round: Round): Promise<void>;
+  deleteRound(tournamentId: string, roundId: string): Promise<void>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
@@ -93,45 +105,64 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       }
     );
   }
+  async createRound(
+    tournamentId: string, round: Round) {
+    await Model.update(
+      {_id: tournamentId},
+      {
+        $push: {
+          rounds: mapRoundToDbModel(round)
+        }
+      }
+    );
+  }
+  async deleteRound(tournamentId: string, roundId: string) {
+    await Model.update(
+      {_id: tournamentId, },
+      {
+        $pull: {
+          rounds: {_id: roundId}
+        }
+      }
+    );
+  }
 }
 
 function mapToDbModel(tournament: Tournament): TournamentModel {
   const {
     _id,
-    name,
     date,
-    type,
-    judges,
     creatorId,
-    participants} = tournament;
+    participants,
+    rounds,
+    ...same
+  } = tournament;
   return {
-    name,
-    type,
-    judges,
+    ...same,
     _id: new mongoose.Types.ObjectId(_id),
     creatorId: new mongoose.Types.ObjectId(creatorId),
     date: date.toDate(),
-    participants: participants.map(mapParticipantToDbModel)
+    participants: participants.map(mapParticipantToDbModel),
+    rounds: rounds.map(mapRoundToDbModel)
   };
 }
 
 function mapToDomainModel(tournament: TournamentModel): Tournament {
   const {
     _id,
-    name,
     date,
-    type,
-    judges,
     creatorId,
-    participants} = tournament;
+    participants,
+    rounds,
+    ...same
+  } = tournament;
   return {
+    ...same,
     _id: _id.toString(),
-    name,
-    type,
-    judges,
     creatorId: creatorId.toString(),
     date: moment(date),
-    participants: participants.map(mapParticipantToDomainModel)
+    participants: participants.map(mapParticipantToDomainModel),
+    rounds: rounds.map(mapRoundToDomainModel)
   };
 }
 

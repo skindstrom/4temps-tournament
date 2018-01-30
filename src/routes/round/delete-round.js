@@ -2,21 +2,17 @@
 
 import type { UserModel } from '../../data/user';
 import type { TournamentRepository } from '../../data/tournament';
-import type { RoundRepository } from '../../data/round';
 
 class DeleteRoundRoute {
   _tournamentRepository: TournamentRepository;
-  _roundRepository: RoundRepository;
 
-  constructor(tournamentRepository: TournamentRepository,
-    roundRepository: RoundRepository) {
+  constructor(tournamentRepository: TournamentRepository) {
     this._tournamentRepository = tournamentRepository;
-    this._roundRepository = roundRepository;
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     const handler = new DeleteRoundRouteHandler(
-      req.session.user, this._tournamentRepository, this._roundRepository);
+      req.session.user, this._tournamentRepository);
 
     try {
       handler.parseParams(req.params);
@@ -46,16 +42,13 @@ class DeleteRoundRoute {
 class DeleteRoundRouteHandler {
   _user: UserModel;
   _tournamentRepository: TournamentRepository;
-  _roundRepository: RoundRepository;
 
   _roundId: string;
   _tournamentId: string;
 
-  constructor(user: UserModel, tournamentRepository: TournamentRepository,
-    roundRepository: RoundRepository) {
+  constructor(user: UserModel, tournamentRepository: TournamentRepository) {
     this._user = user;
     this._tournamentRepository = tournamentRepository;
-    this._roundRepository = roundRepository;
   }
 
   parseParams = (params: mixed) => {
@@ -91,7 +84,7 @@ class DeleteRoundRouteHandler {
   };
 
   deleteRound = async () => {
-    this._roundRepository.delete(this._tournamentId, this._roundId);
+    this._tournamentRepository.deleteRound(this._tournamentId, this._roundId);
   }
 
 }

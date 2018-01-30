@@ -3,19 +3,20 @@
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 
-export type RoundDbModel = Round & {
-  tournamentId: ObjectId,
-  index: number
+export type RoundDbModel = {
+  _id: ObjectId,
+  name: string,
+  danceCount: ?number,
+  minPairCount: ?number,
+  maxPairCount: ?number,
+  tieRule: 'none' | 'random' | 'all',
+  roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
+  multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
+  criteria: Array<RoundCriterion>
 };
 
 
-const schema = new mongoose.Schema({
-  tournamentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    index: true
-  },
-  index: { type: Number, required: true },
+export const schema = new mongoose.Schema({
   name: {type: String, required: true},
   danceCount: {
     type: Number,
@@ -50,64 +51,26 @@ const schema = new mongoose.Schema({
   }]
 });
 
-const Model = mongoose.model('round', schema);
+export function mapToDomainModel(round: RoundDbModel): Round {
+  const {
+    _id,
+    ...same
+  } = round;
 
-export interface RoundRepository {
-  create(tournamentId: string, round: Round): Promise<void>;
-  getForTournament(tournamentId: string): Promise<Array<Round>>;
-  update(tournamentId: string, rounds: Array<Round>): Promise<void>;
-  delete(tournamentId: string, roundId: string): Promise<void>;
+  return {
+    _id: _id.toString(),
+    ...same
+  };
 }
 
-export class RoundRepositoryImpl implements RoundRepository {
-  async create(tournamentId: string, round: Round) {
-    const rounds = await Model.find({tournamentId});
-    const index = rounds.length;
+export function mapToDbModel(round: Round): RoundDbModel {
+  const {
+    _id,
+    ...same
+  } = round;
 
-    await Model.create({tournamentId, index , ...round});
-  }
-
-  async getTournamentId(roundId: string) {
-    return (await Model.findOne({_id: roundId})).tournamentId.toString();
-  }
-
-  async getForTournament(tournamentId: string) {
-    const rounds = await Model.find({tournamentId});
-    return rounds.sort((a, b) => a.index > b.index);
-  }
-
-  async update(tournamentId: string, newRounds: Array<Round> ) {
-    const prevRounds = await Model.find({tournamentId});
-    const newIds = new Set(newRounds.map(({_id}) => _id));
-    const prevIds = prevRounds.map(({_id}) => _id.toString());
-
-    const toDelete = prevIds.filter(id => !newIds.has(id));
-
-    for (const id of toDelete) {
-      await Model.remove({_id: id});
-    }
-
-    for (let i = 0; i < newRounds.length; ++i) {
-      const round = newRounds[i];
-      await Model.update({_id: round._id}, {...round, index: i});
-    }
-  }
-
-  async delete(tournamentId: string, roundId: string) {
-    await this._updateIndices(roundId);
-    await Model.remove({_id: roundId});
-  }
-
-  async _updateIndices(roundId: string) {
-    const tournamentId = await this.getTournamentId(roundId);
-    const rounds = await Model.find({tournamentId});
-    const toBeDeleted = await Model.findOne({_id: roundId});
-    for (const round of rounds) {
-      if (round.index > toBeDeleted.index) {
-        await Model.update({_id: round._id}, {index: round.index - 1});
-      }
-    }
-  }
+  return {
+    _id: new mongoose.Types.ObjectId(_id),
+    ...same
+  };
 }
-
-export default RoundRepositoryImpl;

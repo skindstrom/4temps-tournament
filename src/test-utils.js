@@ -6,9 +6,6 @@ import type {
   UserModel
 } from './data/user';
 import type {
-  RoundRepository
-} from './data/round';
-import type {
   TournamentRepository
 } from './data/tournament';
 
@@ -97,31 +94,6 @@ export class Response implements ServerApiResponse {
   }
 }
 
-export class RoundRepositoryImpl implements RoundRepository {
-  _rounds: {[id: string]: Array<Round>} = {};
-
-  create = async (tournamentId: string, round: Round) => {
-    if (this._rounds[tournamentId] === undefined) {
-      this._rounds[tournamentId] = [round];
-    } else {
-      this._rounds[tournamentId].push(round);
-    }
-  }
-
-  getForTournament = async (id: string) => {
-    return this._rounds[id] == undefined ? [] : this._rounds[id];
-  }
-
-  update = async (id: string, rounds: Array<Round>) => {
-    this._rounds[id] = rounds;
-  }
-
-  delete = async (tournamentId: string, roundId: string) => {
-    this._rounds[tournamentId] =
-      this._rounds[tournamentId].filter(({_id}) => _id != roundId);
-  }
-}
-
 export class TournamentRepositoryImpl implements TournamentRepository {
   _tournaments: {[string]: Tournament} = {};
 
@@ -148,6 +120,18 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   createParticipant =
     async (tournamentId: string, participant: Participant) => {
       this._tournaments[tournamentId].participants.push(participant);
+    }
+
+  createRound =
+    async (tournamentId: string, round: Round) => {
+      this._tournaments[tournamentId].rounds.push(round);
+    }
+
+  deleteRound =
+    async (tournamentId: string, roundId: string) => {
+      this._tournaments[tournamentId].rounds =
+        this._tournaments[tournamentId].rounds
+          .filter(({_id}) => _id !== roundId);
     }
 }
 
@@ -193,7 +177,8 @@ export function createTournament(): Tournament {
     date: moment(),
     type: 'jj',
     judges: [],
-    participants: []
+    participants: [],
+    rounds: []
   };
 }
 

@@ -2,6 +2,7 @@
 import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../rounds';
+import {createTournament} from '../../../test-utils';
 import makePackAction from '../test-utils';
 
 describe('Rounds reducer', () => {
@@ -21,143 +22,113 @@ describe('Rounds reducer', () => {
           .toEqual(state));
   });
 
-  test('GET_ROUNDS action start sets isLoading', () => {
-    const state = getInitialState();
+  describe('CREATE_ROUND', () => {
+    test('success sets the new round', () => {
+      const tournamentId = '123';
+      const payload = { round: roundWithId('3'), tournamentId };
 
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.START, 'GET_ROUNDS')))
-      .toEqual({ ...state, isLoading: true });
+      const expectedState = {
+        ...getInitialState(),
+        forTournament: {
+          [tournamentId]: [payload.round._id]
+        },
+        byId: {
+          [payload.round._id]: payload.round
+        }
+      };
+
+      expect(reducer(getInitialState(),
+        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_ROUND', payload)))
+        .toMatchObject(expectedState);
+    });
   });
 
-  test('GET_ROUNDS action success sets isLoading to false', () => {
-    const state = { ...getInitialState(), isLoading: true };
+  describe('DELETE_ROUND', () => {
+    test('start sets isLoading to true', () => {
+      expect(
+        reducer(
+          getInitialState(), makePackAction(LIFECYCLE.START, 'DELETE_ROUND')))
+        .toMatchObject({...getInitialState(), isLoading: true});
+    });
 
-    const payload = { tournamentId: '', rounds: [] };
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.SUCCESS, 'GET_ROUNDS', payload)))
-      .toMatchObject({ ...state, isLoading: false });
+    test('success removes the round', () => {
+      const tournamentId = '123';
+      const roundId = '3';
+      const round = roundWithId(roundId);
+
+      const payload = {tournamentId, roundId};
+
+      const initialState: RoundsReduxState = {
+        ...getInitialState(),
+        forTournament: {
+          [tournamentId]: [roundId]
+        },
+        byId: {
+          [roundId]: round
+        }
+      };
+
+      const expected = getInitialState();
+
+      expect(reducer(initialState,
+        makePackAction(LIFECYCLE.SUCCESS, 'DELETE_ROUND', payload)))
+        .toMatchObject(expected);
+    });
+
+    test('failure sets isLoading to false', () => {
+      expect(
+        reducer(
+          getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'DELETE_ROUND')))
+        .toMatchObject({...getInitialState(), isLoading: false});
+    });
   });
 
-  test('GET_ROUNDS action success sets rounds', () => {
-    const tournamentId = '123';
-    const rounds = [roundWithId('1'), roundWithId('2'), roundWithId('3')];
-    const payload = { tournamentId, rounds };
-
-    const initialState = getInitialState();
-    const expectedState = {
-      isLoading: false,
-      forTournament: {
-        [tournamentId]: ['1', '2', '3']
-      },
-      byId: {
-        '1': rounds[0],
-        '2': rounds[1],
-        '3': rounds[2],
-      }
+  describe('Get tournaments', () => {
+    const rounds1 = [roundWithId('r1'), roundWithId('r2')];
+    const rounds2 = [roundWithId('r3'), roundWithId('r4')];
+    const tournament1 = {
+      ...createTournament(),
+      _id: 't1',
+      rounds: rounds1
+    };
+    const tournament2 = {
+      ...createTournament(),
+      _id: 't2',
+      rounds: rounds2
     };
 
-    expect(reducer(initialState,
-      makePackAction(LIFECYCLE.SUCCESS, 'GET_ROUNDS', payload)))
-      .toEqual(expectedState);
-  });
+    const payload = [tournament1, tournament2];
 
-  test('GET_ROUNDS failure sets isLoading to false', () => {
-    const state = { ...getInitialState(), isLoading: true };
-
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.FAILURE, 'GET_ROUNDS')))
-      .toMatchObject({ ...state, isLoading: false });
-  });
-
-  test('CREATE_ROUND success sets the new round', () => {
-    const tournamentId = '123';
-    const payload = { round: roundWithId('3'), tournamentId };
-
-    const expectedState = {
+    const expected = {
       ...getInitialState(),
       forTournament: {
-        [tournamentId]: [payload.round._id]
+        [tournament1._id]: [rounds1[0]._id, rounds1[1]._id],
+        [tournament2._id]: [rounds2[0]._id, rounds2[1]._id],
       },
       byId: {
-        [payload.round._id]: payload.round
+        [rounds1[0]._id]: rounds1[0],
+        [rounds1[1]._id]: rounds1[1],
+        [rounds2[0]._id]: rounds2[0],
+        [rounds2[1]._id]: rounds2[1],
       }
     };
 
-    expect(reducer(getInitialState(),
-      makePackAction(LIFECYCLE.SUCCESS, 'CREATE_ROUND', payload)))
-      .toMatchObject(expectedState);
-  });
-
-  test('UPDATE_ROUNDS action start sets isLoading to true', () => {
-    expect(
-      reducer(
-        getInitialState(), makePackAction(LIFECYCLE.START, 'UPDATE_ROUNDS')))
-      .toMatchObject({...getInitialState(), isLoading: true});
-  });
-
-  test('UPDATE_ROUNDS action success sets the new rounds', () => {
-    const tournamentId = '123';
-    const roundId = '3';
-    const payload = { rounds: [roundWithId(roundId)], tournamentId };
-
-    const expectedState = {
-      ...getInitialState(),
-      forTournament: {
-        [tournamentId]: [roundId]
-      },
-      byId: {
-        [roundId]: payload.rounds[0]
-      }
-    };
-
-    expect(reducer(getInitialState(),
-      makePackAction(LIFECYCLE.SUCCESS, 'UPDATE_ROUNDS', payload)))
-      .toMatchObject(expectedState);
-  });
-
-  test('UPDATE_ROUNDS action failure sets isLoading to false', () => {
-    expect(
-      reducer(
-        getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'UPDATE_ROUNDS')))
-      .toMatchObject({...getInitialState(), isLoading: false});
-  });
-
-  test('DELETE_ROUND action start sets isLoading to true', () => {
-    expect(
-      reducer(
-        getInitialState(), makePackAction(LIFECYCLE.START, 'DELETE_ROUND')))
-      .toMatchObject({...getInitialState(), isLoading: true});
-  });
-
-  test('DELETE_ROUND action success removes the round', () => {
-    const tournamentId = '123';
-    const roundId = '3';
-    const round = roundWithId(roundId);
-
-    const payload = {tournamentId, roundId};
-
-    const initialState: RoundsReduxState = {
-      ...getInitialState(),
-      forTournament: {
-        [tournamentId]: [roundId]
-      },
-      byId: {
-        [roundId]: round
-      }
-    };
-
-    const expected = getInitialState();
-
-    expect(reducer(initialState,
-      makePackAction(LIFECYCLE.SUCCESS, 'DELETE_ROUND', payload)))
-      .toMatchObject(expected);
-  });
-
-  test('DELETE_ROUND action failure sets isLoading to false', () => {
-    expect(
-      reducer(
-        getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'DELETE_ROUND')))
-      .toMatchObject({...getInitialState(), isLoading: false});
+    test('GET_ALL_TOURNAMENTS success sets rounds', () => {
+      expect(
+        reducer(
+          getInitialState(),
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', payload)
+        ))
+        .toEqual(expected);
+    });
+    test('GET_USER_TOURNAMENTS success sets rounds', () => {
+      expect(
+        reducer(
+          getInitialState(),
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)
+        ))
+        .toEqual(expected);
+    });
   });
 });
 

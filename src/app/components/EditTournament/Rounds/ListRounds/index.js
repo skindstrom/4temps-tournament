@@ -3,7 +3,8 @@
 import { connect } from 'react-redux';
 import PreloadContainer from '../../../PreloadContainer';
 import List from './component';
-import { getRounds, deleteRound } from '../../../../api/round';
+import { deleteRound } from '../../../../api/round';
+import { getTournamentsForUser } from '../../../../api/tournament';
 
 type Props = {
   tournamentId: string
@@ -23,7 +24,7 @@ function mapStateToProps({ rounds }: ReduxState,
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
     load: () => dispatch(
-      {type: 'GET_ROUNDS', promise: getRounds(tournamentId)}
+      {type: 'GET_USER_TOURNAMENTS', promise: getTournamentsForUser()}
     ),
     deleteFromRounds: (deleteId: string) => dispatch({
       type: 'DELETE_ROUND',

@@ -8,12 +8,11 @@ function rounds(state: RoundsReduxState = getInitialState(),
   const { type } = action;
 
   switch (type) {
-  case 'GET_ROUNDS':
-    return getRounds(state, action);
+  case 'GET_ALL_TOURNAMENTS':
+  case 'GET_USER_TOURNAMENTS':
+    return getTournaments(state, action);
   case 'CREATE_ROUND':
     return createRound(state, action);
-  case 'UPDATE_ROUNDS':
-    return updateRounds(state, action);
   case 'DELETE_ROUND':
     return deleteRound(state, action);
   default:
@@ -27,29 +26,6 @@ export function getInitialState(): RoundsReduxState {
     forTournament: {},
     byId: {},
   };
-}
-
-function getRounds(
-  state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
-
-  const {payload} = action;
-
-  return handle(state, action, {
-    start: prevState => ({ ...prevState, isLoading: true }),
-    success: prevState => ({
-      ...prevState,
-      isLoading: false,
-      forTournament: {
-        ...prevState.byId,
-        [payload.tournamentId]: payload.rounds.map(({ _id }) => _id),
-      },
-      byId: {
-        ...prevState.byId,
-        ...normalize(payload.rounds)
-      }
-    }),
-    failure: prevState => ({ ...prevState, isLoading: false })
-  });
 }
 
 function createRound(
@@ -71,28 +47,6 @@ function createRound(
         [payload.round._id]: payload.round
       }
     }),
-  });
-}
-
-function updateRounds(
-  state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
-
-  const {payload} = action;
-
-  return handle(state, action, {
-    start: prevState => ({...prevState, isLoading: true}),
-    success: prevState => ({
-      ...prevState,
-      forTournament: {
-        ...prevState.forTournament,
-        [payload.tournamentId]: payload.rounds.map(({_id}) => _id),
-      },
-      byId: {
-        ...prevState.byId,
-        ...normalize(payload.rounds)
-      }
-    }),
-    failure: prevState => ({...prevState, isLoading: false}),
   });
 }
 
@@ -118,6 +72,37 @@ function deleteRound(
       }, {})
     }),
     failure: prevState => ({...prevState, isLoading: false}),
+  });
+}
+
+function getTournaments(
+  state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
+  const { payload } = action;
+
+  return handle(state, action, {
+    success: prevState => {
+      const tournaments: {[string]: Tournament} = normalize(payload);
+      const rounds =
+        Object.keys(tournaments)
+          .reduce(
+            (acc, key) => [...acc, ...tournaments[key].rounds], []);
+
+      return {
+        ...prevState,
+        forTournament: {
+          ...prevState.forTournament,
+          ...payload.reduce(
+            (acc, t) => {
+              acc[t._id] = t.rounds.map((p) => p._id);
+              return acc;
+            }, {})
+        },
+        byId: {
+          ...prevState.byId,
+          ...normalize(rounds)
+        }
+      };
+    },
   });
 }
 

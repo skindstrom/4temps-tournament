@@ -1,25 +1,21 @@
 // @flow
 
 import ObjectId from 'bson-objectid';
-import type { RoundRepository } from '../../data/round';
 import validateRound from '../../validators/validate-round';
 import type { TournamentRepository } from '../../data/tournament';
 import type { UserModel } from '../../data/user';
 import parseRound from './utils';
 
 class CreateRoundRoute {
-  _roundRepository: RoundRepository;
   _tournamentRepository: TournamentRepository;
 
-  constructor(roundRepository: RoundRepository,
-    tournamentRepository: TournamentRepository) {
-    this._roundRepository = roundRepository;
+  constructor(tournamentRepository: TournamentRepository) {
     this._tournamentRepository = tournamentRepository;
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
-    const handler = new CreateRoundRouteHandler(this._roundRepository,
-      this._tournamentRepository);
+    const handler =
+      new CreateRoundRouteHandler(this._tournamentRepository);
     try {
       handler.parseBody(req.body);
       await handler.executeForUser(req.session.user);
@@ -34,16 +30,13 @@ class CreateRoundRoute {
 }
 
 class CreateRoundRouteHandler {
-  _roundRepository: RoundRepository;
   _tournamentRepository: TournamentRepository;
 
   _tournamentId: string;
   _round: Round;
   _user: UserModel;
 
-  constructor(roundRepository: RoundRepository,
-    tournamentRepository: TournamentRepository) {
-    this._roundRepository = roundRepository;
+  constructor(tournamentRepository: TournamentRepository) {
     this._tournamentRepository = tournamentRepository;
   }
 
@@ -114,14 +107,15 @@ class CreateRoundRouteHandler {
   _create = async () => {
     this._round._id = this._generateId();
     try {
-      await this._roundRepository.create(this._tournamentId, this._round);
+      await this._tournamentRepository.createRound(
+        this._tournamentId, this._round);
     } catch (e) {
       throw { status: 500 };
     }
   }
 
   _generateId = () => {
-    return ObjectId.generate();
+    return ObjectId.generate().toString();
   }
 }
 

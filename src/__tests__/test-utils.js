@@ -5,8 +5,7 @@ import moment from 'moment';
 
 import {
   Request, Response, createUser, generateId, createRound, createTournament,
-  RoundRepositoryImpl, TournamentRepositoryImpl,
-  TOURNAMENT_ID, createParticipant
+  TournamentRepositoryImpl, createParticipant
 } from '../test-utils';
 import validateUser from '../validators/validate-user';
 import validateRound from '../validators/validate-round';
@@ -176,68 +175,28 @@ describe('Round route test helpers', () => {
       expect(await repo.get(tournament._id))
         .toEqual({...tournament, participants: [participant]});
     });
-  });
 
-  describe('Round repository', () => {
-    let repo: RoundRepositoryImpl;
+    test('Create round adds round', async () => {
+      const tournament = createTournament();
+      await repo.create(tournament);
 
-    beforeEach(() => { repo = new RoundRepositoryImpl(); });
-
-    test('Get with empty repo returns empty array', async () => {
-      expect(await repo.getForTournament(generateId().toString)).toEqual([]);
-    });
-
-    test('Create adds a round', async () => {
       const round = createRound();
-      const id = TOURNAMENT_ID.toString();
-      repo.create(id, round);
+      await repo.createRound(tournament._id, round);
 
-      expect(repo._rounds[id]).toEqual([round]);
+      expect(await repo.get(tournament._id))
+        .toEqual({...tournament, rounds: [round]});
     });
 
-    test('Create adds a round at the end', async () => {
-      const round1 = createRound();
-      const round2 = createRound();
-      const id = TOURNAMENT_ID.toString();
+    test('Delete round deletes round', async () => {
+      const tournament = createTournament();
+      await repo.create(tournament);
 
-      await repo.create(id, round1);
-      await repo.create(id, round2);
+      const round = {...createRound(), _id: 'special id'};
+      await repo.createRound(tournament._id, round);
+      await repo.deleteRound(tournament._id, round._id);
 
-      expect(repo._rounds[id]).toEqual([round1, round2]);
-    });
-
-    test('Get for tournament returns only rounds for a specific tournament',
-      async () => {
-        const id1 = generateId();
-        const id2 = generateId();
-        const round1 = createRound();
-        const round2 = createRound();
-
-        repo.create(id1, round1);
-        repo.create(id2, round2);
-
-
-        expect(await repo.getForTournament(id1))
-          .toEqual([round1]);
-        expect(await repo.getForTournament(id2))
-          .toEqual([round2]);
-      });
-
-    test('Delete removes an existing round', async () => {
-      const round = {...createRound(), _id: generateId().toString()};
-      const id = TOURNAMENT_ID.toString();
-      await repo.create(id, round);
-      await repo.delete(id, round._id.toString());
-
-      expect(repo._rounds[id]).toEqual([]);
-    });
-
-    test('Deleting non-existant round throws', async (done) => {
-      try {
-        await repo.delete(generateId().toString(), createRound()._id);
-      } catch (e) {
-        done();
-      }
+      expect(await repo.get(tournament._id))
+        .toEqual({...tournament, rounds: []});
     });
   });
 });

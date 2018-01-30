@@ -11,6 +11,7 @@ export default function parseTournament(body: any): Tournament {
     type: body.type || 'none',
     judges: body.judges || [],
     participants: body.participants || [],
+    rounds: body.rounds || [],
     creatorId: body.creatorId,
   };
 }
