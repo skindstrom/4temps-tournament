@@ -13,7 +13,6 @@ describe('/api/participant/create', () => {
   const VALID_BODY = {
     tournamentId: TOURNAMENT_ID.toString(),
     participant: {
-      _id: '',
       name: 'Test User',
       role: 'leader'
     }
@@ -37,7 +36,7 @@ describe('/api/participant/create', () => {
 
     await route.createParticipant();
     expect(route.status).toBe(200);
-    expect(route._participant).toEqual(VALID_BODY.participant);
+    expect(route._participant).toMatchObject(VALID_BODY.participant);
   });
 
   test('Invalid participant has status 400', async () => {

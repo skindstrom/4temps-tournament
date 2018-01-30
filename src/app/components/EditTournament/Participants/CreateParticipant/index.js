@@ -1,6 +1,5 @@
 // @flow
 import { connect } from 'react-redux';
-import ObjectId from 'bson-objectid';
 
 import CreateParticipant from './component';
 import type { State as ComponentState } from './component';
@@ -19,8 +18,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
     onSubmit: ({ name, role }: ComponentState) => dispatch({
       type: 'CREATE_PARTICIPANT',
       promise: createParticipant(tournamentId, {
-        _id: ObjectId.generate(),
-        name, role
+        _id: '', name, role
       })
     })
   };

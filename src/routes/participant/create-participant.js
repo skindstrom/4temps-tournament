@@ -1,5 +1,6 @@
 // @flow
 
+import {ObjectID} from 'mongodb';
 import type { TournamentRepository } from '../../data/tournament';
 import type { Participant } from '../../models/participant';
 import { validateParticipant } from '../../validators/validate-participant';
@@ -50,7 +51,7 @@ export class CreateParticipantRouteHandler {
 
     const participant = body.participant || {};
     this._participant = {
-      _id: participant._id || '',
+      _id: new ObjectID().toString(),
       name: participant.name || '',
       role: participant.role || 'none'
     };
