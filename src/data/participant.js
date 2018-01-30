@@ -23,7 +23,7 @@ export const schema = new mongoose.Schema({
 
 const Model = mongoose.model('participant', schema);
 
-export interface ParticipantRepository {
+interface ParticipantRepository {
   createForTournament(tournamentId: string,
     participant: Participant): Promise<void>;
   getForTournament(tournamentId: string): Promise<Array<Participant>>;

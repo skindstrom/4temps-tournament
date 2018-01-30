@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ListParticipants from './component';
 import PreloadContainer from '../../../PreloadContainer';
-import { getParticipants } from '../../../../api/participant';
+import { getTournamentsForUser } from '../../../../api/tournament';
 
 type Props = {
   tournamentId: string
@@ -20,10 +20,10 @@ function mapStateToProps({ participants }: ReduxState,
   };
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
+function mapDispatchToProps(dispatch: ReduxDispatch) {
   return {
     load: () => dispatch(
-      {type: 'GET_PARTICIPANTS', promise: getParticipants(tournamentId)}
+      {type: 'GET_USER_TOURNAMENTS', promise: getTournamentsForUser()}
     )
   };
 }

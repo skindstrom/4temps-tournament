@@ -1,30 +1,23 @@
 // @flow
 
-import type { $Request, $Response } from 'express';
 import type { TournamentRepository } from '../../data/tournament';
-import type { ParticipantRepository } from '../../data/participant';
 import type { Participant } from '../../models/participant';
 import { validateParticipant } from '../../validators/validate-participant';
 
 export class CreateParticipantRoute {
   _tournamentRepository: TournamentRepository;
-  _participantRepository: ParticipantRepository;
 
-  constructor(
-    tournamentRepository: TournamentRepository,
-    participantRepository: ParticipantRepository) {
-
+  constructor(tournamentRepository: TournamentRepository) {
     this._tournamentRepository = tournamentRepository;
-    this._participantRepository = participantRepository;
   }
 
-  route = async (req: $Request, res: $Response) => {
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     // $FlowFixMe
     const userId: string = req.session.user._id;
 
     const handler =
       new CreateParticipantRouteHandler(
-        userId, this._tournamentRepository, this._participantRepository);
+        userId, this._tournamentRepository);
 
     handler.parseBody(req.body);
     await handler.createParticipant();
@@ -42,19 +35,17 @@ export class CreateParticipantRouteHandler {
 
   _userId: string;
   _tournamentRepository: TournamentRepository;
-  _participantRepository: ParticipantRepository;
 
   _tournamentId: string;
   _participant: Participant;
 
-  constructor(userId: string, tournamentRepository: TournamentRepository,
-    participantRepository: ParticipantRepository) {
+  constructor(userId: string, tournamentRepository: TournamentRepository) {
     this._userId = userId;
     this._tournamentRepository = tournamentRepository;
-    this._participantRepository = participantRepository;
   }
 
-  parseBody(body: {tournamentId: ?string, participant: ?Participant}) {
+  // $FlowFixMe
+  parseBody(body: any) {
     this._tournamentId = body.tournamentId || '';
 
     const participant = body.participant || {};
@@ -89,8 +80,8 @@ export class CreateParticipantRouteHandler {
 
   async _createForValidInput() {
     try {
-      await this._participantRepository.createForTournament(this._tournamentId,
-        this._participant);
+      await this._tournamentRepository.createParticipant(
+        this._tournamentId, this._participant);
     } catch (e) {
       this.status = 500;
     }

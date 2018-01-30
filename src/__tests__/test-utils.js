@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import {
   Request, Response, createUser, generateId, createRound, createTournament,
-  RoundRepositoryImpl, TournamentRepositoryImpl, ParticipantRepositoryImpl,
+  RoundRepositoryImpl, TournamentRepositoryImpl,
   TOURNAMENT_ID, createParticipant
 } from '../test-utils';
 import validateUser from '../validators/validate-user';
@@ -238,57 +238,6 @@ describe('Round route test helpers', () => {
       } catch (e) {
         done();
       }
-    });
-  });
-
-  describe('Participant repository', () => {
-    let repo: ParticipantRepositoryImpl;
-
-    beforeEach(() => {
-      repo = new ParticipantRepositoryImpl();
-    });
-
-    test('The repository is empty at first', async () => {
-      expect(
-        await repo.getForTournament(TOURNAMENT_ID.toString()))
-        .toEqual([]);
-    });
-
-    test('Create adds to list', async () => {
-      const id = TOURNAMENT_ID.toString();
-
-      const participant: Participant = {
-        _id: '',
-        name: 'name',
-        role: 'leader'
-      };
-
-      await repo.createForTournament(id, participant);
-      expect(
-        await repo.getForTournament(id))
-        .toEqual([participant]);
-    });
-
-    test('Only gets for the given tournament', async () => {
-      const id = TOURNAMENT_ID.toString();
-
-      const participant1: Participant = {
-        _id: 'id1',
-        name: 'name',
-        role: 'leader'
-      };
-      const participant2: Participant = {
-        _id: 'id2',
-        name: 'name',
-        role: 'leader'
-      };
-
-      await repo.createForTournament(id, participant1);
-      await repo.createForTournament(generateId().toString(), participant2);
-
-      expect(
-        await repo.getForTournament(id))
-        .toEqual([participant1]);
     });
   });
 });

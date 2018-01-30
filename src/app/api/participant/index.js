@@ -1,6 +1,6 @@
 // @flow
 
-import { apiPostRequest, apiGetRequest } from '../util';
+import { apiPostRequest } from '../util';
 
 import type { Participant } from '../../../models/participant';
 import { validateParticipant } from '../../../validators/validate-participant';
@@ -19,10 +19,4 @@ export const createParticipant =
       { tournamentId, participant });
   };
 
-export const getParticipants =
-  async (tournamentId: string): Promise<{
-    tournamentId: string,
-    participants: Array<Participant>
-  }> => {
-    return apiGetRequest(`/api/participant/get/tournament/${tournamentId}`);
-  };
+export default createParticipant;

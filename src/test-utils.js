@@ -11,9 +11,6 @@ import type {
 import type {
   TournamentRepository
 } from './data/tournament';
-import type {
-  ParticipantRepository,
-} from './data/participant';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
@@ -152,23 +149,6 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     async (tournamentId: string, participant: Participant) => {
       this._tournaments[tournamentId].participants.push(participant);
     }
-}
-
-export class ParticipantRepositoryImpl implements ParticipantRepository {
-  participants: {[tournamentId: string]: Array<Participant>} = {};
-
-  createForTournament =
-    async (tournamentId: string, participant: Participant) => {
-      if (!this.participants[tournamentId]) {
-        this.participants[tournamentId] = [participant];
-      } else {
-        this.participants[tournamentId].push(participant);
-      }
-    }
-
-  getForTournament = async (tournamentId: string) => {
-    return this.participants[tournamentId] || [];
-  }
 }
 
 export function createUser(): UserModel {

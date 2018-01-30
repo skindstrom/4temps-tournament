@@ -9,10 +9,13 @@ function participants(state: ParticipantsReduxState = getInitialState(),
   const { type } = action;
 
   switch (type) {
-  case 'GET_PARTICIPANTS':
-    return getParticipants(state, action);
   case 'CREATE_PARTICIPANT':
     return createParticipant(state, action);
+  case 'GET_ALL_TOURNAMENTS':
+  case 'GET_USER_TOURNAMENTS':
+    return getTournaments(state, action);
+  case 'CREATE_TOURNAMENT':
+    return createTournament(state, action);
   default:
     return state;
   }
@@ -24,28 +27,6 @@ export function getInitialState(): ParticipantsReduxState {
     forTournament: {},
     byId: {},
   };
-}
-
-function getParticipants(state: ParticipantsReduxState,
-  action: ReduxPackAction) {
-
-  const { payload } = action;
-
-  return handle(state, action, {
-    start: prevState => ({ ...prevState, isLoading: true }),
-    success: prevState => ({
-      ...prevState,
-      forTournament: {
-        ...prevState.forTournament,
-        [payload.tournamentId]: payload.participants.map(({ _id }) => _id)
-      },
-      byId: {
-        ...prevState.byId,
-        ...normalize(payload.participants)
-      }
-    }),
-    failure: prevState => ({ ...prevState, isLoading: false })
-  });
 }
 
 function createParticipant(state: ParticipantsReduxState,
@@ -67,6 +48,57 @@ function createParticipant(state: ParticipantsReduxState,
         [payload.participant._id]: payload.participant
       }
     }),
+  });
+}
+
+function getTournaments(state: ParticipantsReduxState,
+  action: ReduxPackAction): ParticipantsReduxState {
+
+  const { payload } = action;
+
+  return handle(state, action, {
+    start: prevState => ({ ...prevState, isLoading: true }),
+    success: prevState => {
+      const tournaments: {[string]: Tournament} = normalize(payload);
+      const participants =
+        Object.keys(tournaments)
+          .reduce(
+            (acc, key) => [...acc, ...tournaments[key].participants], []);
+
+      return {
+        ...prevState,
+        forTournament: {
+          ...prevState.forTournament,
+          ...payload.reduce(
+            (acc, t) => {
+              acc[t._id] = t.participants.map((p) => p._id);
+              return acc;
+            }, {})
+        },
+        byId: {
+          ...prevState.byId,
+          ...normalize(participants)
+        }
+      };
+    },
+    failure: prevState => ({ ...prevState, isLoading: false })
+  });
+}
+
+function createTournament(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction): ParticipantsReduxState {
+
+  const {payload} = action;
+
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      forTournament: {
+        ...prevState.forTournament,
+        [payload._id]: []
+      }
+    })
   });
 }
 

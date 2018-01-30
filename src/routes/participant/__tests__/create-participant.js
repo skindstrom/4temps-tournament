@@ -5,7 +5,6 @@ import {
   TOURNAMENT_ID, generateId,
   createUser, createTournament,
   TournamentRepositoryImpl as TournamentRepository,
-  ParticipantRepositoryImpl as ParticipantRepository
 } from '../../../test-utils';
 
 describe('/api/participant/create', () => {
@@ -21,30 +20,30 @@ describe('/api/participant/create', () => {
   };
 
   let tournamentRepository: TournamentRepository;
-  let participantRepository: ParticipantRepository;
 
   beforeEach(async () => {
     tournamentRepository = new TournamentRepository();
     await tournamentRepository.create(createTournament());
-
-    participantRepository = new ParticipantRepository();
   });
 
   test('Valid participant and tournament has status 200', async () => {
     const route =
-      new CreateParticipantRouteHandler(user._id.toString(),
-        tournamentRepository, participantRepository);
+      new CreateParticipantRouteHandler(
+        user._id.toString(), tournamentRepository);
+
+    await tournamentRepository.create(createTournament());
 
     route.parseBody(VALID_BODY);
 
     await route.createParticipant();
     expect(route.status).toBe(200);
+    expect(route._participant).toEqual(VALID_BODY.participant);
   });
 
   test('Invalid participant has status 400', async () => {
     const route =
       new CreateParticipantRouteHandler(user._id.toString(),
-        tournamentRepository, participantRepository);
+        tournamentRepository);
 
     route.parseBody({
       ...VALID_BODY,
@@ -58,7 +57,7 @@ describe('/api/participant/create', () => {
     const otherUserId = new generateId();
     const route =
       new CreateParticipantRouteHandler(otherUserId,
-        tournamentRepository, participantRepository);
+        tournamentRepository);
 
     route.parseBody(VALID_BODY);
     await route.createParticipant();
@@ -68,7 +67,7 @@ describe('/api/participant/create', () => {
   test('Non-existing tournament has status 404', async () => {
     const route =
       new CreateParticipantRouteHandler(user._id.toString(),
-        tournamentRepository, participantRepository);
+        tournamentRepository);
 
     route.parseBody({...VALID_BODY, tournamentId: generateId().toString()});
     await route.createParticipant();

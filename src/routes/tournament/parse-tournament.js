@@ -10,6 +10,7 @@ export default function parseTournament(body: any): Tournament {
     date: moment(body.date) || moment(0),
     type: body.type || 'none',
     judges: body.judges || [],
-    creatorId: body.creatorId
+    participants: body.participants || [],
+    creatorId: body.creatorId,
   };
 }

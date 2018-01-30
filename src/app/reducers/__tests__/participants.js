@@ -4,9 +4,11 @@ import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../participants';
 import makePackAction from '../test-utils';
-import type { Participant } from '../../../models/participant';
+import {createParticipant, createTournament} from '../../../test-utils';
 
 describe('Participant reducer', () => {
+  const initialState = getInitialState();
+
   test('Default value are no participants', () => {
     const state: ParticipantsReduxState = {
       isLoading: false,
@@ -22,140 +24,168 @@ describe('Participant reducer', () => {
   });
 
   test('Invalid action does not change state', () => {
-    expect(reducer(getInitialState(),
+    expect(reducer(initialState,
       makePackAction(LIFECYCLE.START, 'INVALID_ACTION')))
-      .toEqual(getInitialState());
-    expect(reducer(getInitialState(),
+      .toEqual(initialState);
+    expect(reducer(initialState,
       makePackAction(LIFECYCLE.SUCCESS, 'INVALID_ACTION')))
-      .toEqual(getInitialState());
-    expect(reducer(getInitialState(),
+      .toEqual(initialState);
+    expect(reducer(initialState,
       makePackAction(LIFECYCLE.FAILURE, 'INVALID_ACTION')))
-      .toEqual(getInitialState());
+      .toEqual(initialState);
   });
 
-  test('GET_PARTICIPANTS start sets isLoading to true', () => {
-    expect(reducer(getInitialState(),
-      makePackAction(LIFECYCLE.START, 'GET_PARTICIPANTS')))
-      .toEqual({ ...getInitialState(), isLoading: true });
+  describe('CREATE_PARTICIPANT', () => {
+    test('CREATE_PARTICIPANT success sets the new participant', () => {
+      const participant = { ...createParticipant(), _id: '1'};
+
+      const tournamentId = 'tournament_id';
+      const forTournament = { [tournamentId]: ['1'] };
+      const byId = { '1': participant};
+
+      const payload = { tournamentId, participant };
+
+      const state = initialState;
+      expect(reducer(state,
+        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
+        .toEqual({
+          ...state,
+          forTournament,
+          byId,
+        });
+    });
+
+    test('CREATE_PARTICIPANT success does not overwrite participants', () => {
+      const tournamentId = 'tournament_id';
+
+      const state = {
+        ...initialState,
+        forTournament: {
+          [tournamentId]: ['p2_id'],
+          'other_tournament_id': ['p3_id'],
+        },
+        byId: {
+          'p2_id': { ...createParticipant(), _id: 'p2_id'},
+          'p3_id': { ...createParticipant(), _id: 'p3_id'}
+        }
+      };
+
+      const participant = { ...createParticipant(), _id: 'new'};
+
+      const forTournament = {
+        ...state.forTournament,
+        [tournamentId]: ['p2_id', 'new']
+      };
+      const byId = { ...state.byId, 'new': participant};
+      const payload = { tournamentId, participant };
+
+      expect(reducer(state,
+        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
+        .toEqual({
+          ...state,
+          forTournament,
+          byId,
+        });
+    });
+
+
   });
 
-  test('GET_PARTICIPANTS success sets participants', () => {
-    const participants: Array<Participant> = [
-      { _id: '1', name: 'p1', role: 'leader' },
-      { _id: '2', name: 'p2', role: 'follower' }
-    ];
+  describe('CREATE_TOURNAMENT', () => {
+    test('success sets empty participants', () => {
+      const tournament = createTournament();
 
-    const tournamentId = 'tournament_id';
-    const forTournament = { [tournamentId]: ['1', '2'] };
-    const byId = { '1': participants[0], '2': participants[1] };
-
-    const payload = { tournamentId, participants };
-
-    expect(reducer(getInitialState(),
-      makePackAction(LIFECYCLE.SUCCESS, 'GET_PARTICIPANTS', payload)))
-      .toEqual({
-        ...getInitialState(),
-        isLoading: false,
-        forTournament,
-        byId
-      });
+      expect(
+        reducer(
+          initialState, makePackAction(
+            LIFECYCLE.SUCCESS, 'CREATE_TOURNAMENT', tournament)))
+        .toEqual({
+          ...initialState,
+          forTournament: {
+            [tournament._id]: []
+          },
+          byId: {}
+        });
+    });
   });
 
-  test('GET_PARTICIPANTS success does not overwrite other participants', () => {
-    const state = {
-      ...getInitialState(),
-      forTournament: {
-        'other_tournament_id': ['p3_id']
-      },
-      byId: {
-        'p3_id': { _id: 'p3_id', name: 'p3', role: 'leader' }
-      }
-    };
+  describe('GET_ALL_TOURNAMENTS', () => {
+    test('success sets participants', () => {
+      const participants1 = [createParticipant(), createParticipant()];
+      const participants2 = [createParticipant(), createParticipant()];
+      const tournament1 = {
+        ...createTournament(),
+        _id: 't1',
+        participants: participants1
+      };
+      const tournament2 = {
+        ...createTournament(),
+        _id: 't2',
+        participants: participants2
+      };
 
-    const participants: Array<Participant> = [
-      { _id: '1', name: 'p1', role: 'leader' },
-      { _id: '2', name: 'p2', role: 'follower' }
-    ];
+      const payload = [tournament1, tournament2];
 
-    const tournamentId = 'tournament_id';
-    const forTournament = {
-      ...state.forTournament,
-      [tournamentId]: ['1', '2']
-    };
-    const byId = { ...state.byId, '1': participants[0], '2': participants[1] };
+      const expected = {
+        ...initialState,
+        forTournament: {
+          [tournament1._id]: [participants1[0]._id, participants1[1]._id],
+          [tournament2._id]: [participants2[0]._id, participants2[1]._id],
+        },
+        byId: {
+          [participants1[0]._id]: participants1[0],
+          [participants1[1]._id]: participants1[1],
+          [participants2[0]._id]: participants2[0],
+          [participants2[1]._id]: participants2[1],
+        }
+      };
 
-    const payload = { tournamentId, participants };
-
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.SUCCESS, 'GET_PARTICIPANTS', payload)))
-      .toEqual({
-        ...getInitialState(),
-        isLoading: false,
-        forTournament,
-        byId
-      });
+      expect(
+        reducer(
+          initialState,
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', payload)
+        ))
+        .toEqual(expected);
+    });
   });
 
-  test('GET_PARTICIPANTS failure sets isLoading to false', () => {
-    const state = { ...getInitialState(), isLoading: true };
+  describe('GET_USER_TOURNAMENTS', () => {
+    test('success sets participants', () => {
+      const participants1 = [createParticipant(), createParticipant()];
+      const participants2 = [createParticipant(), createParticipant()];
+      const tournament1 = {
+        ...createTournament(),
+        _id: 't1',
+        participants: participants1
+      };
+      const tournament2 = {
+        ...createTournament(),
+        _id: 't2',
+        participants: participants2
+      };
 
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.FAILURE, 'GET_PARTICIPANTS')))
-      .toEqual({
-        ...state,
-        isLoading: false,
-      });
-  });
+      const payload = [tournament1, tournament2];
 
-  test('CREATE_PARTICIPANT success sets the new participant', () => {
-    const participant = { _id: '1', name: 'p1', role: 'leader' };
+      const expected = {
+        ...initialState,
+        forTournament: {
+          [tournament1._id]: [participants1[0]._id, participants1[1]._id],
+          [tournament2._id]: [participants2[0]._id, participants2[1]._id],
+        },
+        byId: {
+          [participants1[0]._id]: participants1[0],
+          [participants1[1]._id]: participants1[1],
+          [participants2[0]._id]: participants2[0],
+          [participants2[1]._id]: participants2[1],
+        }
+      };
 
-    const tournamentId = 'tournament_id';
-    const forTournament = { [tournamentId]: ['1'] };
-    const byId = { '1': participant};
-
-    const payload = { tournamentId, participant };
-
-    const state = getInitialState();
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
-      .toEqual({
-        ...state,
-        forTournament,
-        byId,
-      });
-  });
-
-  test('CREATE_PARTICIPANT success does not overwrite participants', () => {
-    const tournamentId = 'tournament_id';
-
-    const state = {
-      ...getInitialState(),
-      forTournament: {
-        [tournamentId]: ['p2_id'],
-        'other_tournament_id': ['p3_id'],
-      },
-      byId: {
-        'p2_id': { _id: 'p2_id', name: 'p2', role: 'follower' },
-        'p3_id': { _id: 'p3_id', name: 'p3', role: 'leader' }
-      }
-    };
-
-    const participant = { _id: 'new', name: 'p1', role: 'leader' };
-
-    const forTournament = {
-      ...state.forTournament,
-      [tournamentId]: ['p2_id', 'new']
-    };
-    const byId = { ...state.byId, 'new': participant};
-    const payload = { tournamentId, participant };
-
-    expect(reducer(state,
-      makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
-      .toEqual({
-        ...state,
-        forTournament,
-        byId,
-      });
+      expect(
+        reducer(
+          initialState,
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)
+        ))
+        .toEqual(expected);
+    });
   });
 });

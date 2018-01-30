@@ -175,7 +175,7 @@ declare type ReduxPackAction = {
 declare type ReduxAction = LogoutAction | LoginAction
   | GetAllTournamentsAction | GetUserTournamentsAction
   | CreateTournamentAction | EditTournamentAction
-  | GetParticipantsAction | CreateParticipantAction
+  | CreateParticipantAction
   | SignUpAction | CreateRoundAction | GetRoundsAction | UpdateRoundsAction
   | DeleteRoundAction;
 
@@ -214,12 +214,6 @@ declare type CreateTournamentAction =
   };
 declare type EditTournamentAction =
   { type: 'EDIT_TOURNAMENT', promise: Promise<Tournament> };
-
-declare type GetParticipantsAction =
-  {
-    type: 'GET_PARTICIPANTS',
-    promise: Promise<{ tournamentId: string, participants: Array<Participant> }>
-  };
 
 declare type CreateParticipantAction =
   {
