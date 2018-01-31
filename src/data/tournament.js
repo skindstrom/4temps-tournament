@@ -71,6 +71,9 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     await Model.create(mapToDbModel(tournament));
   }
   async get(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return null;
+    }
     return mapToDomainModel(await Model.findOne({ _id: id }));
   }
   async getAll() {
