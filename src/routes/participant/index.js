@@ -1,7 +1,7 @@
 // @flow
 
 import { Router } from 'express';
-import isUserAuthenticated from '../auth-middleware';
+import {allow} from '../auth-middleware';
 
 import {TournamentRepositoryImpl} from '../../data/tournament';
 import {CreateParticipantRoute} from './create-participant';
@@ -11,6 +11,7 @@ const tournamentRepository = new TournamentRepositoryImpl();
 
 const createParticipantRoute =
   new CreateParticipantRoute(tournamentRepository);
-router.post('/create', isUserAuthenticated, createParticipantRoute.route);
+router.post(
+  '/:tournamentId/create', allow('admin'), createParticipantRoute.route);
 
 export default router;

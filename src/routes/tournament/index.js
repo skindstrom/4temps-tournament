@@ -2,7 +2,7 @@
 
 import { Router } from 'express';
 
-import isUserAuthenticated from '../auth-middleware';
+import {allow} from '../auth-middleware';
 
 import {TournamentRepositoryImpl} from '../../data/tournament';
 
@@ -15,15 +15,15 @@ import GetAllTournamentsRoute from './get-all-tournaments';
 const router = Router();
 const tournamentRepository = new TournamentRepositoryImpl();
 
-router.post('/create', isUserAuthenticated,
+router.post('/create', allow('authenticated'),
   new CreateTournamentRoute(tournamentRepository).route);
-router.post('/update', isUserAuthenticated,
+router.post('/update/:tournamentId', allow('admin'),
   new UpdateTournamentRoute(tournamentRepository).route);
-router.get('/get', isUserAuthenticated,
+router.get('/get', allow('authenticated'),
   new GetUserTournamentsRoute(tournamentRepository).route);
 router.get('/get/all', new GetAllTournamentsRoute(tournamentRepository).route);
 
-router.get('/get/:tournamentId', isUserAuthenticated,
+router.get('/get/:tournamentId', allow('authenticated'),
   new GetTournamentRoute(tournamentRepository).route);
 
 

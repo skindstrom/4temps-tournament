@@ -2,27 +2,16 @@
 import type { NextFunction, } from 'express';
 import type {TournamentRepository} from '../data/tournament';
 import type {Tournament} from '../models/tournament';
+import {TournamentRepositoryImpl} from '../data/tournament';
 
-type GroupPermissions = 'public' | 'admin' | 'authenticated';
+type PermissionRole = 'public' | 'admin' | 'authenticated';
 
-export function isAuthenticated
-(req: ServerApiRequest, res: ServerApiResponse, next: NextFunction) {
-  // $FlowFixMe
-  if (req.session.user != null) {
-    return next();
-  }
-
-  res.sendStatus(401);
+export function allow(role: PermissionRole) {
+  return authorizationMiddleware(new TournamentRepositoryImpl())(role);
 }
 
-export class AuthorizationChecker {
-  _repository: TournamentRepository;
-
-  constructor(repository: TournamentRepository) {
-    this._repository = repository;
-  }
-
-  checkRole = (role: GroupPermissions) => {
+export function authorizationMiddleware(repository: TournamentRepository) {
+  return (role: PermissionRole) => {
     let handler: AuthorizationCheckHandler;
     switch(role) {
     case 'public':
@@ -32,14 +21,14 @@ export class AuthorizationChecker {
       handler =  new AuthorizationCheckAuthenticatedHandler();
       break;
     case 'admin':
-      handler =  new AuthorizationCheckAdminHandler(this._repository);
+      handler =  new AuthorizationCheckAdminHandler(repository);
       break;
     default:
       throw new Error('invalid role');
     }
 
     return handler.middleware();
-  }
+  };
 }
 
 interface AuthorizationCheckHandler {
@@ -126,6 +115,3 @@ implements AuthorizationCheckHandler {
 }
 
 function TournamentNotFoundError(){}
-
-
-export default isAuthenticated;

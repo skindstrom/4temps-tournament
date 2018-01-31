@@ -11,7 +11,8 @@ export async function createRound(
     throw validation;
   }
 
-  return apiPostRequest('/api/round/create', { tournamentId, round });
+  return apiPostRequest(`/api/round/${tournamentId}/create`,
+    { tournamentId, round });
 }
 
 export async function deleteRound(
@@ -19,5 +20,5 @@ export async function deleteRound(
     tournamentId: string,
     roundId: string}> {
   return apiDeleteRequest(
-    `/api/round/delete/${tournamentId}/${roundId}`);
+    `/api/round/${tournamentId}/delete/${roundId}`);
 }

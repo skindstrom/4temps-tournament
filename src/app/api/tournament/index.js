@@ -52,6 +52,6 @@ export const updateTournament =
       throw validation;
     }
 
-    return apiPostRequest('/api/tournament/update',
+    return apiPostRequest(`/api/tournament/update/${tournamentId}`,
       { tournamentId, tournament }, deserializeTournament);
   };

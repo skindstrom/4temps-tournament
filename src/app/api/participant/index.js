@@ -15,7 +15,8 @@ export const createParticipant =
       throw validation;
     }
 
-    return apiPostRequest('/api/participant/create',
+    return apiPostRequest(
+      `/api/participant/${tournamentId}/create`,
       { tournamentId, participant });
   };
 
