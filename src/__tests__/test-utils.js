@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import {
   Request, Response, createUser, generateId, createRound, createTournament,
-  TournamentRepositoryImpl, createParticipant
+  TournamentRepositoryImpl, createParticipant, AccessKeyRepositoryImpl
 } from '../test-utils';
 import validateUser from '../validators/validate-user';
 import validateRound from '../validators/validate-round';
@@ -208,6 +208,35 @@ describe('Round route test helpers', () => {
 
       expect(await repo.get(tournament._id))
         .toEqual({...tournament, judges: [judge]});
+    });
+  });
+
+  describe('AccessKey repository', () => {
+    const userId = generateId();
+    test('Create adds key', async () => {
+      const repo = new AccessKeyRepositoryImpl();
+      await repo.createForUser(userId);
+
+      expect(repo.getAll()).toHaveLength(1);
+      expect(repo.getAll()[0]).toMatchObject({userId});
+    });
+
+    test('Creates unique keys', async () => {
+      const repo = new AccessKeyRepositoryImpl();
+      await repo.createForUser(userId);
+      await repo.createForUser(userId);
+
+      const keys = repo.getAll();
+      expect(keys[0]).not.toEqual(keys[1]);
+    });
+
+    test('Get for key only returns the matching object', async () => {
+      const repo = new AccessKeyRepositoryImpl();
+      await repo.createForUser(userId);
+      await repo.createForUser(generateId());
+
+      const expected = repo.getAll()[0];
+      expect(await repo.getForKey(expected.key)).toMatchObject(expected);
     });
   });
 });

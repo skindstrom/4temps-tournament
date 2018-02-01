@@ -15,7 +15,6 @@ import type { UserModel } from '../src/data/user';
 
 // Base types
 
-
 declare type RoundCriterion = {
   name: string,
   minValue: ?number,
@@ -34,6 +33,11 @@ declare type Round = {
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
   criteria: Array<RoundCriterion>
+}
+
+declare type AccessKey = {
+  userId: string,
+  key: string
 }
 
 // Express interface

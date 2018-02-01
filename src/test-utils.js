@@ -8,6 +8,9 @@ import type {
 import type {
   TournamentRepository
 } from './data/tournament';
+import type {
+  AccessKeyRepository
+} from './data/access-key';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
@@ -143,6 +146,31 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     async (tournamentId: string, judge: string) => {
       this._tournaments[tournamentId].judges.push(judge);
     }
+}
+
+export class AccessKeyRepositoryImpl implements AccessKeyRepository {
+  _keys: Array<AccessKey> = [];
+
+  getAll() {
+    return this._keys;
+  }
+
+  async createForUser(userId: string) {
+    this._keys.push({
+      userId,
+      key: String(
+        Math.max(0, ...(this._keys.map(({key}) => parseInt(key)))) + 1)
+    });
+  }
+
+  async getForKey(key: string) {
+    for (const k of this._keys) {
+      if (k.key === key) {
+        return k;
+      }
+    }
+    return null;
+  }
 }
 
 export function createUser(): UserModel {
