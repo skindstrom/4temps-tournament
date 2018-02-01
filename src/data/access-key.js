@@ -13,11 +13,11 @@ type AccessKeyDbModel = {
 
 const schema = new mongoose.Schema({
   tournamentId: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   userId: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   key: {
@@ -37,19 +37,19 @@ export interface AccessKeyRepository {
 class AccessKeyRepositoryImpl implements AccessKeyRepository {
   async createForTournamentAndUser(
     tournamentId: string, userId: string) {
-    const key = this._generateUniqueKey();
+    const key = await this._generateUniqueKey();
     /*
      * There's a race condition between the generation of the key
      * and the insert. However, there will not be a lot of concurrent
      * inserts, and let's believe in the randomness for now
      */
-    await Model.insert({tournamentId, userId, key});
+    await Model.create({tournamentId, userId, key});
   }
 
   async _generateUniqueKey() {
     let key = this._generateKey();
     while ((await this.getForKey(key)) != null) {
-      this._generateKey();
+      key = this._generateKey();
     }
     return key;
   }
@@ -59,7 +59,7 @@ class AccessKeyRepositoryImpl implements AccessKeyRepository {
   }
 
   async getForKey(key: string) {
-    return this.mapToDomainModel(Model.findOne({key}));
+    return this.mapToDomainModel(await Model.findOne({key}));
   }
 
   mapToDomainModel(dbModel: ?AccessKeyDbModel): ?AccessKey {

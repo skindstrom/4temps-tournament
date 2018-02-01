@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import {
   Request, Response, createUser, generateId, createRound, createTournament,
+  createJudge,
   TournamentRepositoryImpl, createParticipant, AccessKeyRepositoryImpl
 } from '../test-utils';
 import validateUser from '../validators/validate-user';
@@ -31,6 +32,19 @@ describe('Round route test helpers', () => {
     tournament = { ...tournament, date: moment(tournament.date) };
     // $FlowFixMe
     expect(validateTournament(tournament).isValidTournament).toBe(true);
+  });
+
+  test('createJudge creates a valid judge', () => {
+    const judge = createJudge();
+    expect(judge._id).not.toBeNull();
+    expect(judge.name).not.toBeNull();
+  });
+
+  test('createJudge generates new id for each', () => {
+    const j1 = createJudge();
+    const j2 = createJudge();
+
+    expect(j1).not.toEqual(j2);
   });
 
   describe('Request helpers', () => {

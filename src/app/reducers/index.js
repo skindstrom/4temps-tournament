@@ -7,6 +7,7 @@ import user from './user';
 import tournaments from './tournaments';
 import participants from './participants';
 import rounds from './rounds';
+import judges from './judges';
 import ui from './ui';
 
 import makePackAction from './test-utils';
@@ -17,6 +18,7 @@ const reducer: Reducer<ReduxState, ReduxPackAction> =
     tournaments,
     participants,
     rounds,
+    judges,
     ui
   });
 

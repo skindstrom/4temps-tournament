@@ -3,6 +3,7 @@
 import ObjectId from 'bson-objectid';
 import type {TournamentRepository} from '../../data/tournament';
 import type {AccessKeyRepository} from '../../data/access-key';
+import validateJudge from '../../validators/validate-judge';
 
 export default function route(
   tournamentRepository: TournamentRepository,
@@ -12,10 +13,15 @@ export default function route(
       const tournamentId = req.params.tournamentId;
       const judgeName = parseName(req.body);
       const judge = {name: judgeName, _id: ObjectId.generate()};
-      await tournamentRepository.addJudge(tournamentId, judge);
-      await accessRepository.createForTournamentAndUser(
-        tournamentId, judge._id);
-      res.json(judge);
+
+      if (validateJudge(judge)) {
+        await tournamentRepository.addJudge(tournamentId, judge);
+        await accessRepository.createForTournamentAndUser(
+          tournamentId, judge._id);
+        res.json({tournamentId, judge});
+      } else {
+        res.sendStatus(400);
+      }
     } catch (e) {
       res.sendStatus(statusFromError(e));
     }

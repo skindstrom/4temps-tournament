@@ -91,6 +91,7 @@ declare type ReduxState = {
   tournaments: TournamentsReduxState,
   participants: ParticipantsReduxState,
   rounds: RoundsReduxState,
+  judges: JudgesReduxState,
 
   ui: {
     login: UiLoginReduxState,
@@ -100,7 +101,8 @@ declare type ReduxState = {
     editTournament: UiEditTournamentsReduxState,
 
     createParticipant: UiCreateParticipantsReduxState,
-    createRound: UiCreateRoundReduxState
+    createRound: UiCreateRoundReduxState,
+    createJudge: UiCreateJudgeReduxState
   }
 };
 
@@ -141,6 +143,15 @@ declare type RoundsReduxState = {
   }
 }
 
+declare type JudgesReduxState = {
+  forTournament: {
+    [id: string]: Array<string>
+  },
+  byId: {
+    [id: string]: Judge
+  }
+}
+
 declare type UiLoginReduxState = {
   isLoading: boolean,
   isValid: boolean,
@@ -176,6 +187,12 @@ declare type UiCreateRoundReduxState = {
   validation: RoundValidationSummary
 }
 
+declare type UiCreateJudgeReduxState = {
+  isLoading: boolean,
+  createdSuccessfully: boolean,
+  isValid: boolean
+}
+
 declare type ReduxPackAction = {
   type: string,
   payload: any
@@ -186,7 +203,7 @@ declare type ReduxAction = LogoutAction | LoginAction
   | CreateTournamentAction | EditTournamentAction
   | CreateParticipantAction
   | SignUpAction | CreateRoundAction
-  | DeleteRoundAction;
+  | DeleteRoundAction | CreateJudgeAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -249,4 +266,10 @@ declare type DeleteRoundAction =
   {
     type: 'DELETE_ROUND',
     promise: Promise<{tournamentId: string, roundId: string}>
+  }
+
+declare type CreateJudgeAction =
+  {
+    type: 'CREATE_JUDGE',
+    promise: any
   }

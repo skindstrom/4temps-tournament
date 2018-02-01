@@ -7,6 +7,7 @@ import type { RouterHistory, Location, Match } from 'react-router-dom';
 import General from './General';
 import Participants from './Participants';
 import Rounds from './Rounds';
+import Judges from './Judges';
 
 type TabName = 'general' | 'rounds' | 'staff' | 'participants';
 type Props = {
@@ -17,8 +18,6 @@ type Props = {
 type State = {
   activeTab: TabName
 }
-
-const Staff = () => 'Add and remove staff (judges, organizers, helpers)';
 
 const getActiveTab = (pathname: string): TabName => {
   const splits = pathname.split('/');
@@ -74,7 +73,9 @@ class EditTournament extends Component<Props, State> {
       tournamentId={this._getTournamentId()}
     />);
 
-  _renderStaff = () => <Staff />
+  _renderStaff = () =>
+    <Judges tournamentId={this._getTournamentId()} />
+
   _renderParticipants = () => (
     <Participants
       tournamentId={this._getTournamentId()}

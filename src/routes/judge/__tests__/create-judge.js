@@ -44,11 +44,14 @@ describe('/api/judge/create', () => {
       });
   });
 
-  test('Returns judge if successful', async () => {
+  test('Returns tournament id and judge if successful', async () => {
     await route(tournamentRepo, accessRepo)(req, res);
 
     expect(res.getStatus()).toBe(200);
-    expect(res.getBody()).toMatchObject({name});
+    expect(res.getBody()).toMatchObject({
+      tournamentId: tournament._id,
+      judge: {name}
+    });
   });
 
   test('Creates access key if successful', async () => {
@@ -56,7 +59,16 @@ describe('/api/judge/create', () => {
 
     expect(res.getStatus()).toBe(200);
     // $FlowFixMe
-    const judge: Judge = res.getBody();
-    expect(accessRepo.getAll()).toMatchObject([{userId: judge._id}]);
+    const judge: Judge = res.getBody().judge;
+    expect(accessRepo.getAll()).toMatchObject([{
+      tournamentId: tournament._id,
+      userId: judge._id
+    }]);
+  });
+
+  test('Status 400 is returned if invalid judge', async () => {
+    req.body.name = null;
+    await route(tournamentRepo, accessRepo)(req, res);
+    expect(res.getStatus()).toBe(400);
   });
 });

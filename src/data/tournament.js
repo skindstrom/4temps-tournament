@@ -141,7 +141,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       {_id: tournamentId},
       {
         $push: {
-          judges: [judge]
+          judges: judge
         }
       }
     );

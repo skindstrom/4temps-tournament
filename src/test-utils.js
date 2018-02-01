@@ -228,3 +228,10 @@ export function createParticipant(): Participant {
     role: 'both'
   };
 }
+
+export function createJudge(): Judge {
+  return {
+    _id: generateId(),
+    name: 'Jane Smith'
+  };
+}
