@@ -143,7 +143,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     }
 
   addJudge =
-    async (tournamentId: string, judge: string) => {
+    async (tournamentId: string, judge: Judge) => {
       this._tournaments[tournamentId].judges.push(judge);
     }
 }
@@ -155,9 +155,10 @@ export class AccessKeyRepositoryImpl implements AccessKeyRepository {
     return this._keys;
   }
 
-  async createForUser(userId: string) {
+  async createForTournamentAndUser(tournamentId: string, userId: string) {
     this._keys.push({
       userId,
+      tournamentId,
       key: String(
         Math.max(0, ...(this._keys.map(({key}) => parseInt(key)))) + 1)
     });

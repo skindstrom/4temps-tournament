@@ -10,7 +10,7 @@ export type Tournament = {
   name: string,
   date: Moment,
   type: TournamentType,
-  judges: Array<string>,
+  judges: Array<Judge>,
   participants: Array<Participant>,
   rounds: Array<Round>
 }

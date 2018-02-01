@@ -203,7 +203,7 @@ describe('Round route test helpers', () => {
       const tournament = createTournament();
       await repo.create(tournament);
 
-      const judge = '123';
+      const judge = {name: 'nice name', _id: '123'};
       await repo.addJudge(tournament._id, judge);
 
       expect(await repo.get(tournament._id))
@@ -213,18 +213,20 @@ describe('Round route test helpers', () => {
 
   describe('AccessKey repository', () => {
     const userId = generateId();
+    const tournamentId = generateId();
+
     test('Create adds key', async () => {
       const repo = new AccessKeyRepositoryImpl();
-      await repo.createForUser(userId);
+      await repo.createForTournamentAndUser(tournamentId, userId);
 
       expect(repo.getAll()).toHaveLength(1);
-      expect(repo.getAll()[0]).toMatchObject({userId});
+      expect(repo.getAll()[0]).toMatchObject({tournamentId, userId});
     });
 
     test('Creates unique keys', async () => {
       const repo = new AccessKeyRepositoryImpl();
-      await repo.createForUser(userId);
-      await repo.createForUser(userId);
+      await repo.createForTournamentAndUser(tournamentId, userId);
+      await repo.createForTournamentAndUser(tournamentId, userId);
 
       const keys = repo.getAll();
       expect(keys[0]).not.toEqual(keys[1]);
@@ -232,8 +234,8 @@ describe('Round route test helpers', () => {
 
     test('Get for key only returns the matching object', async () => {
       const repo = new AccessKeyRepositoryImpl();
-      await repo.createForUser(userId);
-      await repo.createForUser(generateId());
+      await repo.createForTournamentAndUser(tournamentId, userId);
+      await repo.createForTournamentAndUser(tournamentId, generateId());
 
       const expected = repo.getAll()[0];
       expect(await repo.getForKey(expected.key)).toMatchObject(expected);

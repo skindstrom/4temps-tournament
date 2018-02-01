@@ -22,10 +22,14 @@ type TournamentModel = {
   name: string,
   date: Date,
   type: TournamentType,
-  judges: Array<string>,
+  judges: Array<{_id: ObjectId, name: string}>,
   participants: Array<ParticipantDbModel>,
   rounds: Array<RoundDbModel>
 }
+
+const judgeSchema = new mongoose.Schema({
+  name: {type: String, required: true}
+});
 
 const schema = new mongoose.Schema({
   creatorId: {
@@ -44,7 +48,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  judges: [String],
+  judges: [judgeSchema],
   participants: [ParticipantSchema],
   rounds: [RoundSchema]
 });
@@ -65,7 +69,7 @@ export interface TournamentRepository {
     tournamentId: string, round: Round): Promise<void>;
   deleteRound(tournamentId: string, roundId: string): Promise<void>;
 
-  addJudge(tournamentId: string, judge: string): Promise<void>;
+  addJudge(tournamentId: string, judge: Judge): Promise<void>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
@@ -132,7 +136,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     );
   }
 
-  async addJudge(tournamentId: string, judge: string) {
+  async addJudge(tournamentId: string, judge: Judge) {
     await Model.update(
       {_id: tournamentId},
       {
@@ -151,6 +155,7 @@ function mapToDbModel(tournament: Tournament): TournamentModel {
     creatorId,
     participants,
     rounds,
+    judges,
     ...same
   } = tournament;
   return {
@@ -159,7 +164,11 @@ function mapToDbModel(tournament: Tournament): TournamentModel {
     creatorId: new mongoose.Types.ObjectId(creatorId),
     date: date.toDate(),
     participants: participants.map(mapParticipantToDbModel),
-    rounds: rounds.map(mapRoundToDbModel)
+    rounds: rounds.map(mapRoundToDbModel),
+    judges: judges.map(j => ({
+      name: j.name,
+      _id: new mongoose.Types.ObjectId(j._id)
+    }))
   };
 }
 
@@ -170,6 +179,7 @@ function mapToDomainModel(tournament: TournamentModel): Tournament {
     creatorId,
     participants,
     rounds,
+    judges,
     ...same
   } = tournament;
   return {
@@ -178,7 +188,11 @@ function mapToDomainModel(tournament: TournamentModel): Tournament {
     creatorId: creatorId.toString(),
     date: moment(date),
     participants: participants.map(mapParticipantToDomainModel),
-    rounds: rounds.map(mapRoundToDomainModel)
+    rounds: rounds.map(mapRoundToDomainModel),
+    judges: judges.map(j => ({
+      name: j.name,
+      _id: j._id.toString()
+    }))
   };
 }
 

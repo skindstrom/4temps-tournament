@@ -3,42 +3,60 @@
 import route from '../create-judge';
 import {
   Request, Response, createTournament, createUser,
-  generateId,
-  TournamentRepositoryImpl as TournamentRepository
+  TournamentRepositoryImpl as TournamentRepository,
+  AccessKeyRepositoryImpl as AccessKeyRepository,
 } from '../../../test-utils';
 
 describe('/api/judge/create', () => {
   const user = createUser();
   const tournament = {...createTournament(), creatorId: user._id};
-  const judgeId = generateId().toString();
+  const name = 'Judge name';
 
   let req: Request;
   let res: Response;
-  let repo: TournamentRepository;
+  let tournamentRepo: TournamentRepository;
+  let accessRepo: AccessKeyRepository;
 
   beforeEach(async () => {
     req = Request.withUserAndParams(user, {tournamentId: tournament._id});
-    req.body = {judgeId};
+    req.body = {name};
     res = new Response();
-    repo = new TournamentRepository();
-    await repo.create(tournament);
+    tournamentRepo = new TournamentRepository();
+    accessRepo = new AccessKeyRepository();
+    await tournamentRepo.create(tournament);
   });
 
   test('Status 500 is returned if the judge could not be added', async () => {
-    repo.addJudge = () => {throw 'Test throw';};
-    await route(repo)(req, res);
+    tournamentRepo.addJudge = () => {throw 'Test throw';};
+    await route(tournamentRepo, accessRepo)(req, res);
 
     expect(res.getStatus()).toBe(500);
   });
 
   test('Status 200 is returned if judge is added successfully', async () => {
-    await route(repo)(req, res);
+    await route(tournamentRepo, accessRepo)(req, res);
 
     expect(res.getStatus()).toBe(200);
-    expect((await repo.get(tournament._id)))
-      .toEqual({
+    expect((await tournamentRepo.get(tournament._id)))
+      .toMatchObject({
         ...tournament,
-        judges: [judgeId]
+        judges: [{name}]
       });
+  });
+
+  test('Returns judge if successful', async () => {
+    await route(tournamentRepo, accessRepo)(req, res);
+
+    expect(res.getStatus()).toBe(200);
+    expect(res.getBody()).toMatchObject({name});
+  });
+
+  test('Creates access key if successful', async () => {
+    await route(tournamentRepo, accessRepo)(req, res);
+
+    expect(res.getStatus()).toBe(200);
+    // $FlowFixMe
+    const judge: Judge = res.getBody();
+    expect(accessRepo.getAll()).toMatchObject([{userId: judge._id}]);
   });
 });

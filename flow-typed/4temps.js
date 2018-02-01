@@ -1,15 +1,14 @@
 // @flow
+import type {Tournament} from '../src/models/tournament';
+import type {Participant} from '../src/models/participant';
 import type { UserLoginValidationSummary } from
   '../src/validators/validate-user-login';
-import type{ Tournament } from '../src/models/tournament';
 import type { TournamentValidationSummary } from
   '../src/validators/validate-tournament';
-import type { Participant } from '../src/models/participant';
 import type { ParticipantValidationSummary } from
   '../src/validators/validate-participant';
 import type { UserCreateValidationSummary } from
   '../src/validators/validate-user';
-import type { RoundDbModel } from '../src/data/round';
 import type { UserModel } from '../src/data/user';
 
 
@@ -37,7 +36,13 @@ declare type Round = {
 
 declare type AccessKey = {
   userId: string,
-  key: string
+  tournamentId: string,
+  key: string,
+}
+
+declare type Judge = {
+  _id: string,
+  name: string
 }
 
 // Express interface

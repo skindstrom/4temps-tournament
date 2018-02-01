@@ -1,32 +1,41 @@
 // @flow
 
+import ObjectId from 'bson-objectid';
 import type {TournamentRepository} from '../../data/tournament';
+import type {AccessKeyRepository} from '../../data/access-key';
 
-export default function route(repository: TournamentRepository) {
+export default function route(
+  tournamentRepository: TournamentRepository,
+  accessRepository: AccessKeyRepository) {
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
-      const judgeId = parseJudgeId(req.body);
-      await repository.addJudge(req.params.tournamentId, judgeId);
-      res.sendStatus(200);
+      const tournamentId = req.params.tournamentId;
+      const judgeName = parseName(req.body);
+      const judge = {name: judgeName, _id: ObjectId.generate()};
+      await tournamentRepository.addJudge(tournamentId, judge);
+      await accessRepository.createForTournamentAndUser(
+        tournamentId, judge._id);
+      res.json(judge);
     } catch (e) {
       res.sendStatus(statusFromError(e));
     }
   };
 }
 
-function parseJudgeId(body: mixed): string {
-  if (typeof body === 'object' && body != null
-    && typeof body.judgeId === 'string') {
-    return body.judgeId;
+function parseName(body: mixed): string {
+  if (typeof body === 'object'
+    && body != null
+    && typeof body.name === 'string') {
+    return body.name;
   }
-  throw new InvalidJudgeId;
+  throw new ParseError;
 }
 
 function statusFromError(e: mixed) {
-  if (e instanceof InvalidJudgeId) {
+  if (e instanceof ParseError) {
     return 400;
   }
   return 500;
 }
 
-function InvalidJudgeId(){}
+function ParseError(){}

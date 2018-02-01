@@ -6,11 +6,16 @@ import crypto from 'crypto';
 
 type AccessKeyDbModel = {
   _id: ObjectId,
+  tournamentId: ObjectId,
   userId: ObjectId,
   key: string,
 }
 
 const schema = new mongoose.Schema({
+  tournamentId: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
   userId: {
     type: mongoose.Types.ObjectId,
     required: true,
@@ -24,19 +29,21 @@ const schema = new mongoose.Schema({
 const Model = mongoose.model('accessKey', schema);
 
 export interface AccessKeyRepository {
-  createForUser(userId: string): Promise<void>;
+  createForTournamentAndUser(
+    tournamentId: string, userId: string): Promise<void>;
   getForKey(key: string): Promise<?AccessKey>;
 }
 
 class AccessKeyRepositoryImpl implements AccessKeyRepository {
-  async createForUser(userId: string) {
+  async createForTournamentAndUser(
+    tournamentId: string, userId: string) {
     const key = this._generateUniqueKey();
     /*
      * There's a race condition between the generation of the key
      * and the insert. However, there will not be a lot of concurrent
      * inserts, and let's believe in the randomness for now
      */
-    await Model.insert({userId, key});
+    await Model.insert({tournamentId, userId, key});
   }
 
   async _generateUniqueKey() {
@@ -60,8 +67,12 @@ class AccessKeyRepositoryImpl implements AccessKeyRepository {
       return null;
     }
 
-    const {key, userId} = dbModel;
-    return {key, userId: userId.toString()};
+    const {key, userId, tournamentId} = dbModel;
+    return {
+      key,
+      userId: userId.toString(),
+      tournamentId: tournamentId.toString()
+    };
   }
 }
 
