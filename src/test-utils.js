@@ -21,48 +21,53 @@ type Query = {
 type Params = Query;
 
 export class Request implements ServerApiRequest {
-    body: Body = {};
-    session: {
-        user: UserModel
+  body: Body = {};
+  session: {
+    user: UserModel
+  };
+  query: Query = {};
+  params: Params = {};
+
+  constructor(user: UserModel) {
+    this.session = {
+      user
     };
-    query: Query = {};
-    params: Params = {};
+  }
 
-    constructor(user: UserModel) {
-      this.session = {
-        user
-      };
-    }
+  static empty() {
+    // $FlowFixMe
+    return new Request(null);
+  }
 
-    static withBody(body: Body) {
-      return Request.withUserAndBody(createUser(), body);
-    }
+  static withBody(body: Body) {
+    return Request.withUserAndBody(createUser(), body);
+  }
 
-    static withUserAndBody(user: UserModel, body: Body) {
-      const req = new Request(user);
-      req.body = body;
-      return req;
-    }
+  static withUserAndBody(user: UserModel, body: Body) {
+    const req = new Request(user);
+    req.body = body;
+    return req;
+  }
 
-    static withQuery(query: Query) {
-      return Request.withUserAndQuery(createUser(), query);
-    }
+  static withQuery(query: Query) {
+    return Request.withUserAndQuery(createUser(), query);
+  }
 
-    static withUserAndQuery(user: UserModel, query: Query) {
-      const req = new Request(user);
-      req.query = query;
-      return req;
-    }
+  static withUserAndQuery(user: UserModel, query: Query) {
+    const req = new Request(user);
+    req.query = query;
+    return req;
+  }
 
-    static withParams(params: Params) {
-      return Request.withUserAndParams(createUser(), params);
-    }
+  static withParams(params: Params) {
+    return Request.withUserAndParams(createUser(), params);
+  }
 
-    static withUserAndParams(user: UserModel, params: Params) {
-      const req = new Request(user);
-      req.params = params;
-      return req;
-    }
+  static withUserAndParams(user: UserModel, params: Params) {
+    const req = new Request(user);
+    req.params = params;
+    return req;
+  }
 }
 
 export class Response implements ServerApiResponse {
