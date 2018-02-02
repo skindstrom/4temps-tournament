@@ -7,8 +7,19 @@ import {
 } from 'semantic-ui-react';
 
 type CriterionType = 'none' | 'both' | 'one' | 'follower' | 'leader';
+type TieRule = 'none' | 'random' | 'all';
+type RoundScoringRule = 'none' | 'average' | 'averageWithoutOutliers';
+type MultipleDanceScoringRule = 'none' | 'average' | 'best' | 'worst';
 
-type Criterion = {
+type Props = {
+  onSubmit: (round: RoundViewModel) => void,
+
+  isLoading: boolean,
+  createdSuccessfully: boolean,
+  validation: RoundValidationSummary
+}
+
+type CriterionViewModel = {
   name: string,
   minValue: ?number,
   maxValue: ?number,
@@ -16,24 +27,21 @@ type Criterion = {
   type: CriterionType
 }
 
-type TieRule = 'none' | 'random' | 'all';
-type RoundScoringRule = 'none' | 'average' | 'averageWithoutOutliers';
-type MultipleDanceScoringRule = 'none' | 'average' | 'best' | 'worst';
-
-type Props = {
-  onSubmit: (round: Round) => void,
-
-  isLoading: boolean,
-  createdSuccessfully: boolean,
-  validation: RoundValidationSummary
+export type RoundViewModel = {
+  name: string,
+  danceCount: ?number,
+  minPairCount: ?number,
+  maxPairCount: ?number,
+  tieRule: TieRule,
+  roundScoringRule: RoundScoringRule,
+  multipleDanceScoringRule: MultipleDanceScoringRule,
+  criteria: Array<CriterionViewModel>
 }
+type State = RoundViewModel;
 
-type State = Round;
 
 class EditTournamentRounds extends Component<Props, State> {
   state = {
-    // eslint-disable-next-line
-    _id: '',
     name: '',
     danceCount: null,
     minPairCount: null,
@@ -127,7 +135,7 @@ class EditTournamentRounds extends Component<Props, State> {
 
   _renderCriteria = () => this.state.criteria.map(this._renderCriterion);
 
-  _renderCriterion = (criterion: Criterion, index: number) => {
+  _renderCriterion = (criterion: CriterionViewModel, index: number) => {
     const onChangeString = (key: string) =>
       (event) => this._onChangeCriterion({
         ...criterion,
@@ -231,7 +239,7 @@ class EditTournamentRounds extends Component<Props, State> {
     );
   }
 
-  _onChangeCriterion = (criterion: Criterion, index: number) => {
+  _onChangeCriterion = (criterion: CriterionViewModel, index: number) => {
     const criteria = [...this.state.criteria];
     criteria[index] = criterion;
     this.setState({ criteria });

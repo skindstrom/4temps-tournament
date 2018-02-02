@@ -16,8 +16,8 @@ import type { UserModel } from '../src/data/user';
 
 declare type RoundCriterion = {
   name: string,
-  minValue: ?number,
-  maxValue: ?number,
+  minValue: number,
+  maxValue: number,
   description: string,
   type: 'none' | 'both' | 'one' | 'follower' | 'leader'
 }
@@ -25,9 +25,9 @@ declare type RoundCriterion = {
 declare type Round = {
   _id: string,
   name: string,
-  danceCount: ?number,
-  minPairCount: ?number,
-  maxPairCount: ?number,
+  danceCount: number,
+  minPairCount: number,
+  maxPairCount: number,
   tieRule: 'none' | 'random' | 'all',
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',

@@ -4,9 +4,9 @@ function parseRound(bodyRound: mixed): Round {
   let round: Round = {
     _id: '',
     name: '',
-    danceCount: null,
-    minPairCount: null,
-    maxPairCount: null,
+    danceCount: -1,
+    minPairCount: -1,
+    maxPairCount: -1,
     tieRule: 'none',
     roundScoringRule: 'none',
     multipleDanceScoringRule: 'none',

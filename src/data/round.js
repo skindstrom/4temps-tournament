@@ -6,9 +6,9 @@ import type { ObjectId } from 'mongoose';
 export type RoundDbModel = {
   _id: ObjectId,
   name: string,
-  danceCount: ?number,
-  minPairCount: ?number,
-  maxPairCount: ?number,
+  danceCount: number,
+  minPairCount: number,
+  maxPairCount: number,
   tieRule: 'none' | 'random' | 'all',
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
