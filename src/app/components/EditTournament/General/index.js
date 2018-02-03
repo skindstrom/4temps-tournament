@@ -12,11 +12,22 @@ type ConnectedProps = {
   tournamentId: string
 }
 
-function mapStateToProps({ tournaments, ui }: ReduxState,
+function mapStateToProps(
+  { tournaments, rounds, judges, participants, ui }: ReduxState,
   { tournamentId }: ConnectedProps) {
+
   return {
     ...ui.editTournament,
-    tournament: tournaments.byId[tournamentId],
+    tournament: {
+      ...tournaments.byId[tournamentId],
+      rounds: (rounds.forTournament[tournamentId] || [])
+        .map(id => rounds.byId[id]),
+      judges: (judges.forTournament[tournamentId] || [])
+        .map(id => judges.byId[id]),
+      participants:
+        (participants.forTournament[tournamentId] || [])
+          .map(id => participants.byId[id]),
+    },
 
     shouldLoad: !tournaments.byId[tournamentId],
     Child: EditTournamentGeneral,

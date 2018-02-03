@@ -236,10 +236,10 @@ declare type LoginAction =
   };
 
 declare type GetAllTournamentsAction =
-  { type: 'GET_ALL_TOURNAMENTS', promise: Promise<Array<Tournament>> };
+  { type: 'GET_ALL_TOURNAMENTS', promise: Promise<mixed> };
 
 declare type GetUserTournamentsAction =
-  { type: 'GET_USER_TOURNAMENTS', promise: Promise<Array<Tournament>> };
+  { type: 'GET_USER_TOURNAMENTS', promise: Promise<mixed> };
 
 declare type CreateTournamentAction =
   {

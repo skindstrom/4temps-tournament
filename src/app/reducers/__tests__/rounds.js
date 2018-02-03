@@ -4,6 +4,7 @@ import { LIFECYCLE } from 'redux-pack';
 import reducer, { getInitialState } from '../rounds';
 import {createTournament} from '../../../test-utils';
 import makePackAction from '../test-utils';
+import { normalizeTournamentArray } from '../normalize';
 
 describe('Rounds reducer', () => {
   test('Undefined state sets initial state', () => {
@@ -97,7 +98,7 @@ describe('Rounds reducer', () => {
       rounds: rounds2
     };
 
-    const payload = [tournament1, tournament2];
+    const norm = normalizeTournamentArray([tournament1, tournament2]);
 
     const expected = {
       ...getInitialState(),
@@ -117,7 +118,7 @@ describe('Rounds reducer', () => {
       expect(
         reducer(
           getInitialState(),
-          makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', payload)
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', norm)
         ))
         .toEqual(expected);
     });
@@ -125,7 +126,7 @@ describe('Rounds reducer', () => {
       expect(
         reducer(
           getInitialState(),
-          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', norm)
         ))
         .toEqual(expected);
     });

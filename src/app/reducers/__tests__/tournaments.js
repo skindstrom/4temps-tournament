@@ -6,6 +6,7 @@ import reducer, { getInitialState } from '../tournaments';
 import makePackAction from '../test-utils';
 import type { Tournament } from '../../../models/tournament';
 import {createTournament} from '../../../test-utils';
+import { normalizeTournamentArray } from '../normalize';
 
 describe('Tournament reducer', () => {
 
@@ -46,17 +47,19 @@ describe('Tournament reducer', () => {
   });
 
   test('GET_ALL_TOURNAMENTS success sets flags and tournaments', () => {
-    const payload: Array<Tournament> = [
+    const tournaments: Array<Tournament> = [
       {...createTournament(), id: '1'},
       {...createTournament(), id: '2'}
     ];
 
-    const allIds = ['1', '2'];
-    const byId = { '1': payload[0], '2': payload[1] };
+    const nom = normalizeTournamentArray(tournaments);
+
+    const allIds = nom.result;
+    const byId = nom.entities.tournaments;
 
     expect(
       reducer(getInitialState(),
-        makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', payload)))
+        makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', nom)))
       .toEqual({
         ...getInitialState(),
         isLoading: false,
@@ -86,18 +89,20 @@ describe('Tournament reducer', () => {
   });
 
   test('GET_USER_TOURNAMENTS success sets forUser and tournaments', () => {
-    const payload: Array<Tournament> = [
+    const tournaments: Array<Tournament> = [
       {...createTournament(), id: '1'},
       {...createTournament(), id: '2'}
     ];
 
-    const allIds = ['1', '2'];
-    const byId = { '1': payload[0], '2': payload[1] };
-    const forUser = ['1', '2'];
+    const nom = normalizeTournamentArray(tournaments);
+
+    const allIds = nom.result;
+    const byId = nom.entities.tournaments;
+    const forUser = nom.result;
 
     expect(
       reducer(getInitialState(),
-        makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)))
+        makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', nom)))
       .toEqual({
         ...getInitialState(),
         didLoadUserTournaments: true,
@@ -116,18 +121,20 @@ describe('Tournament reducer', () => {
       }
     };
 
-    const payload: Array<Tournament> = [
+    const tournaments: Array<Tournament> = [
       {...createTournament(), id: '1'},
       {...createTournament(), id: '2'}
     ];
 
-    const allIds = [...prevState.allIds, '1', '2'];
-    const byId = { ...prevState.byId, '1': payload[0], '2': payload[1] };
-    const forUser = ['1', '2'];
+    const nom = normalizeTournamentArray(tournaments);
+
+    const allIds = [...prevState.allIds, ...nom.result];
+    const byId = { ...prevState.byId, ...nom.entities.tournaments };
+    const forUser = nom.result;
 
     expect(
       reducer(prevState,
-        makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)))
+        makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', nom)))
       .toEqual({
         ...getInitialState(),
         didLoadUserTournaments: true,
@@ -149,18 +156,20 @@ describe('Tournament reducer', () => {
       }
     };
 
-    const payload: Array<Tournament> = [
+    const tournaments: Array<Tournament> = [
       {...createTournament(), id: '1'},
       {...createTournament(), id: '2'}
     ];
 
-    const allIds = ['1', '2'];
-    const byId = { '1': payload[0], '2': payload[1] };
-    const forUser = ['1', '2'];
+    const nom = normalizeTournamentArray(tournaments);
+
+    const allIds = nom.result;
+    const byId = nom.entities.tournaments;
+    const forUser = nom.result;
 
     expect(
       reducer(prevState,
-        makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)))
+        makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', nom)))
       .toEqual({
         ...getInitialState(),
         didLoadUserTournaments: true,

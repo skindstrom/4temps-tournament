@@ -6,6 +6,7 @@ import makePackAction from '../test-utils';
 import {
   createTournament, createJudge, generateId
 } from '../../../test-utils';
+import { normalizeTournamentArray } from '../normalize';
 
 describe('Judges reducer', () => {
   test('Undefined results in initial', () => {
@@ -28,7 +29,8 @@ describe('Judges reducer', () => {
       judges: judges2
     };
 
-    const payload = [tournament1, tournament2];
+    const tournaments = [tournament1, tournament2];
+    const nom = normalizeTournamentArray(tournaments);
 
     const expected = {
       ...getInitialState(),
@@ -48,7 +50,7 @@ describe('Judges reducer', () => {
       expect(
         reducer(
           getInitialState(),
-          makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', payload)
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', nom)
         ))
         .toEqual(expected);
     });
@@ -56,7 +58,7 @@ describe('Judges reducer', () => {
       expect(
         reducer(
           getInitialState(),
-          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', payload)
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', nom)
         ))
         .toEqual(expected);
     });
