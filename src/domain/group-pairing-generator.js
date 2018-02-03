@@ -1,5 +1,5 @@
 // @flow
-import type {Participant} from '../models/participant';
+import type {Participant, Role} from '../models/participant';
 
 export interface GroupGenerator {
   generateGroups(): Array<Array<Pair>>;
@@ -9,21 +9,47 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   _round: Round;
   _participants: Set<Participant>;
 
+  _leaderCount: number = 0;
+  _followerCount: number = 0;
+  _bothCount: number = 0;
+
   constructor(round: Round, participants: Array<Participant>) {
     this._round = round;
     this._participants = new Set(participants);
   }
 
   generateGroups = () => {
+    this._updateCounts();
+
     const groups: Array<Array<Pair>> = [];
 
     while (this._participants.size > 0) {
       groups.push(this._generateGroup());
     }
 
-    this._balanceUntilMinPairFullfilled(groups);
+    this._balanceUntilMinPairFulfilled(groups);
 
     return groups;
+  }
+
+  _updateCounts = () => {
+    this._leaderCount = 0;
+    this._followerCount = 0;
+    this._bothCount = 0;
+
+    for (const p of this._participants) {
+      switch (p.role) {
+      case 'leader':
+        ++this._leaderCount;
+        break;
+      case 'follower':
+        ++this._followerCount;
+        break;
+      case 'leaderAndFollower':
+        ++this._bothCount;
+        break;
+      }
+    }
   }
 
   _generateGroup = (): Array<Pair> => {
@@ -33,28 +59,40 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     while (this._participants.size > 0
       && group.length < this._round.maxPairCount) {
 
-      const p1 = this._randomParticipant();
+      // $FlowFixMe
+      const p1: Participant = this._getFirstParticipant();
       this._participants.delete(p1);
 
-      let p2: ?Participant;
-      if (this._participants.size === 0) {
-        p2 = null;
-      } else {
-        p2 = this._getOtherParticipant(p1);
+      const p2 =
+        this._getParticipantWithRole(p1.role === 'leader'
+          ? 'follower' : 'leader');
+
+      if (p2 != null) {
         this._participants.delete(p2);
       }
 
       group.push(this._createPair(p1, p2));
+      this._updateCounts();
     }
 
     return group;
   }
 
-  _getOtherParticipant = (first: Participant) => {
-    switch(first.role) {
-    case 'follower':
-      return this._randomLeader();
+  _getFirstParticipant = () => {
+    if (this._leaderCount > this._followerCount) {
+      return this._randomUntilRole('leader');
+    } else if (this._leaderCount < this._followerCount) {
+      return this._randomUntilRole('follower');
+    } else {
+      return this._randomParticipant();
+    }
+  }
+
+  _getParticipantWithRole = (role: Role): ?Participant => {
+    switch(role) {
     case 'leader':
+      return this._randomLeader();
+    case 'follower':
       return this._randomFollower();
     case 'leaderAndFollower':
       return this._randomParticipant();
@@ -64,6 +102,9 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   }
 
   _randomParticipant = () => {
+    if (this._participants.size === 0) {
+      return null;
+    }
     const index = this._randomIndex();
     return Array.from(this._participants.values())[index];
   }
@@ -74,48 +115,74 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   }
 
   _randomLeader = () => {
+    if (this._leaderCount === 0) {
+      return this._randomUntilRoleOrLeaderAndFollower('leader');
+    }
     return this._randomUntilRole('leader');
   }
 
   _randomFollower = () => {
+    if (this._followerCount === 0) {
+      return this._randomUntilRoleOrLeaderAndFollower('follower');
+    }
     return this._randomUntilRole('follower');
   }
 
-  _randomUntilRole = (role: string) => {
-    let participant: Participant;
+  _randomUntilRole = (role: Role) => {
+    if ((role === 'leader' && this._leaderCount === 0)
+      || (role === 'follower' && this._followerCount === 0)) {
+      return null;
+    }
+
+    let participant: ?Participant;
     do {
       participant = this._randomParticipant();
-    } while (participant.role !== role
+    } while (participant && participant.role !== role);
+
+    return participant;
+  }
+
+  _randomUntilRoleOrLeaderAndFollower = (role: Role) => {
+    if (role === 'leader' && this._leaderCount + this._bothCount === 0
+      || (role === 'follower' && this._followerCount + this._bothCount === 0)) {
+      return null;
+    }
+
+    let participant: ?Participant;
+    do {
+      participant = this._randomParticipant();
+    } while (participant && participant.role !== role
       && participant.role !== 'leaderAndFollower');
 
     return participant;
   }
 
+
   _createPair = (p1: ?Participant, p2: ?Participant) => {
     if (p1 == null && p2 != null) {
       if (p2.role === 'leader' || p2.role === 'leaderAndFollower') {
-        return {follower: null, leader: p2.id};
+        return { follower: null, leader: p2.id };
       } else {
-        return {follower: p2.id, leader: null};
+        return { follower: p2.id, leader: null };
       }
     } else if (p2 == null && p1 != null) {
       if (p1.role === 'leader' || p1.role === 'leaderAndFollower') {
-        return {follower: null, leader: p1.id};
+        return { follower: null, leader: p1.id };
       } else {
-        return {follower: p1.id, leader: null};
+        return { follower: p1.id, leader: null };
       }
     } else if (p1 != null && p2 != null) {
       if (p1.role === 'leader' || p1.role === 'leaderAndFollower') {
-        return {leader: p1.id, follower: p2.id};
-      }  else {
-        return {leader: p2.id, follower: p1.id};
+        return { leader: p1.id, follower: p2.id };
+      } else {
+        return { leader: p2.id, follower: p1.id };
       }
     }
     throw 'Both participants may not be null';
   }
 
 
-  _balanceUntilMinPairFullfilled = (groups: Array<Array<Pair>>) => {
+  _balanceUntilMinPairFulfilled = (groups: Array<Array<Pair>>) => {
     if (groups.length >= 2) {
       const lastIndex = groups.length - 1;
       let i = groups.length - 2;
