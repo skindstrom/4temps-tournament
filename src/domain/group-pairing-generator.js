@@ -32,6 +32,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
     while (this._participants.size > 0
       && group.length < this._round.maxPairCount) {
+
       const p1 = this._randomParticipant();
       this._participants.delete(p1);
 
@@ -55,7 +56,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
       return this._randomLeader();
     case 'leader':
       return this._randomFollower();
-    case 'both':
+    case 'leaderAndFollower':
       return this._randomParticipant();
     default:
       throw 'Invalid role';
@@ -68,8 +69,8 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   }
 
   _randomIndex = () => {
-    const max = this._participants.size - 1;
-    return Math.floor(Math.random() * Math.floor(max));
+    const max = this._participants.size;
+    return Math.floor(Math.random() * max);
   }
 
   _randomLeader = () => {
@@ -84,26 +85,27 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     let participant: Participant;
     do {
       participant = this._randomParticipant();
-    } while (participant.role !== role && participant.role !== 'both');
+    } while (participant.role !== role
+      && participant.role !== 'leaderAndFollower');
 
     return participant;
   }
 
   _createPair = (p1: ?Participant, p2: ?Participant) => {
     if (p1 == null && p2 != null) {
-      if (p2.role === 'leader' || p2.role === 'both') {
+      if (p2.role === 'leader' || p2.role === 'leaderAndFollower') {
         return {follower: null, leader: p2._id};
       } else {
         return {follower: p2._id, leader: null};
       }
     } else if (p2 == null && p1 != null) {
-      if (p1.role === 'leader' || p1.role === 'both') {
+      if (p1.role === 'leader' || p1.role === 'leaderAndFollower') {
         return {follower: null, leader: p1._id};
       } else {
         return {follower: p1._id, leader: null};
       }
     } else if (p1 != null && p2 != null) {
-      if (p1.role === 'leader' || p1.role === 'both') {
+      if (p1.role === 'leader' || p1.role === 'leaderAndFollower') {
         return {leader: p1._id, follower: p2._id};
       }  else {
         return {leader: p2._id, follower: p1._id};

@@ -21,11 +21,11 @@ describe('GroupGenerator', () => {
       ]);
   });
 
-  test('"Both" may be a follower', () => {
+  test('"leaderAndFollower" may be a follower', () => {
     const round = {...createRound(), minPairCount: 1, maxPairCount: 1};
     const participants = [
       {...createParticipant(), role: 'leader'},
-      {...createParticipant(), role: 'both'}
+      {...createParticipant(), role: 'leaderAndFollower'}
     ];
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -36,10 +36,10 @@ describe('GroupGenerator', () => {
       ]);
   });
 
-  test('"Both" may be a leader', () => {
+  test('"leaderAndFollower" may be a leader', () => {
     const round = {...createRound(), minPairCount: 1, maxPairCount: 1};
     const participants = [
-      {...createParticipant(), role: 'both'},
+      {...createParticipant(), role: 'leaderAndFollower'},
       {...createParticipant(), role: 'follower'}
     ];
     const generator = new GroupGeneratorImpl(round, participants);
@@ -51,11 +51,11 @@ describe('GroupGenerator', () => {
       ]);
   });
 
-  test('Two "both" may match', () => {
+  test('Two "leaderAndFollower" may match', () => {
     const round = {...createRound(), minPairCount: 1, maxPairCount: 1};
     const participants = [
-      {...createParticipant(), role: 'both'},
-      {...createParticipant(), role: 'both'}
+      {...createParticipant(), role: 'leaderAndFollower'},
+      {...createParticipant(), role: 'leaderAndFollower'}
     ];
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
