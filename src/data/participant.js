@@ -24,14 +24,14 @@ export const schema = new mongoose.Schema({
 export function mapToDomainModel(
   participant: ParticipantDbModel): Participant {
   const {_id, name, role} = participant;
-  return { _id: _id.toString(), name, role };
+  return { id: _id.toString(), name, role };
 }
 
 export function mapToDbModel(
   participant: Participant): ParticipantDbModel {
-  const {_id, name, role} = participant;
+  const {id, name, role} = participant;
   return {
-    _id: new mongoose.Types.ObjectId(_id),
+    _id: new mongoose.Types.ObjectId(id),
     name,
     role
   };

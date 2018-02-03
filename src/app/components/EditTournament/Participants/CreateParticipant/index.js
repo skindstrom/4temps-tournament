@@ -18,7 +18,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
     onSubmit: ({ name, role }: ComponentState) => dispatch({
       type: 'CREATE_PARTICIPANT',
       promise: createParticipant(tournamentId, {
-        _id: '', name, role
+        id: '', name, role
       })
     })
   };

@@ -80,7 +80,7 @@ export function mapToDomainModel(round: RoundDbModel): Round {
   } = round;
 
   return {
-    _id: _id.toString(),
+    id: _id.toString(),
     groups: groups.map(g => ({
       pairs:
         g.pairs.map(p => ({
@@ -94,13 +94,13 @@ export function mapToDomainModel(round: RoundDbModel): Round {
 
 export function mapToDbModel(round: Round): RoundDbModel {
   const {
-    _id,
+    id,
     groups,
     ...same
   } = round;
 
   return {
-    _id: new mongoose.Types.ObjectId(_id),
+    _id: new mongoose.Types.ObjectId(id),
     groups: groups.map(g => ({
       pairs:
         g.pairs.map(p => ({

@@ -43,7 +43,7 @@ function getTournaments(
           ...prevState.forTournament,
           ...payload.reduce(
             (acc, t) => {
-              acc[t._id] = t.judges.map((p) => p._id);
+              acc[t.id] = t.judges.map((p) => p.id);
               return acc;
             }, {})
         },
@@ -68,12 +68,12 @@ function createJudge(
         [payload.tournamentId]:
           [
             ...(prevState.forTournament[payload.tournamentId] || []),
-            payload.judge._id
+            payload.judge.id
           ]
       },
       byId: {
         ...prevState.byId,
-        [payload.judge._id]: payload.judge
+        [payload.judge.id]: payload.judge
       }
     })
   });

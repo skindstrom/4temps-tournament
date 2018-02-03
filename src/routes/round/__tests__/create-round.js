@@ -38,7 +38,7 @@ describe('/api/round/create route', () => {
 
   test('Valid round returns status 200', async () => {
     const response = new Response();
-    const {_id, ...round} = createRound();
+    const {id, ...round} = createRound();
     const route = new CreateRoundRoute(repo);
 
 
@@ -46,18 +46,18 @@ describe('/api/round/create route', () => {
 
     expect(response.getStatus()).toBe(200);
     expect(response.getBody())
-      .toMatchObject({tournamentId: tournament._id, round});
+      .toMatchObject({tournamentId: tournament.id, round});
   });
 
   test('A valid round has an ID generated', async () => {
     const route = new CreateRoundRoute(repo);
 
-    const {_id, ...round} = createRound();
+    const {id, ...round} = createRound();
     await route.route(requestWithRound(round), new Response());
 
-    const dbModel = await repo.get(tournament._id);
+    const dbModel = await repo.get(tournament.id);
     // $FlowFixMe
-    expect(dbModel.rounds[0]._id.length).toBeGreaterThan(0);
+    expect(dbModel.rounds[0].id.length).toBeGreaterThan(0);
   });
 
   test('Error during creation returns status 500', async () => {
@@ -82,7 +82,7 @@ describe('/api/round/create route', () => {
     const response = new Response();
 
     const body = {
-      tournamentId: otherTournament._id,
+      tournamentId: otherTournament.id,
       round: createRound()
     };
     await route.route(Request.withBody(body), response);

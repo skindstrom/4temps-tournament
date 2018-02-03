@@ -24,9 +24,9 @@ describe('Authentication middleware', () => {
       allow = authorizationMiddleware(repo);
 
       await repo.create({
-        ...createTournament,
-        _id: tournamentId,
-        creatorId: user._id
+        ...createTournament(),
+        id: tournamentId,
+        creatorId: user._id.toString()
       });
     });
 

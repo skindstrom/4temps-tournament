@@ -46,7 +46,7 @@ describe('/api/tournament/update', () => {
     expect(
       await updateTournamentRoute(
         tournament.creatorId,
-        {...tournament, _id: otherId},
+        {...tournament, id: otherId},
         repository))
       .toEqual({
         status: 404,

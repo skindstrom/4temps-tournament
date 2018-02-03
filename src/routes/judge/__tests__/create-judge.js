@@ -9,7 +9,7 @@ import {
 
 describe('/api/judge/create', () => {
   const user = createUser();
-  const tournament = {...createTournament(), creatorId: user._id};
+  const tournament = {...createTournament(), creatorId: user._id.toString()};
   const name = 'Judge name';
 
   let req: Request;
@@ -18,7 +18,7 @@ describe('/api/judge/create', () => {
   let accessRepo: AccessKeyRepository;
 
   beforeEach(async () => {
-    req = Request.withUserAndParams(user, {tournamentId: tournament._id});
+    req = Request.withUserAndParams(user, {tournamentId: tournament.id});
     req.body = {name};
     res = new Response();
     tournamentRepo = new TournamentRepository();
@@ -37,7 +37,7 @@ describe('/api/judge/create', () => {
     await route(tournamentRepo, accessRepo)(req, res);
 
     expect(res.getStatus()).toBe(200);
-    expect((await tournamentRepo.get(tournament._id)))
+    expect((await tournamentRepo.get(tournament.id)))
       .toMatchObject({
         ...tournament,
         judges: [{name}]
@@ -49,7 +49,7 @@ describe('/api/judge/create', () => {
 
     expect(res.getStatus()).toBe(200);
     expect(res.getBody()).toMatchObject({
-      tournamentId: tournament._id,
+      tournamentId: tournament.id,
       judge: {name}
     });
   });
@@ -61,8 +61,8 @@ describe('/api/judge/create', () => {
     // $FlowFixMe
     const judge: Judge = res.getBody().judge;
     expect(accessRepo.getAll()).toMatchObject([{
-      tournamentId: tournament._id,
-      userId: judge._id
+      tournamentId: tournament.id,
+      userId: judge.id
     }]);
   });
 

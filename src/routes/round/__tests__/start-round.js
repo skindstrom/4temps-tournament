@@ -14,13 +14,13 @@ describe('Start round route', () => {
 
   beforeAll(async () => {
     await repo.create(tournament);
-    await repo.createRound(tournament._id, round);
+    await repo.createRound(tournament.id, round);
   });
 
 
   test('Returns status 200 and the tournament if success', async () => {
     const req =
-      Request.withParams({tournamentId: tournament._id, roundId: round._id});
+      Request.withParams({tournamentId: tournament.id, roundId: round.id});
     const res = new Response();
     const route = new StartRoundRoute(repo);
 
@@ -34,7 +34,7 @@ describe('Start round route', () => {
 
   test('Returns status 404 if the round does not exist', async () => {
     const req =
-      Request.withParams({tournamentId: tournament._id, roundId: generateId()});
+      Request.withParams({tournamentId: tournament.id, roundId: generateId()});
     const res = new Response();
     const route = new StartRoundRoute(repo);
 
@@ -52,9 +52,9 @@ describe('Start round route', () => {
 
     await repo.create(tournament);
     await repo.createParticipant(
-      tournament._id, participants[0]);
+      tournament.id, participants[0]);
     await repo.createParticipant(
-      tournament._id, participants[1]);
+      tournament.id, participants[1]);
 
     const expectedRound = {
       ...round,
@@ -63,7 +63,7 @@ describe('Start round route', () => {
         {
           pairs: [
             {
-              leader: participants[0]._id, follower: participants[1]._id
+              leader: participants[0].id, follower: participants[1].id
             }
           ]
         }
@@ -71,7 +71,7 @@ describe('Start round route', () => {
     };
 
     const req =
-      Request.withParams({tournamentId: tournament._id, roundId: round._id});
+      Request.withParams({tournamentId: tournament.id, roundId: round.id});
     const res = new Response();
     const route = new StartRoundRoute(repo);
 
@@ -79,7 +79,7 @@ describe('Start round route', () => {
 
     expect(res.getStatus()).toBe(200);
     // $FlowFixMe
-    expect((await repo.get(tournament._id)).rounds)
+    expect((await repo.get(tournament.id)).rounds)
       .toContainEqual(expectedRound);
   });
 });

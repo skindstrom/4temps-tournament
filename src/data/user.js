@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 import bcrypt from 'bcrypt';
-import type { UserCredentials, UserWithPassword } from '../models/user';
+import type { User, UserCredentials, UserWithPassword } from '../models/user';
 
 const SALT_ROUNDS = 12;
 
@@ -67,3 +67,11 @@ export const getUserFromCredentials =
     }
     return null;
   };
+
+export function mapToDomainModel(user: UserModel): User {
+  const {_id, password, ...same} = user;
+  return {
+    id: _id.toString(),
+    ...same
+  };
+}

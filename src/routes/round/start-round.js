@@ -64,7 +64,7 @@ class StartRoundRouteHandler {
 
   _getRound = (): Round => {
     const matches = this._tournament.rounds.filter(
-      ({_id}) => _id === this._roundId);
+      ({id}) => id === this._roundId);
 
     if (matches.length === 0) {
       throw new RoundNotFoundError;

@@ -85,13 +85,13 @@ class TournamentList extends Component<Props, State> {
     return tournaments.length > 0;
   }
 
-  _renderRow = ({ _id, name, date, type }: Tournament) => {
+  _renderRow = ({ id, name, date, type }: Tournament) => {
     const { onClick } = this.props;
     return (
       <TableRow
-        key={_id}
+        key={id}
         onClick={onClick != null ?
-          () => onClick(_id) : null}
+          () => onClick(id) : null}
       >
         <TableCell>{name}</TableCell>
         <TableCell>{this._typeToName(type)}</TableCell>

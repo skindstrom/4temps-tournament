@@ -41,11 +41,11 @@ function createParticipant(state: ParticipantsReduxState,
         ...prevState.forTournament,
         [payload.tournamentId]:
           [...(prevState.forTournament[payload.tournamentId] || []),
-            payload.participant._id]
+            payload.participant.id]
       },
       byId: {
         ...prevState.byId,
-        [payload.participant._id]: payload.participant
+        [payload.participant.id]: payload.participant
       }
     }),
   });
@@ -71,7 +71,7 @@ function getTournaments(state: ParticipantsReduxState,
           ...prevState.forTournament,
           ...payload.reduce(
             (acc, t) => {
-              acc[t._id] = t.participants.map((p) => p._id);
+              acc[t.id] = t.participants.map((p) => p.id);
               return acc;
             }, {})
         },
@@ -96,7 +96,7 @@ function createTournament(
       ...prevState,
       forTournament: {
         ...prevState.forTournament,
-        [payload._id]: []
+        [payload.id]: []
       }
     })
   });

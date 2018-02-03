@@ -1,9 +1,9 @@
 // @flow
 
-function normalize(array: Array<{ _id: string, [string]: mixed }>) {
+function normalize(array: Array<{ id: string, [string]: mixed }>) {
   const acc: { [string]: mixed } = {};
   array.forEach(t => {
-    acc[t._id] = t;
+    acc[t.id] = t;
   });
 
   return acc;

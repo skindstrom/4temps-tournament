@@ -23,7 +23,7 @@ declare type RoundCriterion = {
 }
 
 declare type Round = {
-  _id: string,
+  id: string,
   name: string,
   danceCount: number,
   minPairCount: number,
@@ -52,7 +52,7 @@ declare type AccessKey = {
 }
 
 declare type Judge = {
-  _id: string,
+  id: string,
   name: string
 }
 

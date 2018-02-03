@@ -18,7 +18,7 @@ describe('/api/tournament/get', () => {
   test('Existing tournament is returned with status 200 if user created it',
     async () => {
       expect(await getTournamentRoute(
-        tournament._id,
+        tournament.id,
         tournament.creatorId,
         tournamentRepository))
         .toEqual({
@@ -40,7 +40,7 @@ describe('/api/tournament/get', () => {
   test('Returns 401 and null tournament if tournament was not created by user',
     async () => {
       expect(await getTournamentRoute(
-        tournament._id,
+        tournament.id,
         generateId(),
         tournamentRepository))
         .toEqual({

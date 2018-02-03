@@ -5,7 +5,7 @@ import type {Participant} from './participant';
 export type TournamentType = 'none' | 'jj' | 'classic';
 
 export type Tournament = {
-  _id: string,
+  id: string,
   creatorId: string,
   name: string,
   date: Moment,

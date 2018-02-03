@@ -12,7 +12,7 @@ function ListJudges({judges}: {judges: Array<Judge>}) {
     <Table>
       <TableBody>
         {judges.map(j => (
-          <TableRow key={j._id}>
+          <TableRow key={j.id}>
             <TableCell>{j.name}</TableCell>
           </TableRow>))}
       </TableBody>

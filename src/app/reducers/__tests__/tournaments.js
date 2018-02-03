@@ -47,8 +47,8 @@ describe('Tournament reducer', () => {
 
   test('GET_ALL_TOURNAMENTS success sets flags and tournaments', () => {
     const payload: Array<Tournament> = [
-      {...createTournament(), _id: '1'},
-      {...createTournament(), _id: '2'}
+      {...createTournament(), id: '1'},
+      {...createTournament(), id: '2'}
     ];
 
     const allIds = ['1', '2'];
@@ -87,8 +87,8 @@ describe('Tournament reducer', () => {
 
   test('GET_USER_TOURNAMENTS success sets forUser and tournaments', () => {
     const payload: Array<Tournament> = [
-      {...createTournament(), _id: '1'},
-      {...createTournament(), _id: '2'}
+      {...createTournament(), id: '1'},
+      {...createTournament(), id: '2'}
     ];
 
     const allIds = ['1', '2'];
@@ -112,13 +112,13 @@ describe('Tournament reducer', () => {
       ...getInitialState(),
       allIds: ['3'],
       byId: {
-        '3': {...createTournament(), _id: '3'}
+        '3': {...createTournament(), id: '3'}
       }
     };
 
     const payload: Array<Tournament> = [
-      {...createTournament(), _id: '1'},
-      {...createTournament(), _id: '2'}
+      {...createTournament(), id: '1'},
+      {...createTournament(), id: '2'}
     ];
 
     const allIds = [...prevState.allIds, '1', '2'];
@@ -144,14 +144,14 @@ describe('Tournament reducer', () => {
       byId: {
         '1': {
           ...createTournament(),
-          _id: '1',
+          id: '1',
         }
       }
     };
 
     const payload: Array<Tournament> = [
-      {...createTournament(), _id: '1'},
-      {...createTournament(), _id: '2'}
+      {...createTournament(), id: '1'},
+      {...createTournament(), id: '2'}
     ];
 
     const allIds = ['1', '2'];
@@ -185,9 +185,9 @@ describe('Tournament reducer', () => {
 
     const payload = createTournament();
 
-    const allIds = [payload._id];
+    const allIds = [payload.id];
     const forUser = allIds;
-    const byId = { [payload._id]: payload };
+    const byId = { [payload.id]: payload };
 
     expect(
       reducer(state,
@@ -203,9 +203,9 @@ describe('Tournament reducer', () => {
   test('EDIT_TOURNAMENT success sets the new tournament', () => {
     const tournament = createTournament();
 
-    const allIds = [tournament._id];
+    const allIds = [tournament.id];
     const forUser = allIds;
-    const byId = { [tournament._id]: tournament };
+    const byId = { [tournament.id]: tournament };
 
     const state = {
       ...getInitialState(),
@@ -225,7 +225,7 @@ describe('Tournament reducer', () => {
       .toEqual({
         ...state,
         byId: {
-          [tournament._id]: payload
+          [tournament.id]: payload
         },
       });
   });

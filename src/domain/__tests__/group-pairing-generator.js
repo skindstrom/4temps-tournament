@@ -17,7 +17,7 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id}]
+        [{leader: participants[0].id, follower: participants[1].id}]
       ]);
   });
 
@@ -32,7 +32,7 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id}]
+        [{leader: participants[0].id, follower: participants[1].id}]
       ]);
   });
 
@@ -47,7 +47,7 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id}]
+        [{leader: participants[0].id, follower: participants[1].id}]
       ]);
   });
 
@@ -62,7 +62,7 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id}]
+        [{leader: participants[0].id, follower: participants[1].id}]
       ]);
   });
 
@@ -74,8 +74,8 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id}],
-        [{leader: participants[2]._id, follower: participants[3]._id}]
+        [{leader: participants[0].id, follower: participants[1].id}],
+        [{leader: participants[2].id, follower: participants[3].id}]
       ]);
   });
 
@@ -87,8 +87,8 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([[
-        {leader: participants[0]._id, follower: participants[1]._id},
-        {leader: participants[2]._id, follower: participants[3]._id}
+        {leader: participants[0].id, follower: participants[1].id},
+        {leader: participants[2].id, follower: participants[3].id}
       ]]);
   });
 
@@ -100,9 +100,9 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id},
-          {leader: participants[2]._id, follower: participants[3]._id}],
-        [{leader: participants[4]._id, follower: participants[5]._id}],
+        [{leader: participants[0].id, follower: participants[1].id},
+          {leader: participants[2].id, follower: participants[3].id}],
+        [{leader: participants[4].id, follower: participants[5].id}],
       ]);
   });
 
@@ -114,10 +114,10 @@ describe('GroupGenerator', () => {
 
     expect(generator.generateGroups())
       .toEqual([
-        [{leader: participants[0]._id, follower: participants[1]._id},
-          {leader: participants[2]._id, follower: participants[3]._id}],
-        [{leader: participants[6]._id, follower: participants[7]._id},
-          {leader: participants[4]._id, follower: participants[5]._id}],
+        [{leader: participants[0].id, follower: participants[1].id},
+          {leader: participants[2].id, follower: participants[3].id}],
+        [{leader: participants[6].id, follower: participants[7].id},
+          {leader: participants[4].id, follower: participants[5].id}],
       ]);
   });
 
@@ -130,19 +130,19 @@ describe('GroupGenerator', () => {
     expect(generator.generateGroups())
       .toEqual([
         [
-          {leader: participants[0]._id, follower: participants[1]._id},
-          {leader: participants[2]._id, follower: participants[3]._id},
-          {leader: participants[4]._id, follower: participants[5]._id},
+          {leader: participants[0].id, follower: participants[1].id},
+          {leader: participants[2].id, follower: participants[3].id},
+          {leader: participants[4].id, follower: participants[5].id},
         ],
         [
-          {leader: participants[8]._id, follower: participants[9]._id},
-          {leader: participants[10]._id, follower: participants[11]._id},
-          {leader: participants[12]._id, follower: participants[13]._id},
+          {leader: participants[8].id, follower: participants[9].id},
+          {leader: participants[10].id, follower: participants[11].id},
+          {leader: participants[12].id, follower: participants[13].id},
         ],
         [
-          {leader: participants[16]._id, follower: participants[17]._id},
-          {leader: participants[14]._id, follower: participants[15]._id},
-          {leader: participants[6]._id, follower: participants[7]._id},
+          {leader: participants[16].id, follower: participants[17].id},
+          {leader: participants[14].id, follower: participants[15].id},
+          {leader: participants[6].id, follower: participants[7].id},
         ],
       ]);
   });
@@ -156,19 +156,19 @@ describe('GroupGenerator', () => {
     expect(generator.generateGroups())
       .toEqual([
         [
-          {leader: participants[0]._id, follower: participants[1]._id},
-          {leader: participants[2]._id, follower: participants[3]._id},
-          {leader: participants[4]._id, follower: participants[5]._id},
+          {leader: participants[0].id, follower: participants[1].id},
+          {leader: participants[2].id, follower: participants[3].id},
+          {leader: participants[4].id, follower: participants[5].id},
         ],
         [
-          {leader: participants[8]._id, follower: participants[9]._id},
-          {leader: participants[10]._id, follower: participants[11]._id},
-          {leader: participants[12]._id, follower: participants[13]._id},
+          {leader: participants[8].id, follower: participants[9].id},
+          {leader: participants[10].id, follower: participants[11].id},
+          {leader: participants[12].id, follower: participants[13].id},
         ],
         [
-          {leader: participants[16]._id, follower: participants[17]._id},
-          {leader: participants[14]._id, follower: participants[15]._id},
-          {leader: participants[6]._id, follower: participants[7]._id},
+          {leader: participants[16].id, follower: participants[17].id},
+          {leader: participants[14].id, follower: participants[15].id},
+          {leader: participants[6].id, follower: participants[7].id},
         ],
       ]);
   });
@@ -182,7 +182,7 @@ describe('GroupGenerator', () => {
     expect(generator.generateGroups())
       .toEqual([
         [
-          {leader: participants[0]._id, follower: participants[1]._id},
+          {leader: participants[0].id, follower: participants[1].id},
         ]
       ]);
   });
@@ -196,8 +196,8 @@ describe('GroupGenerator', () => {
     expect(generator.generateGroups())
       .toEqual([
         [
-          {leader: participants[0]._id, follower: participants[1]._id},
-          {leader: participants[2]._id, follower: null},
+          {leader: participants[0].id, follower: participants[1].id},
+          {leader: participants[2].id, follower: null},
         ]
       ]);
   });

@@ -25,8 +25,8 @@ function RoundList({ rounds, deleteFromRounds }: Props) {
       <TableBody>
         {rounds.map(round =>
           (<RoundListItem
-            key={round._id}
-            onClickDelete={() => deleteFromRounds(round._id)}
+            key={round.id}
+            onClickDelete={() => deleteFromRounds(round.id)}
             {...round}
           />))}
       </TableBody>

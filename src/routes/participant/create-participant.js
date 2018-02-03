@@ -51,7 +51,7 @@ export class CreateParticipantRouteHandler {
 
     const participant = body.participant || {};
     this._participant = {
-      _id: new ObjectID().toString(),
+      id: new ObjectID().toString(),
       name: participant.name || '',
       role: participant.role || 'none'
     };

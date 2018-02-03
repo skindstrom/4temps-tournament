@@ -26,7 +26,7 @@ describe('/api/tournament/create', () => {
   test('Valid tournament gets created', async () => {
     await createTournamentRoute(
       tournament.creatorId, tournament, repository);
-    expect(await repository.get(tournament._id))
+    expect(await repository.get(tournament.id))
       .toEqual(tournament);
   });
 

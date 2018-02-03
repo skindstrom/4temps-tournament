@@ -12,9 +12,9 @@ import DeleteRoundRoute from '../delete-round';
 
 describe('/api/round/delete', () => {
   const tournament = createTournament();
-  const round = {...createRound(), _id: generateId()};
-  const tournamentId = tournament._id;
-  const roundId = round._id;
+  const round = {...createRound(), id: generateId()};
+  const tournamentId = tournament.id;
+  const roundId = round.id;
 
   let response: Response;
   let tournamentRepository: TournamentRepository;

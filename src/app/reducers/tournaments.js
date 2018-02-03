@@ -42,7 +42,7 @@ function getAllTournaments(state: TournamentsReduxState,
       ...prevState,
       isLoading: false,
       isInvalidated: false,
-      allIds: payload.map(({ _id }) => _id),
+      allIds: payload.map(({ id }) => id),
       byId: normalize(payload)
     }),
     failure: prevState => ({
@@ -62,10 +62,10 @@ function getUserTournaments(state: TournamentsReduxState,
       ...prevState,
       isLoading: false,
       didLoadUserTournaments: true,
-      forUser: payload.map(({ _id }) => _id),
+      forUser: payload.map(({ id }) => id),
       allIds: [
         ...prevState.allIds,
-        ...payload.map(({ _id }) => _id)]
+        ...payload.map(({ id }) => id)]
         .filter((id, i, arr) => arr.indexOf(id) === i),
       byId: { ...prevState.byId, ...normalize(payload) }
     }),
@@ -81,9 +81,9 @@ function createTournament(state: TournamentsReduxState,
   return handle(state, action, {
     success: prevState => ({
       ...prevState,
-      allIds: [...prevState.allIds, payload._id],
-      byId: { ...prevState.byId, [payload._id]: payload },
-      forUser: [...prevState.forUser, payload._id],
+      allIds: [...prevState.allIds, payload.id],
+      byId: { ...prevState.byId, [payload.id]: payload },
+      forUser: [...prevState.forUser, payload.id],
     }),
   });
 }
@@ -98,7 +98,7 @@ function editTournament(state: TournamentsReduxState,
       ...prevState,
       byId: {
         ...prevState.byId,
-        [payload._id]: payload
+        [payload.id]: payload
       },
     }),
   });

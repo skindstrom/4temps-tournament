@@ -37,9 +37,9 @@ describe('Participant reducer', () => {
 
   describe('CREATE_PARTICIPANT', () => {
     test('CREATE_PARTICIPANT success sets the new participant', () => {
-      const participant = { ...createParticipant(), _id: '1'};
+      const participant = { ...createParticipant(), id: '1'};
 
-      const tournamentId = 'tournament_id';
+      const tournamentId = 'tournamentid';
       const forTournament = { [tournamentId]: ['1'] };
       const byId = { '1': participant};
 
@@ -56,25 +56,25 @@ describe('Participant reducer', () => {
     });
 
     test('CREATE_PARTICIPANT success does not overwrite participants', () => {
-      const tournamentId = 'tournament_id';
+      const tournamentId = 'tournamentid';
 
       const state = {
         ...initialState,
         forTournament: {
-          [tournamentId]: ['p2_id'],
-          'other_tournament_id': ['p3_id'],
+          [tournamentId]: ['p2id'],
+          'other_tournamentid': ['p3id'],
         },
         byId: {
-          'p2_id': { ...createParticipant(), _id: 'p2_id'},
-          'p3_id': { ...createParticipant(), _id: 'p3_id'}
+          'p2id': { ...createParticipant(), id: 'p2id'},
+          'p3id': { ...createParticipant(), id: 'p3id'}
         }
       };
 
-      const participant = { ...createParticipant(), _id: 'new'};
+      const participant = { ...createParticipant(), id: 'new'};
 
       const forTournament = {
         ...state.forTournament,
-        [tournamentId]: ['p2_id', 'new']
+        [tournamentId]: ['p2id', 'new']
       };
       const byId = { ...state.byId, 'new': participant};
       const payload = { tournamentId, participant };
@@ -102,7 +102,7 @@ describe('Participant reducer', () => {
         .toEqual({
           ...initialState,
           forTournament: {
-            [tournament._id]: []
+            [tournament.id]: []
           },
           byId: {}
         });
@@ -115,12 +115,12 @@ describe('Participant reducer', () => {
       const participants2 = [createParticipant(), createParticipant()];
       const tournament1 = {
         ...createTournament(),
-        _id: 't1',
+        id: 't1',
         participants: participants1
       };
       const tournament2 = {
         ...createTournament(),
-        _id: 't2',
+        id: 't2',
         participants: participants2
       };
 
@@ -129,14 +129,14 @@ describe('Participant reducer', () => {
       const expected = {
         ...initialState,
         forTournament: {
-          [tournament1._id]: [participants1[0]._id, participants1[1]._id],
-          [tournament2._id]: [participants2[0]._id, participants2[1]._id],
+          [tournament1.id]: [participants1[0].id, participants1[1].id],
+          [tournament2.id]: [participants2[0].id, participants2[1].id],
         },
         byId: {
-          [participants1[0]._id]: participants1[0],
-          [participants1[1]._id]: participants1[1],
-          [participants2[0]._id]: participants2[0],
-          [participants2[1]._id]: participants2[1],
+          [participants1[0].id]: participants1[0],
+          [participants1[1].id]: participants1[1],
+          [participants2[0].id]: participants2[0],
+          [participants2[1].id]: participants2[1],
         }
       };
 
@@ -155,12 +155,12 @@ describe('Participant reducer', () => {
       const participants2 = [createParticipant(), createParticipant()];
       const tournament1 = {
         ...createTournament(),
-        _id: 't1',
+        id: 't1',
         participants: participants1
       };
       const tournament2 = {
         ...createTournament(),
-        _id: 't2',
+        id: 't2',
         participants: participants2
       };
 
@@ -169,14 +169,14 @@ describe('Participant reducer', () => {
       const expected = {
         ...initialState,
         forTournament: {
-          [tournament1._id]: [participants1[0]._id, participants1[1]._id],
-          [tournament2._id]: [participants2[0]._id, participants2[1]._id],
+          [tournament1.id]: [participants1[0].id, participants1[1].id],
+          [tournament2.id]: [participants2[0].id, participants2[1].id],
         },
         byId: {
-          [participants1[0]._id]: participants1[0],
-          [participants1[1]._id]: participants1[1],
-          [participants2[0]._id]: participants2[0],
-          [participants2[1]._id]: participants2[1],
+          [participants1[0].id]: participants1[0],
+          [participants1[1].id]: participants1[1],
+          [participants2[0].id]: participants2[0],
+          [participants2[1].id]: participants2[1],
         }
       };
 

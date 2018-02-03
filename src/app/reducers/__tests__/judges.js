@@ -19,12 +19,12 @@ describe('Judges reducer', () => {
     const judges2 = [createJudge(), createJudge()];
     const tournament1 = {
       ...createTournament(),
-      _id: 't1',
+      id: 't1',
       judges: judges1
     };
     const tournament2 = {
       ...createTournament(),
-      _id: 't2',
+      id: 't2',
       judges: judges2
     };
 
@@ -33,14 +33,14 @@ describe('Judges reducer', () => {
     const expected = {
       ...getInitialState(),
       forTournament: {
-        [tournament1._id]: [judges1[0]._id, judges1[1]._id],
-        [tournament2._id]: [judges2[0]._id, judges2[1]._id],
+        [tournament1.id]: [judges1[0].id, judges1[1].id],
+        [tournament2.id]: [judges2[0].id, judges2[1].id],
       },
       byId: {
-        [judges1[0]._id]: judges1[0],
-        [judges1[1]._id]: judges1[1],
-        [judges2[0]._id]: judges2[0],
-        [judges2[1]._id]: judges2[1],
+        [judges1[0].id]: judges1[0],
+        [judges1[1].id]: judges1[1],
+        [judges2[0].id]: judges2[0],
+        [judges2[1].id]: judges2[1],
       }
     };
 
@@ -69,10 +69,10 @@ describe('Judges reducer', () => {
       const expected = {
         ...getInitialState(),
         byId: {
-          [judge._id]: judge
+          [judge.id]: judge
         },
         forTournament: {
-          [tournamentId]: [judge._id]
+          [tournamentId]: [judge.id]
         }
       };
 

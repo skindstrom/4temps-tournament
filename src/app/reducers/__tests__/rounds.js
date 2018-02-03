@@ -30,10 +30,10 @@ describe('Rounds reducer', () => {
       const expectedState = {
         ...getInitialState(),
         forTournament: {
-          [tournamentId]: [payload.round._id]
+          [tournamentId]: [payload.round.id]
         },
         byId: {
-          [payload.round._id]: payload.round
+          [payload.round.id]: payload.round
         }
       };
 
@@ -88,12 +88,12 @@ describe('Rounds reducer', () => {
     const rounds2 = [roundWithId('r3'), roundWithId('r4')];
     const tournament1 = {
       ...createTournament(),
-      _id: 't1',
+      id: 't1',
       rounds: rounds1
     };
     const tournament2 = {
       ...createTournament(),
-      _id: 't2',
+      id: 't2',
       rounds: rounds2
     };
 
@@ -102,14 +102,14 @@ describe('Rounds reducer', () => {
     const expected = {
       ...getInitialState(),
       forTournament: {
-        [tournament1._id]: [rounds1[0]._id, rounds1[1]._id],
-        [tournament2._id]: [rounds2[0]._id, rounds2[1]._id],
+        [tournament1.id]: [rounds1[0].id, rounds1[1].id],
+        [tournament2.id]: [rounds2[0].id, rounds2[1].id],
       },
       byId: {
-        [rounds1[0]._id]: rounds1[0],
-        [rounds1[1]._id]: rounds1[1],
-        [rounds2[0]._id]: rounds2[0],
-        [rounds2[1]._id]: rounds2[1],
+        [rounds1[0].id]: rounds1[0],
+        [rounds1[1].id]: rounds1[1],
+        [rounds2[0].id]: rounds2[0],
+        [rounds2[1].id]: rounds2[1],
       }
     };
 
@@ -134,7 +134,7 @@ describe('Rounds reducer', () => {
 
 function roundWithId(id: string): Round {
   return {
-    _id: id,
+    id: id,
     name: 'name',
     danceCount: 1,
     minPairCount: 1,

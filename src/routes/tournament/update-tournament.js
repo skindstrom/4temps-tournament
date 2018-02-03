@@ -38,7 +38,7 @@ export async function updateTournamentRoute(
   const { isValidTournament } = validateTournament(tournament);
   let status: number = 200;
   if (isValidTournament) {
-    const dbTournament = await repository.get(tournament._id);
+    const dbTournament = await repository.get(tournament.id);
 
     if (dbTournament == null) {
       status = 404;

@@ -40,11 +40,11 @@ function createRound(
         ...prevState.forTournament,
         [payload.tournamentId]: [
           ...(prevState.forTournament[payload.tournamentId] || []),
-          payload.round._id]
+          payload.round.id]
       },
       byId: {
         ...prevState.byId,
-        [payload.round._id]: payload.round
+        [payload.round.id]: payload.round
       }
     }),
   });
@@ -93,7 +93,7 @@ function getTournaments(
           ...prevState.forTournament,
           ...payload.reduce(
             (acc, t) => {
-              acc[t._id] = t.rounds.map((p) => p._id);
+              acc[t.id] = t.rounds.map((p) => p.id);
               return acc;
             }, {})
         },

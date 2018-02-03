@@ -4,7 +4,7 @@ import validateRound from '../validate-round';
 
 function createRound(vals: mixed): Round {
   return {
-    _id: '',
+    id: '',
     name: 'name',
     danceCount: 1,
     minPairCount: 1,

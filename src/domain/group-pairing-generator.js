@@ -94,21 +94,21 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   _createPair = (p1: ?Participant, p2: ?Participant) => {
     if (p1 == null && p2 != null) {
       if (p2.role === 'leader' || p2.role === 'leaderAndFollower') {
-        return {follower: null, leader: p2._id};
+        return {follower: null, leader: p2.id};
       } else {
-        return {follower: p2._id, leader: null};
+        return {follower: p2.id, leader: null};
       }
     } else if (p2 == null && p1 != null) {
       if (p1.role === 'leader' || p1.role === 'leaderAndFollower') {
-        return {follower: null, leader: p1._id};
+        return {follower: null, leader: p1.id};
       } else {
-        return {follower: p1._id, leader: null};
+        return {follower: p1.id, leader: null};
       }
     } else if (p1 != null && p2 != null) {
       if (p1.role === 'leader' || p1.role === 'leaderAndFollower') {
-        return {leader: p1._id, follower: p2._id};
+        return {leader: p1.id, follower: p2.id};
       }  else {
-        return {leader: p2._id, follower: p1._id};
+        return {leader: p2.id, follower: p1.id};
       }
     }
     throw 'Both participants may not be null';

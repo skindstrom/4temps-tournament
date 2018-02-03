@@ -105,7 +105,7 @@ class CreateRoundRouteHandler {
   };
 
   _create = async () => {
-    this._round._id = this._generateId();
+    this._round.id = this._generateId();
     try {
       await this._tournamentRepository.createRound(
         this._tournamentId, this._round);

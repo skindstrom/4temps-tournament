@@ -12,12 +12,12 @@ export default function route(
     try {
       const tournamentId = req.params.tournamentId;
       const judgeName = parseName(req.body);
-      const judge = {name: judgeName, _id: ObjectId.generate()};
+      const judge = {name: judgeName, id: ObjectId.generate()};
 
       if (validateJudge(judge)) {
         await tournamentRepository.addJudge(tournamentId, judge);
         await accessRepository.createForTournamentAndUser(
-          tournamentId, judge._id);
+          tournamentId, judge.id);
         res.json({tournamentId, judge});
       } else {
         res.sendStatus(400);

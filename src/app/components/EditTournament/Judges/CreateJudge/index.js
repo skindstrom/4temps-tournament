@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, {tournamentId}: Props) {
   return {
     onSubmit: (name: string) => dispatch({
       type: 'CREATE_JUDGE',
-      promise: createJudge(tournamentId, {_id: '', name})
+      promise: createJudge(tournamentId, {id: '', name})
     })
   };
 }

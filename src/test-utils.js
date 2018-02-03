@@ -11,6 +11,9 @@ import type {
 import type {
   AccessKeyRepository
 } from './data/access-key';
+import type {
+  Tournament
+} from './models/tournament';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
@@ -118,11 +121,11 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   }
 
   create = async (tournament: Tournament) => {
-    this._tournaments[tournament._id] = tournament;
+    this._tournaments[tournament.id] = tournament;
   }
 
   update = async (tournament: Tournament) => {
-    this._tournaments[tournament._id] = tournament;
+    this._tournaments[tournament.id] = tournament;
   }
 
   createParticipant =
@@ -139,14 +142,14 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     async (tournamentId: string, roundId: string) => {
       this._tournaments[tournamentId].rounds =
         this._tournaments[tournamentId].rounds
-          .filter(({_id}) => _id !== roundId);
+          .filter(({id}) => id !== roundId);
     }
 
   updateRound =
     async (tournamentId: string, round: Round) => {
       for (let i = 0; i < this._tournaments[tournamentId].rounds.length; ++i) {
-        if (this._tournaments[tournamentId].rounds._id === round._id) {
-          this._tournaments[tournamentId].rounds = round;
+        if (this._tournaments[tournamentId].rounds[i].id === round.id) {
+          this._tournaments[tournamentId].rounds[i] = round;
         }
       }
     }
@@ -199,7 +202,7 @@ export function generateId() {
 
 export function createRound(): Round {
   return {
-    _id: '',
+    id: '',
     name: 'name',
     danceCount: 1,
     minPairCount: 1,
@@ -221,7 +224,7 @@ export function createRound(): Round {
 
 export function createTournament(): Tournament {
   return {
-    _id: TOURNAMENT_ID,
+    id: TOURNAMENT_ID,
     creatorId: USER_ID,
     name: 'name',
     date: moment(),
@@ -234,7 +237,7 @@ export function createTournament(): Tournament {
 
 export function createParticipant(): Participant {
   return {
-    _id: generateId(),
+    id: generateId(),
     name: 'John Smith',
     role: 'both'
   };
@@ -242,7 +245,7 @@ export function createParticipant(): Participant {
 
 export function createJudge(): Judge {
   return {
-    _id: generateId(),
+    id: generateId(),
     name: 'Jane Smith'
   };
 }

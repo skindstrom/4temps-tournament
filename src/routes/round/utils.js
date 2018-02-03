@@ -2,7 +2,7 @@
 
 function parseRound(bodyRound: mixed): Round {
   let round: Round = {
-    _id: '',
+    id: '',
     name: '',
     danceCount: -1,
     minPairCount: -1,

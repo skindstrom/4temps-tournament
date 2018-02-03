@@ -14,9 +14,9 @@ type Props = {
 }
 
 class ListParticipants extends Component<Props> {
-  _renderItem = ({ _id, name, role }: Participant) => {
+  _renderItem = ({ id, name, role }: Participant) => {
     return (
-      <TableRow key={_id}>
+      <TableRow key={id}>
         <TableCell>{name}</TableCell>
         <TableCell>{this._roleToString(role)}</TableCell>
       </TableRow>
