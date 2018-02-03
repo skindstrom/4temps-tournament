@@ -81,7 +81,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return null;
     }
-    return mapToDomainModel(await Model.findOne({ _id: id }));
+    return mapToDomainModel((await Model.findOne({ _id: id })).toObject());
   }
   async getAll() {
     try {
@@ -138,12 +138,15 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   }
 
   async updateRound(tournamentId: string, round: Round) {
-    await Model.update(
-      {_id: tournamentId, rounds: {$elemMatch: {_id: round._id}}},
-      {
-        $set: round
+    const tournament = await Model.findOne({_id: tournamentId});
+    for (let i = 0; i < tournament.rounds.length; ++i) {
+      if (tournament.rounds[i]._id.toString() === round._id) {
+        const dbModel = mapRoundToDbModel(round);
+        tournament.rounds[i] = dbModel;
+        await tournament.save();
+        break;
       }
-    );
+    }
   }
 
   async addJudge(tournamentId: string, judge: Judge) {

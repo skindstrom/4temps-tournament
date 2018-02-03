@@ -7,18 +7,19 @@ import {allow} from '../auth-middleware';
 import { TournamentRepositoryImpl } from '../../data/tournament';
 import CreateRoundRoute from './create-round';
 import DeleteRoundRoute from './delete-round';
+import StartRoundRoute from './start-round';
 
 const router = Router();
 
 const tournamentRepository = new TournamentRepositoryImpl();
 
-const createRoundRoute =
-  new CreateRoundRoute(tournamentRepository);
-router.post('/:tournamentId/create', allow('admin'), createRoundRoute.route);
+router.post('/:tournamentId/create', allow('admin'),
+  new CreateRoundRoute(tournamentRepository).route);
 
-const deleteRoundRoute =
-  new DeleteRoundRoute(tournamentRepository);
 router.delete('/:tournamentId/delete/:roundId', allow('admin'),
-  deleteRoundRoute.route);
+  new DeleteRoundRoute(tournamentRepository).route);
+
+router.post('/:tournamentId/start/:roundId', allow('admin'),
+  new StartRoundRoute(tournamentRepository).route);
 
 export default router;

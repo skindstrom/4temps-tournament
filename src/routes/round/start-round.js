@@ -9,7 +9,7 @@ export default class StartRoundRoute {
     this._repository = repository;
   }
 
-  async route(req: ServerApiRequest, res: ServerApiResponse) {
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const handler =
         new StartRoundRouteHandler(

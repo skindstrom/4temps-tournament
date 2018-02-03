@@ -18,7 +18,7 @@ export type RoundDbModel = {
 };
 
 type DanceGroupDbModel = {
-  pairs: Array<{follower: ObjectId, leader: ObjectId}>
+  pairs: Array<{follower: ?ObjectId, leader: ?ObjectId}>
 }
 
 
@@ -62,11 +62,11 @@ export const schema = new mongoose.Schema({
     pairs: [{
       follower: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: false
       },
       leader: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: false
       },
     }]
   }]
@@ -84,8 +84,8 @@ export function mapToDomainModel(round: RoundDbModel): Round {
     groups: groups.map(g => ({
       pairs:
         g.pairs.map(p => ({
-          follower: p.follower.toString(),
-          leader: p.leader.toString(),
+          follower: p.follower == null ? null : p.follower.toString(),
+          leader: p.leader == null ? null : p.leader.toString(),
         }))
     })),
     ...same
@@ -104,8 +104,10 @@ export function mapToDbModel(round: Round): RoundDbModel {
     groups: groups.map(g => ({
       pairs:
         g.pairs.map(p => ({
-          follower: new mongoose.Types.ObjectId(p.follower),
-          leader: new mongoose.Types.ObjectId(p.leader),
+          follower: p.follower == null ? null :
+            new mongoose.Types.ObjectId(p.follower),
+          leader: p.leader == null ? null :
+            new mongoose.Types.ObjectId(p.leader),
         }))
     })),
     ...same

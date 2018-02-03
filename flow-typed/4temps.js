@@ -41,8 +41,8 @@ declare type DanceGroup = {
 }
 
 declare type Pair = {
-  follower: string,
-  leader: string
+  follower: ?string,
+  leader: ?string
 }
 
 declare type AccessKey = {

@@ -14,7 +14,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     this._participants = new Set(participants);
   }
 
-  generateGroups() {
+  generateGroups = () => {
     const groups: Array<Array<Pair>> = [];
 
     while (this._participants.size > 0) {
@@ -32,12 +32,16 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
     while (this._participants.size > 0
       && group.length < this._round.maxPairCount) {
-
       const p1 = this._randomParticipant();
       this._participants.delete(p1);
 
-      const p2 = this._getOtherParticipant(p1);
-      this._participants.delete(p2);
+      let p2: ?Participant;
+      if (this._participants.size === 0) {
+        p2 = null;
+      } else {
+        p2 = this._getOtherParticipant(p1);
+        this._participants.delete(p2);
+      }
 
       group.push(this._createPair(p1, p2));
     }
@@ -59,11 +63,12 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   }
 
   _randomParticipant = () => {
-    return Array.from(this._participants.values())[this._randomIndex()];
+    const index = this._randomIndex();
+    return Array.from(this._participants.values())[index];
   }
 
   _randomIndex = () => {
-    const max = this._participants.size;
+    const max = this._participants.size - 1;
     return Math.floor(Math.random() * Math.floor(max));
   }
 
@@ -84,14 +89,27 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     return participant;
   }
 
-  _createPair = (p1: Participant, p2: Participant) => {
-    if (p1.role === 'leader' || p2.role === 'follower') {
-      return {leader: p1._id, follower: p2._id};
-    } else if (p1.role === 'follower' || p2.role === 'leader') {
-      return {leader: p2._id, follower: p1._id};
+  _createPair = (p1: ?Participant, p2: ?Participant) => {
+    if (p1 == null && p2 != null) {
+      if (p2.role === 'leader' || p2.role === 'both') {
+        return {follower: null, leader: p2._id};
+      } else {
+        return {follower: p2._id, leader: null};
+      }
+    } else if (p2 == null && p1 != null) {
+      if (p1.role === 'leader' || p1.role === 'both') {
+        return {follower: null, leader: p1._id};
+      } else {
+        return {follower: p1._id, leader: null};
+      }
+    } else if (p1 != null && p2 != null) {
+      if (p1.role === 'leader' || p1.role === 'both') {
+        return {leader: p1._id, follower: p2._id};
+      }  else {
+        return {leader: p2._id, follower: p1._id};
+      }
     }
-    // both leader and follower may be w/e
-    return {leader: p1._id, follower: p2._id};
+    throw 'Both participants may not be null';
   }
 
 

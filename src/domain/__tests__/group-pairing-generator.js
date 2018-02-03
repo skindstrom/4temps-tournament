@@ -172,6 +172,35 @@ describe('GroupGenerator', () => {
         ],
       ]);
   });
+
+  test('Stops if no more participants, even if criteria not met', () => {
+    const round = {...createRound(), minPairCount: 4, maxPairCount: 4};
+    const participants = createParticipants(2);
+    const generator = new GroupGeneratorImpl(round, participants);
+    stubRandom(generator);
+
+    expect(generator.generateGroups())
+      .toEqual([
+        [
+          {leader: participants[0]._id, follower: participants[1]._id},
+        ]
+      ]);
+  });
+
+  test('If not enough participants, null is set', () => {
+    const round = {...createRound(), minPairCount: 1, maxPairCount: 4};
+    const participants = createParticipants(3);
+    const generator = new GroupGeneratorImpl(round, participants);
+    stubRandom(generator);
+
+    expect(generator.generateGroups())
+      .toEqual([
+        [
+          {leader: participants[0]._id, follower: participants[1]._id},
+          {leader: participants[2]._id, follower: null},
+        ]
+      ]);
+  });
 });
 
 function createParticipants(count: number) {
