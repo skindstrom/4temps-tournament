@@ -32,6 +32,7 @@ declare type Round = {
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
   criteria: Array<RoundCriterion>,
+  active: boolean,
   groups: Array<DanceGroup>
 }
 

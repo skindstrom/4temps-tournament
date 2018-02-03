@@ -14,6 +14,7 @@ function createRound(vals: mixed): Round {
     multipleDanceScoringRule: 'average',
     criteria: [createCriterion()],
     groups: [],
+    active: false,
     ...vals,
   };
 }

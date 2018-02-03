@@ -13,6 +13,7 @@ export type RoundDbModel = {
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
   criteria: Array<RoundCriterion>,
+  active: boolean,
   groups: Array<DanceGroupDbModel>
 };
 
@@ -54,6 +55,9 @@ export const schema = new mongoose.Schema({
     description: {type: String, required: true},
     type: {type: String, required: true}
   }],
+  active: {
+    type: Boolean, required: true
+  },
   groups: [{
     pairs: [{
       follower: {

@@ -149,6 +149,7 @@ function roundWithId(id: string): Round {
       description: 'style...',
       type: 'one'
     }],
-    groups: []
+    groups: [],
+    active: false,
   };
 }

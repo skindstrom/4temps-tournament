@@ -68,6 +68,7 @@ export interface TournamentRepository {
   createRound(
     tournamentId: string, round: Round): Promise<void>;
   deleteRound(tournamentId: string, roundId: string): Promise<void>;
+  updateRound(tournamentId: string, round: Round): Promise<void>;
 
   addJudge(tournamentId: string, judge: Judge): Promise<void>;
 }
@@ -132,6 +133,15 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         $pull: {
           rounds: {_id: roundId}
         }
+      }
+    );
+  }
+
+  async updateRound(tournamentId: string, round: Round) {
+    await Model.update(
+      {_id: tournamentId, rounds: {$elemMatch: {_id: round._id}}},
+      {
+        $set: round
       }
     );
   }

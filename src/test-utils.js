@@ -142,6 +142,15 @@ export class TournamentRepositoryImpl implements TournamentRepository {
           .filter(({_id}) => _id !== roundId);
     }
 
+  updateRound =
+    async (tournamentId: string, round: Round) => {
+      for (let i = 0; i < this._tournaments[tournamentId].rounds.length; ++i) {
+        if (this._tournaments[tournamentId].rounds._id === round._id) {
+          this._tournaments[tournamentId].rounds = round;
+        }
+      }
+    }
+
   addJudge =
     async (tournamentId: string, judge: Judge) => {
       this._tournaments[tournamentId].judges.push(judge);
@@ -205,7 +214,8 @@ export function createRound(): Round {
       description: 'style...',
       type: 'one'
     }],
-    groups: []
+    groups: [],
+    active: false,
   };
 }
 

@@ -1,5 +1,5 @@
 // @flow
-import GroupGeneratorImpl from '../group-generator';
+import GroupGeneratorImpl from '../group-pairing-generator';
 import {createRound, createParticipant} from '../../test-utils';
 
 describe('GroupGenerator', () => {
