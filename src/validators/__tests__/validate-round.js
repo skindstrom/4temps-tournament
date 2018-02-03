@@ -13,6 +13,7 @@ function createRound(vals: mixed): Round {
     roundScoringRule: 'average',
     multipleDanceScoringRule: 'average',
     criteria: [createCriterion()],
+    groups: [],
     ...vals,
   };
 }

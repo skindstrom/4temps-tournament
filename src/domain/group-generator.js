@@ -1,11 +1,6 @@
 // @flow
 import type {Participant} from '../models/participant';
 
-export type Pair = {
-  follower: Participant,
-  leader: Participant
-}
-
 export interface GroupGenerator {
   generateGroups(): Array<Array<Pair>>;
 }
@@ -91,12 +86,12 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
   _createPair = (p1: Participant, p2: Participant) => {
     if (p1.role === 'leader' || p2.role === 'follower') {
-      return {leader: p1, follower: p2};
+      return {leader: p1._id, follower: p2._id};
     } else if (p1.role === 'follower' || p2.role === 'leader') {
-      return {leader: p2, follower: p1};
+      return {leader: p2._id, follower: p1._id};
     }
     // both leader and follower may be w/e
-    return {leader: p1, follower: p2};
+    return {leader: p1._id, follower: p2._id};
   }
 
 

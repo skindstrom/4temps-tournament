@@ -11,6 +11,7 @@ function parseRound(bodyRound: mixed): Round {
     roundScoringRule: 'none',
     multipleDanceScoringRule: 'none',
     criteria: [],
+    groups: []
   };
 
   if (typeof bodyRound === 'object' && bodyRound != null) {

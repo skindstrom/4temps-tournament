@@ -12,8 +12,13 @@ export type RoundDbModel = {
   tieRule: 'none' | 'random' | 'all',
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
-  criteria: Array<RoundCriterion>
+  criteria: Array<RoundCriterion>,
+  groups: Array<DanceGroupDbModel>
 };
+
+type DanceGroupDbModel = {
+  pairs: Array<{follower: ObjectId, leader: ObjectId}>
+}
 
 
 export const schema = new mongoose.Schema({
@@ -48,17 +53,37 @@ export const schema = new mongoose.Schema({
     maxValue: {type: Number, required: true},
     description: {type: String, required: true},
     type: {type: String, required: true}
+  }],
+  groups: [{
+    pairs: [{
+      follower: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+      },
+      leader: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+      },
+    }]
   }]
 });
 
 export function mapToDomainModel(round: RoundDbModel): Round {
   const {
     _id,
+    groups,
     ...same
   } = round;
 
   return {
     _id: _id.toString(),
+    groups: groups.map(g => ({
+      pairs:
+        g.pairs.map(p => ({
+          follower: p.follower.toString(),
+          leader: p.leader.toString(),
+        }))
+    })),
     ...same
   };
 }
@@ -66,11 +91,19 @@ export function mapToDomainModel(round: RoundDbModel): Round {
 export function mapToDbModel(round: Round): RoundDbModel {
   const {
     _id,
+    groups,
     ...same
   } = round;
 
   return {
     _id: new mongoose.Types.ObjectId(_id),
+    groups: groups.map(g => ({
+      pairs:
+        g.pairs.map(p => ({
+          follower: new mongoose.Types.ObjectId(p.follower),
+          leader: new mongoose.Types.ObjectId(p.leader),
+        }))
+    })),
     ...same
   };
 }

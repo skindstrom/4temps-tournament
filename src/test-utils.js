@@ -204,7 +204,8 @@ export function createRound(): Round {
       maxValue: 2,
       description: 'style...',
       type: 'one'
-    }]
+    }],
+    groups: []
   };
 }
 

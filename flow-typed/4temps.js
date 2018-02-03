@@ -31,7 +31,17 @@ declare type Round = {
   tieRule: 'none' | 'random' | 'all',
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
-  criteria: Array<RoundCriterion>
+  criteria: Array<RoundCriterion>,
+  groups: Array<DanceGroup>
+}
+
+declare type DanceGroup = {
+  pairs: Array<Pair>
+}
+
+declare type Pair = {
+  follower: string,
+  leader: string
 }
 
 declare type AccessKey = {
