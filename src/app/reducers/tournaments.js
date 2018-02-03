@@ -1,6 +1,6 @@
 // @flow
 import { handle } from 'redux-pack';
-import normalize from './normalize';
+import { normalizeTournamentArray } from './normalize';
 
 function tournaments(state: TournamentsReduxState = getInitialState(),
   action: ReduxPackAction) {
@@ -38,13 +38,16 @@ function getAllTournaments(state: TournamentsReduxState,
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
-    success: prevState => ({
-      ...prevState,
-      isLoading: false,
-      isInvalidated: false,
-      allIds: payload.map(({ id }) => id),
-      byId: normalize(payload)
-    }),
+    success: prevState => {
+      const norm = normalizeTournamentArray(payload);
+      return {
+        ...prevState,
+        isLoading: false,
+        isInvalidated: false,
+        allIds: norm.result,
+        byId: norm.entities.tournaments
+      };
+    },
     failure: prevState => ({
       ...prevState,
       isLoading: false,
@@ -58,17 +61,22 @@ function getUserTournaments(state: TournamentsReduxState,
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
-    success: prevState => ({
-      ...prevState,
-      isLoading: false,
-      didLoadUserTournaments: true,
-      forUser: payload.map(({ id }) => id),
-      allIds: [
-        ...prevState.allIds,
-        ...payload.map(({ id }) => id)]
-        .filter((id, i, arr) => arr.indexOf(id) === i),
-      byId: { ...prevState.byId, ...normalize(payload) }
-    }),
+    success: prevState => {
+      const norm = normalizeTournamentArray(payload);
+      return {
+        ...prevState,
+        isLoading: false,
+        didLoadUserTournaments: true,
+        forUser: norm.result,
+        allIds:
+          Array.from(
+            new Set([...prevState.allIds, ...norm.result]).values()),
+        byId: {
+          ...prevState.byId,
+          ...norm.entities.tournaments
+        }
+      };
+    },
     failure: prevState => ({ ...prevState, isLoading: false })
   });
 }

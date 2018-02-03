@@ -1,7 +1,7 @@
 // @flow
 
 import { handle } from 'redux-pack';
-import normalize from './normalize';
+import { normalizeTournamentArray } from './normalize';
 
 function participants(state: ParticipantsReduxState = getInitialState(),
   action: ReduxPackAction): ParticipantsReduxState {
@@ -59,25 +59,21 @@ function getTournaments(state: ParticipantsReduxState,
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
     success: prevState => {
-      const tournaments: {[string]: Tournament} = normalize(payload);
-      const participants =
-        Object.keys(tournaments)
-          .reduce(
-            (acc, key) => [...acc, ...tournaments[key].participants], []);
+      const norm = normalizeTournamentArray(payload);
 
       return {
         ...prevState,
         forTournament: {
           ...prevState.forTournament,
-          ...payload.reduce(
-            (acc, t) => {
-              acc[t.id] = t.participants.map((p) => p.id);
+          ...norm.result.reduce(
+            (acc, id) => {
+              acc[id] = norm.entities.tournaments[id].participants;
               return acc;
             }, {})
         },
         byId: {
           ...prevState.byId,
-          ...normalize(participants)
+          ...norm.entities.participants
         }
       };
     },

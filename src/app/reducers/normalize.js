@@ -1,12 +1,23 @@
 // @flow
+import { normalize, schema } from 'normalizr';
 
-function normalize(array: Array<{ id: string, [string]: mixed }>) {
-  const acc: { [string]: mixed } = {};
-  array.forEach(t => {
-    acc[t.id] = t;
-  });
+const groupSchema = new schema.Entity('groups');
+const roundSchema = new schema.Entity('rounds', {
+  groups: [groupSchema]
+});
+const participantSchema = new schema.Entity('participants');
+const judgeSchema = new schema.Entity('judges');
 
-  return acc;
+const tournamentSchema = new schema.Entity('tournaments', {
+  judges: [judgeSchema],
+  participants: [participantSchema],
+  rounds: [roundSchema]
+});
+
+export function normalizeTournament(tournament: Tournament) {
+  return normalize(tournament, tournamentSchema);
 }
 
-export default normalize;
+export function normalizeTournamentArray(tournaments: Array<Tournament>) {
+  return normalize(tournaments, [tournamentSchema]);
+}
