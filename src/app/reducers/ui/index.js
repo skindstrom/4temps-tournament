@@ -8,9 +8,11 @@ import editTournament from './edit-tournament';
 import createParticipant from './create-participant';
 import createRound from './create-round';
 import createJudge from './create-judge';
+import judgeLogin from './judge-login';
 
 export default combineReducers({
   login,
+  judgeLogin,
   signUp,
   createRound,
   createTournament,

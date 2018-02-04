@@ -2,7 +2,7 @@
 
 import {connect} from 'react-redux';
 import Component from './component';
-import createJudge from '../../../../api/judge';
+import {createJudge} from '../../../../api/judge';
 
 type Props = {
   tournamentId: string

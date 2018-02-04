@@ -106,6 +106,7 @@ declare type ReduxState = {
   judges: JudgesReduxState,
 
   ui: {
+    judgeLogin: UiJudgeLoginReduxState,
     login: UiLoginReduxState,
     signUp: UiSignUpReduxState,
 
@@ -170,6 +171,12 @@ declare type UiLoginReduxState = {
   isValidEmail: boolean,
   isValidPassword: boolean,
   doesUserExist: boolean
+}
+
+declare type UiLoginReduxState = {
+  isLoading: boolean,
+  isValidAccessKey: boolean,
+  doesAccessKeyExist: boolean
 }
 
 declare type UiSignUpReduxState = {

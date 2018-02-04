@@ -1,11 +1,15 @@
 import React, { PureComponent } from 'react';
 
 import AdminLogin from './AdminLogin';
+import AccessKeyLogin from './AccessKeyLogin';
 
 class Login extends PureComponent<{}> {
   render () {
     return (
-        <AdminLogin {...this.props}/>
+        <div>
+          <AccessKeyLogin {...this.props}/>
+          <AdminLogin {...this.props}/>
+        </div>
     );
   }
 }
