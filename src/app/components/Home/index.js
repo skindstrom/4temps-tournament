@@ -2,30 +2,15 @@
 
 import { connect } from 'react-redux';
 
-import PreloadContainer from '../PreloadContainer';
-import TournamentList from '../TournamentList';
-import { getAllTournaments } from '../../api/tournament';
+import HomeComponent from './component';
 
-function mapStateToProps({ tournaments }: ReduxState) {
+function mapStateToProps({ user }: ReduxState) {
   return {
-    shouldLoad: tournaments.isInvalidated,
-    isLoading: tournaments.isLoading,
-    Child: TournamentList,
-    tournaments: tournaments.allIds.map(id => tournaments.byId[id])
-  };
-}
-
-function mapDispatchToProps(dispatch: ReduxDispatch) {
-  return {
-    load: () => dispatch({
-      type: 'GET_ALL_TOURNAMENTS',
-      promise: getAllTournaments()
-    }),
-    onClick: null
+    isAuthenticated : user.id !== '',
   };
 }
 
 const HomeContainer =
-  connect(mapStateToProps, mapDispatchToProps)(PreloadContainer);
+  connect(mapStateToProps)(HomeComponent);
 
 export default HomeContainer;
