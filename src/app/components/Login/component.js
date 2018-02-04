@@ -9,6 +9,7 @@ import './styles.css';
 
 type Props = {
   onSubmit: (user: UserCredentials) => Promise<void>,
+  headerTitle: string,
   isValidInput: boolean,
   isValidEmail: boolean,
   isValidPassword: boolean,
@@ -19,6 +20,10 @@ type Props = {
 type State = UserCredentials;
 
 class Login extends PureComponent<Props, State> {
+  static defaultProps = {
+    headerTitle: 'Log in'
+  }
+
   state = {
     email: '',
     password: ''
@@ -41,7 +46,7 @@ class Login extends PureComponent<Props, State> {
       <div styleName='center'>
         <div styleName='width'>
           <Header as='h1'>
-            Log in
+            {this.props.headerTitle}
           </Header>
           <Form
             loading={this.props.isLoading}

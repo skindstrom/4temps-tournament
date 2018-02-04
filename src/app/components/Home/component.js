@@ -9,6 +9,8 @@ type Props = {
 }
 
 class Home extends PureComponent<Props> {
+  static adminLoginHeader = 'Admin Login';
+
   _renderAuthenticated() {
     return (
       <h1>Authenticated</h1>
@@ -16,7 +18,7 @@ class Home extends PureComponent<Props> {
   }
   _renderNotAuthenticated() {
     return (
-      <LoginContainer {...this.props} />
+      <LoginContainer headerTitle={Home.adminLoginHeader} {...this.props} />
     )
   }
   render () {
