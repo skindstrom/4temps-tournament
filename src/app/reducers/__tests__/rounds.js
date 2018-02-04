@@ -190,5 +190,6 @@ function roundWithId(id: string): Round {
     }],
     groups: [],
     active: false,
+    finished: false,
   };
 }

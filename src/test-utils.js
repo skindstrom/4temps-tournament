@@ -219,6 +219,7 @@ export function createRound(): Round {
     }],
     groups: [],
     active: false,
+    finished: false,
   };
 }
 

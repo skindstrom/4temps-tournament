@@ -33,6 +33,7 @@ declare type Round = {
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
   criteria: Array<RoundCriterion>,
   active: boolean,
+  finished: boolean,
   groups: Array<DanceGroup>
 }
 
@@ -214,7 +215,7 @@ declare type ReduxAction = LogoutAction | LoginAction
   | CreateTournamentAction | EditTournamentAction
   | CreateParticipantAction
   | SignUpAction | CreateRoundAction
-  | DeleteRoundAction | CreateJudgeAction;
+  | DeleteRoundAction | CreateJudgeAction | StartRoundAction;
 
 // Redux Actions
 declare type LogoutAction =

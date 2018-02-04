@@ -10,17 +10,6 @@ export type ParticipantDbModel = {
   role: Role
 }
 
-export const schema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  role: {
-    type: String,
-    required: true
-  },
-});
-
 export function mapToDomainModel(
   participant: ParticipantDbModel): Participant {
   const {_id, name, role} = participant;

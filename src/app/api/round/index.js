@@ -22,3 +22,9 @@ export async function deleteRound(
   return apiDeleteRequest(
     `/api/round/${tournamentId}/delete/${roundId}`);
 }
+
+
+export async function startRound(
+  tournamentId: string, roundId: string): Promise<mixed> {
+  return apiPostRequest(`/api/round/${tournamentId}/start/${roundId}`);
+}

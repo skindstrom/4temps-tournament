@@ -5,7 +5,6 @@ import moment from 'moment';
 import type { Tournament, TournamentType } from '../models/tournament';
 import type {ParticipantDbModel} from './participant';
 import {
-  schema as participantSchema,
   mapToDomainModel as mapParticipantToDomainModel,
   mapToDbModel as mapParticipantToDbModel
 } from './participant';
@@ -29,6 +28,17 @@ type TournamentModel = {
 
 const judgeSchema = new mongoose.Schema({
   name: {type: String, required: true}
+});
+
+const participantSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    required: true
+  },
 });
 
 const schema = new mongoose.Schema({

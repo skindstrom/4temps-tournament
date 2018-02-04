@@ -13,6 +13,7 @@ function parseRound(bodyRound: mixed): Round {
     criteria: [],
     groups: [],
     active: false,
+    finished: false,
   };
 
   if (typeof bodyRound === 'object' && bodyRound != null) {

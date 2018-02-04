@@ -15,6 +15,7 @@ function createRound(vals: mixed): Round {
     criteria: [createCriterion()],
     groups: [],
     active: false,
+    finished: false,
     ...vals,
   };
 }
