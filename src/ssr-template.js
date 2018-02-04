@@ -8,6 +8,7 @@ export default (html: string, preloadedState: ReduxState, cspNonce: string) => {
     <html>
       <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>4 Temps</title>
 
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -21,7 +22,10 @@ export default (html: string, preloadedState: ReduxState, cspNonce: string) => {
       <body>
         <div id="root">${html}</div>
         <script nonce="${cspNonce}" type="application/javascript">
-          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(
+    /</g,
+    '\\u003c'
+  )}
         </script>
         <script type="application/javascript" src="/bundle.js"></script>
       </body>
