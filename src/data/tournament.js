@@ -161,11 +161,15 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   }
 
   async addJudge(tournamentId: string, judge: Judge) {
+    const db = {
+      _id: new mongoose.Types.ObjectId(judge.id),
+      name: judge.name
+    };
     await Model.update(
       {_id: tournamentId},
       {
         $push: {
-          judges: judge
+          judges: db
         }
       }
     );
