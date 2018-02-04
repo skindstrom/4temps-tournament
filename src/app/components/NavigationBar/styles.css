@@ -1,0 +1,16 @@
+.sidebar {
+  display: inline
+}
+
+.navbar {
+  display: none
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    display: inline
+  }
+  .sidebar {
+    display: none
+  }
+}

@@ -5,12 +5,12 @@ import {
   Menu,
   MenuItem,
   MenuMenu,
-  Responsive,
-  Segment,
   Icon,
   Sidebar
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+
+import './styles.css';
 
 type Props = {
   activeItem: string,
@@ -154,11 +154,16 @@ class NavigationBar extends PureComponent<Props, State> {
   };
 
   render() {
+    /* Perform conditional rendering with CSS to not mess up the re-hydration*/
     return (
-      <Segment.Group>
-        <Responsive minWidth={769}>{this._renderDesktopView()}</Responsive>
-        <Responsive maxWidth={768}>{this._renderTabletView()}</Responsive>
-      </Segment.Group>
+      <span>
+        <span styleName='navbar'>
+          {this._renderDesktopView()}
+        </span>
+        <span styleName='sidebar'>
+          {this._renderTabletView()}
+        </span>
+      </span>
     );
   }
 }
