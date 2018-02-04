@@ -59,7 +59,7 @@ declare type Judge = {
 
 // Express interface
 declare interface ServerApiRequest {
-  session: { user: UserModel };
+  session: { user: UserModel, judge: Judge };
   body: { [string]: mixed };
   query: { [name: string]: string };
   params: {[param: string]: string};
@@ -173,7 +173,7 @@ declare type UiLoginReduxState = {
   doesUserExist: boolean
 }
 
-declare type UiLoginReduxState = {
+declare type UiJudgeLoginReduxState = {
   isLoading: boolean,
   isValidAccessKey: boolean,
   doesAccessKeyExist: boolean
@@ -222,7 +222,7 @@ declare type ReduxAction = LogoutAction | LoginAction
   | CreateTournamentAction | EditTournamentAction
   | CreateParticipantAction
   | SignUpAction | CreateRoundAction
-  | DeleteRoundAction | CreateJudgeAction | StartRoundAction;
+  | DeleteRoundAction | CreateJudgeAction | StartRoundAction | LoginJudgeAction;
 
 // Redux Actions
 declare type LogoutAction =
@@ -296,4 +296,8 @@ declare type CreateJudgeAction =
 declare type StartRoundAction = {
   type: 'START_ROUND',
   promise: Promise<mixed>
+}
+declare type LoginJudgeAction = {
+  type: 'LOGIN_WITH_ACCESS_KEY',
+  promise: any
 }

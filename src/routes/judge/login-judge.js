@@ -1,6 +1,5 @@
 // @flow
 
-import ObjectId from 'bson-objectid';
 import type {TournamentRepository} from '../../data/tournament';
 import type {AccessKeyRepository} from '../../data/access-key';
 import validateJudgeLogin from '../../validators/validate-judge-login';
@@ -28,7 +27,6 @@ export default function route(
         res.json({isValidAccessKey: false, doesAccessKeyExist: true});
       }
     } catch (e) {
-      console.log(e);
       res.status(statusFromError(e));
       res.json({isValidAccessKey: true, doesAccessKeyExist: false});
     }
@@ -55,9 +53,7 @@ function statusFromError(e: mixed) {
 
 function getJudge(userId: string, tournament: Tournament): Judge {
   const results = tournament.judges.filter(judge => {
-    console.log(judge);
-    console.log(userId);
-    return judge.id === userId
+    return judge.id === userId;
   });
 
   if (results.length !== 1) {

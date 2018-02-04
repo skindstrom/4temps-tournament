@@ -1,21 +1,14 @@
+//@flow
 import { connect } from 'react-redux';
-import type { RouterHistory, Location } from 'react-router-dom';
 import { loginJudge } from '../../../api/judge';
 import LoginComponent from './component';
 
-
-type Props = {
-  location: Location,
-  history: RouterHistory
-}
 
 function mapStateToProps({ ui }: ReduxState) {
   return ui.judgeLogin;
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch,
-  { location, history }: Props) {
-  const referer = location.search.replace(/\?referer=/, '');
+function mapDispatchToProps(dispatch: ReduxDispatch) {
   return {
     onSubmit: (accessKey: string) =>
       dispatch({

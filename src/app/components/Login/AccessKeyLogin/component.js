@@ -7,7 +7,7 @@ import { Button, Form, FormInput, Header, Message } from
 import './styles.css';
 
 type Props = {
-  onSubmit: (user: UserCredentials) => Promise<void>,
+  onSubmit: (key: string) => void,
   headerTitle: string,
   isValidAccessKey: boolean,
   isLoading: boolean,
@@ -15,7 +15,7 @@ type Props = {
 }
 
 type State = {
-  accessKey : string
+  accessKey: string
 }
 
 class Login extends PureComponent<Props, State> {
@@ -53,7 +53,7 @@ class Login extends PureComponent<Props, State> {
               onChange={this._onAccessKeyChange}
             />
             {!this.props.isValidAccessKey &&
-             <Message error content='Access keys are 10 characters long' />}
+            <Message error content='Access keys are 10 characters long' />}
             <Button
               type='submit'
               onClick={this._onSubmit}
@@ -61,7 +61,7 @@ class Login extends PureComponent<Props, State> {
               Submit
             </Button>
             {!this.props.doesAccessKeyExist &&
-             <Message error content='Access key does not exist!' />}
+            <Message error content='Access key does not exist!' />}
           </Form>
         </div>
       </div>

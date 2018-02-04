@@ -11,6 +11,7 @@ function mapStateToProps({ user }: ReduxState) {
 }
 
 const HomeContainer =
+  // $FlowFixMe
   connect(mapStateToProps)(HomeComponent);
 
 export default HomeContainer;

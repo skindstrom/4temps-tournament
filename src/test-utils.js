@@ -29,14 +29,16 @@ type Params = Query;
 export class Request implements ServerApiRequest {
   body: Body = {};
   session: {
-    user: UserModel
+    user: UserModel,
+    judge: Judge
   };
   query: Query = {};
   params: Params = {};
 
   constructor(user: UserModel) {
     this.session = {
-      user
+      user,
+      judge: {id: '', name: ''}
     };
   }
 
