@@ -141,14 +141,15 @@ class Server {
   }
 
   _enablePublicDirectoryRouting = () => {
+    const maxAge = this._isProduction() ? 1000 * 60 * 60 /* 1 day */ : 0;
     // used for files that should be public, but is static
     this._app.use('/', Express.static(path.join(__dirname, '../public'), {
-      maxAge: 1000 * 60 * 60 * 24 // 1 day
+      maxAge
     }));
     // used for files that should be public, but that's generated
     this._app.use('/',
       Express.static(path.join(__dirname, '../public-build'), {
-        maxAge: 1000 * 60 * 60 // 1 day
+        maxAge
       }));
   }
 
