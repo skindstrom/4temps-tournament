@@ -60,7 +60,7 @@ class NavigationBar extends PureComponent<Props, State> {
     const { activeItem } = this.props;
     return (
       <Menu secondary>
-        <MenuItem as={Link} to="/" name="header" header>
+        <MenuItem as={Link} to="/" name="header" header disabled>
           4 Temps Tournaments
         </MenuItem>
         <Menu.Item
@@ -148,6 +148,35 @@ class NavigationBar extends PureComponent<Props, State> {
             <Icon name="edit" />
             Edit Tournament
           </Menu.Item>
+          <div styleName='filler' />
+          {this.props.isAuthenticated ? (
+            <MenuMenu>
+              <MenuItem onClick={() => {
+                this.toggleSideBar();
+                this.props.onClickLogout();
+              }}
+              >
+                <h3>Log out</h3>
+              </MenuItem>
+            </MenuMenu>
+          ) : (
+            <MenuMenu>
+              <MenuItem
+                as={Link}
+                to='/login'
+                onClick={this.toggleSideBar}
+              >
+                <h3>Log in</h3>
+              </MenuItem>
+              <MenuItem
+                as={Link}
+                to='/signup'
+                onClick={this.toggleSideBar}
+              >
+                <h3>Sign up</h3>
+              </MenuItem>
+            </MenuMenu>)}
+          <div styleName='bottom-filler' />
         </Sidebar>
       </MenuMenu>
     );

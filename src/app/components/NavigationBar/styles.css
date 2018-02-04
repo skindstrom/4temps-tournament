@@ -6,6 +6,14 @@
   display: none
 }
 
+.filler {
+  margin-top: auto
+}
+
+.bottom-filler {
+  margin-bottom: 2em
+}
+
 @media (min-width: 768px) {
   .navbar {
     display: inline
