@@ -29,8 +29,7 @@ export function appWithPreloadedState(preloadedState: mixed) {
 
 function initializeStore(preloadedState: mixed) {
   const state: ReduxState = { ...getInitialState(), ...preloadedState };
-  return createStore(reducer, state,
-    applyMiddleware(reduxPackMiddleware));
+  return createStore(reducer, state, applyMiddleware(reduxPackMiddleware));
 }
 
 function App() {
