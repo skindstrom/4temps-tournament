@@ -282,5 +282,10 @@ declare type DeleteRoundAction =
 declare type CreateJudgeAction =
   {
     type: 'CREATE_JUDGE',
-    promise: any
+    promise: Promise<mixed>
   }
+
+declare type StartRoundAction = {
+  type: 'START_ROUND',
+  promise: Promise<mixed>
+}

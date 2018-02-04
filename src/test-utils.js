@@ -202,7 +202,7 @@ export function generateId() {
 
 export function createRound(): Round {
   return {
-    id: '',
+    id: generateId(),
     name: 'name',
     danceCount: 1,
     minPairCount: 1,

@@ -2,7 +2,7 @@
 import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../rounds';
-import {createTournament} from '../../../test-utils';
+import { createTournament, createRound, generateId } from '../../../test-utils';
 import makePackAction from '../test-utils';
 import { normalizeTournamentArray } from '../normalize';
 
@@ -129,6 +129,44 @@ describe('Rounds reducer', () => {
           makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', norm)
         ))
         .toEqual(expected);
+    });
+  });
+
+  describe('START_ROUND', () => {
+    test('success updates round from payload', () => {
+      const initialRound = createRound();
+      const updatedRound: Round = {
+        ...initialRound,
+        groups: [{
+          pairs: [{ follower: generateId(), leader: generateId() }]
+        }]
+      };
+      const tournamentId = generateId();
+
+      const payload = updatedRound;
+
+      const initial = {
+        ...getInitialState(),
+        forTournament: {
+          [tournamentId]: [initialRound.id]
+        },
+        byId: {
+          [initialRound.id]: initialRound
+        }
+      };
+
+      const expected = {
+        ...initial,
+        byId: {
+          [updatedRound.id]: updatedRound
+        }
+      };
+
+
+      expect(
+        reducer(initial,
+          makePackAction(LIFECYCLE.SUCCESS, 'START_ROUND', payload))
+      ).toEqual(expected);
     });
   });
 });

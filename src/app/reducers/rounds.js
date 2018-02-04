@@ -14,6 +14,8 @@ function rounds(state: RoundsReduxState = getInitialState(),
     return createRound(state, action);
   case 'DELETE_ROUND':
     return deleteRound(state, action);
+  case 'START_ROUND':
+    return startRound(state, action);
   default:
     return state;
   }
@@ -92,6 +94,21 @@ function getTournaments(
       byId: {
         ...prevState.byId,
         ...payload.entities.rounds
+      }
+    }),
+  });
+}
+
+function startRound(
+  state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
+  const { payload } = action;
+
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      byId: {
+        ...prevState.byId,
+        [payload.id]: payload
       }
     }),
   });

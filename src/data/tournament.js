@@ -5,7 +5,7 @@ import moment from 'moment';
 import type { Tournament, TournamentType } from '../models/tournament';
 import type {ParticipantDbModel} from './participant';
 import {
-  schema as ParticipantSchema,
+  schema as participantSchema,
   mapToDomainModel as mapParticipantToDomainModel,
   mapToDbModel as mapParticipantToDbModel
 } from './participant';
@@ -49,7 +49,7 @@ const schema = new mongoose.Schema({
     required: true
   },
   judges: [judgeSchema],
-  participants: [ParticipantSchema],
+  participants: [participantSchema],
   rounds: [RoundSchema]
 });
 
