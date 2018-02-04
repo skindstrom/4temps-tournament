@@ -11,12 +11,13 @@ export default class StartRoundRoute {
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
+      const tournamentId = req.params.tournamentId;
       const handler =
         new StartRoundRouteHandler(
-          this._repository, req.params.tournamentId, req.params.roundId);
+          this._repository, tournamentId, req.params.roundId);
 
       await handler.startRound();
-      res.json(await this._repository.get(req.params.tournamentId));
+      res.json(handler.getUpdatedRound());
     } catch (e) {
       res.status(this._statusFromError(e));
     }
@@ -45,13 +46,18 @@ class StartRoundRouteHandler {
     this._roundId = roundId;
   }
 
+  getUpdatedRound = () => {
+    return this._round;
+  }
+
   startRound = async () => {
     this._tournament = await this._repository.get(this._tournamentId);
 
-    const round = this._getRound();
-    round.groups = this._generateGroups();
-    round.active = true;
-    await this._repository.updateRound(this._tournamentId, round);
+    this._round = this._getRound();
+    this._round.groups = this._generateGroups();
+    this._round.active = true;
+
+    await this._repository.updateRound(this._tournamentId, this._round);
   }
 
   _generateGroups = (): Array<DanceGroup> => {

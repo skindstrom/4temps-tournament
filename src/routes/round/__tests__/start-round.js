@@ -18,7 +18,7 @@ describe('Start round route', () => {
   });
 
 
-  test('Returns status 200 and the tournament if success', async () => {
+  test('Returns status 200 and the round if success', async () => {
     const req =
       Request.withParams({tournamentId: tournament.id, roundId: round.id});
     const res = new Response();
@@ -29,7 +29,7 @@ describe('Start round route', () => {
     expect(res.getStatus()).toBe(200);
 
     expect(res.getBody())
-      .toEqual(tournament);
+      .toEqual(round);
   });
 
   test('Returns status 404 if the round does not exist', async () => {
