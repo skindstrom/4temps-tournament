@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react';
 
+import LoginContainer from '../Login';
 
 type Props = {
   isAuthenticated: boolean,
+  location: Location,
+  history: RouterHistory
 }
 
 class Home extends PureComponent<Props> {
@@ -13,7 +16,7 @@ class Home extends PureComponent<Props> {
   }
   _renderNotAuthenticated() {
     return (
-      <h1>Not authenticated</h1>
+      <LoginContainer {...this.props} />
     )
   }
   render () {
