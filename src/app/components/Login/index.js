@@ -1,39 +1,12 @@
-// @flow
+import React, { PureComponent } from 'react';
 
-import { connect } from 'react-redux';
-import type { RouterHistory, Location } from 'react-router-dom';
+import AdminLogin from './AdminLogin';
 
-import LoginComponent from './component';
-import { loginUser } from '../../api/user';
-
-import type { UserCredentials } from '../../../models/user';
-
-
-type Props = {
-  location: Location,
-  history: RouterHistory
+class Login extends PureComponent<{}> {
+  render () {
+    return (
+        <AdminLogin {...this.props}/>
+    );
+  }
 }
-
-function mapStateToProps({ ui }: ReduxState) {
-  return ui.login;
-}
-
-function mapDispatchToProps(dispatch: ReduxDispatch,
-  { location, history }: Props) {
-  const referer = location.search.replace(/\?referer=/, '');
-  return {
-    onSubmit: (credentials: UserCredentials) =>
-      dispatch({
-        type: 'LOGIN_USER',
-        promise: loginUser(credentials),
-        meta: {
-          onSuccess: () => history.push(referer)
-        }
-      })
-  };
-}
-
-const LoginContainer =
-  connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
-
-export default LoginContainer;
+export default Login;

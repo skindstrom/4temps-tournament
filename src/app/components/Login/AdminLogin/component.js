@@ -3,7 +3,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Form, FormInput, Header, Message } from
   'semantic-ui-react';
-import type { UserCredentials } from '../../../models/user';
+import type { UserCredentials } from '../../../../models/user';
 
 import './styles.css';
 
