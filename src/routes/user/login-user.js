@@ -1,5 +1,4 @@
 // @flow
-import type { $Request, $Response } from 'express';
 import type { UserCredentials } from '../../models/user';
 import type { UserModel } from '../../data/user';
 import validateUserLogin from '../../validators/validate-user-login';
@@ -34,22 +33,43 @@ export const loginUserRoute =
     return { status, body: validation };
   };
 
-export default async (req: $Request, res: $Response) => {
-  const credentials: UserCredentials = {
-    email: req.body.email || '',
-    password: req.body.password || ''
-  };
+export default async (req: ServerApiRequest, res: ServerApiResponse) => {
+  try {
+    const credentials = parseBody(req.body);
 
-  const setSessionUser = (user: UserModel) => {
-    // Find out how to update the flow-typed express request
-    // $FlowFixMe
-    req.session.user = user;
-  };
+    const setSessionUser = (user: UserModel) => {
+      req.session.user = {
+        id: user._id.toString(),
+        role: 'admin'
+      };
+    };
 
-  const { status, body } = await loginUserRoute(credentials,
-    setSessionUser,
-    getUserFromCredentials);
+    const { status, body } = await loginUserRoute(credentials,
+      setSessionUser,
+      getUserFromCredentials);
 
-  res.status(status);
-  res.json(body);
+    res.status(status);
+    res.json(body);
+
+  } catch (e) {
+    if (e instanceof ParseError) {
+      res.sendStatus(400);
+    } else {
+      res.sendStatus(500);
+    }
+  }
 };
+
+function parseBody(body: mixed): UserCredentials {
+  if (typeof body === 'object' && body != null
+    && typeof body.email === 'string' && typeof body.password === 'string') {
+    return {
+      email: body.email || '',
+      password: body.password || ''
+    };
+  }
+
+  throw new ParseError();
+}
+
+function ParseError() { }

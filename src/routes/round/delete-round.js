@@ -1,6 +1,5 @@
 // @flow
 
-import type { UserModel } from '../../data/user';
 import type { TournamentRepository } from '../../data/tournament';
 
 class DeleteRoundRoute {
@@ -12,7 +11,7 @@ class DeleteRoundRoute {
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     const handler = new DeleteRoundRouteHandler(
-      req.session.user, this._tournamentRepository);
+      this._userId(req), this._tournamentRepository);
 
     try {
       handler.parseParams(req.params);
@@ -30,6 +29,10 @@ class DeleteRoundRoute {
     }
   }
 
+  _userId = (req: ServerApiRequest) => {
+    return req.session.user != null ? req.session.user.id : '';
+  }
+
   _handleError = (e: {[string]: mixed}, res: ServerApiResponse) => {
     if (e.status != null && typeof e.status === 'number') {
       res.sendStatus(e.status);
@@ -40,14 +43,14 @@ class DeleteRoundRoute {
 }
 
 class DeleteRoundRouteHandler {
-  _user: UserModel;
+  _userId: string;
   _tournamentRepository: TournamentRepository;
 
   _roundId: string;
   _tournamentId: string;
 
-  constructor(user: UserModel, tournamentRepository: TournamentRepository) {
-    this._user = user;
+  constructor(userId: string, tournamentRepository: TournamentRepository) {
+    this._userId = userId;
     this._tournamentRepository = tournamentRepository;
   }
 
@@ -80,7 +83,7 @@ class DeleteRoundRouteHandler {
     if (tournament == null) {
       throw {status: 404};
     }
-    return tournament.creatorId == this._user._id.toString();
+    return tournament.creatorId == this._userId;
   };
 
   deleteRound = async () => {

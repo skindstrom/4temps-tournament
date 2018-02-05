@@ -4,8 +4,6 @@ import type {TournamentRepository} from '../data/tournament';
 import type {Tournament} from '../models/tournament';
 import {TournamentRepositoryImpl} from '../data/tournament';
 
-type PermissionRole = 'public' | 'admin' | 'authenticated';
-
 export function allow(role: PermissionRole) {
   return authorizationMiddleware(new TournamentRepositoryImpl())(role);
 }
@@ -57,7 +55,7 @@ class AuthorizationCheckAdminHandler implements AuthorizationCheckHandler {
 
       this._res = res;
       this._next = next;
-      this._userId = req.session.user != null ? req.session.user._id : '';
+      this._userId = req.session.user != null ? req.session.user.id : '';
       this._tournamentId = req.params.tournamentId || '';
 
       try {

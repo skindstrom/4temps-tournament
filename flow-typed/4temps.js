@@ -9,7 +9,6 @@ import type { ParticipantValidationSummary } from
   '../src/validators/validate-participant';
 import type { UserCreateValidationSummary } from
   '../src/validators/validate-user';
-import type { UserModel } from '../src/data/user';
 
 
 // Base types
@@ -57,9 +56,11 @@ declare type Judge = {
   name: string
 }
 
+declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
+
 // Express interface
 declare interface ServerApiRequest {
-  session: { user: UserModel, judge: Judge };
+  session: { user: ?{ id: string, role: PermissionRole } };
   body: { [string]: mixed };
   query: { [name: string]: string };
   params: {[param: string]: string};

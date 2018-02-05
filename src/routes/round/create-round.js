@@ -3,7 +3,6 @@
 import ObjectId from 'bson-objectid';
 import validateRound from '../../validators/validate-round';
 import type { TournamentRepository } from '../../data/tournament';
-import type { UserModel } from '../../data/user';
 import parseRound from './utils';
 
 class CreateRoundRoute {
@@ -18,7 +17,7 @@ class CreateRoundRoute {
       new CreateRoundRouteHandler(this._tournamentRepository);
     try {
       handler.parseBody(req.body);
-      await handler.executeForUser(req.session.user);
+      await handler.executeForUser(this._userId(req));
       res.json({
         tournamentId: handler.getTournamentId(),
         round: handler.getCreatedRound()
@@ -27,6 +26,10 @@ class CreateRoundRoute {
       res.sendStatus(e.status);
     }
   }
+
+  _userId = (req: ServerApiRequest) => {
+    return req.session.user != null ? req.session.user.id : '';
+  }
 }
 
 class CreateRoundRouteHandler {
@@ -34,7 +37,7 @@ class CreateRoundRouteHandler {
 
   _tournamentId: string;
   _round: Round;
-  _user: UserModel;
+  _userId: string;
 
   constructor(tournamentRepository: TournamentRepository) {
     this._tournamentRepository = tournamentRepository;
@@ -48,8 +51,8 @@ class CreateRoundRouteHandler {
     return this._round;
   }
 
-  async executeForUser(user: UserModel) {
-    this._user = user;
+  async executeForUser(userId: string) {
+    this._userId = userId;
 
     if (!await this._userOwnsTournament()) {
       throw { status: 401 };
@@ -67,7 +70,7 @@ class CreateRoundRouteHandler {
         throw { status: 404 };
       }
 
-      return tournament.creatorId == this._user._id.toString();
+      return tournament.creatorId == this._userId;
     } catch (e) {
       if (e.status) throw e;
       throw { status: 500 };

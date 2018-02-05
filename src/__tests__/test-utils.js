@@ -48,38 +48,39 @@ describe('Round route test helpers', () => {
   });
 
   describe('Request helpers', () => {
-    let body = { test: 'body' };
-    let query = { test: 'query' };
-    let params = {test: 'params'};
-    let user = createUser();
+    const body = { test: 'body' };
+    const query = { test: 'query' };
+    const params = {test: 'params'};
+    const user = createUser();
+    const expectedUser = { id: user._id.toString(), role: 'admin' };
 
 
     test('Request create with body sets body and default user', async () => {
       const req = Request.withBody(body);
 
       expect(req.body).toEqual(body);
-      expect(req.session.user).toEqual(user);
+      expect(req.session.user).toEqual(expectedUser);
     });
 
     test('Request create with userAndBody sets body and user', () => {
       const req = Request.withUserAndBody(user, body);
 
       expect(req.body).toEqual(body);
-      expect(req.session.user).toEqual(user);
+      expect(req.session.user).toEqual(expectedUser);
     });
 
     test('Request create with query sets query and default user', async () => {
       const req = Request.withQuery(query);
 
       expect(req.query).toEqual(query);
-      expect(req.session.user).toEqual(user);
+      expect(req.session.user).toEqual(expectedUser);
     });
 
     test('Request create with userAndQuery sets query and user', () => {
       const req = Request.withUserAndQuery(user, query);
 
       expect(req.query).toEqual(query);
-      expect(req.session.user).toEqual(user);
+      expect(req.session.user).toEqual(expectedUser);
     });
 
     test('Request create with params sets params and default user',
@@ -87,14 +88,14 @@ describe('Round route test helpers', () => {
         const req = Request.withParams(params);
 
         expect(req.params).toEqual(params);
-        expect(req.session.user).toEqual(user);
+        expect(req.session.user).toEqual(expectedUser);
       });
 
     test('Request create with userAndparams sets params and user', () => {
       const req = Request.withUserAndParams(user, params);
 
       expect(req.params).toEqual(params);
-      expect(req.session.user).toEqual(user);
+      expect(req.session.user).toEqual(expectedUser);
     });
   });
 

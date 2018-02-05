@@ -16,7 +16,8 @@ export default function route(
         if (dbModel) {
           const tournament =
             await tournamentRepository.get(dbModel.tournamentId);
-          req.session.judge = getJudge(dbModel.userId, tournament);
+          const judge = getJudge(dbModel.userId, tournament);
+          req.session.user = { id: judge.id, role: 'judge' };
           res.sendStatus(200);
         } else {
           res.status(404);
