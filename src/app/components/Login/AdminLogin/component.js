@@ -3,21 +3,21 @@
 import React, { PureComponent } from 'react';
 import { Button, Form, FormInput, Header, Message } from
   'semantic-ui-react';
-import type { UserCredentials } from '../../../../models/user';
+import type { AdminCredentials } from '../../../../models/admin';
 
 import './styles.css';
 
 type Props = {
-  onSubmit: (user: UserCredentials) => Promise<void>,
+  onSubmit: (admin: AdminCredentials) => Promise<void>,
   headerTitle: string,
   isValidInput: boolean,
   isValidEmail: boolean,
   isValidPassword: boolean,
-  doesUserExist: boolean,
+  doesAdminExist: boolean,
   isLoading: boolean
 }
 
-type State = UserCredentials;
+type State = AdminCredentials;
 
 class Login extends PureComponent<Props, State> {
   static defaultProps = {
@@ -75,7 +75,7 @@ class Login extends PureComponent<Props, State> {
             >
               Submit
             </Button>
-            {!this.props.doesUserExist &&
+            {!this.props.doesAdminExist &&
               <Message error content='Invalid email or password' />}
           </Form>
         </div>

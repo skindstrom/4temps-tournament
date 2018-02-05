@@ -54,11 +54,11 @@ describe('Judges reducer', () => {
         ))
         .toEqual(expected);
     });
-    test('GET_USER_TOURNAMENTS success sets rounds', () => {
+    test('GET_ADMIN_TOURNAMENTS success sets rounds', () => {
       expect(
         reducer(
           getInitialState(),
-          makePackAction(LIFECYCLE.SUCCESS, 'GET_USER_TOURNAMENTS', nom)
+          makePackAction(LIFECYCLE.SUCCESS, 'GET_ADMIN_TOURNAMENTS', nom)
         ))
         .toEqual(expected);
     });

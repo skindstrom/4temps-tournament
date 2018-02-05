@@ -30,7 +30,7 @@ function mapStateToProps({ rounds }: ReduxState,
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
     load: () => dispatch(
-      {type: 'GET_USER_TOURNAMENTS', promise: getTournamentsForUser()}
+      {type: 'GET_ADMIN_TOURNAMENTS', promise: getTournamentsForUser()}
     ),
     deleteFromRounds: (deleteId: string) => dispatch({
       type: 'DELETE_ROUND',

@@ -8,7 +8,7 @@ function rounds(state: RoundsReduxState = getInitialState(),
 
   switch (type) {
   case 'GET_ALL_TOURNAMENTS':
-  case 'GET_USER_TOURNAMENTS':
+  case 'GET_ADMIN_TOURNAMENTS':
     return getTournaments(state, action);
   case 'CREATE_ROUND':
     return createRound(state, action);

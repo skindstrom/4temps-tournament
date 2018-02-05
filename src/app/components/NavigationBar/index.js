@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import type { Location, RouterHistory } from 'react-router-dom';
-import { logoutUser } from '../../api/user';
+import { logoutAdmin } from '../../api/admin';
 
 import NavigationBar from './component';
 
@@ -33,7 +33,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch,
     onClickLogout: () =>
       dispatch(({
         type: 'LOGOUT_USER',
-        promise: logoutUser(),
+        promise: logoutAdmin(),
         meta: {
           onSuccess: () => history.push('/')
         }

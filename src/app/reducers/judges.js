@@ -8,7 +8,7 @@ export default function reducer(
 
   switch(action.type) {
   case 'GET_ALL_TOURNAMENTS':
-  case 'GET_USER_TOURNAMENTS':
+  case 'GET_ADMIN_TOURNAMENTS':
     return getTournaments(state, action);
   case 'CREATE_JUDGE':
     return createJudge(state, action);

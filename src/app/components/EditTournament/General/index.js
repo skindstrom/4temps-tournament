@@ -43,7 +43,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch,
     }),
 
     load: () => dispatch({
-      type: 'GET_USER_TOURNAMENTS',
+      type: 'GET_ADMIN_TOURNAMENTS',
       promise: getTournamentsForUser()
     }),
   };

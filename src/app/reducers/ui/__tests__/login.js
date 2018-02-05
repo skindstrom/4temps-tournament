@@ -3,8 +3,8 @@ import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../login';
 import makePackAction from '../../test-utils';
-import type { UserLoginValidationSummary } from
-  '../../../../validators/validate-user-login';
+import type { AdminLoginValidationSummary } from
+  '../../../../validators/validate-admin-login';
 
 test('Default value is that all fields are valid and not loading', () => {
   expect(reducer(undefined, makePackAction(LIFECYCLE.FAILURE, '')))
@@ -13,7 +13,7 @@ test('Default value is that all fields are valid and not loading', () => {
       isValid: true,
       isValidEmail: true,
       isValidPassword: true,
-      doesUserExist: true
+      doesAdminExist: true
     });
 });
 
@@ -48,11 +48,11 @@ test('When a login fails, isLoading is set to false', () => {
 });
 
 test('When a login is successful, the validation parameters are set', () => {
-  const payload: UserLoginValidationSummary = {
+  const payload: AdminLoginValidationSummary = {
     isValid: false,
     isValidEmail: false,
     isValidPassword: false,
-    doesUserExist: false
+    doesAdminExist: false
   };
 
   const state = {
@@ -60,7 +60,7 @@ test('When a login is successful, the validation parameters are set', () => {
     isValid: true,
     isValidEmail: true,
     isValidPassword: true,
-    doesUserExist: true
+    doesAdminExist: true
   };
 
   expect(
@@ -69,11 +69,11 @@ test('When a login is successful, the validation parameters are set', () => {
 });
 
 test('When a login fails, the validation parameters are set', () => {
-  const payload: UserLoginValidationSummary = {
+  const payload: AdminLoginValidationSummary = {
     isValid: false,
     isValidEmail: false,
     isValidPassword: false,
-    doesUserExist: false
+    doesAdminExist: false
   };
 
   const state = {
@@ -81,7 +81,7 @@ test('When a login fails, the validation parameters are set', () => {
     isValid: true,
     isValidEmail: true,
     isValidPassword: true,
-    doesUserExist: true
+    doesAdminExist: true
   };
 
   expect(

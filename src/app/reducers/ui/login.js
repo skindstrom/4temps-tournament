@@ -24,7 +24,7 @@ export function getInitialState() {
     isValid: true,
     isValidEmail: true,
     isValidPassword: true,
-    doesUserExist: true
+    doesAdminExist: true
   };
 }
 

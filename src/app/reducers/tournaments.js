@@ -7,14 +7,14 @@ function tournaments(state: TournamentsReduxState = getInitialState(),
   switch (type) {
   case 'GET_ALL_TOURNAMENTS':
     return getAllTournaments(state, action);
-  case 'GET_USER_TOURNAMENTS':
+  case 'GET_ADMIN_TOURNAMENTS':
     return getUserTournaments(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);
   case 'EDIT_TOURNAMENT':
     return editTournament(state, action);
   case 'LOGOUT_USER':
-    return logoutUser(state, action);
+    return logoutAdmin(state, action);
   default:
     return state;
   }
@@ -24,9 +24,9 @@ export function getInitialState(): TournamentsReduxState {
   return {
     isLoading: false,
     isInvalidated: true,
-    didLoadUserTournaments: false,
+    didLoadAdminTournaments: false,
 
-    forUser: [],
+    forAdmin: [],
     allIds: [],
     byId: {},
   };
@@ -60,8 +60,8 @@ function getUserTournaments(state: TournamentsReduxState,
     success: prevState => ({
       ...prevState,
       isLoading: false,
-      didLoadUserTournaments: true,
-      forUser: payload.result,
+      didLoadAdminTournaments: true,
+      forAdmin: payload.result,
       allIds:
         Array.from(
           new Set([...prevState.allIds, ...payload.result]).values()),
@@ -84,7 +84,7 @@ function createTournament(state: TournamentsReduxState,
       ...prevState,
       allIds: [...prevState.allIds, payload.id],
       byId: { ...prevState.byId, [payload.id]: payload },
-      forUser: [...prevState.forUser, payload.id],
+      forAdmin: [...prevState.forAdmin, payload.id],
     }),
   });
 }
@@ -105,13 +105,13 @@ function editTournament(state: TournamentsReduxState,
   });
 }
 
-function logoutUser(state: TournamentsReduxState,
+function logoutAdmin(state: TournamentsReduxState,
   action: ReduxPackAction): TournamentsReduxState {
   return handle(state, action, {
     success: prevState => ({
       ...prevState,
-      forUser: [],
-      didLoadUserTournaments: false
+      forAdmin: [],
+      didLoadAdminTournaments: false
     })
   });
 }

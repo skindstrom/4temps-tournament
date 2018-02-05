@@ -13,8 +13,12 @@ export class CreateParticipantRoute {
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
-    // $FlowFixMe
-    const userId: string = req.session.user._id;
+    if (!req.session.user) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const userId: string = req.session.user.id;
 
     const handler =
       new CreateParticipantRouteHandler(

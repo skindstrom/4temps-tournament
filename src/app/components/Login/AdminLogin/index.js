@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import type { RouterHistory, Location } from 'react-router-dom';
 
 import LoginComponent from './component';
-import { loginUser } from '../../../api/user';
+import { loginAdmin } from '../../../api/admin';
 
-import type { UserCredentials } from '../../../../models/user';
+import type { AdminCredentials } from '../../../../models/admin';
 
 
 type Props = {
@@ -22,10 +22,10 @@ function mapDispatchToProps(dispatch: ReduxDispatch,
   { location, history }: Props) {
   const referer = location.search.replace(/\?referer=/, '');
   return {
-    onSubmit: (credentials: UserCredentials) =>
+    onSubmit: (credentials: AdminCredentials) =>
       dispatch({
         type: 'LOGIN_USER',
-        promise: loginUser(credentials),
+        promise: loginAdmin(credentials),
         meta: {
           onSuccess: () => history.push(referer)
         }

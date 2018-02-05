@@ -4,11 +4,11 @@ import ObjectId from 'bson-objectid';
 import moment from 'moment';
 
 import {
-  Request, Response, createUser, generateId, createRound, createTournament,
+  Request, Response, createAdmin, generateId, createRound, createTournament,
   createJudge,
   TournamentRepositoryImpl, createParticipant, AccessKeyRepositoryImpl
 } from '../test-utils';
-import validateUser from '../validators/validate-user';
+import validateAdmin from '../validators/validate-admin';
 import validateRound from '../validators/validate-round';
 import validateTournament from '../validators/validate-tournament';
 
@@ -18,8 +18,8 @@ describe('Round route test helpers', () => {
     expect(ObjectId.isValid(generateId())).toBe(true);
   });
 
-  test('createUser creates a valid user', async () => {
-    expect((await validateUser(createUser())).isValid).toBe(true);
+  test('createAdmin creates a valid admin', async () => {
+    expect((await validateAdmin(createAdmin())).isValid).toBe(true);
   });
 
   test('createRound creates a valid round', () => {
@@ -51,8 +51,8 @@ describe('Round route test helpers', () => {
     const body = { test: 'body' };
     const query = { test: 'query' };
     const params = {test: 'params'};
-    const user = createUser();
-    const expectedUser = { id: user._id.toString(), role: 'admin' };
+    const admin = createAdmin();
+    const expectedUser = { id: admin._id.toString(), role: 'admin' };
 
 
     test('Request create with body sets body and default user', async () => {
@@ -63,7 +63,7 @@ describe('Round route test helpers', () => {
     });
 
     test('Request create with userAndBody sets body and user', () => {
-      const req = Request.withUserAndBody(user, body);
+      const req = Request.withUserAndBody(admin, body);
 
       expect(req.body).toEqual(body);
       expect(req.session.user).toEqual(expectedUser);
@@ -77,7 +77,7 @@ describe('Round route test helpers', () => {
     });
 
     test('Request create with userAndQuery sets query and user', () => {
-      const req = Request.withUserAndQuery(user, query);
+      const req = Request.withUserAndQuery(admin, query);
 
       expect(req.query).toEqual(query);
       expect(req.session.user).toEqual(expectedUser);
@@ -91,8 +91,8 @@ describe('Round route test helpers', () => {
         expect(req.session.user).toEqual(expectedUser);
       });
 
-    test('Request create with userAndparams sets params and user', () => {
-      const req = Request.withUserAndParams(user, params);
+    test('Request create with userAndParams sets params and user', () => {
+      const req = Request.withUserAndParams(admin, params);
 
       expect(req.params).toEqual(params);
       expect(req.session.user).toEqual(expectedUser);

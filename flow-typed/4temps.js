@@ -1,14 +1,14 @@
 // @flow
 import type {Tournament} from '../src/models/tournament';
 import type {Participant} from '../src/models/participant';
-import type { UserLoginValidationSummary } from
-  '../src/validators/validate-user-login';
+import type { AdminLoginValidationSummary } from
+  '../src/validators/validate-admin-login';
 import type { TournamentValidationSummary } from
   '../src/validators/validate-tournament';
 import type { ParticipantValidationSummary } from
   '../src/validators/validate-participant';
-import type { UserCreateValidationSummary } from
-  '../src/validators/validate-user';
+import type { AdminCreateValidationSummary } from
+  '../src/validators/validate-admin';
 
 
 // Base types
@@ -127,9 +127,9 @@ declare type UserReduxState = {
 declare type TournamentsReduxState = {
   isLoading: boolean,
   isInvalidated: boolean,
-  didLoadUserTournaments: boolean,
+  didLoadAdminTournaments: boolean,
 
-  forUser: Array<string>,
+  forAdmin: Array<string>,
   allIds: Array<string>,
   byId: {
     [id: string]: Tournament
@@ -171,7 +171,7 @@ declare type UiLoginReduxState = {
   isValid: boolean,
   isValidEmail: boolean,
   isValidPassword: boolean,
-  doesUserExist: boolean
+  doesAdminExist: boolean
 }
 
 declare type UiJudgeLoginReduxState = {
@@ -182,7 +182,7 @@ declare type UiJudgeLoginReduxState = {
 
 declare type UiSignUpReduxState = {
   isLoading: boolean,
-  validation: UserCreateValidationSummary
+  validation: AdminCreateValidationSummary
 }
 
 declare type UiCreateTournamentsReduxState = {
@@ -219,7 +219,7 @@ declare type ReduxPackAction = {
 }
 
 declare type ReduxAction = LogoutAction | LoginAction
-  | GetAllTournamentsAction | GetUserTournamentsAction
+  | GetAllTournamentsAction | GetAdminTournamentsAction
   | CreateTournamentAction | EditTournamentAction
   | CreateParticipantAction
   | SignUpAction | CreateRoundAction
@@ -238,7 +238,7 @@ declare type LogoutAction =
 declare type LoginAction =
   {
     type: 'LOGIN_USER',
-    promise: Promise<UserLoginValidationSummary>,
+    promise: Promise<AdminLoginValidationSummary>,
     meta: {
       onSuccess: () => mixed
     }
@@ -247,8 +247,8 @@ declare type LoginAction =
 declare type GetAllTournamentsAction =
   { type: 'GET_ALL_TOURNAMENTS', promise: Promise<mixed> };
 
-declare type GetUserTournamentsAction =
-  { type: 'GET_USER_TOURNAMENTS', promise: Promise<mixed> };
+declare type GetAdminTournamentsAction =
+  { type: 'GET_ADMIN_TOURNAMENTS', promise: Promise<mixed> };
 
 declare type CreateTournamentAction =
   {
@@ -270,7 +270,7 @@ declare type CreateParticipantAction =
 declare type SignUpAction =
   {
     type: 'SIGNUP',
-    promise: Promise<UserCreateValidationSummary>,
+    promise: Promise<AdminCreateValidationSummary>,
     meta: {
       onSuccess: () => mixed
     }

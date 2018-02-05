@@ -2,19 +2,19 @@
 import React, { Component } from 'react';
 import { Header, Form, FormInput, Button, Message } from
   'semantic-ui-react';
-import type { UserCreateValidationSummary } from
-  '../../../validators/validate-user';
-import type { UserWithPassword } from '../../../models/user';
+import type { AdminCreateValidationSummary } from
+  '../../../validators/validate-admin';
+import type { AdminWithPassword } from '../../../models/admin';
 
 import './styles.css';
 
 type Props = {
-  onSubmit: (user: UserWithPassword) => Promise<void>,
-  validation: UserCreateValidationSummary,
+  onSubmit: (admin: AdminWithPassword) => Promise<void>,
+  validation: AdminCreateValidationSummary,
   isLoading: boolean
 };
 
-class SignUp extends Component<Props, UserWithPassword> {
+class SignUp extends Component<Props, AdminWithPassword> {
   state = {
     firstName: '',
     lastName: '',

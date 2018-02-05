@@ -11,7 +11,7 @@ function participants(state: ParticipantsReduxState = getInitialState(),
   case 'CREATE_PARTICIPANT':
     return createParticipant(state, action);
   case 'GET_ALL_TOURNAMENTS':
-  case 'GET_USER_TOURNAMENTS':
+  case 'GET_ADMIN_TOURNAMENTS':
     return getTournaments(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);

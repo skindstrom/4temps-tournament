@@ -13,13 +13,15 @@ export default class UpdateTournamentRoute {
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
+    if (!req.session.user) {
+      res.sendStatus(401);
+      return;
+    }
+    const userId = req.session.user.id;
+
     // $FlowFixMe
     const requestBody: any = req.body;
-
     const tournament = parseTournament(requestBody.tournament);
-
-    // $FlowFixMe
-    const userId: string = req.session.user._id;
 
     const { status, body } =
       await updateTournamentRoute(

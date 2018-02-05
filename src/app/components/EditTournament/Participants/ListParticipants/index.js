@@ -23,7 +23,7 @@ function mapStateToProps({ participants }: ReduxState,
 function mapDispatchToProps(dispatch: ReduxDispatch) {
   return {
     load: () => dispatch(
-      {type: 'GET_USER_TOURNAMENTS', promise: getTournamentsForUser()}
+      {type: 'GET_ADMIN_TOURNAMENTS', promise: getTournamentsForUser()}
     )
   };
 }

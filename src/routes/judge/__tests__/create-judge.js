@@ -2,14 +2,14 @@
 
 import route from '../create-judge';
 import {
-  Request, Response, createTournament, createUser,
+  Request, Response, createTournament, createAdmin,
   TournamentRepositoryImpl as TournamentRepository,
   AccessKeyRepositoryImpl as AccessKeyRepository,
 } from '../../../test-utils';
 
 describe('/api/judge/create', () => {
-  const user = createUser();
-  const tournament = {...createTournament(), creatorId: user._id.toString()};
+  const admin = createAdmin();
+  const tournament = {...createTournament(), creatorId: admin._id.toString()};
   const name = 'Judge name';
 
   let req: Request;
@@ -18,7 +18,7 @@ describe('/api/judge/create', () => {
   let accessRepo: AccessKeyRepository;
 
   beforeEach(async () => {
-    req = Request.withUserAndParams(user, {tournamentId: tournament.id});
+    req = Request.withUserAndParams(admin, {tournamentId: tournament.id});
     req.body = {name};
     res = new Response();
     tournamentRepo = new TournamentRepository();

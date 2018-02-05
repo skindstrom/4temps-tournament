@@ -3,8 +3,8 @@
 import ObjectId from 'bson-objectid';
 import moment from 'moment';
 import type {
-  UserModel
-} from './data/user';
+  AdminModel
+} from './data/admin';
 import type {
   TournamentRepository
 } from './data/tournament';
@@ -34,9 +34,9 @@ export class Request implements ServerApiRequest {
   query: Query = {};
   params: Params = {};
 
-  constructor(user: ?UserModel) {
+  constructor(admin: ?AdminModel) {
     this.session = {
-      user: user == null ? null : { id: user._id.toString(), role: 'admin' }
+      user: admin == null ? null : { id: admin._id.toString(), role: 'admin' }
     };
   }
 
@@ -46,30 +46,30 @@ export class Request implements ServerApiRequest {
   }
 
   static withBody(body: Body) {
-    return Request.withUserAndBody(createUser(), body);
+    return Request.withUserAndBody(createAdmin(), body);
   }
 
-  static withUserAndBody(user: UserModel, body: Body) {
+  static withUserAndBody(user: AdminModel, body: Body) {
     const req = new Request(user);
     req.body = body;
     return req;
   }
 
   static withQuery(query: Query) {
-    return Request.withUserAndQuery(createUser(), query);
+    return Request.withUserAndQuery(createAdmin(), query);
   }
 
-  static withUserAndQuery(user: UserModel, query: Query) {
+  static withUserAndQuery(user: AdminModel, query: Query) {
     const req = new Request(user);
     req.query = query;
     return req;
   }
 
   static withParams(params: Params) {
-    return Request.withUserAndParams(createUser(), params);
+    return Request.withUserAndParams(createAdmin(), params);
   }
 
-  static withUserAndParams(user: UserModel, params: Params) {
+  static withUserAndParams(user: AdminModel, params: Params) {
     const req = new Request(user);
     req.params = params;
     return req;
@@ -186,7 +186,7 @@ export class AccessKeyRepositoryImpl implements AccessKeyRepository {
   }
 }
 
-export function createUser(): UserModel {
+export function createAdmin(): AdminModel {
   return {
     _id: USER_ID,
     email: 'test@gmail.com',

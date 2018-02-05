@@ -60,7 +60,7 @@ class NavigationBar extends PureComponent<Props, State> {
     const { activeItem } = this.props;
     return (
       <Menu secondary>
-        <MenuItem as={Link} to="/" name="header" header disabled>
+        <MenuItem as={Link} to="/" name="header" header>
           4 Temps Tournaments
         </MenuItem>
         <Menu.Item

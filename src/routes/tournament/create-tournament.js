@@ -13,9 +13,12 @@ class CreateTournamentRoute {
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
+    if (!req.session.user) {
+      res.sendStatus(401);
+      return;
+    }
 
-    // $FlowFixMe
-    const userId: string = req.session.user._id;
+    const userId: string = req.session.user.id;
 
     // $FlowFixMe
     const requestBody: any = req.body;

@@ -1,19 +1,19 @@
 // @flow
 
-export type User = {
+export type Admin = {
   firstName: string,
   lastName: string,
   email: string
 }
 
-export type UserWithPassword = {
+export type AdminWithPassword = {
   firstName: string,
   lastName: string,
   email: string,
   password: string
 }
 
-export type UserCredentials = {
+export type AdminCredentials = {
   email: string,
   password: string
 }

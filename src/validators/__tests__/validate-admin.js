@@ -1,16 +1,16 @@
 // @flow
 
-import validateUser from '../validate-user';
-import type { UserWithPassword } from '../../models/user';
+import validateAdmin from '../validate-admin';
+import type { AdminWithPassword } from '../../models/admin';
 
 test('Valid object is valid', async () => {
-  const user: UserWithPassword = {
+  const admin: AdminWithPassword = {
     firstName: 'Simon',
     lastName: 'Smith',
     email: 'test@test.com',
     password: 'p4ssw0rdh4xxor'
   };
-  const result = await validateUser(user);
+  const result = await validateAdmin(admin);
   expect(result.isValid).toBe(true);
   expect(result.isEmailNotUsed).toBe(true);
   expect(result.isValidFirstName).toBe(true);
@@ -20,13 +20,13 @@ test('Valid object is valid', async () => {
 });
 
 test('Empty first name is invalid', async () => {
-  const user: UserWithPassword = {
+  const admin: AdminWithPassword = {
     firstName: '',
     lastName: 'Smith',
     email: 'test@test.com',
     password: 'p4ssw0rdh4xxor'
   };
-  const result = await validateUser(user);
+  const result = await validateAdmin(admin);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidFirstName).toBe(false);
@@ -38,14 +38,14 @@ test('Empty first name is invalid', async () => {
 });
 
 test('Empty last name is invalid', async () => {
-  const user: UserWithPassword = {
+  const admin: AdminWithPassword = {
     firstName: 'Simon',
     lastName: '',
     email: 'test@test.com',
     password: 'p4ssw0rdh4xxor'
   };
 
-  const result = await validateUser(user);
+  const result = await validateAdmin(admin);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidLastName).toBe(false);
@@ -57,14 +57,14 @@ test('Empty last name is invalid', async () => {
 });
 
 test('Password requires at least 8 characters', async () => {
-  const user: UserWithPassword = {
+  const admin: AdminWithPassword = {
     firstName: 'Simon',
     lastName: 'Smith',
     email: 'test@test.com',
     password: 'abc4567'
   };
 
-  const result = await validateUser(user);
+  const result = await validateAdmin(admin);
 
   expect(result.isValid).toBe(false);
   expect(result.isValidPassword).toBe(false);
@@ -77,15 +77,15 @@ test('Password requires at least 8 characters', async () => {
 
 test('Email requires valid format', async () => {
   const emails = ['@test.com', 't@t', 't@.com'];
-  const users: Array<UserWithPassword> = emails.map((email) => ({
+  const admins: Array<AdminWithPassword> = emails.map((email) => ({
     firstName: 'Simon',
     lastName: 'Smith',
     email,
     password: 'Password123'
   }));
 
-  for (let i = 0; i < users.length; ++i) {
-    const result = await validateUser(users[i]);
+  for (let i = 0; i < admins.length; ++i) {
+    const result = await validateAdmin(admins[i]);
 
     expect(result.isValid).toBe(false);
     expect(result.isValidEmail).toBe(false);
@@ -98,7 +98,7 @@ test('Email requires valid format', async () => {
 });
 
 test('Email in use is invalid', async () => {
-  const getUsers = () => {
+  const getAdmins = () => {
     return new Promise(resolve =>
       resolve([{
         // $FlowFixMe
@@ -110,14 +110,14 @@ test('Email in use is invalid', async () => {
       }]));
   };
 
-  const user: UserWithPassword = {
+  const admin: AdminWithPassword = {
     firstName: 'Simon',
     lastName: 'Smith',
     email: 'test@test.com',
     password: 'Password123'
   };
 
-  const result = await validateUser(user, getUsers);
+  const result = await validateAdmin(admin, getAdmins);
   expect(result.isValid).toBe(false);
   expect(result.isEmailNotUsed).toBe(false);
 

@@ -1,18 +1,18 @@
 // @flow
 import { Types } from 'mongoose';
-import { loginUserRoute } from '../login-user';
+import { loginAdminRoute } from '../login-admin';
 
-import type { UserCredentials } from '../../../models/user';
-import type { UserModel } from '../../../data/user';
+import type { AdminCredentials } from '../../../models/admin';
+import type { AdminModel } from '../../../data/admin';
 
 const setSessionUser = () => { return; };
 
 test('If credentials are valid, the session is set', (done) => {
-  const credentials: UserCredentials = {
+  const credentials: AdminCredentials = {
     email: 'test@gmail.com',
     password: 'password'
   };
-  const user: UserModel = {
+  const admin: AdminModel = {
     _id: new Types.ObjectId(),
     firstName: 'John',
     lastName: 'Smith',
@@ -20,21 +20,21 @@ test('If credentials are valid, the session is set', (done) => {
     email: 'test@gmail.com'
   };
 
-  const setSessionUser = (user) => {
-    expect(user).toEqual(user);
+  const setSessionUser = (admin) => {
+    expect(admin).toEqual(admin);
     done();
   };
-  const getUser = () => new Promise(resolve => resolve(user));
+  const getAdmin = () => new Promise(resolve => resolve(admin));
 
-  loginUserRoute(credentials, setSessionUser, getUser);
+  loginAdminRoute(credentials, setSessionUser, getAdmin);
 });
 
 test('If credentials are valid, returns status 200', async () => {
-  const credentials: UserCredentials = {
+  const credentials: AdminCredentials = {
     email: 'test@gmail.com',
     password: 'password'
   };
-  const user: UserModel = {
+  const admin: AdminModel = {
     _id: new Types.ObjectId(),
     firstName: 'John',
     lastName: 'Smith',
@@ -42,36 +42,36 @@ test('If credentials are valid, returns status 200', async () => {
     email: 'test@gmail.com'
   };
 
-  const getUser = () => new Promise(resolve => resolve(user));
+  const getAdmin = () => new Promise(resolve => resolve(admin));
 
-  expect((await loginUserRoute(credentials, setSessionUser, getUser)).status)
+  expect((await loginAdminRoute(credentials, setSessionUser, getAdmin)).status)
     .toBe(200);
 });
 
 test('Credentials are validated', async () => {
-  const credentials: UserCredentials = {
+  const credentials: AdminCredentials = {
     email: '',
     password: 'password'
   };
 
-  const getUser = () => new Promise(resolve => resolve(null));
+  const getAdmin = () => new Promise(resolve => resolve(null));
 
-  expect((await loginUserRoute(credentials, setSessionUser, getUser)).body)
+  expect((await loginAdminRoute(credentials, setSessionUser, getAdmin)).body)
     .toEqual({
       isValid: false,
       isValidEmail: false,
       isValidPassword: true,
-      doesUserExist: false
+      doesAdminExist: false
     });
 });
 
 test('Invalid credentials return status 400', async () => {
-  const credentials: UserCredentials = {
+  const credentials: AdminCredentials = {
     email: '',
     password: 'password'
   };
 
-  const getUser = () => new Promise(resolve => resolve({
+  const getAdmin = () => new Promise(resolve => resolve({
     _id: new Types.ObjectId(),
     email: '',
     firstName: '',
@@ -79,6 +79,6 @@ test('Invalid credentials return status 400', async () => {
     password: ''
   }));
 
-  expect((await loginUserRoute(credentials, setSessionUser, getUser)).status)
+  expect((await loginAdminRoute(credentials, setSessionUser, getAdmin)).status)
     .toBe(400);
 });
