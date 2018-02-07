@@ -2,7 +2,7 @@
 
 import { Router } from 'express';
 
-import {allow} from '../auth-middleware';
+import { allow } from '../auth-middleware';
 
 import {TournamentRepositoryImpl} from '../../data/tournament';
 

@@ -107,7 +107,7 @@ implements AuthorizationCheckHandler {
     async (
       req: ServerApiRequest, res: ServerApiResponse, next: NextFunction) => {
 
-      if (req.session.user != null) {
+      if (req.session.user != null && req.session.user.role === 'admin') {
         next();
       } else {
         res.sendStatus(401);

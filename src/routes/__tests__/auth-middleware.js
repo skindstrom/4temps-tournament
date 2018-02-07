@@ -4,7 +4,6 @@ import {
   Request, Response, generateId, createTournament,
   createAdmin,
   TournamentRepositoryImpl as TournamentRepository,
-  AccessKeyRepositoryImpl as AccessKeyRepository,
   createJudge
 } from '../../test-utils';
 import {authorizationMiddleware} from '../auth-middleware';
@@ -12,11 +11,9 @@ import {authorizationMiddleware} from '../auth-middleware';
 describe('Authentication middleware', () => {
   describe('Allow Role', () => {
     const admin = createAdmin();
-    const judge = createJudge();
     const tournamentId = generateId();
 
     let tournamentRepository: TournamentRepository;
-    let accessKeyRepository: AccessKeyRepository;
     let req: Request;
     let res: Response;
     let allow;
@@ -24,7 +21,6 @@ describe('Authentication middleware', () => {
     beforeEach(async () => {
       res = new Response();
       tournamentRepository = new TournamentRepository();
-      accessKeyRepository = new AccessKeyRepository();
       req = Request.withUserAndParams(admin, {tournamentId});
       allow = authorizationMiddleware(tournamentRepository);
 
@@ -33,9 +29,6 @@ describe('Authentication middleware', () => {
         id: tournamentId,
         creatorId: admin._id.toString()
       });
-
-      await accessKeyRepository.createForTournamentAndUser(
-        tournamentId, judge.id);
     });
 
     describe('public', () => {
@@ -49,9 +42,6 @@ describe('Authentication middleware', () => {
             Request.withUserAndParams(admin, {}), res, done);
         });
 
-    });
-
-    describe('admin', () => {
       test('Calls next if admin is null and public are allowed',
         (done) => {
           allow('public')(
@@ -59,6 +49,9 @@ describe('Authentication middleware', () => {
             Request.withUserAndParams(null, {}), res, done);
         });
 
+    });
+
+    describe('authenticated', () => {
       test('Calls next if admin is set and authentication is required',
         (done) => {
           allow('authenticated')(req, res, done);
@@ -87,6 +80,20 @@ describe('Authentication middleware', () => {
           expect(res.getStatus()).toBe(401);
         });
 
+
+      test('Returns 401 if the authenticated user is not an admin',
+        async (done) => {
+          const judge: Judge = createJudge();
+          req = Request.withJudgeAndParams(judge, { tournamentId });
+
+          await allow('authenticated')(req, res, () => { });
+          expect(res.getStatus()).toBe(401);
+          done();
+        });
+
+    });
+
+    describe('admin', () => {
       test('Returns 401 if the admin is not admin of tournament', async () => {
         req = Request.withUserAndParams({
           ...admin,
@@ -135,24 +142,24 @@ describe('Authentication middleware', () => {
     describe('judge', () => {
       test('Judge is not allowed if the judge is not part of the tournament',
         async (done) => {
-          const judge: Judge = { id: generateId(), name: 'judge judy' };
+          const judge = createJudge();
           req = Request.withJudgeAndParams(judge, { tournamentId });
           await allow('judge')(req, res, () => {});
           expect(res.getStatus()).toBe(401);
           done();
         });
+
+      test('Judge is allowed if the judge is part of the tournament',
+        async (done) => {
+          const judge = createJudge();
+          const tournament = { ...createTournament(), id: generateId() };
+          await tournamentRepository.create(tournament);
+          await tournamentRepository.addJudge(tournament.id, judge);
+
+          req =
+            Request.withJudgeAndParams(judge, { tournamentId: tournament.id });
+          await allow('judge')(req, res, done);
+        });
     });
-
-    test('Judge is allowed if the judge is part of the tournament',
-      async (done) => {
-        const judge: Judge = { id: generateId(), name: 'judge judy' };
-        const tournament = { ...createTournament(), id: generateId() };
-        await tournamentRepository.create(tournament);
-        await tournamentRepository.addJudge(tournament.id, judge);
-
-        req =
-          Request.withJudgeAndParams(judge, { tournamentId: tournament.id });
-        await allow('judge')(req, res, done);
-      });
   });
 });
