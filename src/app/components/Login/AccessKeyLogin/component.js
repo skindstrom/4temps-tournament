@@ -44,7 +44,8 @@ class Login extends PureComponent<Props, State> {
           </Header>
           <Form
             loading={this.props.isLoading}
-            error={!this.props.isValidAccessKey}
+            error={!this.props.isValidAccessKey
+              || !this.props.doesAccessKeyExist}
           >
             <FormInput
               label='Access Key'
