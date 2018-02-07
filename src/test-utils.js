@@ -74,6 +74,13 @@ export class Request implements ServerApiRequest {
     req.params = params;
     return req;
   }
+
+  static withJudgeAndParams(judge: Judge, params: Params) {
+    const req = new Request(null);
+    req.session = { user: { id: judge.id, role: 'judge' } };
+    req.params = params;
+    return req;
+  }
 }
 
 export class Response implements ServerApiResponse {

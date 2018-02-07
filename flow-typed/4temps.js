@@ -1,6 +1,7 @@
 // @flow
 import type {Tournament} from '../src/models/tournament';
 import type {Participant} from '../src/models/participant';
+import type {Admin} from '../src/models/admin';
 import type { AdminLoginValidationSummary } from
   '../src/validators/validate-admin-login';
 import type { TournamentValidationSummary } from
@@ -55,6 +56,10 @@ declare type Judge = {
   id: string,
   name: string
 }
+
+type UserTypes = Judge | Admin;
+
+declare type User = UserTypes & { role: PermissionRole };
 
 declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
 

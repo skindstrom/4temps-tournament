@@ -21,6 +21,9 @@ export function authorizationMiddleware(repository: TournamentRepository) {
     case 'admin':
       handler =  new AuthorizationCheckAdminHandler(repository);
       break;
+    case 'judge':
+      handler = new AuthorizationCheckJudgeHandler(repository);
+      break;
     default:
       throw new Error('invalid role');
     }
@@ -112,4 +115,67 @@ implements AuthorizationCheckHandler {
     }
 }
 
-function TournamentNotFoundError(){}
+class AuthorizationCheckJudgeHandler implements AuthorizationCheckHandler {
+  _repo: TournamentRepository;
+
+  _judgeId: string;
+  _requestTournamentId: string;
+
+  constructor(repo: TournamentRepository) {
+    this._repo = repo;
+  }
+
+  middleware = () =>
+    async (
+      req: ServerApiRequest,
+      res: ServerApiResponse,
+      next: NextFunction) => {
+
+      try {
+        this._parseRequest(req);
+        const tournament = await this._getTournament();
+        if (this._isJudgeInTournament(tournament)) {
+          next();
+        } else {
+          res.sendStatus(401);
+        }
+      } catch (e) {
+        this._statusFromError(e);
+      }
+    }
+
+  _parseRequest = (req: ServerApiRequest) => {
+    if (req.params.tournamentId != '' && req.session.user != null) {
+      this._requestTournamentId = req.params.tournamentId;
+      this._judgeId = req.session.user.id;
+    } else {
+      throw new InvalidRequestError();
+    }
+  }
+
+  _getTournament = async (): Promise<Tournament> => {
+    const tournament = await this._repo.get(this._requestTournamentId);
+    if (tournament == null) {
+      throw new TournamentNotFoundError();
+    }
+
+    return tournament;
+  }
+
+  _isJudgeInTournament = (tournament: Tournament): boolean => {
+    return tournament.judges
+      .filter(({ id }) => id === this._judgeId).length === 1;
+  }
+
+  _statusFromError = (e: mixed) => {
+    if (e instanceof TournamentNotFoundError) {
+      return 404;
+    } else if (e instanceof InvalidRequestError) {
+      return 400;
+    }
+    return 500;
+  }
+}
+
+function TournamentNotFoundError() { }
+function InvalidRequestError() { }
