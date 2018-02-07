@@ -32,6 +32,7 @@ export interface AccessKeyRepository {
   createForTournamentAndUser(
     tournamentId: string, userId: string): Promise<void>;
   getForKey(key: string): Promise<?AccessKey>;
+  getForTournament(id: string): Promise<Array<AccessKey>>;
 }
 
 class AccessKeyRepositoryImpl implements AccessKeyRepository {
@@ -73,6 +74,14 @@ class AccessKeyRepositoryImpl implements AccessKeyRepository {
       userId: userId.toString(),
       tournamentId: tournamentId.toString()
     };
+  }
+
+  async getForTournament(tournamentId: string) {
+    const found = await Model.find({ tournamentId });
+    if (found) {
+      return found.map(o => this.mapToDomainModel(o.toObject()));
+    }
+    return [];
   }
 }
 

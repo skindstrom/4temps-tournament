@@ -5,8 +5,8 @@ import AdminLogin from './AdminLogin';
 import AccessKeyLogin from './AccessKeyLogin';
 
 class Login extends PureComponent<{}> {
-  static credentialHeader = 'Credential Login';
-  static accessKeyHeader = 'Access Key Login';
+  static credentialHeader = 'Admin Login';
+  static accessKeyHeader = 'Judge Login';
   render () {
     return (
       <div>

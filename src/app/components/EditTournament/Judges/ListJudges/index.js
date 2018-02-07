@@ -1,31 +1,48 @@
 // @flow
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PreloadContainer from '../../../PreloadContainer';
 import Component from './component';
 
-import {getTournamentsForUser} from '../../../../api/tournament';
+import { getTournamentsForUser } from '../../../../api/tournament';
+import { getAccessKeysForTournament } from '../../../../api/access-key';
 
 type Props = {
   tournamentId: string
 }
 
-function mapStateToProps({ judges }: ReduxState,
+function mapStateToProps({ judges, accessKeys }: ReduxState,
   { tournamentId }: Props) {
+
+  const hasTournament = judges.forTournament[tournamentId] != null;
+  const hasKeys = hasTournament &&
+    judges.forTournament[tournamentId]
+      .reduce((acc, curr) => acc && accessKeys[curr] != null, true);
   return {
     Child: Component,
-    shouldLoad: !judges.forTournament[tournamentId],
+    shouldLoad: !hasKeys,
     judges:
       (judges.forTournament[tournamentId] || [])
-        .map(id => judges.byId[id]),
+        .map(id => ({...judges.byId[id], accessKey: accessKeys[id]})),
   };
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch) {
+function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
-    load: () => dispatch(
-      {type: 'GET_ADMIN_TOURNAMENTS', promise: getTournamentsForUser()}
-    )
+    load: () => {
+      dispatch(
+        {
+          type: 'GET_ADMIN_TOURNAMENTS',
+          promise: getTournamentsForUser()
+        }
+      );
+      dispatch(
+        {
+          type: 'GET_ACCESS_KEYS',
+          promise: getAccessKeysForTournament(tournamentId)
+        }
+      );
+    }
   };
 }
 

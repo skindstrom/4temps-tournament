@@ -110,6 +110,7 @@ declare type ReduxState = {
   participants: ParticipantsReduxState,
   rounds: RoundsReduxState,
   judges: JudgesReduxState,
+  accessKeys: AccessKeysReduxState,
 
   ui: {
     judgeLogin: UiJudgeLoginReduxState,
@@ -171,6 +172,10 @@ declare type JudgesReduxState = {
   }
 }
 
+declare type AccessKeysReduxState = {
+  [id: string]: AccessKey
+}
+
 declare type UiLoginReduxState = {
   isLoading: boolean,
   isValid: boolean,
@@ -228,7 +233,8 @@ declare type ReduxAction = LogoutAction | LoginAction
   | CreateTournamentAction | EditTournamentAction
   | CreateParticipantAction
   | SignUpAction | CreateRoundAction
-  | DeleteRoundAction | CreateJudgeAction | StartRoundAction | LoginJudgeAction;
+  | DeleteRoundAction | CreateJudgeAction | StartRoundAction | LoginJudgeAction
+  | GetAccessKeys;
 
 // Redux Actions
 declare type LogoutAction =
@@ -305,5 +311,10 @@ declare type StartRoundAction = {
 }
 declare type LoginJudgeAction = {
   type: 'LOGIN_WITH_ACCESS_KEY',
-  promise: any
+  promise: mixed
+}
+
+declare type GetAccessKeys = {
+  type: 'GET_ACCESS_KEYS',
+  promise: mixed
 }

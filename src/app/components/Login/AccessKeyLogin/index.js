@@ -14,9 +14,6 @@ function mapDispatchToProps(dispatch: ReduxDispatch) {
       dispatch({
         type: 'LOGIN_WITH_ACCESS_KEY',
         promise: loginJudge(accessKey),
-        meta: {
-          onSuccess: () => alert('Judge successfully logged in!')
-        }
       })
   };
 }

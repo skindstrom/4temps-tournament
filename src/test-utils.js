@@ -191,6 +191,10 @@ export class AccessKeyRepositoryImpl implements AccessKeyRepository {
     }
     return null;
   }
+
+  async getForTournament(tournamentId: string) {
+    return this._keys.filter(k => k.tournamentId === tournamentId);
+  }
 }
 
 export function createAdmin(): AdminModel {
