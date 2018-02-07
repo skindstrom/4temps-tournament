@@ -10,6 +10,7 @@ function userReducer(
 
   switch (type) {
   case 'LOGIN_USER':
+  case 'LOGIN_WITH_ACCESS_KEY':
     return loginUser(state, action);
   case 'LOGOUT_USER':
     return logoutUser(state, action);
