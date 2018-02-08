@@ -7,6 +7,7 @@ import PreloadContainer from '../PreloadContainer';
 import Component from './component';
 import type { RoundViewModel } from './component';
 import { getTournamentsForUser } from '../../api/tournament';
+import { startNextDance } from '../../api/round';
 
 type Props = {
   match: Match,
@@ -64,7 +65,10 @@ function createViewModelsForRound(
   return viewModel;
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
+function mapDispatchToProps(
+  dispatch: ReduxDispatch,
+  { match, history }: Props) {
+
   return {
     load: () => dispatch({
       type: 'GET_ADMIN_TOURNAMENTS',
@@ -72,6 +76,10 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
       meta: {
         onFailure: () => history.push('/404')
       }
+    }),
+    startDance: () => dispatch({
+      type: 'START_NEXT_DANCE',
+      promise: startNextDance(match.params.tournamentId || '')
     })
   };
 }

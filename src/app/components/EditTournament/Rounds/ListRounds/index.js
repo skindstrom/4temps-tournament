@@ -45,10 +45,12 @@ function mapDispatchToProps(
       type: 'START_ROUND',
       promise: startRound(tournamentId, roundId),
       meta: {
-        onSuccess: () => history.push(`/round/${roundId}`)
+        onSuccess: () =>
+          history.push(`/tournament/${tournamentId}/round/${roundId}`)
       }
     }),
-    onClick: (roundId: string) => history.push(`/round/${roundId}`)
+    onClick: (roundId: string) =>
+      history.push(`/tournament/${tournamentId}/round/${roundId}`)
   };
 }
 

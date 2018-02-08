@@ -28,3 +28,8 @@ export async function startRound(
   tournamentId: string, roundId: string): Promise<mixed> {
   return apiPostRequest(`/api/round/${tournamentId}/start/${roundId}`);
 }
+
+export async function startNextDance(
+  tournamentId: string): Promise<mixed> {
+  return apiPostRequest(`/api/round/${tournamentId}/start-dance`);
+}

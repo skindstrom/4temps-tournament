@@ -242,7 +242,7 @@ declare type ReduxAction = LogoutAction | LoginAction
   | CreateParticipantAction
   | SignUpAction | CreateRoundAction
   | DeleteRoundAction | CreateJudgeAction | StartRoundAction | LoginJudgeAction
-  | GetAccessKeys;
+  | GetAccessKeys | StartNextDanceAction;
 
 // Redux Actions
 declare type LogoutAction =

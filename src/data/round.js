@@ -30,6 +30,11 @@ type DanceDbModel = {
   finished: boolean,
 }
 
+const danceSchema = new mongoose.Schema({
+  active: Boolean,
+  finished: Boolean,
+});
+
 const groupSchema = new mongoose.Schema({
   pairs: [{
     follower: {
@@ -40,7 +45,8 @@ const groupSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       required: false
     },
-  }]
+  }],
+  dances: [danceSchema]
 });
 
 export const schema = new mongoose.Schema({

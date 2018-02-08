@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import {
-  Container, Header,
+  Container, Header, Button,
   Table, TableRow, TableCell,
   TableHeader, TableBody, TableHeaderCell,
 } from 'semantic-ui-react';
@@ -24,7 +24,8 @@ export type RoundViewModel = {
 }
 
 export type Props = {
-  round: RoundViewModel
+  round: RoundViewModel,
+  startDance: () => void,
 }
 
 class RoundOverview extends Component<Props> {
@@ -42,6 +43,11 @@ class RoundOverview extends Component<Props> {
               <TableCell>
                 Current dance: {round.activeDance != null ?
                   round.activeGroup : 'None'}
+              </TableCell>
+              <TableCell>
+                <Button onClick={this.props.startDance} >
+                  Start next dance
+                </Button>
               </TableCell>
             </TableRow>
           </TableBody>

@@ -37,7 +37,7 @@ const Router = () => {
         component={EditTournament}
       />
       <PrivateRoute
-        path='/round/:roundId'
+        path='/tournament/:tournamentId/round/:roundId'
         component={RoundOverview}
       />
       <Route component={FourOFour} />
