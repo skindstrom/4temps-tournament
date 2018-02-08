@@ -139,7 +139,8 @@ describe('Rounds reducer', () => {
         ...initialRound,
         groups: [{
           id: generateId(),
-          pairs: [{ follower: generateId(), leader: generateId() }]
+          pairs: [{ follower: generateId(), leader: generateId() }],
+          dances: []
         }]
       };
       const tournamentId = generateId();

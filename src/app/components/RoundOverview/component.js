@@ -16,13 +16,10 @@ export type RoundViewModel = {
   id: string,
   name: string,
   danceCount: number,
-  minPairCount: number,
-  maxPairCount: number,
-  tieRule: string,
-  roundScoringRule: string,
-  multipleDanceScoringRule: string,
   active: boolean,
   finished: boolean,
+  activeGroup: ?number,
+  activeDance: ?number,
   groups: Array<GroupViewModel>
 }
 
@@ -38,8 +35,14 @@ class RoundOverview extends Component<Props> {
         <Table basic='very' collapsing>
           <TableBody>
             <TableRow>
-              <TableCell>Current group: XX</TableCell>
-              <TableCell>Current dance: XX</TableCell>
+              <TableCell>
+                Current group: {round.activeGroup != null ?
+                  round.activeGroup : 'None'}
+              </TableCell>
+              <TableCell>
+                Current dance: {round.activeDance != null ?
+                  round.activeGroup : 'None'}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>);

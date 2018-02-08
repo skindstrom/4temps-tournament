@@ -66,8 +66,13 @@ class StartRoundRouteHandler {
       new PairingGeneratorImpl(
         this._getRound(), this._tournament.participants);
 
+    let dances: Array<Dance> = [];
+    for (let i = 0; i < this._round.danceCount; ++i) {
+      dances.push({ id: ObjectId.generate(), active: false, finished: false });
+    }
+
     return generator.generateGroups()
-      .map(pairs => ({ id: ObjectId.generate(), pairs }));
+      .map(pairs => ({ id: ObjectId.generate(), pairs, dances }));
   }
 
   _getRound = (): Round => {

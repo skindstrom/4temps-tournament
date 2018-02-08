@@ -35,8 +35,22 @@ function createViewModelsForRound(
 
   const { groups, ...rest } = round;
 
+  let activeDance: ?number = null;
+  let activeGroup: ?number = null;
+
+  for (let i = 0; i < groups.length; ++ i) {
+    for (let j = 0; j < groups[i].dances.length; ++j) {
+      if (groups[i].dances[j].active) {
+        activeDance = j + 1;
+        activeGroup = i + 1;
+      }
+    }
+  }
+
   const viewModel: RoundViewModel = {
     ...rest,
+    activeDance,
+    activeGroup,
     groups: groups.map(g => ({
       id: g.id,
       pairs: g.pairs.map((p, i) => ({

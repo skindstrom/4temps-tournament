@@ -39,7 +39,14 @@ declare type Round = {
 
 declare type DanceGroup = {
   id: string,
-  pairs: Array<Pair>
+  pairs: Array<Pair>,
+  dances: Array<Dance>
+}
+
+declare type Dance = {
+  id: string,
+  active: boolean,
+  finished: boolean,
 }
 
 declare type Pair = {
