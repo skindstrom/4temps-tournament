@@ -10,6 +10,7 @@ import SignUp from '../SignUp';
 import Home from '../Home';
 import Login from '../Login';
 import FourOFour from '../FourOFour';
+import RoundOverview from '../RoundOverview';
 import PrivateRoute from './private-route';
 
 const Router = () => {
@@ -34,6 +35,10 @@ const Router = () => {
       <PrivateRoute
         path='/tournament/edit/:tournamentId'
         component={EditTournament}
+      />
+      <PrivateRoute
+        path='/round/:roundId'
+        component={RoundOverview}
       />
       <Route component={FourOFour} />
     </Switch>

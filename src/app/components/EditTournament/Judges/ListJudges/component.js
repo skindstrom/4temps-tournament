@@ -13,14 +13,16 @@ type JudgeViewModel = Judge & {
 
 function ListJudges({judges}: {judges: Array<JudgeViewModel>}) {
   return (
-    <Table>
+    <Table unstackable>
       <TableHeader>
-        <TableHeaderCell>
-          Name
-        </TableHeaderCell>
-        <TableHeaderCell>
-          Access Key
-        </TableHeaderCell>
+        <TableRow>
+          <TableHeaderCell>
+            Name
+          </TableHeaderCell>
+          <TableHeaderCell>
+            Access Key
+          </TableHeaderCell>
+        </TableRow>
       </TableHeader>
       <TableBody>
         {judges.map(j => (

@@ -1,10 +1,7 @@
 // @flow
 import { normalize, schema } from 'normalizr';
 
-const groupSchema = new schema.Entity('groups');
-const roundSchema = new schema.Entity('rounds', {
-  groups: [groupSchema]
-});
+const roundSchema = new schema.Entity('rounds');
 const participantSchema = new schema.Entity('participants');
 const judgeSchema = new schema.Entity('judges');
 

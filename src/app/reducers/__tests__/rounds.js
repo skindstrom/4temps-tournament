@@ -138,6 +138,7 @@ describe('Rounds reducer', () => {
       const updatedRound: Round = {
         ...initialRound,
         groups: [{
+          id: generateId(),
           pairs: [{ follower: generateId(), leader: generateId() }]
         }]
       };

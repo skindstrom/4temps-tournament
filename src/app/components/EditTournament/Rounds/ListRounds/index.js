@@ -1,13 +1,15 @@
 // @flow
 
 import { connect } from 'react-redux';
+import type { RouterHistory } from 'react-router-dom';
 import PreloadContainer from '../../../PreloadContainer';
 import List from './component';
 import { deleteRound, startRound } from '../../../../api/round';
 import { getTournamentsForUser } from '../../../../api/tournament';
 
 type Props = {
-  tournamentId: string
+  tournamentId: string,
+  history: RouterHistory
 }
 
 function mapStateToProps({ rounds }: ReduxState,
@@ -27,7 +29,10 @@ function mapStateToProps({ rounds }: ReduxState,
   };
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
+function mapDispatchToProps(
+  dispatch: ReduxDispatch,
+  { tournamentId, history }: Props) {
+
   return {
     load: () => dispatch(
       {type: 'GET_ADMIN_TOURNAMENTS', promise: getTournamentsForUser()}
@@ -38,8 +43,12 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
     }),
     startRound: (roundId: string) => dispatch({
       type: 'START_ROUND',
-      promise: startRound(tournamentId, roundId)
-    })
+      promise: startRound(tournamentId, roundId),
+      meta: {
+        onSuccess: () => history.push(`/round/${roundId}`)
+      }
+    }),
+    onClick: (roundId: string) => history.push(`/round/${roundId}`)
   };
 }
 

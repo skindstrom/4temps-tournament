@@ -1,4 +1,5 @@
 // @flow
+import ObjectId from 'bson-objectid';
 import type {TournamentRepository} from '../../data/tournament';
 import PairingGeneratorImpl from '../../domain/group-pairing-generator';
 
@@ -65,7 +66,8 @@ class StartRoundRouteHandler {
       new PairingGeneratorImpl(
         this._getRound(), this._tournament.participants);
 
-    return generator.generateGroups().map(pairs => ({pairs}));
+    return generator.generateGroups()
+      .map(pairs => ({ id: ObjectId.generate(), pairs }));
   }
 
   _getRound = (): Round => {

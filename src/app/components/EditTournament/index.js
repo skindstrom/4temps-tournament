@@ -71,6 +71,7 @@ class EditTournament extends Component<Props, State> {
   _renderRounds = () => (
     <Rounds
       tournamentId={this._getTournamentId()}
+      history={this.props.history}
     />);
 
   _renderStaff = () =>

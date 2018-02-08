@@ -38,6 +38,7 @@ declare type Round = {
 }
 
 declare type DanceGroup = {
+  id: string,
   pairs: Array<Pair>
 }
 

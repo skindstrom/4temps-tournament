@@ -37,7 +37,7 @@ class ListParticipants extends Component<Props> {
   render() {
     return (
       <Container>
-        <Table>
+        <Table unstackable>
           <TableHeader>
             <TableRow>
               <TableHeaderCell>Name</TableHeaderCell>

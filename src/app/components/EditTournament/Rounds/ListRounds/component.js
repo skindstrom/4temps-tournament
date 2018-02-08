@@ -10,6 +10,7 @@ type Props = {
   rounds: Array<Round>,
   deleteRound: (id: string) => void,
   startRound: (id: string) => void,
+  onClick: (id: string) => void,
   nextRound: ?string
 };
 
@@ -17,18 +18,9 @@ class RoundList extends Component<Props> {
 
   _renderItem = (round: Round) => {
     return (
-      <TableRow key={round.id}>
+      <TableRow key={round.id} onClick={() => this.props.onClick(round.id)}>
         <TableCell>
           {round.name}
-        </TableCell>
-        <TableCell>
-          {round.danceCount}
-        </TableCell>
-        <TableCell>
-          {round.minPairCount}
-        </TableCell>
-        <TableCell>
-          {round.maxPairCount}
         </TableCell>
         <TableCell textAlign='right'>
           {round.id === this.props.nextRound && !round.active &&
@@ -54,13 +46,10 @@ class RoundList extends Component<Props> {
 
   render() {
     return (
-      <Table fixed>
+      <Table fixed selectable unstackable>
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
-            <TableHeaderCell>Dance count</TableHeaderCell>
-            <TableHeaderCell>Minimum amount of pairs</TableHeaderCell>
-            <TableHeaderCell>Maximum amount of pairs</TableHeaderCell>
             <TableHeaderCell />
             <TableHeaderCell />
           </TableRow>
