@@ -9,46 +9,22 @@ export function allow(role: PermissionRole) {
 }
 
 export function authorizationMiddleware(repository: TournamentRepository) {
-  return (role: PermissionRole) => {
-    let handler: AuthorizationCheckHandler;
-    switch(role) {
-    case 'public':
-      handler = new AuthorizationCheckPublicHandler();
-      break;
-    case 'authenticated':
-      handler =  new AuthorizationCheckAuthenticatedHandler();
-      break;
-    case 'admin':
-      handler =  new AuthorizationCheckAdminHandler(repository);
-      break;
-    case 'judge':
-      handler = new AuthorizationCheckJudgeHandler(repository);
-      break;
-    default:
-      throw new Error('invalid role');
-    }
-
-    return handler.middleware();
+  return (...roles: Array<PermissionRole>) => {
+    return new AuthorizationChecker(roles, repository).middleware();
   };
 }
 
-interface AuthorizationCheckHandler {
-  middleware(): (
-    req: ServerApiRequest,
-    res: ServerApiResponse,
-    next: NextFunction) => Promise<void>
-}
-
-class AuthorizationCheckAdminHandler implements AuthorizationCheckHandler {
+class AuthorizationChecker {
+  _roles: Array<PermissionRole>;
   _repository: TournamentRepository;
 
   _res: ServerApiResponse;
   _next: NextFunction;
-  _userId: string;
+  _user: ?{ id: string, role: PermissionRole };
   _tournamentId: string;
-  _tournament: Tournament;
 
-  constructor(repository: TournamentRepository) {
+  constructor(roles: Array<PermissionRole>, repository: TournamentRepository) {
+    this._roles = roles;
     this._repository = repository;
   }
 
@@ -58,11 +34,11 @@ class AuthorizationCheckAdminHandler implements AuthorizationCheckHandler {
 
       this._res = res;
       this._next = next;
-      this._userId = req.session.user != null ? req.session.user.id : '';
+      this._user = req.session.user;
       this._tournamentId = req.params.tournamentId || '';
 
       try {
-        if (await this._isAdmin()) {
+        if (await this._isAllowed()) {
           next();
         } else {
           res.sendStatus(401);
@@ -72,14 +48,57 @@ class AuthorizationCheckAdminHandler implements AuthorizationCheckHandler {
       }
     }
 
-  _isAdmin = async () => {
-    const tournament = await this._repository.get(this._tournamentId);
 
+  _isAllowed = async () => {
+    const funcs: { [role: PermissionRole]: () => Promise<boolean> } = {
+      'public': this._isAllowedPublic,
+      'authenticated': this._isAllowedAuthenticated,
+      'judge': this._isAllowedJudge,
+      'admin': this._isAllowedAdmin
+    };
+
+    let accumulator: boolean = false;
+    for (const role of this._roles) {
+      accumulator = accumulator || await funcs[role]();
+    }
+
+    return accumulator;
+  }
+
+  _isAllowedPublic = async () => true
+  _isAllowedAuthenticated = async () => this._user != null
+    && this._user.role === 'admin';
+
+  _isAllowedAdmin = async () => this._user != null
+    && this._user.role === 'admin'
+    && this._isAdminOfTournament(await this._getTournament());
+
+  _isAdminOfTournament = async (tournament: Tournament) => {
     if (tournament == null) {
       throw new TournamentNotFoundError();
     }
 
-    return tournament.creatorId == this._userId;
+    const userId = this._user == null ? '' : this._user.id;
+    return tournament.creatorId == userId;
+  }
+
+  _isAllowedJudge = async () => this._user != null
+    && this._user.role === 'judge'
+    && this._isJudgeInTournament(await this._getTournament());
+
+  _getTournament = async (): Promise<Tournament> => {
+    const tournament = await this._repository.get(this._tournamentId);
+    if (tournament == null) {
+      throw new TournamentNotFoundError();
+    }
+
+    return tournament;
+  }
+
+  _isJudgeInTournament = (tournament: Tournament): boolean => {
+    const judgeId = this._user == null ? '' : this._user.id;
+    return tournament.judges
+      .filter(({ id }) => id === judgeId).length === 1;
   }
 
   _handleError = (error: mixed) => {
@@ -91,91 +110,4 @@ class AuthorizationCheckAdminHandler implements AuthorizationCheckHandler {
   }
 }
 
-class AuthorizationCheckPublicHandler implements AuthorizationCheckHandler {
-  middleware = () =>
-    async (
-      req: ServerApiRequest, res: ServerApiResponse, next: NextFunction) => {
-
-      next();
-    }
-}
-
-class AuthorizationCheckAuthenticatedHandler
-implements AuthorizationCheckHandler {
-
-  middleware = () =>
-    async (
-      req: ServerApiRequest, res: ServerApiResponse, next: NextFunction) => {
-
-      if (req.session.user != null && req.session.user.role === 'admin') {
-        next();
-      } else {
-        res.sendStatus(401);
-      }
-    }
-}
-
-class AuthorizationCheckJudgeHandler implements AuthorizationCheckHandler {
-  _repo: TournamentRepository;
-
-  _judgeId: string;
-  _requestTournamentId: string;
-
-  constructor(repo: TournamentRepository) {
-    this._repo = repo;
-  }
-
-  middleware = () =>
-    async (
-      req: ServerApiRequest,
-      res: ServerApiResponse,
-      next: NextFunction) => {
-
-      try {
-        this._parseRequest(req);
-        const tournament = await this._getTournament();
-        if (this._isJudgeInTournament(tournament)) {
-          next();
-        } else {
-          res.sendStatus(401);
-        }
-      } catch (e) {
-        this._statusFromError(e);
-      }
-    }
-
-  _parseRequest = (req: ServerApiRequest) => {
-    if (req.params.tournamentId != '' && req.session.user != null) {
-      this._requestTournamentId = req.params.tournamentId;
-      this._judgeId = req.session.user.id;
-    } else {
-      throw new InvalidRequestError();
-    }
-  }
-
-  _getTournament = async (): Promise<Tournament> => {
-    const tournament = await this._repo.get(this._requestTournamentId);
-    if (tournament == null) {
-      throw new TournamentNotFoundError();
-    }
-
-    return tournament;
-  }
-
-  _isJudgeInTournament = (tournament: Tournament): boolean => {
-    return tournament.judges
-      .filter(({ id }) => id === this._judgeId).length === 1;
-  }
-
-  _statusFromError = (e: mixed) => {
-    if (e instanceof TournamentNotFoundError) {
-      return 404;
-    } else if (e instanceof InvalidRequestError) {
-      return 400;
-    }
-    return 500;
-  }
-}
-
 function TournamentNotFoundError() { }
-function InvalidRequestError() { }
