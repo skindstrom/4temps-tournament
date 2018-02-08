@@ -171,6 +171,51 @@ describe('Rounds reducer', () => {
       ).toEqual(expected);
     });
   });
+
+  describe('START_NEXT_DANCE', () => {
+    test('success sets updated round', () => {
+      const tournamentId = generateId();
+      const activeRound: Round = {
+        ...createRound(),
+        groups: [{
+          id: generateId(),
+          pairs: [],
+          dances: [
+            { id: generateId(), active: false, finished: true },
+            { id: generateId(), active: false, finished: false }],
+        }],
+        active: true,
+        finished: false
+      };
+
+      const updatedRound = JSON.parse(JSON.stringify(activeRound));
+      updatedRound.groups[0].dances[1].active = true;
+
+      const payload = updatedRound;
+
+      const initial = {
+        ...getInitialState(),
+        forTournament: {
+          [tournamentId]: [activeRound.id]
+        },
+        byId: {
+          [activeRound.id]: activeRound
+        }
+      };
+
+      const expected = {
+        ...initial,
+        byId: {
+          [updatedRound.id]: updatedRound
+        }
+      };
+
+      expect(
+        reducer(initial,
+          makePackAction(LIFECYCLE.SUCCESS, 'START_NEXT_DANCE', payload))
+      ).toEqual(expected);
+    });
+  });
 });
 
 function roundWithId(id: string): Round {

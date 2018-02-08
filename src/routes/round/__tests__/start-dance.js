@@ -63,7 +63,7 @@ describe('Start dance API', () => {
         finished: false
       };
 
-      const expected = { ...activeRound };
+      const expected = JSON.parse(JSON.stringify(activeRound));
       expected.groups[0].dances[1].active = true;
 
       await repo.createRound(tournament.id, activeRound);

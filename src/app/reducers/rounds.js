@@ -16,6 +16,8 @@ function rounds(state: RoundsReduxState = getInitialState(),
     return deleteRound(state, action);
   case 'START_ROUND':
     return startRound(state, action);
+  case 'START_NEXT_DANCE':
+    return startDance(state, action);
   default:
     return state;
   }
@@ -100,6 +102,21 @@ function getTournaments(
 }
 
 function startRound(
+  state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
+  const { payload } = action;
+
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      byId: {
+        ...prevState.byId,
+        [payload.id]: payload
+      }
+    }),
+  });
+}
+
+function startDance(
   state: RoundsReduxState, action: ReduxPackAction): RoundsReduxState {
   const { payload } = action;
 

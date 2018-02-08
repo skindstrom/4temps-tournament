@@ -326,3 +326,8 @@ declare type GetAccessKeys = {
   type: 'GET_ACCESS_KEYS',
   promise: mixed
 }
+
+declare type StartNextDanceAction = {
+  type: 'START_NEXT_DANCE',
+  promise: mixed
+}
