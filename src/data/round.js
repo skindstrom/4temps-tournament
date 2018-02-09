@@ -3,6 +3,15 @@
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 
+type CriterionDbModel = {
+  _id: ObjectId,
+  name: string,
+  minValue: number,
+  maxValue: number,
+  description: string,
+  type: 'none' | 'both' | 'one' | 'follower' | 'leader'
+}
+
 export type RoundDbModel = {
   _id: ObjectId,
   name: string,
@@ -12,7 +21,7 @@ export type RoundDbModel = {
   tieRule: 'none' | 'random' | 'all',
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
-  criteria: Array<RoundCriterion>,
+  criteria: Array<CriterionDbModel>,
   active: boolean,
   finished: boolean,
   groups: Array<DanceGroupDbModel>
@@ -95,11 +104,16 @@ export function mapToDomainModel(round: RoundDbModel): Round {
   const {
     _id,
     groups,
+    criteria,
     ...same
   } = round;
 
   return {
     id: _id.toString(),
+    criteria: criteria.map(({ _id, ...sameCrit }) => ({
+      id: _id.toString(),
+      ...sameCrit,
+    })),
     groups: groups.map(g => ({
       id: g._id.toString(),
       pairs:
@@ -121,11 +135,16 @@ export function mapToDbModel(round: Round): RoundDbModel {
   const {
     id,
     groups,
+    criteria,
     ...same
   } = round;
 
   return {
     _id: new mongoose.Types.ObjectId(id),
+    criteria: criteria.map(({ id, ...sameCrit }) => ({
+      _id: new mongoose.Types.ObjectId(id),
+      ...sameCrit,
+    })),
     groups: groups.map(g => ({
       _id: new mongoose.Types.ObjectId(g.id),
       pairs:

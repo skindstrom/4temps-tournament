@@ -14,6 +14,7 @@ import type {
 import type {
   Tournament
 } from './models/tournament';
+import type { NoteRepository } from './data/note';
 
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
@@ -194,6 +195,27 @@ export class AccessKeyRepositoryImpl implements AccessKeyRepository {
 
   async getForTournament(tournamentId: string) {
     return this._keys.filter(k => k.tournamentId === tournamentId);
+  }
+}
+
+export class NoteRepositoryImpl implements NoteRepository {
+  _notes: Array<JudgeNote> = [];
+
+  getAll = () => this._notes;
+
+  createOrUpdate = async (note: JudgeNote) => {
+
+    const index = this._notes.findIndex(arrNote =>
+      arrNote.judgeId === note.judgeId
+      && arrNote.participantId === note.judgeId
+      && arrNote.criterionId === note.criterionId
+      && arrNote.danceId === note.danceId);
+
+    if (index != -1) {
+      this._notes[index] = note;
+    } else {
+      this._notes.push(note);
+    }
   }
 }
 

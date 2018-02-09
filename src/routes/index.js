@@ -8,6 +8,7 @@ import TournamentRoute from './tournament';
 import ParticipantRoute from './participant';
 import RoundRoute from './round';
 import JudgeRoute from './judge';
+import NoteRoute from './note';
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use('/tournament', TournamentRoute);
 router.use('/participant', ParticipantRoute);
 router.use('/round', RoundRoute);
 router.use('/judge', JudgeRoute);
+router.use('/note', NoteRoute);
 
 export default router;
