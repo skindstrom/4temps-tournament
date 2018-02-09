@@ -15,6 +15,7 @@ import type { AdminCreateValidationSummary } from
 // Base types
 
 declare type RoundCriterion = {
+  id: string,
   name: string,
   minValue: number,
   maxValue: number,
@@ -63,6 +64,14 @@ declare type AccessKey = {
 declare type Judge = {
   id: string,
   name: string
+}
+
+declare type JudgeNote = {
+  judgeId: string,
+  danceId: string,
+  criterionId: string,
+  participantId: string,
+  value: number
 }
 
 type UserTypes = Judge | Admin;

@@ -229,6 +229,7 @@ function roundWithId(id: string): Round {
     roundScoringRule: 'average',
     multipleDanceScoringRule: 'worst',
     criteria: [{
+      id: generateId(),
       name: 'style',
       minValue: 1,
       maxValue: 2,

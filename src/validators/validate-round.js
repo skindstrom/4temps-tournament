@@ -85,8 +85,8 @@ function validateCriterion({ name,
   description, minValue, maxValue, type }: RoundCriterion) {
 
   const isValidName = name.length > 0;
-  const isValidMinValue = minValue != null && minValue >= 0;
-  const isValidMaxValue = maxValue != null && maxValue >= 0;
+  const isValidMinValue = minValue != null;
+  const isValidMaxValue = maxValue != null;
 
   const isValidValueCombination =
     maxValue != null && minValue != null ? maxValue > minValue : true;

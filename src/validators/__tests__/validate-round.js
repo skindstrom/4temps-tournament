@@ -22,6 +22,7 @@ function createRound(vals: mixed): Round {
 
 function createCriterion(vals: mixed): RoundCriterion {
   return {
+    id: 'an id',
     name: 'style',
     description: 'How beautiful their style is...',
     minValue: 0,
@@ -277,17 +278,12 @@ describe('Round validator', () => {
     });
   });
 
-  test('A criterion may not have a negative minValue', () => {
+  test('A criterion may have a negative minValue', () => {
     expect(validateRound(createRound({
       criteria:
         [createCriterion({ minValue: -1 })]
     }))).toMatchObject({
-      isValidRound: false,
-      isValidCriteria: false,
-      criteriaValidation: [{
-        isValidCriterion: false,
-        isValidMinValue: false
-      }]
+      isValidRound: true,
     });
   });
 
@@ -314,17 +310,12 @@ describe('Round validator', () => {
     });
   });
 
-  test('A criterion may not have a negative maxValue', () => {
+  test('A criterion may have a negative maxValue', () => {
     expect(validateRound(createRound({
       criteria:
-        [createCriterion({ maxValue: -1 })]
+        [createCriterion({ maxValue: -1, minValue: -2 })]
     }))).toMatchObject({
-      isValidRound: false,
-      isValidCriteria: false,
-      criteriaValidation: [{
-        isValidCriterion: false,
-        isValidMaxValue: false
-      }]
+      isValidRound: true,
     });
   });
 
