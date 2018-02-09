@@ -83,7 +83,7 @@ declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
 // Express interface
 declare interface ServerApiRequest {
   session: { user: ?{ id: string, role: PermissionRole } };
-  body: { [string]: mixed };
+  body: mixed;
   query: { [name: string]: string };
   params: {[param: string]: string};
 }

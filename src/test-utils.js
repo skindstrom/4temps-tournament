@@ -18,9 +18,7 @@ import type {
 export const USER_ID = generateId();
 export const TOURNAMENT_ID = generateId();
 
-type Body = {
-    [name: string]: mixed
-};
+type Body = mixed;
 type Query = {
     [name: string]: string
 };
@@ -106,7 +104,9 @@ export class Response implements ServerApiResponse {
   }
 
   json(body ?: mixed): ServerApiResponse {
-    this._status = 200;
+    if (this._status == null) {
+      this._status = 200;
+    }
     this._body = body;
     return this;
   }

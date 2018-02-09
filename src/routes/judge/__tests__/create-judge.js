@@ -67,7 +67,7 @@ describe('/api/judge/create', () => {
   });
 
   test('Status 400 is returned if invalid judge', async () => {
-    req.body.name = null;
+    req.body = { name: null };
     await route(tournamentRepo, accessRepo)(req, res);
     expect(res.getStatus()).toBe(400);
   });

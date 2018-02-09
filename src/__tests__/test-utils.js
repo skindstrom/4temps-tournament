@@ -100,14 +100,14 @@ describe('Round route test helpers', () => {
   });
 
   describe('Response helpers', () => {
-    const res = new Response();
-
     test('sendStatus sets status', () => {
+      const res = new Response();
       res.sendStatus(123);
       expect(res.getStatus()).toBe(123);
     });
 
     test('json sets status to 200 and body', () => {
+      const res = new Response();
       const body = { test: 'sweet' };
       res.json(body);
 
