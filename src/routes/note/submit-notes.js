@@ -10,18 +10,18 @@ import validateNoteForTournamentAndUser, {
   InvalidValueError,
   WrongJudgeError,
 } from './validate-note';
-import { parseNote, InvalidBodyError } from './parse-note';
+import { parseNotes, InvalidBodyError } from './parse-note';
 
-export default function CreateNoteRoute(
+export default function submitNotesRoute(
   tournamentRepository: TournamentRepository, noteRepository: NoteRepository) {
 
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
-    await new CreateNoteRouteHandler(
+    await new SubmitNotesRouteHandler(
       tournamentRepository, noteRepository, req, res).route();
   };
 }
 
-class CreateNoteRouteHandler {
+class SubmitNotesRouteHandler {
   _tournamentRepository: TournamentRepository;
   _noteRepository: NoteRepository;
   _req: ServerApiRequest;
@@ -40,20 +40,22 @@ class CreateNoteRouteHandler {
 
   route = async () => {
     try {
-      const note = parseNote(this._req.body);
+      const notes = parseNotes(this._req.body);
+      await this._validateNotes(notes);
 
-      await this._validateNote(note);
-      await this._noteRepository.createOrUpdate(note);
-
-      this._res.json(note);
+      for (const note of notes) {
+        await this._noteRepository.createOrUpdate(note);
+      }
+      this._res.sendStatus(200);
     } catch (e) {
       this._handleError(e);
     }
   }
 
-  _validateNote = async (note: JudgeNote) => {
+  _validateNotes = async (notes: Array<JudgeNote>) => {
     const tournament: Tournament = await this._getTournament();
-    validateNoteForTournamentAndUser(note, tournament, this._req.session.user);
+    notes.forEach(note => validateNoteForTournamentAndUser(
+      note, tournament, this._req.session.user));
   }
 
   _getTournament = async (): Promise<Tournament> => {
@@ -70,24 +72,15 @@ class CreateNoteRouteHandler {
   _handleError = (e: mixed) => {
     if (e instanceof InvalidBodyError) {
       this._res.sendStatus(400);
-    } else if (e instanceof TournamentNotFoundError) {
+    } else if (e instanceof TournamentNotFoundError
+      || e instanceof DanceNotActiveError
+      || e instanceof CriterionNotFoundError
+      || e instanceof ParticipantNotFoundError) {
+
       this._res.status(404);
-      this._res.json({ tournamentExists: false });
-    } else if (e instanceof DanceNotActiveError) {
-      this._res.status(404);
-      this._res.json({ isDanceActive: false });
-    } else if (e instanceof CriterionNotFoundError) {
-      this._res.status(404);
-      this._res.json({ criterionExists: false });
-    } else if (e instanceof ParticipantNotFoundError) {
-      this._res.status(404);
-      this._res.json({ participantExists: false });
-    } else if (e instanceof InvalidCriterionForParticipant) {
+    } else if (e instanceof InvalidCriterionForParticipant
+      || e instanceof InvalidValueError) {
       this._res.status(400);
-      this._res.json({ isValidCriterionForParticipant: false });
-    } else if (e instanceof InvalidValueError) {
-      this._res.status(400);
-      this._res.json({ isValueInRange: false });
     } else if (e instanceof WrongJudgeError) {
       this._res.sendStatus(401);
     } else {

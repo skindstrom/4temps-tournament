@@ -25,17 +25,23 @@ const schema = new mongoose.Schema({
   }
 });
 
-const Model = mongoose.model('note', schema);
+const TempModel = mongoose.model('tempNote', schema);
+const SubmittedModel = mongoose.model('submittedNote', schema);
 
 export interface NoteRepository {
   createOrUpdate(note: JudgeNote): Promise<void>;
 }
 
-class NoteRepositoryImpl implements NoteRepository {
+export class TemporaryNoteRepository implements NoteRepository {
   async createOrUpdate(note: JudgeNote) {
     const { value, ...ids } = note;
-    await Model.findOneAndUpdate({ ...ids }, note, { upsert: true });
+    await TempModel.update({ ...ids }, { ...note }, { upsert: true });
   }
 }
 
-export default NoteRepositoryImpl;
+export class SubmittedNoteRepository implements NoteRepository {
+  async createOrUpdate(note: JudgeNote) {
+    const { value, ...ids } = note;
+    await SubmittedModel.update({ ...ids }, note, { upsert: true });
+  }
+}

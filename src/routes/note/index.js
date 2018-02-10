@@ -3,14 +3,17 @@
 import { Router } from 'express';
 import {allow} from '../auth-middleware';
 import setNoteRoute from './set-note';
+import submitNotesRoute from './submit-notes';
 import { TournamentRepositoryImpl } from '../../data/tournament';
-import NoteRepositoryImpl from '../../data/note';
+import { TemporaryNoteRepository, SubmittedNoteRepository } from
+  '../../data/note';
 
 const router = Router();
 const tournamentRepository = new TournamentRepositoryImpl();
-const noteRepository = new NoteRepositoryImpl();
 
 router.post('/:tournamentId/set', allow('judge'),
-  setNoteRoute(tournamentRepository, noteRepository));
+  setNoteRoute(tournamentRepository, new TemporaryNoteRepository()));
+router.post('/:tournamentId/submit', allow('judge'),
+  submitNotesRoute(tournamentRepository, new SubmittedNoteRepository()));
 
 export default router;
