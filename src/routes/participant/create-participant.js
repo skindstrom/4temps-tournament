@@ -1,6 +1,6 @@
 // @flow
 
-import {ObjectID} from 'mongodb';
+import { ObjectID } from 'mongodb';
 import type { TournamentRepository } from '../../data/tournament';
 import type { Participant } from '../../models/participant';
 import { validateParticipant } from '../../validators/validate-participant';
@@ -20,9 +20,10 @@ export class CreateParticipantRoute {
 
     const userId: string = req.session.user.id;
 
-    const handler =
-      new CreateParticipantRouteHandler(
-        userId, this._tournamentRepository);
+    const handler = new CreateParticipantRouteHandler(
+      userId,
+      this._tournamentRepository
+    );
 
     handler.parseBody(req.body);
     await handler.createParticipant();
@@ -32,7 +33,7 @@ export class CreateParticipantRoute {
       tournamentId: handler._tournamentId,
       participant: handler._participant
     });
-  }
+  };
 }
 
 export class CreateParticipantRouteHandler {
@@ -57,7 +58,8 @@ export class CreateParticipantRouteHandler {
     this._participant = {
       id: new ObjectID().toString(),
       name: participant.name || '',
-      role: participant.role || 'none'
+      role: participant.role || 'none',
+      isAttending: participant.isAttending || false
     };
   }
 
@@ -79,14 +81,15 @@ export class CreateParticipantRouteHandler {
 
   async _isValidTournament() {
     const tournament = await this._tournamentRepository.get(this._tournamentId);
-    return tournament != null
-      && tournament.creatorId === this._userId;
+    return tournament != null && tournament.creatorId === this._userId;
   }
 
   async _createForValidInput() {
     try {
       await this._tournamentRepository.createParticipant(
-        this._tournamentId, this._participant);
+        this._tournamentId,
+        this._participant
+      );
     } catch (e) {
       this.status = 500;
     }
