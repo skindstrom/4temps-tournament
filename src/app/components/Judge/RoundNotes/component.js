@@ -24,13 +24,13 @@ function RoundNotes(props: Props) {
   });
   return (
     <Container>
-      <Grid columns={props.pairs.length} divded>
+      <Grid padded>
         <GridRow>
           <Header as='h3'>
             Pairs
           </Header>
         </GridRow>
-        <GridRow>
+        <GridRow columns={props.pairs.length}>
           {pairs}
         </GridRow>
       </Grid>
