@@ -19,6 +19,8 @@ class RoundInformation extends PureComponent<Props> {
         {this.props.roundName}
         <HeaderSubheader>
           Group: {groupNumber} of {numberOfGroups}
+        </HeaderSubheader>
+        <HeaderSubheader>
           Dance: {danceNumber} of {numberOfDances}
         </HeaderSubheader>
       </Header>
