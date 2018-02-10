@@ -2,9 +2,10 @@
 
 import { handle } from 'redux-pack';
 
-function participants(state: ParticipantsReduxState = getInitialState(),
-  action: ReduxPackAction): ParticipantsReduxState {
-
+function participants(
+  state: ParticipantsReduxState = getInitialState(),
+  action: ReduxPackAction
+): ParticipantsReduxState {
   const { type } = action;
 
   switch (type) {
@@ -15,6 +16,8 @@ function participants(state: ParticipantsReduxState = getInitialState(),
     return getTournaments(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);
+  case 'CHANGE_ATTENDANCE':
+    return changeAttendance(state, action);
   default:
     return state;
   }
@@ -24,13 +27,14 @@ export function getInitialState(): ParticipantsReduxState {
   return {
     isLoading: false,
     forTournament: {},
-    byId: {},
+    byId: {}
   };
 }
 
-function createParticipant(state: ParticipantsReduxState,
-  action: ReduxPackAction): ParticipantsReduxState {
-
+function createParticipant(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction
+): ParticipantsReduxState {
   const { payload } = action;
 
   return handle(state, action, {
@@ -38,21 +42,23 @@ function createParticipant(state: ParticipantsReduxState,
       ...prevState,
       forTournament: {
         ...prevState.forTournament,
-        [payload.tournamentId]:
-          [...(prevState.forTournament[payload.tournamentId] || []),
-            payload.participant.id]
+        [payload.tournamentId]: [
+          ...(prevState.forTournament[payload.tournamentId] || []),
+          payload.participant.id
+        ]
       },
       byId: {
         ...prevState.byId,
         [payload.participant.id]: payload.participant
       }
-    }),
+    })
   });
 }
 
-function getTournaments(state: ParticipantsReduxState,
-  action: ReduxPackAction): ParticipantsReduxState {
-
+function getTournaments(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction
+): ParticipantsReduxState {
   const { payload } = action;
 
   return handle(state, action, {
@@ -61,11 +67,10 @@ function getTournaments(state: ParticipantsReduxState,
       ...prevState,
       forTournament: {
         ...prevState.forTournament,
-        ...payload.result.reduce(
-          (acc, id) => {
-            acc[id] = payload.entities.tournaments[id].participants;
-            return acc;
-          }, {})
+        ...payload.result.reduce((acc, id) => {
+          acc[id] = payload.entities.tournaments[id].participants;
+          return acc;
+        }, {})
       },
       byId: {
         ...prevState.byId,
@@ -78,9 +83,9 @@ function getTournaments(state: ParticipantsReduxState,
 
 function createTournament(
   state: ParticipantsReduxState,
-  action: ReduxPackAction): ParticipantsReduxState {
-
-  const {payload} = action;
+  action: ReduxPackAction
+): ParticipantsReduxState {
+  const { payload } = action;
 
   return handle(state, action, {
     success: prevState => ({
@@ -88,6 +93,26 @@ function createTournament(
       forTournament: {
         ...prevState.forTournament,
         [payload.id]: []
+      }
+    })
+  });
+}
+
+function changeAttendance(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction
+): ParticipantsReduxState {
+  const { payload } = action;
+
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      byId: {
+        ...prevState.byId,
+        [payload.participantId]: {
+          ...prevState.byId[payload.participantId],
+          isAttending: payload.isAttending
+        }
       }
     })
   });
