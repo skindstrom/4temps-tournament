@@ -12,6 +12,8 @@ export default function reducer(
     return getTournaments(state, action);
   case 'CREATE_JUDGE':
     return createJudge(state, action);
+  case 'GET_JUDGE_TOURNAMENT':
+    return getJudgeTournament(state, action);
   default:
     return state;
   }
@@ -67,5 +69,24 @@ function createJudge(
         [payload.judge.id]: payload.judge
       }
     })
+  });
+}
+
+
+function getJudgeTournament(state: JudgesReduxState,
+  action: ReduxPackAction): JudgesReduxState {
+  const { payload } = action;
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      forTournament: {
+        ...prevState.forTournament,
+        [payload.result]: payload.entities.tournaments[payload.result].judges
+      },
+      byId: {
+        ...prevState.byId,
+        ...payload.entities.judges
+      }
+    }),
   });
 }

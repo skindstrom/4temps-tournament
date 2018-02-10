@@ -4,11 +4,14 @@ import { handle } from 'redux-pack';
 function tournaments(state: TournamentsReduxState = getInitialState(),
   action: ReduxPackAction) {
   const { type } = action;
+
   switch (type) {
   case 'GET_ALL_TOURNAMENTS':
     return getAllTournaments(state, action);
   case 'GET_ADMIN_TOURNAMENTS':
     return getUserTournaments(state, action);
+  case 'GET_JUDGE_TOURNAMENT':
+    return getJudgeTournament(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);
   case 'EDIT_TOURNAMENT':
@@ -25,7 +28,7 @@ export function getInitialState(): TournamentsReduxState {
     isLoading: false,
     isInvalidated: true,
     didLoadAdminTournaments: false,
-
+    forJudge: '',
     forAdmin: [],
     allIds: [],
     byId: {},
@@ -65,6 +68,27 @@ function getUserTournaments(state: TournamentsReduxState,
       allIds:
         Array.from(
           new Set([...prevState.allIds, ...payload.result]).values()),
+      byId: {
+        ...prevState.byId,
+        ...payload.entities.tournaments
+      }
+    }),
+    failure: prevState => ({ ...prevState, isLoading: false })
+  });
+}
+
+function getJudgeTournament(state: TournamentsReduxState,
+  action: ReduxPackAction) {
+  const { payload } = action;
+  return handle(state, action, {
+    start: prevState => ({ ...prevState, isLoading: true }),
+    success: prevState => ({
+      ...prevState,
+      isLoading: false,
+      forJudge: payload.result,
+      allIds:
+        Array.from(
+          new Set([...prevState.allIds, payload.result]).values()),
       byId: {
         ...prevState.byId,
         ...payload.entities.tournaments

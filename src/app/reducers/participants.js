@@ -14,6 +14,8 @@ function participants(
   case 'GET_ALL_TOURNAMENTS':
   case 'GET_ADMIN_TOURNAMENTS':
     return getTournaments(state, action);
+  case 'GET_JUDGE_TOURNAMENT':
+    return getJudgeTournament(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);
   case 'CHANGE_ATTENDANCE':
@@ -55,10 +57,27 @@ function createParticipant(
   });
 }
 
-function getTournaments(
-  state: ParticipantsReduxState,
-  action: ReduxPackAction
-): ParticipantsReduxState {
+function getJudgeTournament(state: ParticipantsReduxState,
+  action: ReduxPackAction): ParticipantsReduxState {
+  const { payload } = action;
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      forTournament: {
+        ...prevState.forTournament,
+        [payload.result]:
+          payload.entities.tournaments[payload.result].participants
+      },
+      byId: {
+        ...prevState.byId,
+        ...payload.entities.participants
+      }
+    }),
+  });
+}
+
+function getTournaments(state: ParticipantsReduxState,
+  action: ReduxPackAction): ParticipantsReduxState {
   const { payload } = action;
 
   return handle(state, action, {

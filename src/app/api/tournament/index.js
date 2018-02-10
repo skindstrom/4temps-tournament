@@ -9,7 +9,10 @@ import {
 
 import validateTournament from '../../../validators/validate-tournament';
 import type { Tournament } from '../../../models/tournament';
-import { normalizeTournamentArray } from '../../reducers/normalize';
+import {
+  normalizeTournamentArray,
+  normalizeTournament
+} from '../../reducers/normalize';
 
 export const createTournament =
   async (
@@ -33,6 +36,10 @@ export const getTournamentsForUser =
     return apiGetRequest('/api/tournament/get',
       (tours) => normalizeTournamentArray(tours.map(deserializeTournament)));
   };
+
+export const getTournamentForJudge = (): Promise<mixed> => {
+  return apiGetRequest('/api/tournament/get/judge', normalizeTournament);
+};
 
 export const getAllTournaments = (): Promise<mixed> => {
   return apiGetRequest('/api/tournament/get/all',

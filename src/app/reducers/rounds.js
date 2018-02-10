@@ -18,6 +18,8 @@ function rounds(state: RoundsReduxState = getInitialState(),
     return startRound(state, action);
   case 'START_NEXT_DANCE':
     return startDance(state, action);
+  case 'GET_JUDGE_TOURNAMENT':
+    return getJudgeTournament(state, action);
   default:
     return state;
   }
@@ -92,6 +94,24 @@ function getTournaments(
             acc[id] = payload.entities.tournaments[id].rounds;
             return acc;
           }, {})
+      },
+      byId: {
+        ...prevState.byId,
+        ...payload.entities.rounds
+      }
+    }),
+  });
+}
+
+function getJudgeTournament(state: RoundsReduxState,
+  action: ReduxPackAction): RoundsReduxState {
+  const { payload } = action;
+  return handle(state, action, {
+    success: prevState => ({
+      ...prevState,
+      forTournament: {
+        ...prevState.forTournament,
+        [payload.result]: payload.entities.tournaments[payload.result].rounds
       },
       byId: {
         ...prevState.byId,

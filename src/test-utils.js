@@ -122,6 +122,14 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     );
   };
 
+  getForJudge = async (userId: string) => {
+    const tournaments = await this.getAll();
+    for (const tournament of tournaments) {
+      if(tournament.judges.filter(judge => judge.id === userId).length > 0)
+        return tournament;
+    }
+  }
+
   create = async (tournament: Tournament) => {
     this._tournaments[tournament.id] = tournament;
   };

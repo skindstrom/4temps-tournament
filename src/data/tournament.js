@@ -74,6 +74,7 @@ export interface TournamentRepository {
   get(id: string): Promise<?Tournament>;
   getAll(): Promise<Array<Tournament>>;
   getForUser(userId: string): Promise<Array<Tournament>>;
+  getForJudge(judgeId: string): Promise<?Tournament>;
   update(tournament: Tournament): Promise<void>;
   updateParticipantAttendance(
     participantId: string,
@@ -118,6 +119,17 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       return [];
     }
   }
+
+  async getForJudge(judgeId: string) {
+    try {
+      return mapToDomainModel(
+        (await Model.findOne({judges: {$elemMatch: {_id: judgeId}}})).toObject()
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
   async update(tournament: Tournament) {
     // don't overwrite anything sensitive for now
     const { name, date } = mapToDbModel(tournament);

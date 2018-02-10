@@ -15,7 +15,7 @@ describe('Tournament reducer', () => {
       isLoading: false,
       isInvalidated: true,
       didLoadAdminTournaments: false,
-
+      forJudge: '',
       forAdmin: [],
       allIds: [],
       byId: {},

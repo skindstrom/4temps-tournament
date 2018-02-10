@@ -152,6 +152,7 @@ declare type TournamentsReduxState = {
 
   forAdmin: Array<string>,
   allIds: Array<string>,
+  forJudge: string,
   byId: {
     [id: string]: Tournament
   }
@@ -259,7 +260,8 @@ declare type ReduxAction =
   | LoginJudgeAction
   | GetAccessKeys
   | StartNextDanceAction
-  | ChangeAttendance;
+  | ChangeAttendance
+  | GetJudgeTournament;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -349,5 +351,10 @@ declare type StartNextDanceAction = {
 
 declare type ChangeAttendance = {
   type: 'CHANGE_ATTENDANCE',
+  promise: mixed
+};
+
+declare type GetJudgeTournament = {
+  type: 'GET_JUDGE_TOURNAMENT',
   promise: mixed
 };
