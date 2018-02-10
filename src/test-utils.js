@@ -130,6 +130,15 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     }
   }
 
+  getForJudge = async (userId: string) => {
+    const tournaments = await this.getAll();
+    for (let i = 0; i < tournaments.length; i++) {
+      const judges = tournaments[i].judges;
+      if (judges.filter(j => j.id === userId).length > 0)
+        return tournaments[i];
+    }
+  }
+
   create = async (tournament: Tournament) => {
     this._tournaments[tournament.id] = tournament;
   };
