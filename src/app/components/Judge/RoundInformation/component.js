@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { Header, HeaderSubheader } from 'semantic-ui-react';
+import { Header, HeaderSubheader, Container } from 'semantic-ui-react';
 
 type Props = {
   roundName: string,
@@ -15,15 +15,17 @@ class RoundInformation extends PureComponent<Props> {
     const numberOfDances = this.props.danceInformation.numberOfDances;
     const danceNumber = this.props.danceInformation.danceNumber;
     return (
-      <Header as='h2'>
-        {this.props.roundName}
-        <HeaderSubheader>
-          Group: {groupNumber} of {numberOfGroups}
-        </HeaderSubheader>
-        <HeaderSubheader>
-          Dance: {danceNumber} of {numberOfDances}
-        </HeaderSubheader>
-      </Header>
+      <Container>
+        <Header as='h2'>
+          {this.props.roundName}
+          <HeaderSubheader>
+            Group: {groupNumber} of {numberOfGroups}
+          </HeaderSubheader>
+          <HeaderSubheader>
+            Dance: {danceNumber} of {numberOfDances}
+          </HeaderSubheader>
+        </Header>
+      </Container>
     );
   }
 }

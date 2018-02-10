@@ -3,6 +3,7 @@ import {Container} from 'semantic-ui-react';
 
 import React, {Component} from 'react';
 import RoundInformation from './RoundInformation';
+import RoundNotes from './RoundNotes';
 
 
 type Props = {
@@ -18,6 +19,7 @@ class Judge extends Component<Props> {
       return (
         <Container>
           <RoundInformation />
+          <RoundNotes />
         </Container>
       );
     }
