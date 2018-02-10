@@ -2,26 +2,39 @@
 import React, { Component } from 'react';
 import {
   Container,
-  Table, TableHeader, TableHeaderCell, TableBody, TableRow, TableCell
+  Table,
+  TableHeader,
+  TableHeaderCell,
+  TableBody,
+  TableRow,
+  TableCell,
+  Checkbox
 } from 'semantic-ui-react';
 
 import type { Participant, Role } from '../../../../../models/participant';
 
 type Props = {
   participants: Array<Participant>,
-
+  onChangeAttending: (id: string, isAttending: boolean) => void,
   getParticipants: () => void
-}
+};
 
 class ListParticipants extends Component<Props> {
-  _renderItem = ({ id, name, role }: Participant) => {
+  _renderItem = ({ id, name, role, isAttending }: Participant) => {
     return (
       <TableRow key={id}>
+        <Table.Cell collapsing>
+          <Checkbox
+            slider
+            onChange={() => this.props.onChangeAttending(id, !isAttending)}
+            checked={isAttending}
+          />
+        </Table.Cell>
         <TableCell>{name}</TableCell>
         <TableCell>{this._roleToString(role)}</TableCell>
       </TableRow>
     );
-  }
+  };
 
   _roleToString(role: Role) {
     if (role === 'leader') {
@@ -40,13 +53,12 @@ class ListParticipants extends Component<Props> {
         <Table unstackable>
           <TableHeader>
             <TableRow>
+              <TableHeaderCell>Present</TableHeaderCell>
               <TableHeaderCell>Name</TableHeaderCell>
               <TableHeaderCell>Role</TableHeaderCell>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {this.props.participants.map(this._renderItem)}
-          </TableBody>
+          <TableBody>{this.props.participants.map(this._renderItem)}</TableBody>
         </Table>
       </Container>
     );
