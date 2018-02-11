@@ -10,15 +10,13 @@ import {
 } from 'semantic-ui-react';
 
 type Props = {
-  pairs: Array<Pair>,
-}
+  pairs: Array<Pair>
+};
 function RoundNotes(props: Props) {
   const pairs = Array.from(Array(props.pairs.length).keys()).map(i => {
     return (
       <GridColumn key={i}>
-        <Button>
-          {i + 1}
-        </Button>
+        <Button>{i + 1}</Button>
       </GridColumn>
     );
   });
@@ -26,13 +24,9 @@ function RoundNotes(props: Props) {
     <Container>
       <Grid padded>
         <GridRow>
-          <Header as='h3'>
-            Pairs
-          </Header>
+          <Header as="h3">Pairs</Header>
         </GridRow>
-        <GridRow columns={props.pairs.length}>
-          {pairs}
-        </GridRow>
+        <GridRow columns={props.pairs.length}>{pairs}</GridRow>
       </Grid>
     </Container>
   );

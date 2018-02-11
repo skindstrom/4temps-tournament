@@ -74,26 +74,25 @@ describe('Create note route', () => {
     expect(res.getBody()).toEqual({ tournamentExists: false });
   });
 
-  test('401 is returned if the judge on the note is not the one logged in',
-    async () => {
-      const tournament = createTournament();
-      const tournamentRepository = new TournamentRepositoryImpl();
-      await tournamentRepository.create(tournament);
+  test('401 is returned if the judge on the note is not the one logged in', async () => {
+    const tournament = createTournament();
+    const tournamentRepository = new TournamentRepositoryImpl();
+    await tournamentRepository.create(tournament);
 
-      const req = Request.withJudgeAndParams(createJudge(), {
-        tournamentId: tournament.id
-      });
-
-      req.body = validNote;
-      const res = new Response();
-
-      await setNoteRoute(tournamentRepository, new NoteRepositoryImpl())(
-        req,
-        res
-      );
-
-      expect(res.getStatus()).toBe(401);
+    const req = Request.withJudgeAndParams(createJudge(), {
+      tournamentId: tournament.id
     });
+
+    req.body = validNote;
+    const res = new Response();
+
+    await setNoteRoute(tournamentRepository, new NoteRepositoryImpl())(
+      req,
+      res
+    );
+
+    expect(res.getStatus()).toBe(401);
+  });
 
   test('404 is returned if there is no active dance', async () => {
     const tournament = createTournament();
@@ -160,7 +159,8 @@ describe('Create note route', () => {
       id: generateId(),
       name: 'John Doe',
       role: 'leader',
-      isAttending: false };
+      isAttending: false
+    };
     const followerCriterion: RoundCriterion = {
       id: generateId(),
       name: 'Follower Criterion',
@@ -210,7 +210,8 @@ describe('Create note route', () => {
       id: generateId(),
       name: 'John Doe',
       role: 'follower',
-      isAttending: true };
+      isAttending: true
+    };
     const leaderCriterion: RoundCriterion = {
       id: generateId(),
       name: 'Leader Criterion',

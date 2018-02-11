@@ -13,15 +13,14 @@ test('Validates tournament', async () => {
   const createAdmin = () => new Promise(resolve => resolve(false));
   const getAdmins = () => new Promise(resolve => resolve([]));
 
-  expect((await createAdminRoute(admin, createAdmin, getAdmins)).body)
-    .toEqual({
-      isValid: false,
-      isValidFirstName: true,
-      isValidLastName: false,
-      isValidEmail: true,
-      isEmailNotUsed: true,
-      isValidPassword: false
-    });
+  expect((await createAdminRoute(admin, createAdmin, getAdmins)).body).toEqual({
+    isValid: false,
+    isValidFirstName: true,
+    isValidLastName: false,
+    isValidEmail: true,
+    isEmailNotUsed: true,
+    isValidPassword: false
+  });
 });
 
 test('Used email returns 409 status', async () => {
@@ -38,8 +37,9 @@ test('Used email returns 409 status', async () => {
     // $FlowFixMe
     new Promise(resolve => resolve([{ email: 'test@gmail.com' }]));
 
-  expect((await createAdminRoute(admin, createAdmin, getAdmins)).status)
-    .toBe(409);
+  expect((await createAdminRoute(admin, createAdmin, getAdmins)).status).toBe(
+    409
+  );
 });
 
 test('A valid admin that could not be created returns status 500', async () => {
@@ -53,8 +53,9 @@ test('A valid admin that could not be created returns status 500', async () => {
   const createAdmin = () => new Promise(resolve => resolve(false));
   const getAdmins = () => new Promise(resolve => resolve([]));
 
-  expect((await createAdminRoute(admin, createAdmin, getAdmins)).status)
-    .toBe(500);
+  expect((await createAdminRoute(admin, createAdmin, getAdmins)).status).toBe(
+    500
+  );
 });
 
 test('Invalid admin with unused email returns status 400', async () => {
@@ -68,6 +69,7 @@ test('Invalid admin with unused email returns status 400', async () => {
   const createAdmin = () => new Promise(resolve => resolve(true));
   const getAdmins = () => new Promise(resolve => resolve([]));
 
-  expect((await createAdminRoute(admin, createAdmin, getAdmins)).status)
-    .toBe(400);
+  expect((await createAdminRoute(admin, createAdmin, getAdmins)).status).toBe(
+    400
+  );
 });

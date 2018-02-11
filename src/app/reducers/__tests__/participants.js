@@ -4,7 +4,7 @@ import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../participants';
 import makePackAction from '../test-utils';
-import {createParticipant, createTournament} from '../../../test-utils';
+import { createParticipant, createTournament } from '../../../test-utils';
 import { normalizeTournamentArray } from '../normalize';
 
 describe('Participant reducer', () => {
@@ -14,26 +14,25 @@ describe('Participant reducer', () => {
     const state: ParticipantsReduxState = {
       isLoading: false,
       forTournament: {},
-      byId: {},
+      byId: {}
     };
 
-    expect(reducer(undefined,
-      makePackAction(LIFECYCLE.FAILURE, 'INVALID_ACTION')))
-      .toEqual(state);
-    expect(getInitialState())
-      .toEqual(state);
+    expect(
+      reducer(undefined, makePackAction(LIFECYCLE.FAILURE, 'INVALID_ACTION'))
+    ).toEqual(state);
+    expect(getInitialState()).toEqual(state);
   });
 
   test('Invalid action does not change state', () => {
-    expect(reducer(initialState,
-      makePackAction(LIFECYCLE.START, 'INVALID_ACTION')))
-      .toEqual(initialState);
-    expect(reducer(initialState,
-      makePackAction(LIFECYCLE.SUCCESS, 'INVALID_ACTION')))
-      .toEqual(initialState);
-    expect(reducer(initialState,
-      makePackAction(LIFECYCLE.FAILURE, 'INVALID_ACTION')))
-      .toEqual(initialState);
+    expect(
+      reducer(initialState, makePackAction(LIFECYCLE.START, 'INVALID_ACTION'))
+    ).toEqual(initialState);
+    expect(
+      reducer(initialState, makePackAction(LIFECYCLE.SUCCESS, 'INVALID_ACTION'))
+    ).toEqual(initialState);
+    expect(
+      reducer(initialState, makePackAction(LIFECYCLE.FAILURE, 'INVALID_ACTION'))
+    ).toEqual(initialState);
   });
 
   describe('CREATE_PARTICIPANT', () => {
@@ -47,13 +46,16 @@ describe('Participant reducer', () => {
       const payload = { tournamentId, participant };
 
       const state = initialState;
-      expect(reducer(state,
-        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
-        .toEqual({
-          ...state,
-          forTournament,
-          byId,
-        });
+      expect(
+        reducer(
+          state,
+          makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)
+        )
+      ).toEqual({
+        ...state,
+        forTournament,
+        byId
+      });
     });
 
     test('CREATE_PARTICIPANT success does not overwrite participants', () => {
@@ -63,11 +65,11 @@ describe('Participant reducer', () => {
         ...initialState,
         forTournament: {
           [tournamentId]: ['p2id'],
-          'other_tournamentid': ['p3id'],
+          other_tournamentid: ['p3id']
         },
         byId: {
-          'p2id': { ...createParticipant(), id: 'p2id' },
-          'p3id': { ...createParticipant(), id: 'p3id' }
+          p2id: { ...createParticipant(), id: 'p2id' },
+          p3id: { ...createParticipant(), id: 'p3id' }
         }
       };
 
@@ -77,19 +79,20 @@ describe('Participant reducer', () => {
         ...state.forTournament,
         [tournamentId]: ['p2id', 'new']
       };
-      const byId = { ...state.byId, 'new': participant };
+      const byId = { ...state.byId, new: participant };
       const payload = { tournamentId, participant };
 
-      expect(reducer(state,
-        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)))
-        .toEqual({
-          ...state,
-          forTournament,
-          byId,
-        });
+      expect(
+        reducer(
+          state,
+          makePackAction(LIFECYCLE.SUCCESS, 'CREATE_PARTICIPANT', payload)
+        )
+      ).toEqual({
+        ...state,
+        forTournament,
+        byId
+      });
     });
-
-
   });
 
   describe('CREATE_TOURNAMENT', () => {
@@ -98,15 +101,16 @@ describe('Participant reducer', () => {
 
       expect(
         reducer(
-          initialState, makePackAction(
-            LIFECYCLE.SUCCESS, 'CREATE_TOURNAMENT', tournament)))
-        .toEqual({
-          ...initialState,
-          forTournament: {
-            [tournament.id]: []
-          },
-          byId: {}
-        });
+          initialState,
+          makePackAction(LIFECYCLE.SUCCESS, 'CREATE_TOURNAMENT', tournament)
+        )
+      ).toEqual({
+        ...initialState,
+        forTournament: {
+          [tournament.id]: []
+        },
+        byId: {}
+      });
     });
   });
 
@@ -130,24 +134,23 @@ describe('Participant reducer', () => {
       ...initialState,
       forTournament: {
         [tournament1.id]: [participants1[0].id, participants1[1].id],
-        [tournament2.id]: [participants2[0].id, participants2[1].id],
+        [tournament2.id]: [participants2[0].id, participants2[1].id]
       },
       byId: {
         [participants1[0].id]: participants1[0],
         [participants1[1].id]: participants1[1],
         [participants2[0].id]: participants2[0],
-        [participants2[1].id]: participants2[1],
+        [participants2[1].id]: participants2[1]
       }
     };
 
     test('GET_ALL success sets participants', () => {
-
       expect(
         reducer(
           initialState,
           makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', nom)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
 
     test('GET_ADMIN_TOURNAMENTS success sets participants', () => {
@@ -155,8 +158,8 @@ describe('Participant reducer', () => {
         reducer(
           initialState,
           makePackAction(LIFECYCLE.SUCCESS, 'GET_ADMIN_TOURNAMENTS', nom)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
   });
 });

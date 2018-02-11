@@ -1,9 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import { Header, Form, FormInput, Button, Message } from
-  'semantic-ui-react';
-import type { AdminCreateValidationSummary } from
-  '../../../validators/validate-admin';
+import { Header, Form, FormInput, Button, Message } from 'semantic-ui-react';
+import type { AdminCreateValidationSummary } from '../../../validators/validate-admin';
 import type { AdminWithPassword } from '../../../models/admin';
 
 import './styles.css';
@@ -44,55 +42,60 @@ class SignUp extends Component<Props, AdminWithPassword> {
 
   render() {
     return (
-      <div styleName='center'>
-        <div styleName='width'>
-          <Header as='h1'>
-            Sign up
-          </Header>
+      <div styleName="center">
+        <div styleName="width">
+          <Header as="h1">Sign up</Header>
           <Form
             loading={this.props.isLoading}
             error={!this.props.validation.isValid}
           >
             <FormInput
-              label='First name'
-              placeholder='John'
+              label="First name"
+              placeholder="John"
               value={this.state.firstName}
               onChange={this._onChangeFirstName}
             />
-            {!this.props.validation.isValidFirstName &&
-              <Message error content='Invalid first name' />}
+            {!this.props.validation.isValidFirstName && (
+              <Message error content="Invalid first name" />
+            )}
             <FormInput
-              label='Last name'
-              placeholder='Smith'
+              label="Last name"
+              placeholder="Smith"
               value={this.state.lastName}
               onChange={this._onChangeLastName}
             />
-            {!this.props.validation.isValidLastName &&
-              <Message error content='Invalid last name' />}
+            {!this.props.validation.isValidLastName && (
+              <Message error content="Invalid last name" />
+            )}
             <FormInput
-              label='Email'
-              placeholder='john@gmail.com'
+              label="Email"
+              placeholder="john@gmail.com"
               value={this.state.email}
               onChange={this._onChangeEmail}
             />
-            {!this.props.validation.isValidEmail &&
-              <Message error content='Invalid email' />}
-            {!this.props.validation.isEmailNotUsed &&
+            {!this.props.validation.isValidEmail && (
+              <Message error content="Invalid email" />
+            )}
+            {!this.props.validation.isEmailNotUsed && (
               <Message
                 error
-                content='An account already exists with this email'
-              />}
+                content="An account already exists with this email"
+              />
+            )}
             <FormInput
-              label='Password'
-              type='password'
+              label="Password"
+              type="password"
               value={this.state.password}
-              placeholder='P4ssw0rd'
+              placeholder="P4ssw0rd"
               onChange={this._onChangePassword}
             />
-            {!this.props.validation.isValidPassword &&
-              <Message error content='A password is at least 8 characters' />}
-            <Button onClick={this._onSubmit} type='submit'>Submit</Button>
-          </Form >
+            {!this.props.validation.isValidPassword && (
+              <Message error content="A password is at least 8 characters" />
+            )}
+            <Button onClick={this._onSubmit} type="submit">
+              Submit
+            </Button>
+          </Form>
         </div>
       </div>
     );

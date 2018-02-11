@@ -8,8 +8,7 @@ import {
   FormInput,
   Message
 } from 'semantic-ui-react';
-import type { ParticipantValidationSummary }
-  from '../../../../../validators/validate-participant';
+import type { ParticipantValidationSummary } from '../../../../../validators/validate-participant';
 import type { Role } from '../../../../../models/participant';
 
 type Props = {

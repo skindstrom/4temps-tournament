@@ -1,8 +1,10 @@
 // @flow
 import { handle } from 'redux-pack';
 
-function tournaments(state: TournamentsReduxState = getInitialState(),
-  action: ReduxPackAction) {
+function tournaments(
+  state: TournamentsReduxState = getInitialState(),
+  action: ReduxPackAction
+) {
   const { type } = action;
 
   switch (type) {
@@ -31,12 +33,14 @@ export function getInitialState(): TournamentsReduxState {
     forJudge: '',
     forAdmin: [],
     allIds: [],
-    byId: {},
+    byId: {}
   };
 }
 
-function getAllTournaments(state: TournamentsReduxState,
-  action: ReduxPackAction): TournamentsReduxState {
+function getAllTournaments(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+): TournamentsReduxState {
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
@@ -50,13 +54,15 @@ function getAllTournaments(state: TournamentsReduxState,
     failure: prevState => ({
       ...prevState,
       isLoading: false,
-      isInvalidated: false,
-    }),
+      isInvalidated: false
+    })
   });
 }
 
-function getUserTournaments(state: TournamentsReduxState,
-  action: ReduxPackAction): TournamentsReduxState {
+function getUserTournaments(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+): TournamentsReduxState {
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
@@ -65,9 +71,9 @@ function getUserTournaments(state: TournamentsReduxState,
       isLoading: false,
       didLoadAdminTournaments: true,
       forAdmin: payload.result,
-      allIds:
-        Array.from(
-          new Set([...prevState.allIds, ...payload.result]).values()),
+      allIds: Array.from(
+        new Set([...prevState.allIds, ...payload.result]).values()
+      ),
       byId: {
         ...prevState.byId,
         ...payload.entities.tournaments
@@ -77,8 +83,10 @@ function getUserTournaments(state: TournamentsReduxState,
   });
 }
 
-function getJudgeTournament(state: TournamentsReduxState,
-  action: ReduxPackAction) {
+function getJudgeTournament(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+) {
   const { payload } = action;
   return handle(state, action, {
     start: prevState => ({ ...prevState, isLoading: true }),
@@ -86,9 +94,9 @@ function getJudgeTournament(state: TournamentsReduxState,
       ...prevState,
       isLoading: false,
       forJudge: payload.result,
-      allIds:
-        Array.from(
-          new Set([...prevState.allIds, payload.result]).values()),
+      allIds: Array.from(
+        new Set([...prevState.allIds, payload.result]).values()
+      ),
       byId: {
         ...prevState.byId,
         ...payload.entities.tournaments
@@ -98,9 +106,10 @@ function getJudgeTournament(state: TournamentsReduxState,
   });
 }
 
-function createTournament(state: TournamentsReduxState,
-  action: ReduxPackAction): TournamentsReduxState {
-
+function createTournament(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+): TournamentsReduxState {
   const { payload } = action;
 
   return handle(state, action, {
@@ -108,14 +117,15 @@ function createTournament(state: TournamentsReduxState,
       ...prevState,
       allIds: [...prevState.allIds, payload.id],
       byId: { ...prevState.byId, [payload.id]: payload },
-      forAdmin: [...prevState.forAdmin, payload.id],
-    }),
+      forAdmin: [...prevState.forAdmin, payload.id]
+    })
   });
 }
 
-function editTournament(state: TournamentsReduxState,
-  action: ReduxPackAction): TournamentsReduxState {
-
+function editTournament(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+): TournamentsReduxState {
   const { payload } = action;
 
   return handle(state, action, {
@@ -124,13 +134,15 @@ function editTournament(state: TournamentsReduxState,
       byId: {
         ...prevState.byId,
         [payload.id]: payload
-      },
-    }),
+      }
+    })
   });
 }
 
-function logoutAdmin(state: TournamentsReduxState,
-  action: ReduxPackAction): TournamentsReduxState {
+function logoutAdmin(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+): TournamentsReduxState {
   return handle(state, action, {
     success: prevState => ({
       ...prevState,

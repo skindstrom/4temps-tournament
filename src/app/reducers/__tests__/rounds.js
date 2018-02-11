@@ -8,19 +8,19 @@ import { normalizeTournamentArray } from '../normalize';
 
 describe('Rounds reducer', () => {
   test('Undefined state sets initial state', () => {
-    expect(reducer(undefined,
-      makePackAction(LIFECYCLE.start, 'INVALID_ACTION', )))
-      .toEqual(getInitialState());
+    expect(
+      reducer(undefined, makePackAction(LIFECYCLE.start, 'INVALID_ACTION'))
+    ).toEqual(getInitialState());
   });
 
   test('Invalid action does not change state', () => {
     const state = getInitialState();
 
-    [LIFECYCLE.START, LIFECYCLE.SUCCESS, LIFECYCLE.FAILURE]
-      .map(lifecycle =>
-        expect(
-          reducer(state, makePackAction(lifecycle, 'INVALID_ACTION')))
-          .toEqual(state));
+    [LIFECYCLE.START, LIFECYCLE.SUCCESS, LIFECYCLE.FAILURE].map(lifecycle =>
+      expect(
+        reducer(state, makePackAction(lifecycle, 'INVALID_ACTION'))
+      ).toEqual(state)
+    );
   });
 
   describe('CREATE_ROUND', () => {
@@ -38,9 +38,12 @@ describe('Rounds reducer', () => {
         }
       };
 
-      expect(reducer(getInitialState(),
-        makePackAction(LIFECYCLE.SUCCESS, 'CREATE_ROUND', payload)))
-        .toMatchObject(expectedState);
+      expect(
+        reducer(
+          getInitialState(),
+          makePackAction(LIFECYCLE.SUCCESS, 'CREATE_ROUND', payload)
+        )
+      ).toMatchObject(expectedState);
     });
   });
 
@@ -48,8 +51,10 @@ describe('Rounds reducer', () => {
     test('start sets isLoading to true', () => {
       expect(
         reducer(
-          getInitialState(), makePackAction(LIFECYCLE.START, 'DELETE_ROUND')))
-        .toMatchObject({...getInitialState(), isLoading: true});
+          getInitialState(),
+          makePackAction(LIFECYCLE.START, 'DELETE_ROUND')
+        )
+      ).toMatchObject({ ...getInitialState(), isLoading: true });
     });
 
     test('success removes the round', () => {
@@ -57,7 +62,7 @@ describe('Rounds reducer', () => {
       const roundId = '3';
       const round = roundWithId(roundId);
 
-      const payload = {tournamentId, roundId};
+      const payload = { tournamentId, roundId };
 
       const initialState: RoundsReduxState = {
         ...getInitialState(),
@@ -71,16 +76,21 @@ describe('Rounds reducer', () => {
 
       const expected = getInitialState();
 
-      expect(reducer(initialState,
-        makePackAction(LIFECYCLE.SUCCESS, 'DELETE_ROUND', payload)))
-        .toMatchObject(expected);
+      expect(
+        reducer(
+          initialState,
+          makePackAction(LIFECYCLE.SUCCESS, 'DELETE_ROUND', payload)
+        )
+      ).toMatchObject(expected);
     });
 
     test('failure sets isLoading to false', () => {
       expect(
         reducer(
-          getInitialState(), makePackAction(LIFECYCLE.FAILURE, 'DELETE_ROUND')))
-        .toMatchObject({...getInitialState(), isLoading: false});
+          getInitialState(),
+          makePackAction(LIFECYCLE.FAILURE, 'DELETE_ROUND')
+        )
+      ).toMatchObject({ ...getInitialState(), isLoading: false });
     });
   });
 
@@ -104,13 +114,13 @@ describe('Rounds reducer', () => {
       ...getInitialState(),
       forTournament: {
         [tournament1.id]: [rounds1[0].id, rounds1[1].id],
-        [tournament2.id]: [rounds2[0].id, rounds2[1].id],
+        [tournament2.id]: [rounds2[0].id, rounds2[1].id]
       },
       byId: {
         [rounds1[0].id]: rounds1[0],
         [rounds1[1].id]: rounds1[1],
         [rounds2[0].id]: rounds2[0],
-        [rounds2[1].id]: rounds2[1],
+        [rounds2[1].id]: rounds2[1]
       }
     };
 
@@ -119,16 +129,16 @@ describe('Rounds reducer', () => {
         reducer(
           getInitialState(),
           makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', norm)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
     test('GET_ADMIN_TOURNAMENTS success sets rounds', () => {
       expect(
         reducer(
           getInitialState(),
           makePackAction(LIFECYCLE.SUCCESS, 'GET_ADMIN_TOURNAMENTS', norm)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
   });
 
@@ -137,11 +147,13 @@ describe('Rounds reducer', () => {
       const initialRound = createRound();
       const updatedRound: Round = {
         ...initialRound,
-        groups: [{
-          id: generateId(),
-          pairs: [{ follower: generateId(), leader: generateId() }],
-          dances: []
-        }]
+        groups: [
+          {
+            id: generateId(),
+            pairs: [{ follower: generateId(), leader: generateId() }],
+            dances: []
+          }
+        ]
       };
       const tournamentId = generateId();
 
@@ -164,10 +176,11 @@ describe('Rounds reducer', () => {
         }
       };
 
-
       expect(
-        reducer(initial,
-          makePackAction(LIFECYCLE.SUCCESS, 'START_ROUND', payload))
+        reducer(
+          initial,
+          makePackAction(LIFECYCLE.SUCCESS, 'START_ROUND', payload)
+        )
       ).toEqual(expected);
     });
   });
@@ -177,13 +190,16 @@ describe('Rounds reducer', () => {
       const tournamentId = generateId();
       const activeRound: Round = {
         ...createRound(),
-        groups: [{
-          id: generateId(),
-          pairs: [],
-          dances: [
-            { id: generateId(), active: false, finished: true },
-            { id: generateId(), active: false, finished: false }],
-        }],
+        groups: [
+          {
+            id: generateId(),
+            pairs: [],
+            dances: [
+              { id: generateId(), active: false, finished: true },
+              { id: generateId(), active: false, finished: false }
+            ]
+          }
+        ],
         active: true,
         finished: false
       };
@@ -211,8 +227,10 @@ describe('Rounds reducer', () => {
       };
 
       expect(
-        reducer(initial,
-          makePackAction(LIFECYCLE.SUCCESS, 'START_NEXT_DANCE', payload))
+        reducer(
+          initial,
+          makePackAction(LIFECYCLE.SUCCESS, 'START_NEXT_DANCE', payload)
+        )
       ).toEqual(expected);
     });
   });
@@ -228,16 +246,18 @@ function roundWithId(id: string): Round {
     tieRule: 'random',
     roundScoringRule: 'average',
     multipleDanceScoringRule: 'worst',
-    criteria: [{
-      id: generateId(),
-      name: 'style',
-      minValue: 1,
-      maxValue: 2,
-      description: 'style...',
-      type: 'one'
-    }],
+    criteria: [
+      {
+        id: generateId(),
+        name: 'style',
+        minValue: 1,
+        maxValue: 2,
+        description: 'style...',
+        type: 'one'
+      }
+    ],
     groups: [],
     active: false,
-    finished: false,
+    finished: false
   };
 }

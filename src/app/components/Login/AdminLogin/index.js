@@ -8,18 +8,19 @@ import { loginAdmin } from '../../../api/admin';
 
 import type { AdminCredentials } from '../../../../models/admin';
 
-
 type Props = {
   location: Location,
   history: RouterHistory
-}
+};
 
 function mapStateToProps({ ui }: ReduxState) {
   return ui.login;
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch,
-  { location, history }: Props) {
+function mapDispatchToProps(
+  dispatch: ReduxDispatch,
+  { location, history }: Props
+) {
   const referer = location.search.replace(/\?referer=/, '');
   return {
     onSubmit: (credentials: AdminCredentials) =>
@@ -33,7 +34,8 @@ function mapDispatchToProps(dispatch: ReduxDispatch,
   };
 }
 
-const LoginContainer =
-  connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+const LoginContainer = connect(mapStateToProps, mapDispatchToProps)(
+  LoginComponent
+);
 
 export default LoginContainer;

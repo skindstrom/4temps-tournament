@@ -1,24 +1,27 @@
 // @flow
 
 import ObjectId from 'bson-objectid';
-import type {TournamentRepository} from '../../data/tournament';
-import type {AccessKeyRepository} from '../../data/access-key';
+import type { TournamentRepository } from '../../data/tournament';
+import type { AccessKeyRepository } from '../../data/access-key';
 import validateJudge from '../../validators/validate-judge';
 
 export default function route(
   tournamentRepository: TournamentRepository,
-  accessRepository: AccessKeyRepository) {
+  accessRepository: AccessKeyRepository
+) {
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const tournamentId = req.params.tournamentId;
       const judgeName = parseName(req.body);
-      const judge = {name: judgeName, id: ObjectId.generate()};
+      const judge = { name: judgeName, id: ObjectId.generate() };
 
       if (validateJudge(judge)) {
         await tournamentRepository.addJudge(tournamentId, judge);
         await accessRepository.createForTournamentAndUser(
-          tournamentId, judge.id);
-        res.json({tournamentId, judge});
+          tournamentId,
+          judge.id
+        );
+        res.json({ tournamentId, judge });
       } else {
         res.sendStatus(400);
       }
@@ -29,12 +32,14 @@ export default function route(
 }
 
 function parseName(body: mixed): string {
-  if (typeof body === 'object'
-    && body != null
-    && typeof body.name === 'string') {
+  if (
+    typeof body === 'object' &&
+    body != null &&
+    typeof body.name === 'string'
+  ) {
     return body.name;
   }
-  throw new ParseError;
+  throw new ParseError();
 }
 
 function statusFromError(e: mixed) {
@@ -44,4 +49,4 @@ function statusFromError(e: mixed) {
   return 500;
 }
 
-function ParseError(){}
+function ParseError() {}

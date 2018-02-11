@@ -3,16 +3,14 @@ import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../judges';
 import makePackAction from '../test-utils';
-import {
-  createTournament, createJudge, generateId
-} from '../../../test-utils';
+import { createTournament, createJudge, generateId } from '../../../test-utils';
 import { normalizeTournamentArray } from '../normalize';
 
 describe('Judges reducer', () => {
   test('Undefined results in initial', () => {
     expect(
-      reducer(undefined, makePackAction(LIFECYCLE.SUCCESS, 'INVALID')))
-      .toEqual(getInitialState());
+      reducer(undefined, makePackAction(LIFECYCLE.SUCCESS, 'INVALID'))
+    ).toEqual(getInitialState());
   });
 
   describe('Get tournaments', () => {
@@ -36,13 +34,13 @@ describe('Judges reducer', () => {
       ...getInitialState(),
       forTournament: {
         [tournament1.id]: [judges1[0].id, judges1[1].id],
-        [tournament2.id]: [judges2[0].id, judges2[1].id],
+        [tournament2.id]: [judges2[0].id, judges2[1].id]
       },
       byId: {
         [judges1[0].id]: judges1[0],
         [judges1[1].id]: judges1[1],
         [judges2[0].id]: judges2[0],
-        [judges2[1].id]: judges2[1],
+        [judges2[1].id]: judges2[1]
       }
     };
 
@@ -51,16 +49,16 @@ describe('Judges reducer', () => {
         reducer(
           getInitialState(),
           makePackAction(LIFECYCLE.SUCCESS, 'GET_ALL_TOURNAMENTS', nom)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
     test('GET_ADMIN_TOURNAMENTS success sets rounds', () => {
       expect(
         reducer(
           getInitialState(),
           makePackAction(LIFECYCLE.SUCCESS, 'GET_ADMIN_TOURNAMENTS', nom)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
   });
 
@@ -78,13 +76,13 @@ describe('Judges reducer', () => {
         }
       };
 
-      const payload = {tournamentId, judge};
+      const payload = { tournamentId, judge };
       expect(
         reducer(
           getInitialState(),
           makePackAction(LIFECYCLE.SUCCESS, 'CREATE_JUDGE', payload)
-        ))
-        .toEqual(expected);
+        )
+      ).toEqual(expected);
     });
   });
 });

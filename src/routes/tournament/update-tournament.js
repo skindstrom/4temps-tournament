@@ -23,9 +23,11 @@ export default class UpdateTournamentRoute {
     const requestBody: any = req.body;
     const tournament = parseTournament(requestBody.tournament);
 
-    const { status, body } =
-      await updateTournamentRoute(
-        userId, tournament, this._repository);
+    const { status, body } = await updateTournamentRoute(
+      userId,
+      tournament,
+      this._repository
+    );
 
     res.status(status);
     res.json(body);
@@ -35,8 +37,8 @@ export default class UpdateTournamentRoute {
 export async function updateTournamentRoute(
   userId: string,
   tournament: Tournament,
-  repository: TournamentRepository): RouteResult<?Tournament> {
-
+  repository: TournamentRepository
+): RouteResult<?Tournament> {
   const { isValidTournament } = validateTournament(tournament);
   let status: number = 200;
   if (isValidTournament) {
@@ -44,8 +46,7 @@ export async function updateTournamentRoute(
 
     if (dbTournament == null) {
       status = 404;
-    }
-    else if (dbTournament.creatorId != userId) {
+    } else if (dbTournament.creatorId != userId) {
       status = 401;
     } else {
       const newTournament = {

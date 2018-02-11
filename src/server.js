@@ -7,7 +7,8 @@ import Helmet from 'helmet';
 import compression from 'compression';
 import type {
   $Application as ExpressApplication,
-  $Request, $Response
+  $Request,
+  $Response
 } from 'express';
 import path from 'path';
 import React from 'react';
@@ -51,19 +52,19 @@ class Server {
       // eslint-disable-next-line no-console
       console.log('Application started');
     });
-  }
+  };
 
   stop = (onClose: () => void) => {
     this._server.close(onClose);
-  }
+  };
 
   _enableCompression = () => {
     this._app.use(compression());
-  }
+  };
 
   _enableBodyParsing = () => {
     this._app.use(bodyParser.json());
-  }
+  };
 
   _forceSsl = () => {
     if (this._isProduction()) {
@@ -73,17 +74,17 @@ class Server {
         if (req.originalUrl === '/health-check' || forwardedProto === 'https') {
           next();
         } else {
-          const redirectUrl = 'https://' + String(req.header('Host')) +
-            req.originalUrl;
+          const redirectUrl =
+            'https://' + String(req.header('Host')) + req.originalUrl;
           res.redirect(301, redirectUrl);
         }
       });
     }
-  }
+  };
 
   _isProduction = () => {
     return process.env.NODE_ENV === 'production';
-  }
+  };
 
   _enableSessions = () => {
     if (this._isProduction()) {
@@ -92,39 +93,50 @@ class Server {
     }
 
     const MongoStore = ConnectMongo(Session);
-    this._app.use(Session({
-      name: 'SESSION',
-      secret: process.env.COOKIE_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      // Trust the reverse proxy for secure cookies
-      proxy: this._isProduction(),
-      cookie: {
-        // Only use secure in prod
-        secure: this._isProduction(),
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
-      },
-      store: new MongoStore({ mongooseConnection: getDbConnection() })
-    }));
-  }
+    this._app.use(
+      Session({
+        name: 'SESSION',
+        secret: process.env.COOKIE_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        // Trust the reverse proxy for secure cookies
+        proxy: this._isProduction(),
+        cookie: {
+          // Only use secure in prod
+          secure: this._isProduction(),
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // ~10 years
+        },
+        store: new MongoStore({ mongooseConnection: getDbConnection() })
+      })
+    );
+  };
 
   _enableSecurePolicies = () => {
     this._addCspNonceToResponse();
-    this._app.use(Helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'",
-            (req: $Request, res: $Response) =>
-              // $FlowFixMe
-              `'nonce-${res.locals.cspNonce}'`],
-          styleSrc: ["'self'", 'cdnjs.cloudflare.com', 'fonts.googleapis.com'],
-          fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
-          formAction: ["'self'"]
+    this._app.use(
+      Helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+              "'self'",
+              (req: $Request, res: $Response) =>
+                // $FlowFixMe
+                `'nonce-${res.locals.cspNonce}'`
+            ],
+            styleSrc: [
+              "'self'",
+              'cdnjs.cloudflare.com',
+              'fonts.googleapis.com'
+            ],
+            fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
+            formAction: ["'self'"]
+          }
         }
-      }}));
-  }
+      })
+    );
+  };
 
   _addCspNonceToResponse = () => {
     // Add a CSP nonce to allow inline scripts
@@ -132,45 +144,49 @@ class Server {
       res.locals.cspNonce = uuid();
       return next();
     });
-  }
+  };
 
   _enableRouting = () => {
     this._enablePublicDirectoryRouting();
     this._enableApiRouting();
     this._enableHealthCheckRouting();
-  }
+  };
 
   _enablePublicDirectoryRouting = () => {
     const maxAge = this._isProduction() ? 1000 * 60 * 60 /* 1 day */ : 0;
     // used for files that should be public, but is static
-    this._app.use('/', Express.static(path.join(__dirname, '../public'), {
-      maxAge
-    }));
+    this._app.use(
+      '/',
+      Express.static(path.join(__dirname, '../public'), {
+        maxAge
+      })
+    );
     // used for files that should be public, but that's generated
-    this._app.use('/',
+    this._app.use(
+      '/',
       Express.static(path.join(__dirname, '../public-build'), {
         maxAge
-      }));
-  }
+      })
+    );
+  };
 
   _enableApiRouting = () => {
     this._app.use('/api', ApiRoute);
     this._app.use(/\/api\/.*/, (req: $Request, res: $Response) => {
       res.sendStatus(404);
     });
-  }
+  };
 
   _enableHealthCheckRouting = () => {
-    this._app.use('/health-check',
-      (req: $Request, res: $Response) => {
-        res.status(200);
-        res.send(`I'm all healthy!`);
-      });
-  }
+    this._app.use('/health-check', (req: $Request, res: $Response) => {
+      res.status(200);
+      res.send(`I'm all healthy!`);
+    });
+  };
 
   _enableServerSideRendering = () => {
     this._app.use(this._renderRequest);
-  }
+  };
 
   _renderRequest = (req: $Request, res: $Response) => {
     const context = {};
@@ -181,10 +197,7 @@ class Server {
     };
 
     const html = renderToString(
-      <StaticRouter
-        location={req.url}
-        context={context}
-      >
+      <StaticRouter location={req.url} context={context}>
         {appWithPreloadedState({ user })}
       </StaticRouter>
     );
@@ -196,12 +209,17 @@ class Server {
       });
     } else {
       res.type('html');
-      res.write(renderHtmlTemplate(html, getReduxState(),
-        // $FlowFixMe: It's set a bit higher up
-        res.locals.cspNonce));
+      res.write(
+        renderHtmlTemplate(
+          html,
+          getReduxState(),
+          // $FlowFixMe: It's set a bit higher up
+          res.locals.cspNonce
+        )
+      );
     }
     res.end();
-  }
+  };
 }
 
 export default Server;

@@ -8,8 +8,7 @@ type Props = {
   load: () => void,
   shouldLoad: boolean,
   Child: ElementType
-}
-
+};
 
 class PreloadContainer extends Component<Props> {
   componentDidMount() {

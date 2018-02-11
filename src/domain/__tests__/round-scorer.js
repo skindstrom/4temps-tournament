@@ -1,7 +1,10 @@
 // @flow
 import RoundScorer from '../round-scorer';
 import {
-  createParticipant, createJudge, generateId, createRound
+  createParticipant,
+  createJudge,
+  generateId,
+  createRound
 } from '../../test-utils';
 
 describe('Dance scorer', () => {
@@ -62,18 +65,17 @@ describe('Dance scorer', () => {
         criterionId: criterionIds[1],
         danceId: dances[1],
         value: 123
-      },
+      }
     ];
 
     // participant0 => 1 + 2 + 5 = 8
     // participant1 => 2 + 10 + 20 + 123 = 32 + 123 = 155
 
     const scorer = new RoundScorer(participants, round);
-    expect(scorer.scoreRound(notes))
-      .toEqual([
-        { participant: participants[1], score: 155 },
-        { participant: participants[0], score: 8 },
-      ]);
+    expect(scorer.scoreRound(notes)).toEqual([
+      { participant: participants[1], score: 155 },
+      { participant: participants[0], score: 8 }
+    ]);
   });
 });
 
@@ -88,14 +90,14 @@ function createRoundWithGroups(danceIds: Array<string>): Round {
           {
             id: danceIds[0],
             active: false,
-            finished: false,
+            finished: false
           },
           {
             id: danceIds[1],
             active: false,
-            finished: false,
-          },
-        ],
+            finished: false
+          }
+        ]
       },
       {
         id: generateId(),
@@ -104,15 +106,15 @@ function createRoundWithGroups(danceIds: Array<string>): Round {
           {
             id: danceIds[2],
             active: false,
-            finished: false,
+            finished: false
           },
           {
             id: danceIds[3],
             active: false,
-            finished: false,
-          },
-        ],
-      },
+            finished: false
+          }
+        ]
+      }
     ]
   };
 }

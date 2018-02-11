@@ -7,7 +7,7 @@ import AccessKeyLogin from './AccessKeyLogin';
 class Login extends PureComponent<{}> {
   static credentialHeader = 'Admin Login';
   static accessKeyHeader = 'Judge Login';
-  render () {
+  render() {
     return (
       <div>
         <AccessKeyLogin headerTitle={Login.accessKeyHeader} {...this.props} />

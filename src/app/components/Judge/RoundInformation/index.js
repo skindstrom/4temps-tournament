@@ -2,9 +2,10 @@
 import { connect } from 'react-redux';
 import RoundInformation from './component';
 
-function mapStateToProps({tournaments, rounds}: ReduxState) {
-  const tournamentRounds: Array<Round> =
-    tournaments.byId[tournaments.forJudge].rounds.map(id => rounds.byId[id]);
+function mapStateToProps({ tournaments, rounds }: ReduxState) {
+  const tournamentRounds: Array<Round> = tournaments.byId[
+    tournaments.forJudge
+  ].rounds.map(id => rounds.byId[id]);
   const activeRound = getActiveRound(tournamentRounds);
   const activeGroupInformation = getActiveGroupInformation(activeRound);
   const activeDanceInformation = getActiveDanceInformation(
@@ -21,8 +22,12 @@ function getActiveRound(rounds: Array<Round>): Round {
   return rounds.filter(round => round.active)[0];
 }
 
-function getActiveGroupInformation(round: Round): {
-  group: DanceGroup, groupNumber: number, numberOfGroups: number
+function getActiveGroupInformation(
+  round: Round
+): {
+  group: DanceGroup,
+  groupNumber: number,
+  numberOfGroups: number
 } {
   const numberOfGroups = round.groups.length;
   for (let i = 0; i < numberOfGroups; i++) {
@@ -37,13 +42,16 @@ function getActiveGroupInformation(round: Round): {
   throw new Error('No active groups!');
 }
 
-function getActiveDanceInformation(group: DanceGroup): {
-  danceNumber: number, numberOfDances: number
+function getActiveDanceInformation(
+  group: DanceGroup
+): {
+  danceNumber: number,
+  numberOfDances: number
 } {
   const numberOfDances = group.dances.length;
   for (let i = 0; i < numberOfDances; i++) {
     if (group.dances[i].active)
-      return {danceNumber: i + 1, numberOfDances: numberOfDances};
+      return { danceNumber: i + 1, numberOfDances: numberOfDances };
   }
   throw new Error('There is not active dance!');
 }

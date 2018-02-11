@@ -6,7 +6,7 @@ import Component from './component';
 
 type Props = {
   tournamentId: string
-}
+};
 
 function mapStateToProps({ ui }: ReduxState) {
   return ui.createRound;
@@ -22,7 +22,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   };
 }
 
-const EditTournamentRoundsContainer =
-  connect(mapStateToProps, mapDispatchToProps)(Component);
+const EditTournamentRoundsContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default EditTournamentRoundsContainer;

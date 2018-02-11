@@ -2,11 +2,14 @@
 
 import CreateRoundRoute from '../create-round';
 import {
-  generateId, TOURNAMENT_ID,
-  Request, Response,
-  createRound, createTournament,
+  generateId,
+  TOURNAMENT_ID,
+  Request,
+  Response,
+  createRound,
+  createTournament,
   TournamentRepositoryImpl as TournamentRepository
-}  from '../../../test-utils';
+} from '../../../test-utils';
 
 describe('/api/round/create route', () => {
   const tournament = createTournament();
@@ -31,28 +34,31 @@ describe('/api/round/create route', () => {
     const route = new CreateRoundRoute(repo);
 
     await route.route(
-      requestWithRound({...createRound(), name: ''}), response);
+      requestWithRound({ ...createRound(), name: '' }),
+      response
+    );
 
     expect(response.getStatus()).toBe(400);
   });
 
   test('Valid round returns status 200', async () => {
     const response = new Response();
-    const {id, ...round} = createRound();
+    const { id, ...round } = createRound();
     const route = new CreateRoundRoute(repo);
-
 
     await route.route(requestWithRound(round), response);
 
     expect(response.getStatus()).toBe(200);
-    expect(response.getBody())
-      .toMatchObject({tournamentId: tournament.id, round});
+    expect(response.getBody()).toMatchObject({
+      tournamentId: tournament.id,
+      round
+    });
   });
 
   test('A valid round has an ID generated', async () => {
     const route = new CreateRoundRoute(repo);
 
-    const {id, ...round} = createRound();
+    const { id, ...round } = createRound();
     await route.route(requestWithRound(round), new Response());
 
     const dbModel = await repo.get(tournament.id);
@@ -62,7 +68,9 @@ describe('/api/round/create route', () => {
 
   test('Error during creation returns status 500', async () => {
     // $FlowFixMe
-    repo.createRound = () => {throw {};};
+    repo.createRound = () => {
+      throw {};
+    };
     const route = new CreateRoundRoute(repo);
     const response = new Response();
 

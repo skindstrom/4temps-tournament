@@ -27,14 +27,15 @@ class CreateTournamentRoute {
       creatorId: userId
     };
 
-    const { status, body } =
-      await createTournamentRoute(
-        userId, tournament, this._repository);
+    const { status, body } = await createTournamentRoute(
+      userId,
+      tournament,
+      this._repository
+    );
 
     res.status(status);
     res.json(body);
-
-  }
+  };
 }
 
 export async function createTournamentRoute(
@@ -42,7 +43,6 @@ export async function createTournamentRoute(
   tournament: Tournament,
   repository: TournamentRepository
 ): RouteResult<?Tournament> {
-
   const { isValidTournament } = validateTournament(tournament);
   let status: number = 200;
 

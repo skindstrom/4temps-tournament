@@ -9,7 +9,7 @@ import NavigationBar from './component';
 type Props = {
   location: Location,
   history: RouterHistory
-}
+};
 
 function getActivePath(location: string): string {
   const matches = location.match(/\/(.+)\/?\??.*/);
@@ -27,21 +27,24 @@ function mapStateToProps({ user }: ReduxState, { location }: Props) {
   };
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch,
-  { history }: { history: RouterHistory }) {
+function mapDispatchToProps(
+  dispatch: ReduxDispatch,
+  { history }: { history: RouterHistory }
+) {
   return {
     onClickLogout: () =>
-      dispatch(({
+      dispatch({
         type: 'LOGOUT_USER',
         promise: logoutAdmin(),
         meta: {
           onSuccess: () => history.push('/')
         }
-      }))
+      })
   };
 }
 
-const NavigationBarContainer =
-  withRouter(connect(mapStateToProps, mapDispatchToProps)(NavigationBar));
+const NavigationBarContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NavigationBar)
+);
 
 export default NavigationBarContainer;

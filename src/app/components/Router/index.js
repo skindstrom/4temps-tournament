@@ -11,38 +11,32 @@ import Home from '../Home';
 import Login from '../Login';
 import FourOFour from '../FourOFour';
 import RoundOverview from '../RoundOverview';
-import Judge from  '../Judge';
+import Judge from '../Judge';
 import PrivateRoute from './private-route';
 
 const Router = () => {
   return (
     <Switch>
-      <Route path='/(|home)' exact component={Home} />
-      <Route path='/signup' component={SignUp} />
-      <Route
-        path='/login'
-        component={Login}
-      />
+      <Route path="/(|home)" exact component={Home} />
+      <Route path="/signup" component={SignUp} />
+      <Route path="/login" component={Login} />
       <PrivateRoute
-        path='/tournament/create'
+        path="/tournament/create"
         exact
         component={CreateTournament}
       />
       <PrivateRoute
-        path='/tournament/edit'
+        path="/tournament/edit"
         exact
         component={EditTournamentList}
       />
       <PrivateRoute
-        path='/tournament/edit/:tournamentId'
+        path="/tournament/edit/:tournamentId"
         component={EditTournament}
       />
+      <PrivateRoute path="/judge" component={Judge} />
       <PrivateRoute
-        path='/judge'
-        component={Judge}
-      />
-      <PrivateRoute
-        path='/tournament/:tournamentId/round/:roundId'
+        path="/tournament/:tournamentId/round/:roundId"
         component={RoundOverview}
       />
       <Route component={FourOFour} />

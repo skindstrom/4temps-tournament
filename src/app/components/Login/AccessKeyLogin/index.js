@@ -6,13 +6,13 @@ import LoginComponent from './component';
 
 type Props = {
   history: RouterHistory
-}
+};
 
 function mapStateToProps({ ui }: ReduxState) {
   return ui.judgeLogin;
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch, {history}: Props) {
+function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
   return {
     onSubmit: (accessKey: string) =>
       dispatch({
@@ -25,7 +25,8 @@ function mapDispatchToProps(dispatch: ReduxDispatch, {history}: Props) {
   };
 }
 
-const LoginContainer =
-  connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
+const LoginContainer = connect(mapStateToProps, mapDispatchToProps)(
+  LoginComponent
+);
 
 export default LoginContainer;

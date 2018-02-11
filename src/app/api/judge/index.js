@@ -1,6 +1,6 @@
 // @flow
 
-import {apiPostRequest} from '../util';
+import { apiPostRequest } from '../util';
 import validateJudge from '../../../validators/validate-judge';
 import validateJudgeLogin from '../../../validators/validate-judge-login';
 
@@ -14,7 +14,7 @@ export async function createJudge(tournamentId: string, judge: Judge) {
 export async function loginJudge(accessKey: string) {
   let isValid = await validateJudgeLogin(accessKey);
   if (!isValid) {
-    throw {isValidAccessKey: false, doesAccessKeyExist: true};
+    throw { isValidAccessKey: false, doesAccessKeyExist: true };
   }
-  return apiPostRequest('/api/judge/login', {accessKey});
+  return apiPostRequest('/api/judge/login', { accessKey });
 }

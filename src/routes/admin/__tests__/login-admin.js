@@ -5,9 +5,11 @@ import { loginAdminRoute } from '../login-admin';
 import type { AdminCredentials } from '../../../models/admin';
 import type { AdminModel } from '../../../data/admin';
 
-const setSessionUser = () => { return; };
+const setSessionUser = () => {
+  return;
+};
 
-test('If credentials are valid, the session is set', (done) => {
+test('If credentials are valid, the session is set', done => {
   const credentials: AdminCredentials = {
     email: 'test@gmail.com',
     password: 'password'
@@ -20,7 +22,7 @@ test('If credentials are valid, the session is set', (done) => {
     email: 'test@gmail.com'
   };
 
-  const setSessionUser = (admin) => {
+  const setSessionUser = admin => {
     expect(admin).toEqual(admin);
     done();
   };
@@ -44,8 +46,9 @@ test('If credentials are valid, returns status 200', async () => {
 
   const getAdmin = () => new Promise(resolve => resolve(admin));
 
-  expect((await loginAdminRoute(credentials, setSessionUser, getAdmin)).status)
-    .toBe(200);
+  expect(
+    (await loginAdminRoute(credentials, setSessionUser, getAdmin)).status
+  ).toBe(200);
 });
 
 test('Credentials are validated', async () => {
@@ -56,13 +59,14 @@ test('Credentials are validated', async () => {
 
   const getAdmin = () => new Promise(resolve => resolve(null));
 
-  expect((await loginAdminRoute(credentials, setSessionUser, getAdmin)).body)
-    .toEqual({
-      isValid: false,
-      isValidEmail: false,
-      isValidPassword: true,
-      doesAdminExist: false
-    });
+  expect(
+    (await loginAdminRoute(credentials, setSessionUser, getAdmin)).body
+  ).toEqual({
+    isValid: false,
+    isValidEmail: false,
+    isValidPassword: true,
+    doesAdminExist: false
+  });
 });
 
 test('Invalid credentials return status 400', async () => {
@@ -71,14 +75,18 @@ test('Invalid credentials return status 400', async () => {
     password: 'password'
   };
 
-  const getAdmin = () => new Promise(resolve => resolve({
-    _id: new Types.ObjectId(),
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: ''
-  }));
+  const getAdmin = () =>
+    new Promise(resolve =>
+      resolve({
+        _id: new Types.ObjectId(),
+        email: '',
+        firstName: '',
+        lastName: '',
+        password: ''
+      })
+    );
 
-  expect((await loginAdminRoute(credentials, setSessionUser, getAdmin)).status)
-    .toBe(400);
+  expect(
+    (await loginAdminRoute(credentials, setSessionUser, getAdmin)).status
+  ).toBe(400);
 });

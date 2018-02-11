@@ -2,14 +2,17 @@
 
 import route from '../create-judge';
 import {
-  Request, Response, createTournament, createAdmin,
+  Request,
+  Response,
+  createTournament,
+  createAdmin,
   TournamentRepositoryImpl as TournamentRepository,
-  AccessKeyRepositoryImpl as AccessKeyRepository,
+  AccessKeyRepositoryImpl as AccessKeyRepository
 } from '../../../test-utils';
 
 describe('/api/judge/create', () => {
   const admin = createAdmin();
-  const tournament = {...createTournament(), creatorId: admin._id.toString()};
+  const tournament = { ...createTournament(), creatorId: admin._id.toString() };
   const name = 'Judge name';
 
   let req: Request;
@@ -18,8 +21,8 @@ describe('/api/judge/create', () => {
   let accessRepo: AccessKeyRepository;
 
   beforeEach(async () => {
-    req = Request.withUserAndParams(admin, {tournamentId: tournament.id});
-    req.body = {name};
+    req = Request.withUserAndParams(admin, { tournamentId: tournament.id });
+    req.body = { name };
     res = new Response();
     tournamentRepo = new TournamentRepository();
     accessRepo = new AccessKeyRepository();
@@ -27,7 +30,9 @@ describe('/api/judge/create', () => {
   });
 
   test('Status 500 is returned if the judge could not be added', async () => {
-    tournamentRepo.addJudge = () => {throw 'Test throw';};
+    tournamentRepo.addJudge = () => {
+      throw 'Test throw';
+    };
     await route(tournamentRepo, accessRepo)(req, res);
 
     expect(res.getStatus()).toBe(500);
@@ -37,11 +42,10 @@ describe('/api/judge/create', () => {
     await route(tournamentRepo, accessRepo)(req, res);
 
     expect(res.getStatus()).toBe(200);
-    expect((await tournamentRepo.get(tournament.id)))
-      .toMatchObject({
-        ...tournament,
-        judges: [{name}]
-      });
+    expect(await tournamentRepo.get(tournament.id)).toMatchObject({
+      ...tournament,
+      judges: [{ name }]
+    });
   });
 
   test('Returns tournament id and judge if successful', async () => {
@@ -50,7 +54,7 @@ describe('/api/judge/create', () => {
     expect(res.getStatus()).toBe(200);
     expect(res.getBody()).toMatchObject({
       tournamentId: tournament.id,
-      judge: {name}
+      judge: { name }
     });
   });
 
@@ -60,10 +64,12 @@ describe('/api/judge/create', () => {
     expect(res.getStatus()).toBe(200);
     // $FlowFixMe
     const judge: Judge = res.getBody().judge;
-    expect(accessRepo.getAll()).toMatchObject([{
-      tournamentId: tournament.id,
-      userId: judge.id
-    }]);
+    expect(accessRepo.getAll()).toMatchObject([
+      {
+        tournamentId: tournament.id,
+        userId: judge.id
+      }
+    ]);
   });
 
   test('Status 400 is returned if invalid judge', async () => {

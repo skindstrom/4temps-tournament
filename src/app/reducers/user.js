@@ -4,8 +4,8 @@ import { handle } from 'redux-pack';
 
 function userReducer(
   state: UserReduxState = getInitialState(),
-  action: ReduxPackAction): UserReduxState {
-
+  action: ReduxPackAction
+): UserReduxState {
   const { type } = action;
 
   switch (type) {
@@ -20,23 +20,25 @@ function userReducer(
 }
 
 export function getInitialState(): UserReduxState {
-  return {id: ''};
+  return { id: '' };
 }
 
 function loginUser(
-  state: UserReduxState, action: ReduxPackAction): UserReduxState {
-
-  const {payload} = action;
+  state: UserReduxState,
+  action: ReduxPackAction
+): UserReduxState {
+  const { payload } = action;
   return handle(state, action, {
-    success: () => ({id: payload.userId}),
+    success: () => ({ id: payload.userId })
   });
 }
 
 function logoutUser(
-  state: UserReduxState, action: ReduxPackAction): UserReduxState {
-
+  state: UserReduxState,
+  action: ReduxPackAction
+): UserReduxState {
   return handle(state, action, {
-    success: () => ({id: ''}),
+    success: () => ({ id: '' })
   });
 }
 

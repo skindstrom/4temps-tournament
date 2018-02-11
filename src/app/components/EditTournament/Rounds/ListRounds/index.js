@@ -10,14 +10,12 @@ import { getTournamentsForUser } from '../../../../api/tournament';
 type Props = {
   tournamentId: string,
   history: RouterHistory
-}
+};
 
-function mapStateToProps({ rounds }: ReduxState,
-  { tournamentId }: Props) {
-
-  const tournamentRounds =
-    (rounds.forTournament[tournamentId] || [])
-      .map(id => rounds.byId[id]);
+function mapStateToProps({ rounds }: ReduxState, { tournamentId }: Props) {
+  const tournamentRounds = (rounds.forTournament[tournamentId] || []).map(
+    id => rounds.byId[id]
+  );
 
   const nextRound = tournamentRounds.find(({ finished }) => !finished);
 
@@ -31,30 +29,35 @@ function mapStateToProps({ rounds }: ReduxState,
 
 function mapDispatchToProps(
   dispatch: ReduxDispatch,
-  { tournamentId, history }: Props) {
-
+  { tournamentId, history }: Props
+) {
   return {
-    load: () => dispatch(
-      {type: 'GET_ADMIN_TOURNAMENTS', promise: getTournamentsForUser()}
-    ),
-    deleteFromRounds: (deleteId: string) => dispatch({
-      type: 'DELETE_ROUND',
-      promise: deleteRound(tournamentId, deleteId)
-    }),
-    startRound: (roundId: string) => dispatch({
-      type: 'START_ROUND',
-      promise: startRound(tournamentId, roundId),
-      meta: {
-        onSuccess: () =>
-          history.push(`/tournament/${tournamentId}/round/${roundId}`)
-      }
-    }),
+    load: () =>
+      dispatch({
+        type: 'GET_ADMIN_TOURNAMENTS',
+        promise: getTournamentsForUser()
+      }),
+    deleteFromRounds: (deleteId: string) =>
+      dispatch({
+        type: 'DELETE_ROUND',
+        promise: deleteRound(tournamentId, deleteId)
+      }),
+    startRound: (roundId: string) =>
+      dispatch({
+        type: 'START_ROUND',
+        promise: startRound(tournamentId, roundId),
+        meta: {
+          onSuccess: () =>
+            history.push(`/tournament/${tournamentId}/round/${roundId}`)
+        }
+      }),
     onClick: (roundId: string) =>
       history.push(`/tournament/${tournamentId}/round/${roundId}`)
   };
 }
 
-const ListRoundContainer =
-  connect(mapStateToProps, mapDispatchToProps)(PreloadContainer);
+const ListRoundContainer = connect(mapStateToProps, mapDispatchToProps)(
+  PreloadContainer
+);
 
 export default ListRoundContainer;

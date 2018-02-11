@@ -6,7 +6,7 @@ import HomeComponent from './component';
 
 function mapStateToProps({ user }: ReduxState) {
   return {
-    isAuthenticated : user.id !== '',
+    isAuthenticated: user.id !== ''
   };
 }
 

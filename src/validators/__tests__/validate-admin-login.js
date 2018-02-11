@@ -20,7 +20,7 @@ test('Valid info is valid', async () => {
 
 test('Email has to be valid', async () => {
   const emails = ['@test.com', 't@t', 't@.com'];
-  const admins: Array<AdminCredentials> = emails.map((email) => ({
+  const admins: Array<AdminCredentials> = emails.map(email => ({
     email,
     password: 'Password123'
   }));
@@ -63,11 +63,13 @@ test('Returns valid admin if exists', async () => {
     email: admin.email,
     firstName: 'Test',
     lastName: 'WopWop',
-    password: 'asdasdasd',
+    password: 'asdasdasd'
   };
 
-  const result = await validateAdminLogin(admin,
-    () => new Promise((resolve) => resolve(fullAdmin)));
+  const result = await validateAdminLogin(
+    admin,
+    () => new Promise(resolve => resolve(fullAdmin))
+  );
 
   expect(result.isValid).toBe(true);
   expect(result.doesAdminExist).toBe(true);
@@ -82,8 +84,10 @@ test('Returns null admin if not exists', async () => {
     password: 'password'
   };
 
-  const result = await validateAdminLogin(admin,
-    () => new Promise((resolve) => resolve(null)));
+  const result = await validateAdminLogin(
+    admin,
+    () => new Promise(resolve => resolve(null))
+  );
 
   expect(result.isValid).toBe(false);
   expect(result.doesAdminExist).toBe(false);

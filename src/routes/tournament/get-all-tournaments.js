@@ -11,5 +11,5 @@ export default class GetAllTournamentsRoute {
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     res.json(await this._repository.getAll());
-  }
+  };
 }

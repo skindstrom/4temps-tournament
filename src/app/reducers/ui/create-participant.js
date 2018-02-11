@@ -2,9 +2,10 @@
 
 import { handle } from 'redux-pack';
 
-function participants(state: UiCreateParticipantsReduxState = getInitialState(),
-  action: ReduxPackAction): UiCreateParticipantsReduxState {
-
+function participants(
+  state: UiCreateParticipantsReduxState = getInitialState(),
+  action: ReduxPackAction
+): UiCreateParticipantsReduxState {
   const { type } = action;
 
   switch (type) {
@@ -27,9 +28,10 @@ export function getInitialState(): UiCreateParticipantsReduxState {
   };
 }
 
-function createParticipant(state: UiCreateParticipantsReduxState,
-  action: ReduxPackAction): UiCreateParticipantsReduxState {
-
+function createParticipant(
+  state: UiCreateParticipantsReduxState,
+  action: ReduxPackAction
+): UiCreateParticipantsReduxState {
   const { payload } = action;
 
   return handle(state, action, {

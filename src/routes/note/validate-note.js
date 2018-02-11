@@ -3,10 +3,9 @@
 export default function validateNoteForTournamentAndUser(
   note: JudgeNote,
   tournament: Tournament,
-  user: ?Admin | ?Judge) {
-
-  if (user == null
-    || note.judgeId != user.id) {
+  user: ?Admin | ?Judge
+) {
+  if (user == null || note.judgeId != user.id) {
     throw new WrongJudgeError();
   }
 
@@ -40,7 +39,8 @@ function isDanceActive(tournament: Tournament, danceId: string): boolean {
 }
 function getCriterion(
   tournament: Tournament,
-  criterionId: string): RoundCriterion {
+  criterionId: string
+): RoundCriterion {
   for (const round of tournament.rounds) {
     for (const criterion of round.criteria) {
       if (criterion.id === criterionId) {
@@ -52,7 +52,8 @@ function getCriterion(
 }
 function getParticipant(
   tournament: Tournament,
-  participantId: string): Participant {
+  participantId: string
+): Participant {
   for (const participant of tournament.participants) {
     if (participant.id === participantId) {
       return participant;
@@ -63,13 +64,17 @@ function getParticipant(
 
 function isValidCriterionForParticipant(
   criterion: RoundCriterion,
-  participant: Participant): boolean {
+  participant: Participant
+): boolean {
   if (criterion.type === 'leader') {
-    return participant.role === 'leader'
-      || participant.role === 'leaderAndFollower';
+    return (
+      participant.role === 'leader' || participant.role === 'leaderAndFollower'
+    );
   } else if (criterion.type === 'follower') {
-    return participant.role === 'follower'
-      || participant.role === 'leaderAndFollower';
+    return (
+      participant.role === 'follower' ||
+      participant.role === 'leaderAndFollower'
+    );
   }
 
   return true;
@@ -79,9 +84,9 @@ function isValueWithinRange(criterion: RoundCriterion, value: number) {
   return criterion.minValue <= value && value <= criterion.maxValue;
 }
 
-export function DanceNotActiveError() { }
-export function CriterionNotFoundError() { }
-export function ParticipantNotFoundError() { }
-export function InvalidCriterionForParticipant() { }
-export function InvalidValueError() { }
-export function WrongJudgeError(){}
+export function DanceNotActiveError() {}
+export function CriterionNotFoundError() {}
+export function ParticipantNotFoundError() {}
+export function InvalidCriterionForParticipant() {}
+export function InvalidValueError() {}
+export function WrongJudgeError() {}

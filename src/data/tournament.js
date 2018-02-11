@@ -123,7 +123,9 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   async getForJudge(judgeId: string) {
     try {
       return mapToDomainModel(
-        (await Model.findOne({judges: {$elemMatch: {_id: judgeId}}})).toObject()
+        (await Model.findOne({
+          judges: { $elemMatch: { _id: judgeId } }
+        })).toObject()
       );
     } catch (e) {
       return null;

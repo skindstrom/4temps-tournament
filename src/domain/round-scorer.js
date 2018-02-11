@@ -12,11 +12,12 @@ export default class RoundScorer {
     this._round = round;
   }
 
-  scoreRound = (notes: Array<JudgeNote>): Array<{
+  scoreRound = (
+    notes: Array<JudgeNote>
+  ): Array<{
     participant: Participant,
     score: number
   }> => {
-
     const danceScorer = new DanceScorer(this._participants, notes);
     const totals = {};
 
@@ -32,14 +33,14 @@ export default class RoundScorer {
       }
     }
 
-    return Object.keys(totals).map(participantId => ({
-      // $FlowFixMe: Participant will surely exist
-      participant: this._participants
-        .find(p => p.id === participantId),
-      score: totals[participantId]
-    }))
+    return Object.keys(totals)
+      .map(participantId => ({
+        // $FlowFixMe: Participant will surely exist
+        participant: this._participants.find(p => p.id === participantId),
+        score: totals[participantId]
+      }))
       .sort((a, b) => b.score - a.score);
-  }
+  };
 
   _getDances = (): Array<Dance> => {
     let dances: Array<Dance> = [];
@@ -49,6 +50,5 @@ export default class RoundScorer {
     });
 
     return dances;
-  }
-
+  };
 }

@@ -10,9 +10,9 @@ import ListRounds from './ListRounds';
 type Props = {
   tournamentId: string,
   history: RouterHistory
-}
+};
 
-function EditTournamentRounds({tournamentId, history}: Props) {
+function EditTournamentRounds({ tournamentId, history }: Props) {
   return (
     <Container>
       <Modal defaultOpen={false} trigger={<Button>Add round</Button>}>

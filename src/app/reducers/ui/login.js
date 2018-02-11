@@ -2,8 +2,10 @@
 
 import { handle } from 'redux-pack';
 
-function uiLogin(state: UiLoginReduxState = getInitialState(),
-  action: ReduxPackAction) {
+function uiLogin(
+  state: UiLoginReduxState = getInitialState(),
+  action: ReduxPackAction
+) {
   const { type, payload } = action;
 
   switch (type) {
@@ -11,7 +13,7 @@ function uiLogin(state: UiLoginReduxState = getInitialState(),
     return handle(state, action, {
       start: prevState => ({ ...prevState, isLoading: true }),
       success: prevState => ({ ...prevState, isLoading: false, ...payload }),
-      failure: prevState => ({ ...prevState, isLoading: false, ...payload }),
+      failure: prevState => ({ ...prevState, isLoading: false, ...payload })
     });
   default:
     return state;

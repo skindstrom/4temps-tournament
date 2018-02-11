@@ -2,9 +2,10 @@
 
 import { handle } from 'redux-pack';
 
-function uiSignUp(state: UiSignUpReduxState = getInitialState(),
-  action: ReduxPackAction): UiSignUpReduxState {
-
+function uiSignUp(
+  state: UiSignUpReduxState = getInitialState(),
+  action: ReduxPackAction
+): UiSignUpReduxState {
   const { type, payload } = action;
 
   switch (type) {

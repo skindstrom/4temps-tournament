@@ -2,8 +2,10 @@
 
 import { handle } from 'redux-pack';
 
-function uiLogin(state: UiJudgeLoginReduxState = getInitialState(),
-  action: ReduxPackAction): UiJudgeLoginReduxState {
+function uiLogin(
+  state: UiJudgeLoginReduxState = getInitialState(),
+  action: ReduxPackAction
+): UiJudgeLoginReduxState {
   const { type, payload } = action;
 
   switch (type) {
@@ -11,7 +13,7 @@ function uiLogin(state: UiJudgeLoginReduxState = getInitialState(),
     return handle(state, action, {
       start: prevState => ({ ...prevState, isLoading: true }),
       success: () => getInitialState(),
-      failure: prevState => ({ ...prevState, isLoading: false, ...payload }),
+      failure: prevState => ({ ...prevState, isLoading: false, ...payload })
     });
   default:
     return state;
@@ -22,7 +24,7 @@ export function getInitialState(): UiJudgeLoginReduxState {
   return {
     isLoading: false,
     isValidAccessKey: true,
-    doesAccessKeyExist: true,
+    doesAccessKeyExist: true
   };
 }
 

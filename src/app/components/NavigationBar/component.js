@@ -148,35 +148,29 @@ class NavigationBar extends PureComponent<Props, State> {
             <Icon name="edit" />
             Edit Tournament
           </Menu.Item>
-          <div styleName='filler' />
+          <div styleName="filler" />
           {this.props.isAuthenticated ? (
             <MenuMenu>
-              <MenuItem onClick={() => {
-                this.toggleSideBar();
-                this.props.onClickLogout();
-              }}
+              <MenuItem
+                onClick={() => {
+                  this.toggleSideBar();
+                  this.props.onClickLogout();
+                }}
               >
                 <h3>Log out</h3>
               </MenuItem>
             </MenuMenu>
           ) : (
             <MenuMenu>
-              <MenuItem
-                as={Link}
-                to='/login'
-                onClick={this.toggleSideBar}
-              >
+              <MenuItem as={Link} to="/login" onClick={this.toggleSideBar}>
                 <h3>Log in</h3>
               </MenuItem>
-              <MenuItem
-                as={Link}
-                to='/signup'
-                onClick={this.toggleSideBar}
-              >
+              <MenuItem as={Link} to="/signup" onClick={this.toggleSideBar}>
                 <h3>Sign up</h3>
               </MenuItem>
-            </MenuMenu>)}
-          <div styleName='bottom-filler' />
+            </MenuMenu>
+          )}
+          <div styleName="bottom-filler" />
         </Sidebar>
       </MenuMenu>
     );
@@ -186,12 +180,8 @@ class NavigationBar extends PureComponent<Props, State> {
     /* Perform conditional rendering with CSS to not mess up the re-hydration*/
     return (
       <span>
-        <span styleName='navbar'>
-          {this._renderDesktopView()}
-        </span>
-        <span styleName='sidebar'>
-          {this._renderTabletView()}
-        </span>
+        <span styleName="navbar">{this._renderDesktopView()}</span>
+        <span styleName="sidebar">{this._renderTabletView()}</span>
       </span>
     );
   }

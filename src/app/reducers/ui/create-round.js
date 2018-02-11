@@ -1,8 +1,10 @@
 // @flow
 import { handle } from 'redux-pack';
 
-function createRound(state: UiCreateRoundReduxState = getInitialState(),
-  action: ReduxPackAction) {
+function createRound(
+  state: UiCreateRoundReduxState = getInitialState(),
+  action: ReduxPackAction
+) {
   const { type, payload } = action;
 
   switch (type) {
@@ -41,15 +43,17 @@ export function getInitialState(): UiCreateRoundReduxState {
       isValidMultipleDanceScoringRule: true,
       isValidAmountOfCriteria: true,
       isValidCriteria: true,
-      criteriaValidation: [{
-        isValidCriterion: true,
-        isValidName: true,
-        isValidMinValue: true,
-        isValidMaxValue: true,
-        isValidValueCombination: true,
-        isValidType: true,
-        isValidDescription: true
-      }]
+      criteriaValidation: [
+        {
+          isValidCriterion: true,
+          isValidName: true,
+          isValidMinValue: true,
+          isValidMaxValue: true,
+          isValidValueCombination: true,
+          isValidType: true,
+          isValidDescription: true
+        }
+      ]
     }
   };
 }

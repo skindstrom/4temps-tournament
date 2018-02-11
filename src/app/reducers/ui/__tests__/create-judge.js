@@ -1,16 +1,15 @@
 // @flow
 
-import {LIFECYCLE} from 'redux-pack';
+import { LIFECYCLE } from 'redux-pack';
 
-import reducer, {getInitialState} from '../create-judge';
+import reducer, { getInitialState } from '../create-judge';
 import makePackAction from '../../test-utils';
 
 describe('Create judge UI reducer', () => {
   test('Default value is set', () => {
     expect(
-      reducer(undefined,
-        makePackAction(LIFECYCLE.START, 'INVALID')))
-      .toEqual(getInitialState());
+      reducer(undefined, makePackAction(LIFECYCLE.START, 'INVALID'))
+    ).toEqual(getInitialState());
   });
 
   describe('CREATE_JUDGE', () => {
@@ -26,9 +25,8 @@ describe('Create judge UI reducer', () => {
         createdSuccessfully: false
       };
       expect(
-        reducer(initial,
-          makePackAction(LIFECYCLE.START, 'CREATE_JUDGE')))
-        .toEqual(expected);
+        reducer(initial, makePackAction(LIFECYCLE.START, 'CREATE_JUDGE'))
+      ).toEqual(expected);
     });
 
     test('success sets flags', () => {
@@ -45,9 +43,8 @@ describe('Create judge UI reducer', () => {
         createdSuccessfully: true
       };
       expect(
-        reducer(initial,
-          makePackAction(LIFECYCLE.SUCCESS, 'CREATE_JUDGE')))
-        .toEqual(expected);
+        reducer(initial, makePackAction(LIFECYCLE.SUCCESS, 'CREATE_JUDGE'))
+      ).toEqual(expected);
     });
 
     test('failure sets flags', () => {
@@ -64,9 +61,8 @@ describe('Create judge UI reducer', () => {
         createdSuccessfully: false
       };
       expect(
-        reducer(initial,
-          makePackAction(LIFECYCLE.FAILURE, 'CREATE_JUDGE')))
-        .toEqual(expected);
+        reducer(initial, makePackAction(LIFECYCLE.FAILURE, 'CREATE_JUDGE'))
+      ).toEqual(expected);
     });
   });
 });

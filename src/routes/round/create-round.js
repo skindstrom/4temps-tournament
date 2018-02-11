@@ -13,8 +13,7 @@ class CreateRoundRoute {
   }
 
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
-    const handler =
-      new CreateRoundRouteHandler(this._tournamentRepository);
+    const handler = new CreateRoundRouteHandler(this._tournamentRepository);
     try {
       handler.parseBody(req.body);
       await handler.executeForUser(this._userId(req));
@@ -25,11 +24,11 @@ class CreateRoundRoute {
     } catch (e) {
       res.sendStatus(e.status);
     }
-  }
+  };
 
   _userId = (req: ServerApiRequest) => {
     return req.session.user != null ? req.session.user.id : '';
-  }
+  };
 }
 
 class CreateRoundRouteHandler {
@@ -45,11 +44,11 @@ class CreateRoundRouteHandler {
 
   getTournamentId = () => {
     return this._tournamentId;
-  }
+  };
 
   getCreatedRound = () => {
     return this._round;
-  }
+  };
 
   async executeForUser(userId: string) {
     this._userId = userId;
@@ -63,8 +62,9 @@ class CreateRoundRouteHandler {
 
   _userOwnsTournament = async (): Promise<boolean> => {
     try {
-      const tournament =
-        await this._tournamentRepository.get(this._tournamentId);
+      const tournament = await this._tournamentRepository.get(
+        this._tournamentId
+      );
 
       if (tournament == null) {
         throw { status: 404 };
@@ -75,7 +75,7 @@ class CreateRoundRouteHandler {
       if (e.status) throw e;
       throw { status: 500 };
     }
-  }
+  };
 
   parseBody = (body: mixed) => {
     this._round = this._parseRound(body);
@@ -84,22 +84,25 @@ class CreateRoundRouteHandler {
     if (!this._isValidRound()) {
       throw { status: 400 };
     }
-  }
+  };
 
   _parseRound = (body: mixed) => {
     if (typeof body === 'object' && body != null) {
       return parseRound(body.round);
     } else {
-      throw {status: 400};
+      throw { status: 400 };
     }
-  }
+  };
 
   _parseTournamentId = (body: mixed) => {
-    if (typeof body === 'object'
-      && body != null && typeof body.tournamentId === 'string') {
+    if (
+      typeof body === 'object' &&
+      body != null &&
+      typeof body.tournamentId === 'string'
+    ) {
       return body.tournamentId;
     } else {
-      throw {status: 400};
+      throw { status: 400 };
     }
   };
 
@@ -111,15 +114,17 @@ class CreateRoundRouteHandler {
     this._round.id = this._generateId();
     try {
       await this._tournamentRepository.createRound(
-        this._tournamentId, this._round);
+        this._tournamentId,
+        this._round
+      );
     } catch (e) {
       throw { status: 500 };
     }
-  }
+  };
 
   _generateId = () => {
     return ObjectId.generate().toString();
-  }
+  };
 }
 
 export default CreateRoundRoute;

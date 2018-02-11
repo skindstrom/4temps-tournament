@@ -7,40 +7,27 @@ import './styles.css';
 type Props = {
   header: string,
   onClickSignUp: () => void,
-  onClickLogin: () => void,
+  onClickLogin: () => void
 };
 
 const SignUpOrLogin = ({ header, onClickSignUp, onClickLogin }: Props) => {
   return (
-    <Grid
-      styleName='grid'
-      columns={1}
-      centered
-    >
+    <Grid styleName="grid" columns={1} centered>
       <GridRow>
-        <Header as='h1'>
-          {header}
-        </Header>
+        <Header as="h1">{header}</Header>
       </GridRow>
       <GridRow>
-        <Button
-          styleName='button'
-          primary
-          onClick={onClickSignUp}
-        >
+        <Button styleName="button" primary onClick={onClickSignUp}>
           Sign up
         </Button>
       </GridRow>
       <GridRow>
-        <Button
-          styleName='button'
-          secondary
-          onClick={onClickLogin}
-        >
+        <Button styleName="button" secondary onClick={onClickLogin}>
           Log in
         </Button>
       </GridRow>
-    </Grid>);
+    </Grid>
+  );
 };
 
 export default SignUpOrLogin;

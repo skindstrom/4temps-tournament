@@ -77,7 +77,7 @@ test('Password requires at least 8 characters', async () => {
 
 test('Email requires valid format', async () => {
   const emails = ['@test.com', 't@t', 't@.com'];
-  const admins: Array<AdminWithPassword> = emails.map((email) => ({
+  const admins: Array<AdminWithPassword> = emails.map(email => ({
     firstName: 'Simon',
     lastName: 'Smith',
     email,
@@ -100,14 +100,17 @@ test('Email requires valid format', async () => {
 test('Email in use is invalid', async () => {
   const getAdmins = () => {
     return new Promise(resolve =>
-      resolve([{
-        // $FlowFixMe
-        _id: 'asdasd',
-        firstName: 'Other',
-        lastName: 'Other',
-        email: 'test@test.com',
-        password: 'asasdasdasd'
-      }]));
+      resolve([
+        {
+          // $FlowFixMe
+          _id: 'asdasd',
+          firstName: 'Other',
+          lastName: 'Other',
+          email: 'test@test.com',
+          password: 'asasdasdasd'
+        }
+      ])
+    );
   };
 
   const admin: AdminWithPassword = {

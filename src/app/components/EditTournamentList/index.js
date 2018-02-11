@@ -16,18 +16,23 @@ function mapStateToProps({ tournaments }: ReduxState) {
   };
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch,
-  { history }: { history: RouterHistory }) {
+function mapDispatchToProps(
+  dispatch: ReduxDispatch,
+  { history }: { history: RouterHistory }
+) {
   return {
-    load: () => dispatch({
-      type: 'GET_ADMIN_TOURNAMENTS',
-      promise: getTournamentsForUser()
-    }),
+    load: () =>
+      dispatch({
+        type: 'GET_ADMIN_TOURNAMENTS',
+        promise: getTournamentsForUser()
+      }),
     onClick: (id: string) => history.push(`/tournament/edit/${id}`)
   };
 }
 
-const EditTournamentListContainer =
-  connect(mapStateToProps, mapDispatchToProps)(PreloadContainer);
+const EditTournamentListContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default EditTournamentListContainer;

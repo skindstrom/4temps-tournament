@@ -1,11 +1,11 @@
 // @flow
 
-import {handle} from 'redux-pack';
+import { handle } from 'redux-pack';
 
 export default function reducer(
   state: AccessKeysReduxState = getInitialState(),
-  action: ReduxPackAction): AccessKeysReduxState {
-
+  action: ReduxPackAction
+): AccessKeysReduxState {
   const { type, payload } = action;
 
   switch (type) {

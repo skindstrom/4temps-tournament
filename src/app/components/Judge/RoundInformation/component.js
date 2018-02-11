@@ -4,9 +4,9 @@ import { Header, HeaderSubheader, Container } from 'semantic-ui-react';
 
 type Props = {
   roundName: string,
-  groupInformation: {groupNumber: number, numberOfGroups: number},
-  danceInformation: {danceNumber: number, numberOfDances: number}
-}
+  groupInformation: { groupNumber: number, numberOfGroups: number },
+  danceInformation: { danceNumber: number, numberOfDances: number }
+};
 
 class RoundInformation extends PureComponent<Props> {
   render() {
@@ -16,7 +16,7 @@ class RoundInformation extends PureComponent<Props> {
     const danceNumber = this.props.danceInformation.danceNumber;
     return (
       <Container>
-        <Header as='h2'>
+        <Header as="h2">
           {this.props.roundName}
           <HeaderSubheader>
             Group: {groupNumber} of {numberOfGroups}

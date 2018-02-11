@@ -14,10 +14,7 @@ delete window.__PRELOADED_STATE__;
 const root = document.getElementById('root');
 if (root) {
   hydrate(
-    <BrowserRouter>
-      {appWithPreloadedState(preloadedState)}
-    </BrowserRouter>
-    ,
+    <BrowserRouter>{appWithPreloadedState(preloadedState)}</BrowserRouter>,
     root
   );
 } else {

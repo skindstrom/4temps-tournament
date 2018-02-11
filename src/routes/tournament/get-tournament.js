@@ -18,20 +18,22 @@ export default class GetTournamentRoute {
     const userId: string = req.session.user.id;
     const tournamentId = req.params.tournamentId;
 
-    const { status, body } =
-      await getTournamentRoute(
-        tournamentId, userId, this._tournamentRepository);
+    const { status, body } = await getTournamentRoute(
+      tournamentId,
+      userId,
+      this._tournamentRepository
+    );
 
     res.status(status);
     res.json(body);
-  }
+  };
 }
 
 export async function getTournamentRoute(
   tournamentId: string,
   userId: string,
-  tournamentRepository: TournamentRepository): RouteResult<?Tournament> {
-
+  tournamentRepository: TournamentRepository
+): RouteResult<?Tournament> {
   const tournament = await tournamentRepository.get(tournamentId);
 
   if (tournament == null) {

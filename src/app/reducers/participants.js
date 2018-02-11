@@ -57,8 +57,10 @@ function createParticipant(
   });
 }
 
-function getJudgeTournament(state: ParticipantsReduxState,
-  action: ReduxPackAction): ParticipantsReduxState {
+function getJudgeTournament(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction
+): ParticipantsReduxState {
   const { payload } = action;
   return handle(state, action, {
     success: prevState => ({
@@ -72,12 +74,14 @@ function getJudgeTournament(state: ParticipantsReduxState,
         ...prevState.byId,
         ...payload.entities.participants
       }
-    }),
+    })
   });
 }
 
-function getTournaments(state: ParticipantsReduxState,
-  action: ReduxPackAction): ParticipantsReduxState {
+function getTournaments(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction
+): ParticipantsReduxState {
   const { payload } = action;
 
   return handle(state, action, {

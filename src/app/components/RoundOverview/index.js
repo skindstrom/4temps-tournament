@@ -12,12 +12,9 @@ import { startNextDance } from '../../api/round';
 type Props = {
   match: Match,
   history: RouterHistory
-}
+};
 
-function mapStateToProps(
-  state: ReduxState,
-  { match }: Props) {
-
+function mapStateToProps(state: ReduxState, { match }: Props) {
   const roundId = match.params.roundId || '';
   return {
     shouldLoad: !state.rounds.byId[roundId],
@@ -27,8 +24,9 @@ function mapStateToProps(
 }
 
 function createViewModelsForRound(
-  { rounds, participants }: ReduxState, roundId: string): ?RoundViewModel {
-
+  { rounds, participants }: ReduxState,
+  roundId: string
+): ?RoundViewModel {
   const round = rounds.byId[roundId];
   if (!round) {
     return null;
@@ -39,7 +37,7 @@ function createViewModelsForRound(
   let activeDance: ?number = null;
   let activeGroup: ?number = null;
 
-  for (let i = 0; i < groups.length; ++ i) {
+  for (let i = 0; i < groups.length; ++i) {
     for (let j = 0; j < groups[i].dances.length; ++j) {
       if (groups[i].dances[j].active) {
         activeDance = j + 1;
@@ -57,7 +55,7 @@ function createViewModelsForRound(
       pairs: g.pairs.map((p, i) => ({
         id: i.toString(),
         leader: p.leader == null ? '' : participants.byId[p.leader].name,
-        follower: p.follower == null ? '' : participants.byId[p.follower].name,
+        follower: p.follower == null ? '' : participants.byId[p.follower].name
       }))
     }))
   };
@@ -67,24 +65,27 @@ function createViewModelsForRound(
 
 function mapDispatchToProps(
   dispatch: ReduxDispatch,
-  { match, history }: Props) {
-
+  { match, history }: Props
+) {
   return {
-    load: () => dispatch({
-      type: 'GET_ADMIN_TOURNAMENTS',
-      promise: getTournamentsForUser(),
-      meta: {
-        onFailure: () => history.push('/404')
-      }
-    }),
-    startDance: () => dispatch({
-      type: 'START_NEXT_DANCE',
-      promise: startNextDance(match.params.tournamentId || '')
-    })
+    load: () =>
+      dispatch({
+        type: 'GET_ADMIN_TOURNAMENTS',
+        promise: getTournamentsForUser(),
+        meta: {
+          onFailure: () => history.push('/404')
+        }
+      }),
+    startDance: () =>
+      dispatch({
+        type: 'START_NEXT_DANCE',
+        promise: startNextDance(match.params.tournamentId || '')
+      })
   };
 }
 
-const RoundOverviewContainer =
-  connect(mapStateToProps, mapDispatchToProps)(PreloadContainer);
+const RoundOverviewContainer = connect(mapStateToProps, mapDispatchToProps)(
+  PreloadContainer
+);
 
 export default RoundOverviewContainer;

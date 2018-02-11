@@ -1,11 +1,11 @@
 // @flow
-import {handle} from 'redux-pack';
+import { handle } from 'redux-pack';
 
 export default function reducer(
   state: UiCreateJudgeReduxState = getInitialState(),
-  action: ReduxPackAction): UiCreateJudgeReduxState {
-
-  switch(action.type) {
+  action: ReduxPackAction
+): UiCreateJudgeReduxState {
+  switch (action.type) {
   case 'CREATE_JUDGE':
     return handle(state, action, {
       start: prevState => ({

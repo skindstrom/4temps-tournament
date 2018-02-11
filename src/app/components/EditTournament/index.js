@@ -14,26 +14,28 @@ type Props = {
   match: Match,
   location: Location,
   history: RouterHistory
-}
+};
 type State = {
   activeTab: TabName
-}
+};
 
 const getActiveTab = (pathname: string): TabName => {
   const splits = pathname.split('/');
   const tabName = splits[splits.length - 1];
-  if (tabName !== 'rounds' && tabName !== 'staff'
-    && tabName !== 'participants') {
+  if (
+    tabName !== 'rounds' &&
+    tabName !== 'staff' &&
+    tabName !== 'participants'
+  ) {
     return 'general';
   }
   return tabName;
 };
 
 class EditTournament extends Component<Props, State> {
-
   state = {
-    activeTab: getActiveTab(this.props.location.pathname),
-  }
+    activeTab: getActiveTab(this.props.location.pathname)
+  };
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({ activeTab: getActiveTab(nextProps.location.pathname) });
@@ -45,8 +47,8 @@ class EditTournament extends Component<Props, State> {
 
   _onClickTab = (tab: TabName) => {
     this.props.history.push(
-      `/tournament/edit/${
-        String(this.props.match.params.tournamentId)}/${tab}`);
+      `/tournament/edit/${String(this.props.match.params.tournamentId)}/${tab}`
+    );
     this.setState({ activeTab: tab });
   };
 
@@ -58,53 +60,48 @@ class EditTournament extends Component<Props, State> {
         onClick={() => this._onClickTab(tab)}
       >
         {content}
-      </MenuItem>);
-  }
+      </MenuItem>
+    );
+  };
 
   _renderGeneral = () => {
-    return (
-      <General
-        tournamentId={this._getTournamentId()}
-      />);
-  }
+    return <General tournamentId={this._getTournamentId()} />;
+  };
 
   _renderRounds = () => (
     <Rounds
       tournamentId={this._getTournamentId()}
       history={this.props.history}
-    />);
+    />
+  );
 
-  _renderStaff = () =>
-    <Judges tournamentId={this._getTournamentId()} />
+  _renderStaff = () => <Judges tournamentId={this._getTournamentId()} />;
 
   _renderParticipants = () => (
-    <Participants
-      tournamentId={this._getTournamentId()}
-    />);
+    <Participants tournamentId={this._getTournamentId()} />
+  );
 
   _getTournamentId = (): string => {
     return this.props.match.params.tournamentId || '';
-  }
+  };
 
   components = {
-    'general': this._renderGeneral,
-    'rounds': this._renderRounds,
-    'staff': this._renderStaff,
-    'participants': this._renderParticipants
-  }
+    general: this._renderGeneral,
+    rounds: this._renderRounds,
+    staff: this._renderStaff,
+    participants: this._renderParticipants
+  };
 
   render() {
     return (
       <Container>
         <Menu tabular>
-          {
-            [
-              { name: 'general', content: 'General' },
-              { name: 'rounds', content: 'Rounds' },
-              { name: 'staff', content: 'Staff' },
-              { name: 'participants', content: 'Participants' }
-            ].map(({ name, content }) => this._renderMenuItem(name, content))
-          }
+          {[
+            { name: 'general', content: 'General' },
+            { name: 'rounds', content: 'Rounds' },
+            { name: 'staff', content: 'Staff' },
+            { name: 'participants', content: 'Participants' }
+          ].map(({ name, content }) => this._renderMenuItem(name, content))}
         </Menu>
         {this.components[this.state.activeTab]()}
       </Container>

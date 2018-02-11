@@ -17,7 +17,7 @@
     "test": "jest src",
     "test:watch": "jest --watch",
     "lint": "npm-run-all -p lint:eslint lint:flow",
-    "lint:fix": "eslint src/** --fix",
+    "lint:fix": "prettier --write 'src/**/*.js' && eslint 'src/**/*.js' --fix",
     "lint:eslint": "eslint src/**",
     "lint:flow": "flow check",
     "validate": "npm-run-all -p lint test"

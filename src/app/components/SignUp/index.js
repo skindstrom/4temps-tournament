@@ -15,20 +15,22 @@ function mapStateToProps({ ui }: ReduxState) {
   return ui.signUp;
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch,
-  { history, location }: Props) {
+function mapDispatchToProps(
+  dispatch: ReduxDispatch,
+  { history, location }: Props
+) {
   return {
-    onSubmit: (admin: AdminWithPassword) => dispatch({
-      type: 'SIGNUP',
-      promise: createAdmin(admin),
-      meta: {
-        onSuccess: () => history.push('/login' + location.search)
-      }
-    })
+    onSubmit: (admin: AdminWithPassword) =>
+      dispatch({
+        type: 'SIGNUP',
+        promise: createAdmin(admin),
+        meta: {
+          onSuccess: () => history.push('/login' + location.search)
+        }
+      })
   };
 }
 
-const SignUpContainer =
-  connect(mapStateToProps, mapDispatchToProps)(SignUp);
+const SignUpContainer = connect(mapStateToProps, mapDispatchToProps)(SignUp);
 
 export default SignUpContainer;

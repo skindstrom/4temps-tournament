@@ -7,7 +7,7 @@ export type AdminLoginValidationSummary = {
   isValid: boolean,
   isValidEmail: boolean,
   isValidPassword: boolean,
-  doesAdminExist: boolean,
+  doesAdminExist: boolean
 };
 
 const validateAdminLogin = async (

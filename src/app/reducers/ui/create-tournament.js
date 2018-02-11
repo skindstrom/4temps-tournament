@@ -1,8 +1,10 @@
 // @flow
 import { handle } from 'redux-pack';
 
-function reducer(state: UiCreateTournamentsReduxState = getInitialState(),
-  action: ReduxPackAction) {
+function reducer(
+  state: UiCreateTournamentsReduxState = getInitialState(),
+  action: ReduxPackAction
+) {
   const { type } = action;
   switch (type) {
   case 'CREATE_TOURNAMENT':
@@ -24,9 +26,10 @@ export function getInitialState(): UiCreateTournamentsReduxState {
   };
 }
 
-function createTournament(state: UiCreateTournamentsReduxState,
-  action: ReduxPackAction): TournamentsReduxState {
-
+function createTournament(
+  state: UiCreateTournamentsReduxState,
+  action: ReduxPackAction
+): TournamentsReduxState {
   const { payload } = action;
 
   return handle(state, action, {

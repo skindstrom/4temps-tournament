@@ -3,7 +3,7 @@
 import moment from 'moment';
 
 import validateTournament from '../validate-tournament';
-import {createTournament} from '../../test-utils';
+import { createTournament } from '../../test-utils';
 
 describe('Tournament validator', () => {
   test('Valid tournament is valid', () => {
@@ -18,7 +18,7 @@ describe('Tournament validator', () => {
   });
 
   test('Empty name is invalid', () => {
-    const tournament = {...createTournament(), name: ''};
+    const tournament = { ...createTournament(), name: '' };
     const validation = validateTournament(tournament);
 
     expect(validation.isValidTournament).toBe(false);
@@ -29,7 +29,7 @@ describe('Tournament validator', () => {
 
   describe('Tournament type must be valid', () => {
     test('Tournament type must be set', () => {
-      const tournament = {...createTournament(), type: 'none'};
+      const tournament = { ...createTournament(), type: 'none' };
       const validation = validateTournament(tournament);
 
       expect(validation.isValidTournament).toBe(false);
@@ -37,7 +37,7 @@ describe('Tournament validator', () => {
     });
 
     test('Tournament type may be jj', () => {
-      const tournament = {...createTournament(), type: 'jj'};
+      const tournament = { ...createTournament(), type: 'jj' };
       const validation = validateTournament(tournament);
 
       expect(validation.isValidTournament).toBe(true);
@@ -45,7 +45,7 @@ describe('Tournament validator', () => {
     });
 
     test('Tournament type may be classic', () => {
-      const tournament = {...createTournament(), type: 'classic'};
+      const tournament = { ...createTournament(), type: 'classic' };
       const validation = validateTournament(tournament);
 
       expect(validation.isValidTournament).toBe(true);
@@ -56,7 +56,7 @@ describe('Tournament validator', () => {
       const tournament = {
         ...createTournament(),
         // $FlowFixMe (ignored on purpose)
-        type: 'some other type',
+        type: 'some other type'
       };
       const validation = validateTournament(tournament);
 
@@ -66,7 +66,7 @@ describe('Tournament validator', () => {
   });
 
   test('Unix epoch is invalid date', () => {
-    const tournament = {...createTournament(), date: moment(0)};
+    const tournament = { ...createTournament(), date: moment(0) };
     const validation = validateTournament(tournament);
 
     expect(validation.isValidTournament).toBe(false);

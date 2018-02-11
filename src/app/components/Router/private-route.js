@@ -11,29 +11,37 @@ type Props = {
   referer: string,
   path: string,
   component: ComponentType<*>,
-  isAuthenticated: boolean,
-}
+  isAuthenticated: boolean
+};
 
-const PrivateRoute =
-  ({ component: Component, isAuthenticated, referer, ...rest }: Props) => {
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          isAuthenticated === true
-            ? <Component {...props} />
-            : (
-              <SignUpOrLogin
-                {...props}
-                header='Please log in or sign up'
-                referer={referer}
-              />)}
-      />
-    );
-  };
+const PrivateRoute = ({
+  component: Component,
+  isAuthenticated,
+  referer,
+  ...rest
+}: Props) => {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isAuthenticated === true ? (
+          <Component {...props} />
+        ) : (
+          <SignUpOrLogin
+            {...props}
+            header="Please log in or sign up"
+            referer={referer}
+          />
+        )
+      }
+    />
+  );
+};
 
-function mapStateToProps({user}: ReduxState,
-  { location }: { location: Location }) {
+function mapStateToProps(
+  { user }: ReduxState,
+  { location }: { location: Location }
+) {
   return {
     isAuthenticated: user.id !== '',
     referer: location.pathname
@@ -43,6 +51,5 @@ function mapStateToProps({user}: ReduxState,
 const PrivateRouteContainer =
   // $FlowFixMe
   withRouter(connect(mapStateToProps)(PrivateRoute));
-
 
 export default PrivateRouteContainer;

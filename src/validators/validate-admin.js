@@ -9,14 +9,13 @@ export type AdminCreateValidationSummary = {
   isEmailNotUsed: boolean,
   isValidFirstName: boolean,
   isValidLastName: boolean,
-  isValidPassword: boolean,
+  isValidPassword: boolean
 };
-
 
 const validateAdmin = async (
   admin: AdminWithPassword,
-  getAdmins: ?() =>
-    Promise<Array<AdminModel>>): Promise<AdminCreateValidationSummary> => {
+  getAdmins: ?() => Promise<Array<AdminModel>>
+): Promise<AdminCreateValidationSummary> => {
   const isValidFirstName = admin.firstName.length > 0;
   const isValidLastName = admin.lastName.length > 0;
   const isValidPassword = admin.password.length >= 8;
@@ -29,13 +28,17 @@ const validateAdmin = async (
   }
 
   return {
-    isValid: isValidFirstName && isValidLastName
-      && isValidEmail && isValidPassword && isEmailNotUsed,
+    isValid:
+      isValidFirstName &&
+      isValidLastName &&
+      isValidEmail &&
+      isValidPassword &&
+      isEmailNotUsed,
     isValidFirstName,
     isValidLastName,
     isValidEmail,
     isValidPassword,
-    isEmailNotUsed,
+    isEmailNotUsed
   };
 };
 

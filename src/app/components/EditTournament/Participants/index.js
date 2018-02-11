@@ -8,15 +8,16 @@ import CreateParticipant from './CreateParticipant';
 
 type Props = {
   tournamentId: string
-}
+};
 
 export default function EditTournamentParticipants(props: Props) {
   return (
     <Container>
-      <Header as='h1'>Participants</Header>
+      <Header as="h1">Participants</Header>
       <ListParticipants {...props} />
       <Divider />
-      <Header as='h2'>Add participant</Header>
+      <Header as="h2">Add participant</Header>
       <CreateParticipant {...props} />
-    </Container>);
+    </Container>
+  );
 }

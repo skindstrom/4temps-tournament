@@ -5,19 +5,19 @@ import mongoose from 'mongoose';
 const schema = new mongoose.Schema({
   judgeId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: true
   },
   danceId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: true
   },
   criterionId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: true
   },
   participantId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: true
   },
   value: {
     type: Number,

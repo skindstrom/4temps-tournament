@@ -8,16 +8,21 @@ import validateNoteForTournamentAndUser, {
   ParticipantNotFoundError,
   InvalidCriterionForParticipant,
   InvalidValueError,
-  WrongJudgeError,
+  WrongJudgeError
 } from './validate-note';
 import { parseNote, InvalidBodyError } from './parse-note';
 
 export default function CreateNoteRoute(
-  tournamentRepository: TournamentRepository, noteRepository: NoteRepository) {
-
+  tournamentRepository: TournamentRepository,
+  noteRepository: NoteRepository
+) {
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
     await new CreateNoteRouteHandler(
-      tournamentRepository, noteRepository, req, res).route();
+      tournamentRepository,
+      noteRepository,
+      req,
+      res
+    ).route();
   };
 }
 
@@ -31,7 +36,8 @@ class CreateNoteRouteHandler {
     tournamentRepository: TournamentRepository,
     noteRepository: NoteRepository,
     req: ServerApiRequest,
-    res: ServerApiResponse) {
+    res: ServerApiResponse
+  ) {
     this._tournamentRepository = tournamentRepository;
     this._noteRepository = noteRepository;
     this._req = req;
@@ -49,23 +55,24 @@ class CreateNoteRouteHandler {
     } catch (e) {
       this._handleError(e);
     }
-  }
+  };
 
   _validateNote = async (note: JudgeNote) => {
     const tournament: Tournament = await this._getTournament();
     validateNoteForTournamentAndUser(note, tournament, this._req.session.user);
-  }
+  };
 
   _getTournament = async (): Promise<Tournament> => {
-    const tournament =
-      await this._tournamentRepository.get(this._req.params.tournamentId);
+    const tournament = await this._tournamentRepository.get(
+      this._req.params.tournamentId
+    );
 
     if (tournament == null) {
       throw new TournamentNotFoundError();
     }
 
     return tournament;
-  }
+  };
 
   _handleError = (e: mixed) => {
     if (e instanceof InvalidBodyError) {
@@ -93,7 +100,7 @@ class CreateNoteRouteHandler {
     } else {
       this._res.status(500);
     }
-  }
+  };
 }
 
-function TournamentNotFoundError(){}
+function TournamentNotFoundError() {}

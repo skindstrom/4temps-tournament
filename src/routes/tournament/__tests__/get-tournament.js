@@ -15,37 +15,38 @@ describe('/api/tournament/get', () => {
     await tournamentRepository.create(tournament);
   });
 
-  test('Existing tournament is returned with status 200 if user created it',
-    async () => {
-      expect(await getTournamentRoute(
+  test('Existing tournament is returned with status 200 if user created it', async () => {
+    expect(
+      await getTournamentRoute(
         tournament.id,
         tournament.creatorId,
-        tournamentRepository))
-        .toEqual({
-          status: 200,
-          body: tournament
-        });
+        tournamentRepository
+      )
+    ).toEqual({
+      status: 200,
+      body: tournament
     });
+  });
 
-  test('Returns 404 and null tournament if tournament does not exist',
-    async () => {
-      expect(await getTournamentRoute(
-        generateId(), generateId(), tournamentRepository))
-        .toEqual({
-          status: 404,
-          body: null
-        });
+  test('Returns 404 and null tournament if tournament does not exist', async () => {
+    expect(
+      await getTournamentRoute(generateId(), generateId(), tournamentRepository)
+    ).toEqual({
+      status: 404,
+      body: null
     });
+  });
 
-  test('Returns 401 and null tournament if tournament was not created by user',
-    async () => {
-      expect(await getTournamentRoute(
+  test('Returns 401 and null tournament if tournament was not created by user', async () => {
+    expect(
+      await getTournamentRoute(
         tournament.id,
         generateId(),
-        tournamentRepository))
-        .toEqual({
-          status: 401,
-          body: null
-        });
+        tournamentRepository
+      )
+    ).toEqual({
+      status: 401,
+      body: null
     });
+  });
 });

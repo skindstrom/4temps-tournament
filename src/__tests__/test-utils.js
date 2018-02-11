@@ -4,16 +4,22 @@ import ObjectId from 'bson-objectid';
 import moment from 'moment';
 
 import {
-  Request, Response, createAdmin, generateId, createRound, createTournament,
+  Request,
+  Response,
+  createAdmin,
+  generateId,
+  createRound,
+  createTournament,
   createJudge,
-  TournamentRepositoryImpl, createParticipant, AccessKeyRepositoryImpl
+  TournamentRepositoryImpl,
+  createParticipant,
+  AccessKeyRepositoryImpl
 } from '../test-utils';
 import validateAdmin from '../validators/validate-admin';
 import validateRound from '../validators/validate-round';
 import validateTournament from '../validators/validate-tournament';
 
 describe('Round route test helpers', () => {
-
   test('Generate ID generates a valid object id', () => {
     expect(ObjectId.isValid(generateId())).toBe(true);
   });
@@ -50,10 +56,9 @@ describe('Round route test helpers', () => {
   describe('Request helpers', () => {
     const body = { test: 'body' };
     const query = { test: 'query' };
-    const params = {test: 'params'};
+    const params = { test: 'params' };
     const admin = createAdmin();
     const expectedUser = { id: admin._id.toString(), role: 'admin' };
-
 
     test('Request create with body sets body and default user', async () => {
       const req = Request.withBody(body);
@@ -83,13 +88,12 @@ describe('Round route test helpers', () => {
       expect(req.session.user).toEqual(expectedUser);
     });
 
-    test('Request create with params sets params and default user',
-      async () => {
-        const req = Request.withParams(params);
+    test('Request create with params sets params and default user', async () => {
+      const req = Request.withParams(params);
 
-        expect(req.params).toEqual(params);
-        expect(req.session.user).toEqual(expectedUser);
-      });
+      expect(req.params).toEqual(params);
+      expect(req.session.user).toEqual(expectedUser);
+    });
 
     test('Request create with userAndParams sets params and user', () => {
       const req = Request.withUserAndParams(admin, params);
@@ -174,7 +178,7 @@ describe('Round route test helpers', () => {
       const tournament = createTournament();
       await repo.create(tournament);
 
-      const newTournament = {...tournament, name: 'a very cool name'};
+      const newTournament = { ...tournament, name: 'a very cool name' };
       await repo.update(newTournament);
 
       expect(await repo.get(newTournament.id)).toEqual(newTournament);
@@ -187,8 +191,10 @@ describe('Round route test helpers', () => {
       const participant = createParticipant();
       await repo.createParticipant(tournament.id, participant);
 
-      expect(await repo.get(tournament.id))
-        .toEqual({...tournament, participants: [participant]});
+      expect(await repo.get(tournament.id)).toEqual({
+        ...tournament,
+        participants: [participant]
+      });
     });
 
     test('Create round adds round', async () => {
@@ -198,31 +204,37 @@ describe('Round route test helpers', () => {
       const round = createRound();
       await repo.createRound(tournament.id, round);
 
-      expect(await repo.get(tournament.id))
-        .toEqual({...tournament, rounds: [round]});
+      expect(await repo.get(tournament.id)).toEqual({
+        ...tournament,
+        rounds: [round]
+      });
     });
 
     test('Delete round deletes round', async () => {
       const tournament = createTournament();
       await repo.create(tournament);
 
-      const round = {...createRound(), id: 'special id'};
+      const round = { ...createRound(), id: 'special id' };
       await repo.createRound(tournament.id, round);
       await repo.deleteRound(tournament.id, round.id);
 
-      expect(await repo.get(tournament.id))
-        .toEqual({...tournament, rounds: []});
+      expect(await repo.get(tournament.id)).toEqual({
+        ...tournament,
+        rounds: []
+      });
     });
 
     test('Add judge adds a judge', async () => {
       const tournament = createTournament();
       await repo.create(tournament);
 
-      const judge = {name: 'nice name', id: '123'};
+      const judge = { name: 'nice name', id: '123' };
       await repo.addJudge(tournament.id, judge);
 
-      expect(await repo.get(tournament.id))
-        .toEqual({...tournament, judges: [judge]});
+      expect(await repo.get(tournament.id)).toEqual({
+        ...tournament,
+        judges: [judge]
+      });
     });
   });
 
@@ -235,7 +247,7 @@ describe('Round route test helpers', () => {
       await repo.createForTournamentAndUser(tournamentId, userId);
 
       expect(repo.getAll()).toHaveLength(1);
-      expect(repo.getAll()[0]).toMatchObject({tournamentId, userId});
+      expect(repo.getAll()[0]).toMatchObject({ tournamentId, userId });
     });
 
     test('Creates unique keys', async () => {

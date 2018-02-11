@@ -1,12 +1,13 @@
 // @flow
 
-import type {TournamentRepository} from '../../data/tournament';
-import type {AccessKeyRepository} from '../../data/access-key';
+import type { TournamentRepository } from '../../data/tournament';
+import type { AccessKeyRepository } from '../../data/access-key';
 import validateJudgeLogin from '../../validators/validate-judge-login';
 
 export default function route(
   tournamentRepository: TournamentRepository,
-  accessRepository: AccessKeyRepository) {
+  accessRepository: AccessKeyRepository
+) {
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const accessKey = parseAccessKey(req.body);
@@ -14,22 +15,23 @@ export default function route(
       if (validateJudgeLogin(accessKey)) {
         const dbModel = await accessRepository.getForKey(accessKey);
         if (dbModel) {
-          const tournament =
-            await tournamentRepository.get(dbModel.tournamentId);
+          const tournament = await tournamentRepository.get(
+            dbModel.tournamentId
+          );
           const judge = getJudge(dbModel.userId, tournament);
           req.session.user = { id: judge.id, role: 'judge' };
           res.json({ userId: judge.id });
         } else {
           res.status(404);
-          res.json({isValidAccessKey: true, doesAccessKeyExist: false});
+          res.json({ isValidAccessKey: true, doesAccessKeyExist: false });
         }
       } else {
         res.status(400);
-        res.json({isValidAccessKey: false, doesAccessKeyExist: true});
+        res.json({ isValidAccessKey: false, doesAccessKeyExist: true });
       }
     } catch (e) {
       res.status(statusFromError(e));
-      res.json({isValidAccessKey: true, doesAccessKeyExist: false});
+      res.json({ isValidAccessKey: true, doesAccessKeyExist: false });
     }
   };
 }
@@ -39,10 +41,11 @@ function parseAccessKey(body: mixed): string {
     body != null &&
     typeof body === 'object' &&
     typeof body.accessKey === 'string' &&
-    body.accessKey != null) {
+    body.accessKey != null
+  ) {
     return body.accessKey;
   }
-  throw new ParseError;
+  throw new ParseError();
 }
 
 function statusFromError(e: mixed) {
@@ -63,4 +66,4 @@ function getJudge(userId: string, tournament: Tournament): Judge {
   return results[0];
 }
 
-function ParseError(){}
+function ParseError() {}

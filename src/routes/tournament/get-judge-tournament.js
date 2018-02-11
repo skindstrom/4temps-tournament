@@ -12,11 +12,10 @@ export default class GetJudgeTournamentRoute {
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     if (req.session.user != null && req.session.user.role === 'judge') {
       const judgeId = req.session.user.id;
-      const tournament =
-        await this._repository.getForJudge(judgeId);
+      const tournament = await this._repository.getForJudge(judgeId);
       res.json(tournament);
     } else {
       res.sendStatus(401);
     }
-  }
+  };
 }

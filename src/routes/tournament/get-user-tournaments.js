@@ -15,8 +15,9 @@ export default class GetAdminTournamentsRoute {
       return;
     }
     const userId = req.session.user.id;
-    const tournaments: Array<Tournament> =
-      await this._repository.getForUser(userId);
+    const tournaments: Array<Tournament> = await this._repository.getForUser(
+      userId
+    );
     res.json(tournaments);
-  }
+  };
 }

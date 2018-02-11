@@ -18,5 +18,5 @@ export default combineReducers({
   createTournament,
   editTournament,
   createParticipant,
-  createJudge,
+  createJudge
 });
