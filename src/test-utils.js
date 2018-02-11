@@ -309,3 +309,14 @@ export function createJudge(): Judge {
     name: 'Jane Smith'
   };
 }
+
+export function createCriterion(): RoundCriterion {
+  return {
+    id: generateId(),
+    name: 'Style',
+    minValue: 0,
+    maxValue: 1,
+    description: 'this is a criterion',
+    type: 'both'
+  };
+}
