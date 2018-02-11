@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Header, Form, FormInput, Button, Message } from 'semantic-ui-react';
 import type { AdminCreateValidationSummary } from '../../../validators/validate-admin';
-import type { AdminWithPassword } from '../../../models/admin';
 
 import './styles.css';
 

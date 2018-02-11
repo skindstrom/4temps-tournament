@@ -1,7 +1,6 @@
 // @flow
 import type { NextFunction } from 'express';
 import type { TournamentRepository } from '../data/tournament';
-import type { Tournament } from '../models/tournament';
 import { TournamentRepositoryImpl } from '../data/tournament';
 
 export function allow(role: PermissionRole) {

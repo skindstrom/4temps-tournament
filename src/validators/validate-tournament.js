@@ -1,5 +1,4 @@
 // @flow
-import type { Tournament } from '../models/tournament';
 
 export type TournamentValidationSummary = {
   isValidTournament: boolean,

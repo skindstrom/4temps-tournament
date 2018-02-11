@@ -2,7 +2,6 @@
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 import moment from 'moment';
-import type { Tournament, TournamentType } from '../models/tournament';
 import type { ParticipantDbModel } from './participant';
 import {
   mapToDomainModel as mapParticipantToDomainModel,

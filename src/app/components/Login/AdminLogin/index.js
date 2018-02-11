@@ -6,8 +6,6 @@ import type { RouterHistory, Location } from 'react-router-dom';
 import LoginComponent from './component';
 import { loginAdmin } from '../../../api/admin';
 
-import type { AdminCredentials } from '../../../../models/admin';
-
 type Props = {
   location: Location,
   history: RouterHistory

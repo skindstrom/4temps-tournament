@@ -1,7 +1,6 @@
 // @flow
 
 import validateAdmin from '../validate-admin';
-import type { AdminWithPassword } from '../../models/admin';
 
 test('Valid object is valid', async () => {
   const admin: AdminWithPassword = {

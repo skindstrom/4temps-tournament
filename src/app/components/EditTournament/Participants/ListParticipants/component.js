@@ -11,8 +11,6 @@ import {
   Checkbox
 } from 'semantic-ui-react';
 
-import type { Participant, Role } from '../../../../../models/participant';
-
 type Props = {
   participants: Array<Participant>,
   onChangeAttending: (id: string, isAttending: boolean) => void,
@@ -36,7 +34,7 @@ class ListParticipants extends Component<Props> {
     );
   };
 
-  _roleToString(role: Role) {
+  _roleToString(role: ParticipantRole) {
     if (role === 'leader') {
       return 'Leader';
     } else if (role === 'follower') {
@@ -55,7 +53,7 @@ class ListParticipants extends Component<Props> {
             <TableRow>
               <TableHeaderCell>Present</TableHeaderCell>
               <TableHeaderCell>Name</TableHeaderCell>
-              <TableHeaderCell>Role</TableHeaderCell>
+              <TableHeaderCell>ParticipantRole</TableHeaderCell>
             </TableRow>
           </TableHeader>
           <TableBody>{this.props.participants.map(this._renderItem)}</TableBody>

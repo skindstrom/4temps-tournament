@@ -2,7 +2,6 @@
 
 import { apiPostRequest } from '../util';
 
-import type { Participant } from '../../../models/participant';
 import { validateParticipant } from '../../../validators/validate-participant';
 
 export const createParticipant = async (

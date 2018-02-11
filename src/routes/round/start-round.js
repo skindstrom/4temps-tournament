@@ -27,7 +27,10 @@ export default class StartRoundRoute {
   };
 
   _statusFromError = (e: mixed) => {
-    if (e instanceof RoundNotFoundError) {
+    if (
+      e instanceof RoundNotFoundError ||
+      e instanceof TournamentNotFoundError
+    ) {
       return 404;
     }
     return 500;
@@ -57,8 +60,7 @@ class StartRoundRouteHandler {
   };
 
   startRound = async () => {
-    this._tournament = await this._repository.get(this._tournamentId);
-
+    this._tournament = await this._getTournament();
     this._round = this._getRound();
     this._round.groups = this._generateGroups();
     this._round.active = true;
@@ -82,6 +84,15 @@ class StartRoundRouteHandler {
       .map(pairs => ({ id: ObjectId.generate(), pairs, dances }));
   };
 
+  _getTournament = async (): Promise<Tournament> => {
+    const tournament = await this._repository.get(this._tournamentId);
+    if (tournament == null) {
+      throw new TournamentNotFoundError();
+    }
+
+    return tournament;
+  };
+
   _getRound = (): Round => {
     const matches = this._tournament.rounds.filter(
       ({ id }) => id === this._roundId
@@ -95,4 +106,5 @@ class StartRoundRouteHandler {
   };
 }
 
+function TournamentNotFoundError() {}
 function RoundNotFoundError() {}

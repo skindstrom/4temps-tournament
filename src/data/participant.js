@@ -2,12 +2,11 @@
 
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
-import type { Participant, Role } from '../models/participant';
 
 export type ParticipantDbModel = {
   _id: ObjectId,
   name: string,
-  role: Role,
+  role: ParticipantRole,
   isAttending: boolean
 };
 

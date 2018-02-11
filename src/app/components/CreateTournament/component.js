@@ -15,7 +15,6 @@ import type Moment from 'moment';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-import type { TournamentType } from '../../../models/tournament';
 import type { TournamentValidationSummary } from '../../../validators/validate-tournament';
 
 type Props = {

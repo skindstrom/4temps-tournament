@@ -1,6 +1,5 @@
 // @flow
 
-import type { Participant } from '../models/participant';
 import DanceScorer from './dance-scorer';
 
 export default class RoundScorer {

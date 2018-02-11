@@ -1,5 +1,4 @@
 // @flow
-import type { Participant, Role } from '../models/participant';
 
 export interface GroupGenerator {
   generateGroups(): Array<Array<Pair>>;
@@ -63,7 +62,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
       const p1: Participant = this._getFirstParticipant();
       this._participants.delete(p1);
 
-      const p2 = this._getParticipantWithRole(
+      const p2 = this._getParticipantWithParticipantRole(
         p1.role === 'leader' ? 'follower' : 'leader'
       );
 
@@ -80,15 +79,17 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
   _getFirstParticipant = () => {
     if (this._leaderCount > this._followerCount) {
-      return this._randomUntilRole('leader');
+      return this._randomUntilParticipantRole('leader');
     } else if (this._leaderCount < this._followerCount) {
-      return this._randomUntilRole('follower');
+      return this._randomUntilParticipantRole('follower');
     } else {
       return this._randomParticipant();
     }
   };
 
-  _getParticipantWithRole = (role: Role): ?Participant => {
+  _getParticipantWithParticipantRole = (
+    role: ParticipantRole
+  ): ?Participant => {
     switch (role) {
     case 'leader':
       return this._randomLeader();
@@ -116,19 +117,19 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
   _randomLeader = () => {
     if (this._leaderCount === 0) {
-      return this._randomUntilRoleOrLeaderAndFollower('leader');
+      return this._randomUntilParticipantRoleOrLeaderAndFollower('leader');
     }
-    return this._randomUntilRole('leader');
+    return this._randomUntilParticipantRole('leader');
   };
 
   _randomFollower = () => {
     if (this._followerCount === 0) {
-      return this._randomUntilRoleOrLeaderAndFollower('follower');
+      return this._randomUntilParticipantRoleOrLeaderAndFollower('follower');
     }
-    return this._randomUntilRole('follower');
+    return this._randomUntilParticipantRole('follower');
   };
 
-  _randomUntilRole = (role: Role) => {
+  _randomUntilParticipantRole = (role: ParticipantRole) => {
     if (
       (role === 'leader' && this._leaderCount === 0) ||
       (role === 'follower' && this._followerCount === 0)
@@ -144,7 +145,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     return participant;
   };
 
-  _randomUntilRoleOrLeaderAndFollower = (role: Role) => {
+  _randomUntilParticipantRoleOrLeaderAndFollower = (role: ParticipantRole) => {
     if (
       (role === 'leader' && this._leaderCount + this._bothCount === 0) ||
       (role === 'follower' && this._followerCount + this._bothCount === 0)

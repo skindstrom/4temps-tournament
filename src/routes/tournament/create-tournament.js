@@ -1,6 +1,5 @@
 // @flow
 import validateTournament from '../../validators/validate-tournament';
-import type { Tournament } from '../../models/tournament';
 import type { TournamentRepository } from '../../data/tournament';
 import type { RouteResult } from '../util';
 import parseTournament from './parse-tournament';

@@ -1,7 +1,6 @@
 // @flow
 import { connect } from 'react-redux';
 
-import type { Tournament } from '../../../../models/tournament';
 import {
   updateTournament,
   getTournamentsForUser

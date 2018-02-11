@@ -1,7 +1,6 @@
 // @flow
 
 import validateAdminLogin from '../validate-admin-login';
-import type { AdminCredentials } from '../../models/admin';
 import type { AdminModel } from '../../data/admin';
 
 test('Valid info is valid', async () => {

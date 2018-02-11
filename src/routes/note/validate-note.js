@@ -3,7 +3,7 @@
 export default function validateNoteForTournamentAndUser(
   note: JudgeNote,
   tournament: Tournament,
-  user: ?Admin | ?Judge
+  user: ?User
 ) {
   if (user == null || note.judgeId != user.id) {
     throw new WrongJudgeError();

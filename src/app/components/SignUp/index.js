@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import type { Location, RouterHistory } from 'react-router-dom';
 
 import SignUp from './component';
-import type { AdminWithPassword } from '../../../models/admin';
 import { createAdmin } from '../../api/admin';
 
 type Props = {

@@ -5,7 +5,6 @@ import moment from 'moment';
 import { apiGetRequest, apiPostRequest } from '../util';
 
 import validateTournament from '../../../validators/validate-tournament';
-import type { Tournament } from '../../../models/tournament';
 import {
   normalizeTournamentArray,
   normalizeTournament

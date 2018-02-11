@@ -13,7 +13,6 @@ import {
 import moment from 'moment';
 import type Moment from 'moment';
 
-import type { Tournament, TournamentType } from '../../../models/tournament';
 
 import './styles.css';
 

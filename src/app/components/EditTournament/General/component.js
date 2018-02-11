@@ -10,7 +10,6 @@ import {
 import DatePicker from 'react-datepicker';
 import type Moment from 'moment';
 import moment from 'moment';
-import type { Tournament } from '../../../../models/tournament';
 
 type Props = {
   tournament: Tournament,

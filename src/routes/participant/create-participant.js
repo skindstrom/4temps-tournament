@@ -2,7 +2,6 @@
 
 import { ObjectID } from 'mongodb';
 import type { TournamentRepository } from '../../data/tournament';
-import type { Participant } from '../../models/participant';
 import { validateParticipant } from '../../validators/validate-participant';
 
 export class CreateParticipantRoute {

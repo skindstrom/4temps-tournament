@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react';
 import { Button, Form, FormInput, Header, Message } from 'semantic-ui-react';
-import type { AdminCredentials } from '../../../../models/admin';
 
 import './styles.css';
 

@@ -5,7 +5,6 @@ import moment from 'moment';
 import type { AdminModel } from './data/admin';
 import type { TournamentRepository } from './data/tournament';
 import type { AccessKeyRepository } from './data/access-key';
-import type { Tournament } from './models/tournament';
 import type { NoteRepository } from './data/note';
 
 export const USER_ID = generateId();
@@ -299,7 +298,8 @@ export function createParticipant(): Participant {
   return {
     id: generateId(),
     name: 'John Smith',
-    role: 'both'
+    role: 'leaderAndFollower',
+    isAttending: false
   };
 }
 

@@ -1,7 +1,5 @@
 // @flow
 
-import type { Participant } from '../models/participant';
-
 export type ParticipantValidationSummary = {
   isValidParticipant: boolean,
   isValidName: boolean,

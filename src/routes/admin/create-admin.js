@@ -6,7 +6,6 @@ import type { RouteResult } from '../util';
 import type { AdminCreateValidationSummary } from '../../validators/validate-admin';
 import { createAdmin, getAdmins } from '../../data/admin';
 import type { AdminModel } from '../../data/admin';
-import type { AdminWithPassword } from '../../models/admin';
 
 export const createAdminRoute = async (
   admin: AdminWithPassword,

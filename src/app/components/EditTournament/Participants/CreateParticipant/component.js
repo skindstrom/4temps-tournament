@@ -9,7 +9,6 @@ import {
   Message
 } from 'semantic-ui-react';
 import type { ParticipantValidationSummary } from '../../../../../validators/validate-participant';
-import type { Role } from '../../../../../models/participant';
 
 type Props = {
   isLoading: boolean,
@@ -22,7 +21,7 @@ type Props = {
 
 export type State = {
   name: string,
-  role: Role
+  role: ParticipantRole
 };
 
 class CreateParticipant extends Component<Props, State> {
@@ -36,7 +35,7 @@ class CreateParticipant extends Component<Props, State> {
 
   _onChangeRadio = (
     event: SyntheticInputEvent<HTMLInputElement>,
-    { value }: { value: Role }
+    { value }: { value: ParticipantRole }
   ) => this.setState({ role: value });
 
   _onSubmit = async () => {
@@ -55,7 +54,7 @@ class CreateParticipant extends Component<Props, State> {
         <FormInput label="Name" value={name} onChange={this._onChangeName} />
         {!isValidName && <Message error content="Invalid name" />}
         <FormGroup id="role-radio" inline>
-          <label htmlFor="role-radio">Role</label>
+          <label htmlFor="role-radio">ParticipantRole</label>
           <FormRadio
             label="Leader"
             value="leader"

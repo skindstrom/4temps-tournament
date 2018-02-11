@@ -2,11 +2,6 @@
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 import bcrypt from 'bcrypt';
-import type {
-  Admin,
-  AdminCredentials,
-  AdminWithPassword
-} from '../models/admin';
 
 const SALT_ROUNDS = 12;
 

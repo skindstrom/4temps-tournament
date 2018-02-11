@@ -21,10 +21,18 @@ class DanceScorer {
     notesForDance.forEach(note => this._addNoteToTotal(note, totals));
 
     return Object.keys(totals)
-      .map(participantId => ({
-        participant: this._participants.find(p => p.id === participantId),
-        score: totals[participantId]
-      }))
+      .map(participantId => {
+        const participant = this._participants.find(
+          p => p.id === participantId
+        );
+        if (!participant) {
+          throw new Error('Participant does not exist');
+        }
+        return {
+          participant: participant,
+          score: totals[participantId]
+        };
+      })
       .sort((a, b) => b.score - a.score);
   };
 

@@ -18,6 +18,10 @@ export default function route(
           const tournament = await tournamentRepository.get(
             dbModel.tournamentId
           );
+          if (tournament == null) {
+            res.status(404);
+            return;
+          }
           const judge = getJudge(dbModel.userId, tournament);
           req.session.user = { id: judge.id, role: 'judge' };
           res.json({ userId: judge.id });

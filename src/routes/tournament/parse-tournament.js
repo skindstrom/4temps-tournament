@@ -1,6 +1,5 @@
 // @flow
 import moment from 'moment';
-import type { Tournament } from '../../models/tournament';
 
 // $FlowFixMe
 export default function parseTournament(body: any): Tournament {

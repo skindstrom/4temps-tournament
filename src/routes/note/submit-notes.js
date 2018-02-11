@@ -1,7 +1,6 @@
 // @flow
 import type { TournamentRepository } from '../../data/tournament';
 import type { NoteRepository } from '../../data/note';
-import type { Tournament } from '../../models/tournament';
 import validateNoteForTournamentAndUser, {
   DanceNotActiveError,
   CriterionNotFoundError,

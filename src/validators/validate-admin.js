@@ -1,6 +1,5 @@
 // @flow
 import validateEmail from './validate-email';
-import type { AdminWithPassword } from '../models/admin';
 import type { AdminModel } from '../data/admin';
 
 export type AdminCreateValidationSummary = {

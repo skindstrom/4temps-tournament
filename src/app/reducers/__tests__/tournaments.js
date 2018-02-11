@@ -4,7 +4,6 @@ import { LIFECYCLE } from 'redux-pack';
 
 import reducer, { getInitialState } from '../tournaments';
 import makePackAction from '../test-utils';
-import type { Tournament } from '../../../models/tournament';
 import { createTournament } from '../../../test-utils';
 import { normalizeTournamentArray } from '../normalize';
 
@@ -155,6 +154,7 @@ describe('Tournament reducer', () => {
 
     expect(
       reducer(
+        // $FlowFixMe
         prevState,
         makePackAction(LIFECYCLE.SUCCESS, 'GET_ADMIN_TOURNAMENTS', nom)
       )
@@ -192,6 +192,7 @@ describe('Tournament reducer', () => {
 
     expect(
       reducer(
+        // $FlowFixMe
         prevState,
         makePackAction(LIFECYCLE.SUCCESS, 'GET_ADMIN_TOURNAMENTS', nom)
       )

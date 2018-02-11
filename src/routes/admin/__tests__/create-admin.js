@@ -1,6 +1,5 @@
 // @flow
 import { createAdminRoute } from '../create-admin';
-import type { AdminWithPassword } from '../../../models/admin';
 
 test('Validates tournament', async () => {
   const admin: AdminWithPassword = {

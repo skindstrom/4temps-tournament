@@ -2,7 +2,6 @@
 import { Types } from 'mongoose';
 import { loginAdminRoute } from '../login-admin';
 
-import type { AdminCredentials } from '../../../models/admin';
 import type { AdminModel } from '../../../data/admin';
 
 const setSessionUser = () => {

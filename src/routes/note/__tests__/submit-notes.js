@@ -10,7 +10,6 @@ import {
   createJudge,
   NoteRepositoryImpl
 } from '../../../test-utils';
-import type { Tournament } from '../../../models/tournament';
 
 describe('Create note route', () => {
   const judge = createJudge();

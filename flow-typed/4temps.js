@@ -1,17 +1,44 @@
 // @flow
-import type { Tournament } from '../src/models/tournament';
-import type { Participant } from '../src/models/participant';
-import type { Admin } from '../src/models/admin';
-import type { AdminLoginValidationSummary }
-  from '../src/validators/validate-admin-login';
-import type { TournamentValidationSummary }
-  from '../src/validators/validate-tournament';
-import type { ParticipantValidationSummary }
-  from '../src/validators/validate-participant';
-import type { AdminCreateValidationSummary }
-  from '../src/validators/validate-admin';
+import type Moment from 'moment';
+import type { AdminLoginValidationSummary } from '../src/validators/validate-admin-login';
+import type { TournamentValidationSummary } from '../src/validators/validate-tournament';
+import type { ParticipantValidationSummary } from '../src/validators/validate-participant';
+import type { AdminCreateValidationSummary } from '../src/validators/validate-admin';
 
 // Base types
+
+declare type TournamentType = 'none' | 'jj' | 'classic';
+
+declare type Tournament = {
+  id: string,
+  creatorId: string,
+  name: string,
+  date: Moment,
+  type: TournamentType,
+  judges: Array<Judge>,
+  participants: Array<Participant>,
+  rounds: Array<Round>
+};
+
+declare type ParticipantRole =
+  | 'none'
+  | 'leader'
+  | 'follower'
+  | 'leaderAndFollower';
+
+declare type Participant = {
+  id: string,
+  name: string,
+  role: ParticipantRole,
+  isAttending: boolean
+};
+
+declare type RoundCriterionType =
+  | 'none'
+  | 'both'
+  | 'one'
+  | 'follower'
+  | 'leader';
 
 declare type RoundCriterion = {
   id: string,
@@ -19,7 +46,7 @@ declare type RoundCriterion = {
   minValue: number,
   maxValue: number,
   description: string,
-  type: 'none' | 'both' | 'one' | 'follower' | 'leader'
+  type: RoundCriterionType
 };
 
 declare type Round = {
@@ -73,15 +100,31 @@ declare type JudgeNote = {
   value: number
 };
 
-type UserTypes = Judge | Admin;
+declare type Admin = {
+  firstName: string,
+  lastName: string,
+  email: string
+};
 
-declare type User = UserTypes & { role: PermissionRole };
+declare type AdminWithPassword = {
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string
+};
+
+declare type AdminCredentials = {
+  email: string,
+  password: string
+};
+
+declare type User = { id: string, role: PermissionRole };
 
 declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
 
 // Express interface
 declare interface ServerApiRequest {
-  session: { user: ?{ id: string, role: PermissionRole } };
+  session: { user: ?User };
   body: mixed;
   query: { [name: string]: string };
   params: { [param: string]: string };
@@ -154,7 +197,16 @@ declare type TournamentsReduxState = {
   allIds: Array<string>,
   forJudge: string,
   byId: {
-    [id: string]: Tournament
+    [id: string]: {
+      id: string,
+      creatorId: string,
+      name: string,
+      date: Moment,
+      type: TournamentType,
+      judges: Array<string>,
+      participants: Array<string>,
+      rounds: Array<string>
+    }
   }
 };
 
