@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Grid,
   Button,
@@ -12,24 +12,64 @@ import {
 type Props = {
   pairs: Array<Pair>
 };
-function RoundNotes(props: Props) {
-  const pairs = Array.from(Array(props.pairs.length).keys()).map(i => {
+
+class RoundNotes extends Component<Props> {
+  // $FlowFixMe
+  state: {activePair: Pair} = {
+    activePair: this.props.pairs[0]
+  };
+
+  onClick(pair: Pair) {
+    // $FlowFixMe
+    this.setState({activePair: pair});
+  }
+  arrangeUpperLayer() {
+    const condition = (index: number) => index % 2 !== 0;
+    return this.conditionalLayer(condition);
+  }
+  arrangeLowerLayer() {
+    const condition = (index: number) => index % 2 === 0;
+    return this.conditionalLayer(condition);
+  }
+  conditionalLayer(condition: (index: number) => boolean) {
+    return Array.from(Array(this.props.pairs.length).keys()).map(i => {
+      if(condition(i)) {
+        const pair = this.props.pairs[i];
+        return (
+          <GridColumn key={i} textAlign='center'>
+            <Button
+              toggle
+              active={this.isActive(pair)}
+              onClick={() => this.onClick(pair)}
+            >
+              {i + 1}
+            </Button>
+          </GridColumn>
+        );
+      } else {
+        return <GridColumn key={i} />;
+      }
+    });
+  }
+  isActive(pair: Pair): boolean {
+    return this.state.activePair.follower === pair.follower &&
+      this.state.activePair.leader === pair.leader;
+  }
+  render () {
+    const upperPairs = this.arrangeUpperLayer();
+    const lowerPairs = this.arrangeLowerLayer();
     return (
-      <GridColumn key={i}>
-        <Button>{i + 1}</Button>
-      </GridColumn>
+      <Container>
+        <Grid padded>
+          <GridRow>
+            <Header as="h3">Pairs</Header>
+          </GridRow>
+          <GridRow columns={this.props.pairs.length}>{upperPairs}</GridRow>
+          <GridRow columns={this.props.pairs.length}>{lowerPairs}</GridRow>
+        </Grid>
+      </Container>
     );
-  });
-  return (
-    <Container>
-      <Grid padded>
-        <GridRow>
-          <Header as="h3">Pairs</Header>
-        </GridRow>
-        <GridRow columns={props.pairs.length}>{pairs}</GridRow>
-      </Grid>
-    </Container>
-  );
+  }
 }
 
 export default RoundNotes;
