@@ -53,7 +53,7 @@ class ListParticipants extends Component<Props> {
             <TableRow>
               <TableHeaderCell>Present</TableHeaderCell>
               <TableHeaderCell>Name</TableHeaderCell>
-              <TableHeaderCell>ParticipantRole</TableHeaderCell>
+              <TableHeaderCell>Role</TableHeaderCell>
             </TableRow>
           </TableHeader>
           <TableBody>{this.props.participants.map(this._renderItem)}</TableBody>

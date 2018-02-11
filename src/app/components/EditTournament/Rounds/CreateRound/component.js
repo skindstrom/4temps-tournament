@@ -9,7 +9,8 @@ import {
   Form,
   FormGroup,
   FormInput,
-  FormRadio
+  FormRadio,
+  FormField
 } from 'semantic-ui-react';
 
 type CriterionType = 'none' | 'both' | 'one' | 'follower' | 'leader';
@@ -36,8 +37,9 @@ type CriterionViewModel = {
 export type RoundViewModel = {
   name: string,
   danceCount: ?number,
-  minPairCount: ?number,
-  maxPairCount: ?number,
+  minPairCountPerGroup: ?number,
+  maxPairCountPerGroup: ?number,
+  passingParticipantsCount: ?number,
   tieRule: TieRule,
   roundScoringRule: RoundScoringRule,
   multipleDanceScoringRule: MultipleDanceScoringRule,
@@ -49,8 +51,9 @@ class EditTournamentRounds extends Component<Props, State> {
   state = {
     name: '',
     danceCount: null,
-    minPairCount: null,
-    maxPairCount: null,
+    minPairCountPerGroup: null,
+    maxPairCountPerGroup: null,
+    passingParticipantsCount: null,
     tieRule: 'none',
     roundScoringRule: 'none',
     multipleDanceScoringRule: 'none',
@@ -73,13 +76,21 @@ class EditTournamentRounds extends Component<Props, State> {
     this.setState({ danceCount: this._parseCount(event) });
   };
 
-  _onChangeMinPairCount = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ minPairCount: this._parseCount(event) });
+  _onChangeMinPairCountPerGroup = (
+    event: SyntheticInputEvent<HTMLInputElement>
+  ) => {
+    this.setState({ minPairCountPerGroup: this._parseCount(event) });
   };
 
-  _onChangeMaxPairCount = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ maxPairCount: this._parseCount(event) });
+  _onChangeMaxPairCountPerGroup = (
+    event: SyntheticInputEvent<HTMLInputElement>
+  ) => {
+    this.setState({ maxPairCountPerGroup: this._parseCount(event) });
   };
+
+  _onChangePassingParticipantsCount = (
+    event: SyntheticInputEvent<HTMLInputElement>
+  ) => this.setState({ passingParticipantsCount: this._parseCount(event) });
 
   _parseCount = (event: SyntheticInputEvent<HTMLInputElement>): ?number => {
     const count = parseInt(event.target.value);
@@ -297,12 +308,26 @@ class EditTournamentRounds extends Component<Props, State> {
         {this.props.createdSuccessfully && (
           <Message positive content="Success!" />
         )}
-        <FormInput
-          label="Name"
-          value={this.state.name}
-          onChange={this._onChangeName}
-          error={!validation.isValidName}
-        />
+        <FormGroup widths="equal">
+          <FormInput
+            label="Name"
+            placeholder="First round"
+            value={this.state.name}
+            onChange={this._onChangeName}
+            error={!validation.isValidName}
+          />
+          <FormField error={!validation.isValidPassingParticipantsCount}>
+            <label htmlFor="participant-pass-count">
+              Amount of <i>participants</i> that can proceed to the next round
+            </label>
+            <input
+              id="participant-pass-count"
+              placeholder="25"
+              value={this.state.passingParticipantsCount}
+              onChange={this._onChangePassingParticipantsCount}
+            />
+          </FormField>
+        </FormGroup>
         <FormGroup widths="equal">
           <FormInput
             label="Amount of dances"
@@ -313,22 +338,22 @@ class EditTournamentRounds extends Component<Props, State> {
             error={!validation.isValidDanceCount}
           />
           <FormInput
-            label="Minimum amount of pairs"
-            placeholder="5"
+            label="Minimum amount of pairs per group"
+            placeholder="3"
             type="number"
-            value={this._countOrEmptyString(this.state.minPairCount)}
-            onChange={this._onChangeMinPairCount}
+            value={this._countOrEmptyString(this.state.minPairCountPerGroup)}
+            onChange={this._onChangeMinPairCountPerGroup}
             error={
               !validation.isValidMinPairCount ||
               !validation.isMaxPairGreaterOrEqualToMinPair
             }
           />
           <FormInput
-            label="Maximum amount of pairs"
-            placeholder="8"
+            label="Maximum amount of pairs per group"
+            placeholder="5"
             type="number"
-            value={this._countOrEmptyString(this.state.maxPairCount)}
-            onChange={this._onChangeMaxPairCount}
+            value={this._countOrEmptyString(this.state.maxPairCountPerGroup)}
+            onChange={this._onChangeMaxPairCountPerGroup}
             error={
               !validation.isValidMaxPairCount ||
               !validation.isMaxPairGreaterOrEqualToMinPair
