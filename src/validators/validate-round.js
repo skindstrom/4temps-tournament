@@ -4,8 +4,9 @@ function validateRound(round: Round): RoundValidationSummary {
   const {
     name,
     danceCount,
-    minPairCount,
-    maxPairCount,
+    minPairCountPerGroup,
+    maxPairCountPerGroup,
+    passingParticipantsCount,
     tieRule,
     roundScoringRule,
     criteria
@@ -13,13 +14,17 @@ function validateRound(round: Round): RoundValidationSummary {
 
   const isValidName = name.length > 0;
   const isValidDanceCount = danceCount != null && danceCount >= 1;
-  const isValidMinPairCount = minPairCount != null && minPairCount >= 1;
-  const isValidMaxPairCount = maxPairCount != null && maxPairCount >= 1;
+  const isValidPassingParticipantsCount =
+    passingParticipantsCount != null && passingParticipantsCount >= 2;
+  const isValidMinPairCount =
+    minPairCountPerGroup != null && minPairCountPerGroup >= 1;
+  const isValidMaxPairCount =
+    maxPairCountPerGroup != null && maxPairCountPerGroup >= 1;
 
   const isMaxPairGreaterOrEqualToMinPair =
-    minPairCount == null ||
-    maxPairCount == null ||
-    maxPairCount >= minPairCount;
+    minPairCountPerGroup == null ||
+    maxPairCountPerGroup == null ||
+    maxPairCountPerGroup >= minPairCountPerGroup;
 
   const isValidTieRule = tieRule === 'random' || tieRule === 'all';
 
@@ -41,6 +46,7 @@ function validateRound(round: Round): RoundValidationSummary {
       isValidDanceCount &&
       isValidMinPairCount &&
       isValidMaxPairCount &&
+      isValidPassingParticipantsCount &&
       isMaxPairGreaterOrEqualToMinPair &&
       isValidTieRule &&
       isValidRoundScoringRule &&
@@ -51,6 +57,7 @@ function validateRound(round: Round): RoundValidationSummary {
     isValidDanceCount,
     isValidMinPairCount,
     isValidMaxPairCount,
+    isValidPassingParticipantsCount,
     isMaxPairGreaterOrEqualToMinPair,
     isValidTieRule,
     isValidRoundScoringRule,

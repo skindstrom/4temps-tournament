@@ -16,8 +16,9 @@ export type RoundDbModel = {
   _id: ObjectId,
   name: string,
   danceCount: number,
-  minPairCount: number,
-  maxPairCount: number,
+  minPairCountPerGroup: number,
+  maxPairCountPerGroup: number,
+  passingParticipantsCount: number,
   tieRule: 'none' | 'random' | 'all',
   roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
   multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
@@ -66,11 +67,15 @@ export const schema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  minPairCount: {
+  minPairCountPerGroup: {
     type: Number,
     required: true
   },
-  maxPairCount: {
+  maxPairCountPerGroup: {
+    type: Number,
+    required: true
+  },
+  passingParticipantsCount: {
     type: Number,
     required: true
   },

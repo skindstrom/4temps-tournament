@@ -15,13 +15,13 @@ type Props = {
 
 class RoundNotes extends Component<Props> {
   // $FlowFixMe
-  state: {activePair: Pair} = {
+  state: { activePair: Pair } = {
     activePair: this.props.pairs[0]
   };
 
   onClick(pair: Pair) {
     // $FlowFixMe
-    this.setState({activePair: pair});
+    this.setState({ activePair: pair });
   }
   arrangeUpperLayer() {
     const condition = (index: number) => index % 2 !== 0;
@@ -33,10 +33,10 @@ class RoundNotes extends Component<Props> {
   }
   conditionalLayer(condition: (index: number) => boolean) {
     return Array.from(Array(this.props.pairs.length).keys()).map(i => {
-      if(condition(i)) {
+      if (condition(i)) {
         const pair = this.props.pairs[i];
         return (
-          <GridColumn key={i} textAlign='center'>
+          <GridColumn key={i} textAlign="center">
             <Button
               toggle
               active={this.isActive(pair)}
@@ -52,10 +52,12 @@ class RoundNotes extends Component<Props> {
     });
   }
   isActive(pair: Pair): boolean {
-    return this.state.activePair.follower === pair.follower &&
-      this.state.activePair.leader === pair.leader;
+    return (
+      this.state.activePair.follower === pair.follower &&
+      this.state.activePair.leader === pair.leader
+    );
   }
-  render () {
+  render() {
     const upperPairs = this.arrangeUpperLayer();
     const lowerPairs = this.arrangeLowerLayer();
     return (

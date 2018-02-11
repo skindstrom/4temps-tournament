@@ -238,26 +238,7 @@ describe('Rounds reducer', () => {
 
 function roundWithId(id: string): Round {
   return {
-    id: id,
-    name: 'name',
-    danceCount: 1,
-    minPairCount: 1,
-    maxPairCount: 2,
-    tieRule: 'random',
-    roundScoringRule: 'average',
-    multipleDanceScoringRule: 'worst',
-    criteria: [
-      {
-        id: generateId(),
-        name: 'style',
-        minValue: 1,
-        maxValue: 2,
-        description: 'style...',
-        type: 'one'
-      }
-    ],
-    groups: [],
-    active: false,
-    finished: false
+    ...createRound(),
+    id: id
   };
 }

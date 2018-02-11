@@ -1,21 +1,11 @@
 // @flow
 
 import validateRound from '../validate-round';
+import { createRound as createRoundTestUtils } from '../../test-utils';
 
 function createRound(vals: mixed): Round {
   return {
-    id: '',
-    name: 'name',
-    danceCount: 1,
-    minPairCount: 1,
-    maxPairCount: 1000,
-    tieRule: 'random',
-    roundScoringRule: 'average',
-    multipleDanceScoringRule: 'average',
-    criteria: [createCriterion()],
-    groups: [],
-    active: false,
-    finished: false,
+    ...createRoundTestUtils(),
     ...vals
   };
 }
@@ -68,59 +58,94 @@ describe('Round validator', () => {
     });
   });
 
-  test('null minPairCount is invalid', () => {
-    expect(validateRound(createRound({ minPairCount: null }))).toMatchObject({
+  test('At least two participants has to pass', () => {
+    expect(
+      validateRound(createRound({ passingParticipantsCount: 0 }))
+    ).toMatchObject({
       isValidRound: false,
-      isValidMinPairCount: false
+      isValidPassingParticipantsCount: false
     });
-  });
-  test('Zero minPairCount is invalid', () => {
-    expect(validateRound(createRound({ minPairCount: 0 }))).toMatchObject({
+    expect(
+      validateRound(createRound({ passingParticipantsCount: 1 }))
+    ).toMatchObject({
       isValidRound: false,
-      isValidMinPairCount: false
+      isValidPassingParticipantsCount: false
     });
-  });
-  test('Negative minPairCount is invalid', () => {
-    expect(validateRound(createRound({ minPairCount: -1 }))).toMatchObject({
-      isValidRound: false,
-      isValidMinPairCount: false
-    });
-  });
-  test('Positive minPairCount is valid', () => {
-    expect(validateRound(createRound({ minPairCount: 1 }))).toMatchObject({
+    expect(
+      validateRound(createRound({ passingParticipantsCount: 2 }))
+    ).toMatchObject({
       isValidRound: true,
-      isValidMinPairCount: true
+      isValidPassingParticipantsCount: true
     });
-    expect(validateRound(createRound({ minPairCount: 123 }))).toMatchObject({
+  });
+
+  test('null minPairCountPerGroup is invalid', () => {
+    expect(
+      validateRound(createRound({ minPairCountPerGroup: null }))
+    ).toMatchObject({
+      isValidRound: false,
+      isValidMinPairCount: false
+    });
+  });
+  test('Zero minPairCountPerGroup is invalid', () => {
+    expect(
+      validateRound(createRound({ minPairCountPerGroup: 0 }))
+    ).toMatchObject({
+      isValidRound: false,
+      isValidMinPairCount: false
+    });
+  });
+  test('Negative minPairCountPerGroup is invalid', () => {
+    expect(
+      validateRound(createRound({ minPairCountPerGroup: -1 }))
+    ).toMatchObject({
+      isValidRound: false,
+      isValidMinPairCount: false
+    });
+  });
+  test('Positive minPairCountPerGroup is valid', () => {
+    expect(
+      validateRound(createRound({ minPairCountPerGroup: 1 }))
+    ).toMatchObject({
       isValidRound: true,
       isValidMinPairCount: true
     });
   });
 
-  test('null maxPairCount is invalid', () => {
-    expect(validateRound(createRound({ maxPairCount: null }))).toMatchObject({
+  test('null maxPairCountPerGroup is invalid', () => {
+    expect(
+      validateRound(createRound({ maxPairCountPerGroup: null }))
+    ).toMatchObject({
       isValidRound: false,
       isValidMaxPairCount: false
     });
   });
-  test('Zero maxPairCount is invalid', () => {
-    expect(validateRound(createRound({ maxPairCount: 0 }))).toMatchObject({
+  test('Zero maxPairCountPerGroup is invalid', () => {
+    expect(
+      validateRound(createRound({ maxPairCountPerGroup: 0 }))
+    ).toMatchObject({
       isValidRound: false,
       isValidMaxPairCount: false
     });
   });
-  test('Negative maxPairCount is invalid', () => {
-    expect(validateRound(createRound({ maxPairCount: -1 }))).toMatchObject({
+  test('Negative maxPairCountPerGroup is invalid', () => {
+    expect(
+      validateRound(createRound({ maxPairCountPerGroup: -1 }))
+    ).toMatchObject({
       isValidRound: false,
       isValidMaxPairCount: false
     });
   });
-  test('Positive maxPairCount is valid', () => {
-    expect(validateRound(createRound({ maxPairCount: 1 }))).toMatchObject({
+  test('Positive maxPairCountPerGroup is valid', () => {
+    expect(
+      validateRound(createRound({ maxPairCountPerGroup: 1 }))
+    ).toMatchObject({
       isValidRound: true,
       isValidMaxPairCount: true
     });
-    expect(validateRound(createRound({ maxPairCount: 123 }))).toMatchObject({
+    expect(
+      validateRound(createRound({ maxPairCountPerGroup: 123 }))
+    ).toMatchObject({
       isValidRound: true,
       isValidMaxPairCount: true
     });
@@ -128,12 +153,16 @@ describe('Round validator', () => {
 
   test('Max pair count may be equal to min pair count', () => {
     expect(
-      validateRound(createRound({ minPairCount: 1, maxPairCount: 1 }))
+      validateRound(
+        createRound({ minPairCountPerGroup: 1, maxPairCountPerGroup: 1 })
+      )
     ).toMatchObject({ isValidRound: true });
   });
   test('Max pair count may not be less than min pair count', () => {
     expect(
-      validateRound(createRound({ minPairCount: 2, maxPairCount: 1 }))
+      validateRound(
+        createRound({ minPairCountPerGroup: 2, maxPairCountPerGroup: 1 })
+      )
     ).toMatchObject({
       isValidRound: false,
       isMaxPairGreaterOrEqualToMinPair: false

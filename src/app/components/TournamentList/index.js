@@ -13,7 +13,6 @@ import {
 import moment from 'moment';
 import type Moment from 'moment';
 
-
 import './styles.css';
 
 type Props = {

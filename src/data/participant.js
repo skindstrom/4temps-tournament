@@ -10,6 +10,21 @@ export type ParticipantDbModel = {
   isAttending: boolean
 };
 
+export const schema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    required: true
+  },
+  isAttending: {
+    type: Boolean,
+    required: true
+  }
+});
+
 export function mapToDomainModel(participant: ParticipantDbModel): Participant {
   const { _id, ...rest } = participant;
   return { id: _id.toString(), ...rest };

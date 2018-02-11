@@ -35,6 +35,7 @@ export function getInitialState(): UiCreateRoundReduxState {
       isValidName: true,
       isValidRound: true,
       isValidDanceCount: true,
+      isValidPassingParticipantsCount: true,
       isValidMinPairCount: true,
       isValidMaxPairCount: true,
       isMaxPairGreaterOrEqualToMinPair: true,

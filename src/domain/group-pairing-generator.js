@@ -56,7 +56,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
     while (
       this._participants.size > 0 &&
-      group.length < this._round.maxPairCount
+      group.length < this._round.maxPairCountPerGroup
     ) {
       // $FlowFixMe
       const p1: Participant = this._getFirstParticipant();
@@ -193,7 +193,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
       const lastIndex = groups.length - 1;
       let i = groups.length - 2;
       while (
-        groups[lastIndex].length < this._round.minPairCount &&
+        groups[lastIndex].length < this._round.minPairCountPerGroup &&
         groups[lastIndex].length < groups[i].length
       ) {
         groups[lastIndex].push(groups[i].pop());

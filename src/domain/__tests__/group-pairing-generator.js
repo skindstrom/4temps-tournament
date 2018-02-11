@@ -4,13 +4,21 @@ import { createRound, createParticipant } from '../../test-utils';
 
 describe('GroupGenerator', () => {
   test('Zero min & max returns empty list', () => {
-    const round = { ...createRound(), minPairCount: 0, maxPairCount: 0 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 0,
+      maxPairCountPerGroup: 0
+    };
     const generator = new GroupGeneratorImpl(round, []);
     expect(generator.generateGroups()).toEqual([]);
   });
 
   test('Matches leaders and followers', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 1 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
     const participants = createParticipants(2);
     const generator = new GroupGeneratorImpl(round, participants);
 
@@ -20,7 +28,11 @@ describe('GroupGenerator', () => {
   });
 
   test('"leaderAndFollower" may be a follower', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 1 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
     const participants = [
       { ...createParticipant(), role: 'leader' },
       { ...createParticipant(), role: 'leaderAndFollower' }
@@ -33,7 +45,11 @@ describe('GroupGenerator', () => {
   });
 
   test('"leaderAndFollower" may be a leader', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 1 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
     const participants = [
       { ...createParticipant(), role: 'leaderAndFollower' },
       { ...createParticipant(), role: 'follower' }
@@ -46,7 +62,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Two "leaderAndFollower" may match', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 1 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
     const participants = [
       { ...createParticipant(), role: 'leaderAndFollower' },
       { ...createParticipant(), role: 'leaderAndFollower' }
@@ -60,7 +80,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Creates multiple arrays if all cant fit in one', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 1 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
     const participants = createParticipants(4);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -72,7 +96,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Only creates as many groups as needed', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 2 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 2
+    };
     const participants = createParticipants(4);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -86,7 +114,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Fills the first group first first groups', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 2 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 2
+    };
     const participants = createParticipants(6);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -100,8 +132,12 @@ describe('GroupGenerator', () => {
     ]);
   });
 
-  test('Fills at least minPairCount in each group', () => {
-    const round = { ...createRound(), minPairCount: 2, maxPairCount: 3 };
+  test('Fills at least minPairCountPerGroup in each group', () => {
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 2,
+      maxPairCountPerGroup: 3
+    };
     const participants = createParticipants(8);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -119,7 +155,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Redistributes equally, from the back', () => {
-    const round = { ...createRound(), minPairCount: 3, maxPairCount: 4 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 3,
+      maxPairCountPerGroup: 4
+    };
     const participants = createParticipants(18);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -144,7 +184,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Will redistribute equally if condition cant be upheld', () => {
-    const round = { ...createRound(), minPairCount: 4, maxPairCount: 4 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 4,
+      maxPairCountPerGroup: 4
+    };
     const participants = createParticipants(18);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -169,7 +213,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Stops if no more participants, even if criteria not met', () => {
-    const round = { ...createRound(), minPairCount: 4, maxPairCount: 4 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 4,
+      maxPairCountPerGroup: 4
+    };
     const participants = createParticipants(2);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -180,7 +228,11 @@ describe('GroupGenerator', () => {
   });
 
   test('If not enough participants, null is set', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 4 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 4
+    };
     const participants = createParticipants(3);
     const generator = new GroupGeneratorImpl(round, participants);
     stubRandom(generator);
@@ -194,7 +246,11 @@ describe('GroupGenerator', () => {
   });
 
   test('Does not pick a leaderAndFollower if it fails criteria', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 4 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 4
+    };
     const participants = [
       { ...createParticipant(), role: 'leader' },
       { ...createParticipant(), role: 'leaderAndFollower' },
@@ -213,7 +269,11 @@ describe('GroupGenerator', () => {
   });
 
   test('May have multiple null participants if necessary', () => {
-    const round = { ...createRound(), minPairCount: 1, maxPairCount: 4 };
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 4
+    };
     const participants = [
       { ...createParticipant(), role: 'leader' },
       { ...createParticipant(), role: 'leader' }
