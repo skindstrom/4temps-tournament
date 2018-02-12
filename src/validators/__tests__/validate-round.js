@@ -60,22 +60,22 @@ describe('Round validator', () => {
 
   test('At least two participants has to pass', () => {
     expect(
-      validateRound(createRound({ passingParticipantsCount: 0 }))
+      validateRound(createRound({ passingCouplesCount: 0 }))
     ).toMatchObject({
       isValidRound: false,
-      isValidPassingParticipantsCount: false
+      isValidPassingCouplesCount: false
     });
     expect(
-      validateRound(createRound({ passingParticipantsCount: 1 }))
+      validateRound(createRound({ passingCouplesCount: 1 }))
     ).toMatchObject({
       isValidRound: false,
-      isValidPassingParticipantsCount: false
+      isValidPassingCouplesCount: false
     });
     expect(
-      validateRound(createRound({ passingParticipantsCount: 2 }))
+      validateRound(createRound({ passingCouplesCount: 2 }))
     ).toMatchObject({
       isValidRound: true,
-      isValidPassingParticipantsCount: true
+      isValidPassingCouplesCount: true
     });
   });
 

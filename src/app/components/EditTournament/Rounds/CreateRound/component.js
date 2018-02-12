@@ -39,7 +39,7 @@ export type RoundViewModel = {
   danceCount: ?number,
   minPairCountPerGroup: ?number,
   maxPairCountPerGroup: ?number,
-  passingParticipantsCount: ?number,
+  passingCouplesCount: ?number,
   tieRule: TieRule,
   roundScoringRule: RoundScoringRule,
   multipleDanceScoringRule: MultipleDanceScoringRule,
@@ -53,7 +53,7 @@ class EditTournamentRounds extends Component<Props, State> {
     danceCount: null,
     minPairCountPerGroup: null,
     maxPairCountPerGroup: null,
-    passingParticipantsCount: null,
+    passingCouplesCount: null,
     tieRule: 'none',
     roundScoringRule: 'none',
     multipleDanceScoringRule: 'none',
@@ -88,9 +88,9 @@ class EditTournamentRounds extends Component<Props, State> {
     this.setState({ maxPairCountPerGroup: this._parseCount(event) });
   };
 
-  _onChangePassingParticipantsCount = (
+  _onChangePassingCouplesCount = (
     event: SyntheticInputEvent<HTMLInputElement>
-  ) => this.setState({ passingParticipantsCount: this._parseCount(event) });
+  ) => this.setState({ passingCouplesCount: this._parseCount(event) });
 
   _parseCount = (event: SyntheticInputEvent<HTMLInputElement>): ?number => {
     const count = parseInt(event.target.value);
@@ -316,15 +316,15 @@ class EditTournamentRounds extends Component<Props, State> {
             onChange={this._onChangeName}
             error={!validation.isValidName}
           />
-          <FormField error={!validation.isValidPassingParticipantsCount}>
-            <label htmlFor="participant-pass-count">
-              Amount of <i>participants</i> that can proceed to the next round
+          <FormField error={!validation.isValidPassingCouplesCount}>
+            <label htmlFor="couple-pass-count">
+              Amount of <i>couples</i> that will proceed to the next round
             </label>
             <input
-              id="participant-pass-count"
+              id="couple-pass-count"
               placeholder="25"
-              value={this.state.passingParticipantsCount}
-              onChange={this._onChangePassingParticipantsCount}
+              value={this.state.passingCouplesCount}
+              onChange={this._onChangePassingCouplesCount}
             />
           </FormField>
         </FormGroup>
