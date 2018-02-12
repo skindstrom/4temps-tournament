@@ -8,6 +8,7 @@ import {
   Header,
   Container
 } from 'semantic-ui-react';
+import NotesContainer from './Notes';
 
 type Props = {
   pairs: Array<Pair>
@@ -68,6 +69,9 @@ class RoundNotes extends Component<Props> {
           </GridRow>
           <GridRow columns={this.props.pairs.length}>{upperPairs}</GridRow>
           <GridRow columns={this.props.pairs.length}>{lowerPairs}</GridRow>
+          <GridRow>
+            <NotesContainer pair={this.state.activePair} />
+          </GridRow>
         </Grid>
       </Container>
     );
