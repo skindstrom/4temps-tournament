@@ -106,7 +106,7 @@ describe('Checker that all notes are submitted', () => {
   test('Everything must be set, missing criteria', () => {
     const criteria = [
       { ...createCriterion(), type: 'both' },
-      { ...createCriterion(), type: 'leader' }
+      { ...createCriterion(), type: 'one' }
     ];
     const judges = [createJudge(), createJudge()];
     const participants = [
@@ -180,14 +180,28 @@ describe('Checker that all notes are submitted', () => {
         criterionId: criteria[0].id,
         participantId: participants[1].id,
         value: 0
+      },
+      {
+        judgeId: judges[1].id,
+        danceId,
+        criterionId: criteria[0].id,
+        participantId: participants[1].id,
+        value: 0
+      },
+      {
+        judgeId: judges[0].id,
+        danceId,
+        criterionId: criteria[1].id,
+        participantId: participants[1].id,
+        value: 0
       }
       //{
-      //  judgeId: judges[0].id,
+      //  judgeId: judges[1].id,
       //  danceId,
-      //  criterionId: criteria[0].id,
+      //  criterionId: criteria[1].id,
       //  participantId: participants[1].id,
       //  value: 0
-      //}
+      //},
     ];
 
     const checker = new NoteChecker(tournament);
@@ -197,7 +211,7 @@ describe('Checker that all notes are submitted', () => {
   test('Everything must be set, valid', () => {
     const criteria = [
       { ...createCriterion(), type: 'both' },
-      { ...createCriterion(), type: 'leader' }
+      { ...createCriterion(), type: 'one' }
     ];
     const judges = [createJudge(), createJudge()];
     const participants = [
@@ -276,6 +290,20 @@ describe('Checker that all notes are submitted', () => {
         judgeId: judges[1].id,
         danceId,
         criterionId: criteria[0].id,
+        participantId: participants[1].id,
+        value: 0
+      },
+      {
+        judgeId: judges[0].id,
+        danceId,
+        criterionId: criteria[1].id,
+        participantId: participants[1].id,
+        value: 0
+      },
+      {
+        judgeId: judges[1].id,
+        danceId,
+        criterionId: criteria[1].id,
         participantId: participants[1].id,
         value: 0
       }
@@ -288,7 +316,7 @@ describe('Checker that all notes are submitted', () => {
   test('Can check for one judge', () => {
     const criteria = [
       { ...createCriterion(), type: 'both' },
-      { ...createCriterion(), type: 'leader' }
+      { ...createCriterion(), type: 'one' }
     ];
     const judges = [createJudge(), createJudge()];
     const participants = [
@@ -360,7 +388,7 @@ describe('Checker that all notes are submitted', () => {
   test('Can check for one judge, true', () => {
     const criteria = [
       { ...createCriterion(), type: 'both' },
-      { ...createCriterion(), type: 'leader' }
+      { ...createCriterion(), type: 'one' }
     ];
     const judges = [createJudge(), createJudge()];
     const participants = [
@@ -418,6 +446,13 @@ describe('Checker that all notes are submitted', () => {
         judgeId: judges[0].id,
         danceId,
         criterionId: criteria[0].id,
+        participantId: participants[1].id,
+        value: 0
+      },
+      {
+        judgeId: judges[0].id,
+        danceId,
+        criterionId: criteria[1].id,
         participantId: participants[1].id,
         value: 0
       }

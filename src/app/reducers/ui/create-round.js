@@ -40,7 +40,6 @@ export function getInitialState(): UiCreateRoundReduxState {
       isValidMaxPairCount: true,
       isMaxPairGreaterOrEqualToMinPair: true,
       isValidTieRule: true,
-      isValidRoundScoringRule: true,
       isValidMultipleDanceScoringRule: true,
       isValidAmountOfCriteria: true,
       isValidCriteria: true,

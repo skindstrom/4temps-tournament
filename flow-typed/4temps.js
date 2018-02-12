@@ -34,12 +34,7 @@ declare type Participant = {
   isAttending: boolean
 };
 
-declare type RoundCriterionType =
-  | 'none'
-  | 'both'
-  | 'one'
-  | 'follower'
-  | 'leader';
+declare type RoundCriterionType = 'none' | 'both' | 'one';
 
 declare type RoundCriterion = {
   id: string,
@@ -58,8 +53,7 @@ declare type Round = {
   maxPairCountPerGroup: number,
   passingCouplesCount: number,
   tieRule: 'none' | 'random' | 'all',
-  roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
-  multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
+  multipleDanceScoringRule: 'none' | 'average' | 'best',
   criteria: Array<RoundCriterion>,
   active: boolean,
   finished: boolean,
@@ -148,7 +142,6 @@ declare type RoundValidationSummary = {
   isValidPassingCouplesCount: boolean,
   isMaxPairGreaterOrEqualToMinPair: boolean,
   isValidTieRule: boolean,
-  isValidRoundScoringRule: boolean,
   isValidMultipleDanceScoringRule: boolean,
   isValidAmountOfCriteria: boolean,
   isValidCriteria: boolean,

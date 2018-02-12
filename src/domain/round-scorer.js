@@ -18,16 +18,16 @@ export default class RoundScorer {
     score: number
   }> => {
     const danceScorer = new DanceScorer(this._participants, notes);
-    const totals = {};
+    const totals: { [id: string]: Array<number> } = {};
 
     for (const dance of this._getDances()) {
       const danceScore = danceScorer.scoreDance(dance.id);
       for (const entry of danceScore) {
         const participantId = entry.participant.id;
         if (totals[participantId]) {
-          totals[participantId] += entry.score;
+          totals[participantId].push(entry.score);
         } else {
-          totals[participantId] = entry.score;
+          totals[participantId] = [entry.score];
         }
       }
     }
@@ -36,9 +36,20 @@ export default class RoundScorer {
       .map(participantId => ({
         // $FlowFixMe: Participant will surely exist
         participant: this._participants.find(p => p.id === participantId),
-        score: totals[participantId]
+        score: this._scoreFromDanceRule(totals[participantId])
       }))
       .sort((a, b) => b.score - a.score);
+  };
+
+  _scoreFromDanceRule = (danceScores: Array<number>) => {
+    if (this._round.danceScoringRule === 'average') {
+      return (
+        danceScores.reduce((acc, score) => acc + score, 0) *
+        1.0 /
+        danceScores.length
+      );
+    }
+    return Math.max(...danceScores);
   };
 
   _getDances = (): Array<Dance> => {

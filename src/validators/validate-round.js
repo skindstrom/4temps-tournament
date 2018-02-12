@@ -8,7 +8,6 @@ function validateRound(round: Round): RoundValidationSummary {
     maxPairCountPerGroup,
     passingCouplesCount,
     tieRule,
-    roundScoringRule,
     criteria
   } = round;
 
@@ -28,10 +27,6 @@ function validateRound(round: Round): RoundValidationSummary {
 
   const isValidTieRule = tieRule === 'random' || tieRule === 'all';
 
-  const isValidRoundScoringRule =
-    roundScoringRule === 'average' ||
-    roundScoringRule === 'averageWithoutOutliers';
-
   const isValidMultipleDanceScoringRule = validateMultipleDanceScoringRule(
     round
   );
@@ -49,7 +44,6 @@ function validateRound(round: Round): RoundValidationSummary {
       isValidPassingCouplesCount &&
       isMaxPairGreaterOrEqualToMinPair &&
       isValidTieRule &&
-      isValidRoundScoringRule &&
       isValidMultipleDanceScoringRule &&
       isValidAmountOfCriteria &&
       isValidCriteria,
@@ -60,7 +54,6 @@ function validateRound(round: Round): RoundValidationSummary {
     isValidPassingCouplesCount,
     isMaxPairGreaterOrEqualToMinPair,
     isValidTieRule,
-    isValidRoundScoringRule,
     isValidMultipleDanceScoringRule,
     isValidAmountOfCriteria,
     isValidCriteria,
@@ -74,8 +67,7 @@ function validateMultipleDanceScoringRule({
 }: Round) {
   const isValidRule =
     multipleDanceScoringRule === 'average' ||
-    multipleDanceScoringRule === 'best' ||
-    multipleDanceScoringRule === 'worst';
+    multipleDanceScoringRule === 'best';
 
   const isValidEnum = isValidRule || multipleDanceScoringRule === 'none';
   danceCount = danceCount || 0;

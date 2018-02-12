@@ -9,7 +9,7 @@ type CriterionDbModel = {
   minValue: number,
   maxValue: number,
   description: string,
-  type: 'none' | 'both' | 'one' | 'follower' | 'leader'
+  type: RoundCriterionType
 };
 
 export type RoundDbModel = {
@@ -20,8 +20,7 @@ export type RoundDbModel = {
   maxPairCountPerGroup: number,
   passingCouplesCount: number,
   tieRule: 'none' | 'random' | 'all',
-  roundScoringRule: 'none' | 'average' | 'averageWithoutOutliers',
-  multipleDanceScoringRule: 'none' | 'average' | 'best' | 'worst',
+  multipleDanceScoringRule: 'none' | 'average' | 'best',
   criteria: Array<CriterionDbModel>,
   active: boolean,
   finished: boolean,
@@ -80,10 +79,6 @@ export const schema = new mongoose.Schema({
     required: true
   },
   tieRule: {
-    type: String,
-    required: true
-  },
-  roundScoringRule: {
     type: String,
     required: true
   },

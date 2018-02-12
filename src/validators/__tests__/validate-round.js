@@ -191,26 +191,8 @@ describe('Round validator', () => {
     ).toMatchObject({ isValidRound: false, isValidTieRule: false });
   });
 
-  test('Round scoring rule must be set', () => {
-    expect(
-      validateRound(createRound({ roundScoringRule: 'none' }))
-    ).toMatchObject({ isValidRound: false, isValidRoundScoringRule: false });
-
-    ['average', 'averageWithoutOutliers'].map(roundScoringRule => {
-      expect(validateRound(createRound({ roundScoringRule }))).toMatchObject({
-        isValidRound: true,
-        isValidRoundScoringRule: true
-      });
-    });
-  });
-  test('Round scoring rule must have a valid value', () => {
-    expect(
-      validateRound(createRound({ roundScoringRule: 'bogus_value' }))
-    ).toMatchObject({ isValidRound: false, isValidRoundScoringRule: false });
-  });
-
   test('Multiple dances scoring rule may not be set if the dance count is 1', () => {
-    ['none', 'average', 'best', 'worst'].map(multipleDanceScoringRule => {
+    ['none', 'average', 'best'].map(multipleDanceScoringRule => {
       expect(
         validateRound(
           createRound({
@@ -238,7 +220,7 @@ describe('Round validator', () => {
       isValidMultipleDanceScoringRule: false
     });
 
-    ['average', 'best', 'worst'].map(multipleDanceScoringRule => {
+    ['average', 'best'].map(multipleDanceScoringRule => {
       expect(
         validateRound(
           createRound({
