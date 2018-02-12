@@ -13,8 +13,6 @@ import  {
 } from 'semantic-ui-react';
 
 type Props = {
-  pair: Pair,
-  dance: Dance,
   criteria: Array<RoundCriterion>
 }
 
