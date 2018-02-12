@@ -47,6 +47,11 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  prevAttendanceId: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   judges: [judgeSchema],
   participants: [participantSchema],
   rounds: [roundSchema]
@@ -64,7 +69,7 @@ export interface TournamentRepository {
   updateParticipantAttendance(
     participantId: string,
     isAttending: boolean
-  ): Promise<void>;
+  ): Promise<?Participant>;
 
   createParticipant(
     tournamentId: string,
@@ -189,10 +194,39 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     participantId: string,
     isAttending: boolean
   ) {
-    await Model.update(
+    const participant = (await Model.findOne(
+      {
+        participants: { $elemMatch: { _id: participantId } }
+      },
+      { 'participants.$': 1 }
+    )).participants[0];
+
+    let attendanceId: ?number;
+    if (isAttending && !participant.attendanceId) {
+      attendanceId = (await Model.findOneAndUpdate(
+        { participants: { $elemMatch: { _id: participantId } } },
+        { $inc: { prevAttendanceId: 1 } },
+        { new: true }
+      )).prevAttendanceId;
+    } else {
+      attendanceId = participant.attendanceId;
+    }
+
+    const tournament = await Model.findOneAndUpdate(
       { participants: { $elemMatch: { _id: participantId } } },
-      { $set: { 'participants.$.isAttending': isAttending } }
+      {
+        $set: {
+          'participants.$.isAttending': isAttending,
+          'participants.$.attendanceId': attendanceId
+        }
+      },
+      { new: true }
     );
+
+    return tournament
+      .toObject()
+      .participants.map(mapParticipantToDomainModel)
+      .filter(({ id }) => id === participantId)[0];
   }
 }
 

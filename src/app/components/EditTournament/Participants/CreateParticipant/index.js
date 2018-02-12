@@ -22,6 +22,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
           id: '',
           name,
           role,
+          attendanceId: 0, // generate on server side
           isAttending: false
         })
       })

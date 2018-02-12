@@ -160,9 +160,11 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       for (const participant of this._tournaments[key].participants) {
         if (participant.id === participantId) {
           participant.isAttending = isAttending;
+          return participant;
         }
       }
     }
+    return null;
   };
 
   createRound = async (tournamentId: string, round: Round) => {
@@ -300,7 +302,8 @@ export function createParticipant(): Participant {
     id: generateId(),
     name: 'John Smith',
     role: 'leaderAndFollower',
-    isAttending: false
+    isAttending: false,
+    attendanceId: 0
   };
 }
 

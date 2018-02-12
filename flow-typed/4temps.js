@@ -28,6 +28,7 @@ declare type ParticipantRole =
 
 declare type Participant = {
   id: string,
+  attendanceId: number,
   name: string,
   role: ParticipantRole,
   isAttending: boolean

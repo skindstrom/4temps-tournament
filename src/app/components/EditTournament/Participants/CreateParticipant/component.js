@@ -54,7 +54,7 @@ class CreateParticipant extends Component<Props, State> {
         <FormInput label="Name" value={name} onChange={this._onChangeName} />
         {!isValidName && <Message error content="Invalid name" />}
         <FormGroup id="role-radio" inline>
-          <label htmlFor="role-radio">ParticipantRole</label>
+          <label htmlFor="role-radio">Role</label>
           <FormRadio
             label="Leader"
             value="leader"

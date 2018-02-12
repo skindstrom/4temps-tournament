@@ -54,6 +54,7 @@ export class CreateParticipantRouteHandler {
     this._tournamentId = body.tournamentId || '';
 
     const participant = body.participant || {};
+    // $FlowFixMe
     this._participant = {
       id: new ObjectID().toString(),
       name: participant.name || '',

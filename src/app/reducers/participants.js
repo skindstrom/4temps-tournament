@@ -132,10 +132,7 @@ function changeAttendance(
       ...prevState,
       byId: {
         ...prevState.byId,
-        [payload.participantId]: {
-          ...prevState.byId[payload.participantId],
-          isAttending: payload.isAttending
-        }
+        [payload.id]: payload
       }
     })
   });

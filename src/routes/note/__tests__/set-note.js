@@ -8,16 +8,15 @@ import {
   createTournament,
   createRound,
   createJudge,
+  createParticipant,
   NoteRepositoryImpl
 } from '../../../test-utils';
 
 describe('Create note route', () => {
   const judge = createJudge();
   const participant = {
-    id: generateId(),
-    name: 'John Doe',
-    role: 'leader',
-    isAttending: true
+    ...createParticipant(),
+    role: 'leader'
   };
   const dance = { id: generateId(), active: true, finished: false };
 
@@ -155,10 +154,8 @@ describe('Create note route', () => {
   test('A follower criterion may not be set on a leader', async () => {
     const tournamentRepository = new TournamentRepositoryImpl();
     const leader = {
-      id: generateId(),
-      name: 'John Doe',
-      role: 'leader',
-      isAttending: false
+      ...createParticipant(),
+      role: 'leader'
     };
     const followerCriterion: RoundCriterion = {
       id: generateId(),
@@ -206,10 +203,8 @@ describe('Create note route', () => {
   test('A leader criterion may not be set on a follower', async () => {
     const tournamentRepository = new TournamentRepositoryImpl();
     const follower = {
-      id: generateId(),
-      name: 'John Doe',
-      role: 'follower',
-      isAttending: true
+      ...createParticipant(),
+      role: 'follower'
     };
     const leaderCriterion: RoundCriterion = {
       id: generateId(),

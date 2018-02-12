@@ -18,16 +18,22 @@ type Props = {
 };
 
 class ListParticipants extends Component<Props> {
-  _renderItem = ({ id, name, role, isAttending }: Participant) => {
+  _renderItem = ({
+    id,
+    name,
+    role,
+    isAttending,
+    attendanceId
+  }: Participant) => {
     return (
-      <TableRow key={id}>
+      <TableRow
+        key={id}
+        onClick={() => this.props.onChangeAttending(id, !isAttending)}
+      >
         <Table.Cell collapsing>
-          <Checkbox
-            slider
-            onChange={() => this.props.onChangeAttending(id, !isAttending)}
-            checked={isAttending}
-          />
+          <Checkbox slider checked={isAttending} />
         </Table.Cell>
+        <TableCell>{attendanceId == null ? 'X' : attendanceId}</TableCell>
         <TableCell>{name}</TableCell>
         <TableCell>{this._roleToString(role)}</TableCell>
       </TableRow>
@@ -48,10 +54,11 @@ class ListParticipants extends Component<Props> {
   render() {
     return (
       <Container>
-        <Table unstackable>
+        <Table unstackable selectable>
           <TableHeader>
             <TableRow>
               <TableHeaderCell>Present</TableHeaderCell>
+              <TableHeaderCell>Participant Number</TableHeaderCell>
               <TableHeaderCell>Name</TableHeaderCell>
               <TableHeaderCell>Role</TableHeaderCell>
             </TableRow>

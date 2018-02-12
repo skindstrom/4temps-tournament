@@ -1,10 +1,11 @@
 // @flow
 
 import { validateParticipant } from '../validate-participant';
+import { createParticipant } from '../../test-utils';
 
 test('An empty name is invalid', () => {
   expect(
-    validateParticipant({ id: '', name: '', role: 'leader', isAttending: true })
+    validateParticipant({ ...createParticipant(), name: '' })
   ).toMatchObject({
     isValidParticipant: false,
     isValidName: false
@@ -12,10 +13,8 @@ test('An empty name is invalid', () => {
 
   expect(
     validateParticipant({
-      id: '',
-      name: 'sweet',
-      role: 'leader',
-      isAttending: true
+      ...createParticipant(),
+      name: 'sweet'
     })
   ).toMatchObject({ isValidName: true });
 });
@@ -23,34 +22,26 @@ test('An empty name is invalid', () => {
 test('Any role other than "none" is valid', () => {
   expect(
     validateParticipant({
-      id: '',
-      name: 'name',
-      role: 'none',
-      isAttending: true
+      ...createParticipant(),
+      role: 'none'
     })
   ).toMatchObject({ isValidParticipant: false, isValidRole: false });
   expect(
     validateParticipant({
-      id: '',
-      name: 'name',
-      role: 'leader',
-      isAttending: true
+      ...createParticipant(),
+      role: 'leader'
     })
   ).toMatchObject({ isValidRole: true });
   expect(
     validateParticipant({
-      id: '',
-      name: 'name',
-      role: 'follower',
-      isAttending: true
+      ...createParticipant(),
+      role: 'follower'
     })
   ).toMatchObject({ isValidRole: true });
   expect(
     validateParticipant({
-      id: '',
-      name: 'name',
-      role: 'leaderAndFollower',
-      isAttending: true
+      ...createParticipant(),
+      role: 'leaderAndFollower'
     })
   ).toMatchObject({ isValidRole: true });
 });

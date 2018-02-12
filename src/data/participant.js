@@ -7,6 +7,7 @@ export type ParticipantDbModel = {
   _id: ObjectId,
   name: string,
   role: ParticipantRole,
+  attendanceId: number,
   isAttending: boolean
 };
 
@@ -18,6 +19,10 @@ export const schema = new mongoose.Schema({
   role: {
     type: String,
     required: true
+  },
+  attendanceId: {
+    type: Number,
+    required: false
   },
   isAttending: {
     type: Boolean,

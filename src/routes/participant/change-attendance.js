@@ -19,11 +19,11 @@ export default class ChangeAttendance {
       req.body.isAttending != null
     ) {
       const { participantId, isAttending } = req.body;
-      await this._repository.updateParticipantAttendance(
+      const participant = await this._repository.updateParticipantAttendance(
         participantId,
         isAttending
       );
-      res.json(req.body);
+      res.json(participant);
     } else {
       res.sendStatus(400);
     }
