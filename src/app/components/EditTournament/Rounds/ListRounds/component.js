@@ -50,7 +50,7 @@ class RoundList extends Component<Props> {
 
   render() {
     return (
-      <Table fixed selectable unstackable>
+      <Table fixed selectable unstackable basic="very">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>

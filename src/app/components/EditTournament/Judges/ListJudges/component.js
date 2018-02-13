@@ -16,7 +16,7 @@ type JudgeViewModel = Judge & {
 
 function ListJudges({ judges }: { judges: Array<JudgeViewModel> }) {
   return (
-    <Table unstackable>
+    <Table unstackable basic="very">
       <TableHeader>
         <TableRow>
           <TableHeaderCell>Name</TableHeaderCell>

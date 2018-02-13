@@ -8,30 +8,50 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Checkbox
+  Checkbox,
+  Modal,
+  Header,
+  ModalContent,
+  Button,
+  ModalActions,
+  Icon
 } from 'semantic-ui-react';
 
 type Props = {
   participants: Array<Participant>,
-  onChangeAttending: (id: string, isAttending: boolean) => void,
-  getParticipants: () => void
+  onChangeAttending: (id: string, isAttending: boolean) => void
 };
 
-class ListParticipants extends Component<Props> {
-  _renderItem = ({
-    id,
-    name,
-    role,
-    isAttending,
-    attendanceId
-  }: Participant) => {
+type State = {
+  didClickUnAttend: boolean,
+  unAttendParticipant: ?Participant
+};
+
+class ListParticipants extends Component<Props, State> {
+  state = {
+    didClickUnAttend: false,
+    unAttendParticipant: null
+  };
+
+  _renderItem = (participant: Participant) => {
+    const { id, name, role, isAttending, attendanceId } = participant;
     return (
-      <TableRow
-        key={id}
-        onClick={() => this.props.onChangeAttending(id, !isAttending)}
-      >
+      <TableRow key={id}>
         <Table.Cell collapsing>
-          <Checkbox slider checked={isAttending} />
+          <Checkbox
+            slider
+            checked={isAttending}
+            onChange={() => {
+              if (isAttending) {
+                this.setState({
+                  didClickUnAttend: true,
+                  unAttendParticipant: participant
+                });
+              } else {
+                this.props.onChangeAttending(id, true);
+              }
+            }}
+          />
         </Table.Cell>
         <TableCell>{attendanceId == null ? 'X' : attendanceId}</TableCell>
         <TableCell>{name}</TableCell>
@@ -51,14 +71,57 @@ class ListParticipants extends Component<Props> {
     return 'Invalid role';
   }
 
+  _hideModal = () => {
+    this.setState({
+      didClickUnAttend: false,
+      unAttendParticipant: null
+    });
+  };
+
   render() {
     return (
       <Container>
-        <Table unstackable selectable>
+        <Modal open={this.state.didClickUnAttend} onClose={this._hideModal}>
+          <Header content="Un-attending participant" />
+          <ModalContent>
+            <p>
+              Marking{' '}
+              <b>
+                {this.state.unAttendParticipant == null
+                  ? 'someone'
+                  : this.state.unAttendParticipant.name +
+                    ' (' +
+                    this.state.unAttendParticipant.attendanceId +
+                    ')'}{' '}
+              </b>
+              as not-present
+            </p>
+          </ModalContent>
+          <ModalActions>
+            <Button color="red" onClick={this._hideModal}>
+              <Icon name="remove" /> No
+            </Button>
+            <Button
+              color="green"
+              inverted
+              onClick={() => {
+                this.props.onChangeAttending(
+                  // $FlowFixMe
+                  this.state.unAttendParticipant.id,
+                  false
+                );
+                this._hideModal();
+              }}
+            >
+              <Icon name="checkmark" /> OK
+            </Button>
+          </ModalActions>
+        </Modal>
+        <Table selectable basic="very">
           <TableHeader>
             <TableRow>
               <TableHeaderCell>Present</TableHeaderCell>
-              <TableHeaderCell>Participant Number</TableHeaderCell>
+              <TableHeaderCell collapsing>Participant Number</TableHeaderCell>
               <TableHeaderCell>Name</TableHeaderCell>
               <TableHeaderCell>Role</TableHeaderCell>
             </TableRow>
