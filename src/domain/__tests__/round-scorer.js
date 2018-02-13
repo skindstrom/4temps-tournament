@@ -36,9 +36,9 @@ describe('Round scorer', () => {
       }
     ];
 
-    const scorer = new RoundScorer(participants, round);
+    const scorer = new RoundScorer(round);
     expect(scorer.scoreRound(notes)).toEqual([
-      { participant: participants[0], score: 10 }
+      { participantId: participants[0].id, score: 10 }
     ]);
   });
 
@@ -70,9 +70,9 @@ describe('Round scorer', () => {
       }
     ];
 
-    const scorer = new RoundScorer(participants, round);
+    const scorer = new RoundScorer(round);
     expect(scorer.scoreRound(notes)).toEqual([
-      { participant: participants[0], score: 5.5 }
+      { participantId: participants[0].id, score: 5.5 }
     ]);
   });
 });

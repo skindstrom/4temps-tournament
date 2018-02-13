@@ -3,27 +3,25 @@
 import DanceScorer from './dance-scorer';
 
 export default class RoundScorer {
-  _participants: Array<Participant>;
   _round: Round;
 
-  constructor(participants: Array<Participant>, round: Round) {
-    this._participants = participants;
+  constructor(round: Round) {
     this._round = round;
   }
 
   scoreRound = (
     notes: Array<JudgeNote>
   ): Array<{
-    participant: Participant,
+    participantId: string,
     score: number
   }> => {
-    const danceScorer = new DanceScorer(this._participants, notes);
+    const danceScorer = new DanceScorer(notes);
     const totals: { [id: string]: Array<number> } = {};
 
     for (const dance of this._getDances()) {
       const danceScore = danceScorer.scoreDance(dance.id);
       for (const entry of danceScore) {
-        const participantId = entry.participant.id;
+        const participantId = entry.participantId;
         if (totals[participantId]) {
           totals[participantId].push(entry.score);
         } else {
@@ -34,8 +32,7 @@ export default class RoundScorer {
 
     return Object.keys(totals)
       .map(participantId => ({
-        // $FlowFixMe: Participant will surely exist
-        participant: this._participants.find(p => p.id === participantId),
+        participantId,
         score: this._scoreFromDanceRule(totals[participantId])
       }))
       .sort((a, b) => b.score - a.score);

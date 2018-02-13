@@ -1,18 +1,16 @@
 // @flow
 
 class DanceScorer {
-  _participants: Array<Participant>;
   _notes: Array<JudgeNote>;
 
-  constructor(participants: Array<Participant>, notes: Array<JudgeNote>) {
-    this._participants = participants;
+  constructor(notes: Array<JudgeNote>) {
     this._notes = notes;
   }
 
   scoreDance = (
     danceId: string
   ): Array<{
-    participant: Participant,
+    participantId: string,
     score: number
   }> => {
     const notesForDance = this._notes.filter(note => note.danceId === danceId);
@@ -22,14 +20,8 @@ class DanceScorer {
 
     return Object.keys(totals)
       .map(participantId => {
-        const participant = this._participants.find(
-          p => p.id === participantId
-        );
-        if (!participant) {
-          throw new Error('Participant does not exist');
-        }
         return {
-          participant: participant,
+          participantId,
           score: totals[participantId]
         };
       })

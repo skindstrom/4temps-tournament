@@ -64,10 +64,10 @@ describe('Dance scorer', () => {
     // participant0 => 1 + 2 + 5 = 8
     // participant1 => 2 + 10 + 20 = 32
 
-    const scorer = new DanceScorer(participants, notes);
+    const scorer = new DanceScorer(notes);
     expect(scorer.scoreDance(dances[0])).toEqual([
-      { participant: participants[1], score: 32 },
-      { participant: participants[0], score: 8 }
+      { participantId: participants[1].id, score: 32 },
+      { participantId: participants[0].id, score: 8 }
     ]);
   });
 });
