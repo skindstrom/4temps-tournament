@@ -31,7 +31,8 @@ export type RoundViewModel = {
 
 export type Props = {
   round: RoundViewModel,
-  startDance: () => void
+  startDance: () => void,
+  generateGroups: () => void
 };
 
 class RoundOverview extends Component<Props> {
@@ -67,9 +68,13 @@ class RoundOverview extends Component<Props> {
   };
 
   _renderGroups = () => {
-    const { groups } = this.props.round;
-    if (groups.length === 0) {
-      return 'Groups are not generated until the round is started';
+    const { active, groups } = this.props.round;
+    if (active && groups.length === 0) {
+      return <div>No groups generated / no participants in tournament</div>;
+    } else if (groups.length === 0) {
+      return (
+        <div>You have to start the round before you can create groups</div>
+      );
     }
 
     return (
@@ -105,12 +110,22 @@ class RoundOverview extends Component<Props> {
     );
   };
 
+  _canGenerateGroups = () => {
+    const { active, activeDance, activeGroup } = this.props.round;
+    return active && activeDance == null && activeGroup == null;
+  };
+
   render() {
     return (
       <Container>
         <Header as="h2">{this.props.round.name}</Header>
         {this._renderState()}
         <Header as="h3">Groups</Header>
+        {this._canGenerateGroups() && (
+          <Button onClick={this.props.generateGroups}>
+            Re-generate groups
+          </Button>
+        )}
         {this._renderGroups()}
       </Container>
     );

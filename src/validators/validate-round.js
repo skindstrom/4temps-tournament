@@ -14,7 +14,7 @@ function validateRound(round: Round): RoundValidationSummary {
   const isValidName = name.length > 0;
   const isValidDanceCount = danceCount != null && danceCount >= 1;
   const isValidPassingCouplesCount =
-    passingCouplesCount != null && passingCouplesCount >= 2;
+    passingCouplesCount != null && passingCouplesCount >= 1;
   const isValidMinPairCount =
     minPairCountPerGroup != null && minPairCountPerGroup >= 1;
   const isValidMaxPairCount =

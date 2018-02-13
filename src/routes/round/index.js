@@ -9,6 +9,7 @@ import CreateRoundRoute from './create-round';
 import DeleteRoundRoute from './delete-round';
 import StartRoundRoute from './start-round';
 import StartDanceRoute from './start-dance';
+import GenerateGroupsRoute from './generate-groups';
 
 const router = Router();
 
@@ -36,6 +37,12 @@ router.post(
   '/:tournamentId/start-dance/',
   allow('admin'),
   new StartDanceRoute(tournamentRepository).route
+);
+
+router.post(
+  '/:tournamentId/generate-groups/:roundId',
+  allow('admin'),
+  new GenerateGroupsRoute(tournamentRepository).route
 );
 
 export default router;

@@ -1,7 +1,9 @@
 // @flow
+import ObjectId from 'bson-objectid';
 import type { TournamentRepository } from '../../data/tournament';
+import PairingGeneratorImpl from '../../domain/group-pairing-generator';
 
-export default class StartRoundRoute {
+export default class GenerateGroupsRoute {
   _repository: TournamentRepository;
 
   constructor(repository: TournamentRepository) {
@@ -11,7 +13,7 @@ export default class StartRoundRoute {
   route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const tournamentId = req.params.tournamentId;
-      const handler = new StartRoundRouteHandler(
+      const handler = new GenerateGroupsRouteHandler(
         this._repository,
         tournamentId,
         req.params.roundId
@@ -31,7 +33,8 @@ export default class StartRoundRoute {
     ) {
       return 404;
     } else if (
-      e instanceof AlreadyStartedError ||
+      e instanceof DanceStartedError ||
+      e instanceof NotStartedError ||
       e instanceof AlreadyFinishedError
     ) {
       return 400;
@@ -40,7 +43,7 @@ export default class StartRoundRoute {
   };
 }
 
-class StartRoundRouteHandler {
+class GenerateGroupsRouteHandler {
   _repository: TournamentRepository;
   _tournamentId: string;
   _roundId: string;
@@ -66,15 +69,33 @@ class StartRoundRouteHandler {
     this._tournament = await this._getTournament();
     this._round = this._getRound();
 
-    if (this._round.active) {
-      throw new AlreadyStartedError();
+    if (!this._round.active) {
+      throw new NotStartedError();
+    } else if (this._hasActiveDance()) {
+      throw new DanceStartedError();
     } else if (this._round.finished) {
       throw new AlreadyFinishedError();
     }
 
-    this._round.active = true;
+    this._round.groups = this._generateGroups();
 
     await this._repository.updateRound(this._tournamentId, this._round);
+  };
+
+  _generateGroups = (): Array<DanceGroup> => {
+    const generator = new PairingGeneratorImpl(
+      this._getRound(),
+      this._tournament.participants
+    );
+
+    let dances: Array<Dance> = [];
+    for (let i = 0; i < this._round.danceCount; ++i) {
+      dances.push({ id: ObjectId.generate(), active: false, finished: false });
+    }
+
+    return generator
+      .generateGroups()
+      .map(pairs => ({ id: ObjectId.generate(), pairs, dances }));
   };
 
   _getTournament = async (): Promise<Tournament> => {
@@ -97,9 +118,18 @@ class StartRoundRouteHandler {
 
     return matches[0];
   };
+
+  _hasActiveDance = (): boolean => {
+    return this._round.groups.reduce(
+      (acc, group) =>
+        acc || group.dances.reduce((acc, dance) => acc || dance.active, false),
+      false
+    );
+  };
 }
 
 function TournamentNotFoundError() {}
 function RoundNotFoundError() {}
-function AlreadyStartedError() {}
+function NotStartedError() {}
+function DanceStartedError() {}
 function AlreadyFinishedError() {}

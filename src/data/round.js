@@ -24,7 +24,9 @@ export type RoundDbModel = {
   criteria: Array<CriterionDbModel>,
   active: boolean,
   finished: boolean,
-  groups: Array<DanceGroupDbModel>
+  groups: Array<DanceGroupDbModel>,
+  winners: Array<string>,
+  scores: Array<Score>
 };
 
 type DanceGroupDbModel = {

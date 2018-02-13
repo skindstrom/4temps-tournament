@@ -36,6 +36,15 @@ export async function startRound(
   return apiPostRequest(`/api/round/${tournamentId}/start/${roundId}`);
 }
 
+export async function generateGroupsForRound(
+  tournamentId: string,
+  roundId: string
+): Promise<mixed> {
+  return apiPostRequest(
+    `/api/round/${tournamentId}/generate-groups/${roundId}`
+  );
+}
+
 export async function startNextDance(tournamentId: string): Promise<mixed> {
   return apiPostRequest(`/api/round/${tournamentId}/start-dance`);
 }

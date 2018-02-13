@@ -57,7 +57,14 @@ declare type Round = {
   criteria: Array<RoundCriterion>,
   active: boolean,
   finished: boolean,
-  groups: Array<DanceGroup>
+  groups: Array<DanceGroup>,
+  winners: Array<string>,
+  scores: Array<Score>
+};
+
+declare type Score = {
+  participantId: string,
+  score: number
 };
 
 declare type DanceGroup = {
@@ -309,7 +316,8 @@ declare type ReduxAction =
   | GetAccessKeys
   | StartNextDanceAction
   | ChangeAttendance
-  | GetJudgeTournament;
+  | GetJudgeTournament
+  | GenerateGroupsAction;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -404,5 +412,10 @@ declare type ChangeAttendance = {
 
 declare type GetJudgeTournament = {
   type: 'GET_JUDGE_TOURNAMENT',
+  promise: mixed
+};
+
+declare type GenerateGroupsAction = {
+  type: 'GENERATE_GROUPS',
   promise: mixed
 };

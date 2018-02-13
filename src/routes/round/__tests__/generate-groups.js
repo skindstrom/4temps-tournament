@@ -5,13 +5,14 @@ import {
   createTournament,
   createRound,
   generateId,
+  createParticipant,
   TournamentRepositoryImpl
 } from '../../../test-utils';
-import StartRoundRoute from '../start-round';
+import GenerateGroupsRoute from '../generate-groups';
 
-describe('Start round route', () => {
+describe('Generate groups route', () => {
   const tournament = createTournament();
-  const round = createRound();
+  const round = { ...createRound(), active: true };
 
   test('Returns status 200 and the round if success', async () => {
     const repo = new TournamentRepositoryImpl();
@@ -23,7 +24,7 @@ describe('Start round route', () => {
       roundId: round.id
     });
     const res = new Response();
-    const route = new StartRoundRoute(repo);
+    const route = new GenerateGroupsRoute(repo);
 
     await route.route(req, res);
 
@@ -40,7 +41,7 @@ describe('Start round route', () => {
       roundId: generateId()
     });
     const res = new Response();
-    const route = new StartRoundRoute(repo);
+    const route = new GenerateGroupsRoute(repo);
 
     await route.route(req, res);
 
@@ -49,16 +50,33 @@ describe('Start round route', () => {
 
   test('Updates repository', async () => {
     const tournament = { ...createTournament(), id: generateId() };
-    const round = { ...createRound(), active: false };
+    const round = { ...createRound(), active: true };
     const repo = new TournamentRepositoryImpl();
     await repo.create(tournament);
     await repo.createRound(tournament.id, round);
 
+    const participants = [
+      { ...createParticipant(), role: 'leader' },
+      { ...createParticipant(), role: 'follower' }
+    ];
+
     await repo.create(tournament);
+    await repo.createParticipant(tournament.id, participants[0]);
+    await repo.createParticipant(tournament.id, participants[1]);
 
     const expectedRound = {
       ...round,
-      active: true
+      active: true,
+      groups: [
+        {
+          pairs: [
+            {
+              leader: participants[0].id,
+              follower: participants[1].id
+            }
+          ]
+        }
+      ]
     };
 
     const req = Request.withParams({
@@ -66,7 +84,7 @@ describe('Start round route', () => {
       roundId: round.id
     });
     const res = new Response();
-    const route = new StartRoundRoute(repo);
+    const route = new GenerateGroupsRoute(repo);
 
     await route.route(req, res);
 
@@ -77,10 +95,10 @@ describe('Start round route', () => {
     );
   });
 
-  test('Returns 400 if round is already started', async () => {
+  test('Returns 400 if round is not started', async () => {
     const repo = new TournamentRepositoryImpl();
 
-    const startedRound = { ...createRound(), active: true };
+    const startedRound = { ...createRound(), active: false };
     const tournament = { ...createTournament(), rounds: [startedRound] };
     await repo.create(tournament);
     await repo.createRound(tournament.id, startedRound);
@@ -90,7 +108,7 @@ describe('Start round route', () => {
       roundId: startedRound.id
     });
     const res = new Response();
-    const route = new StartRoundRoute(repo);
+    const route = new GenerateGroupsRoute(repo);
 
     await route.route(req, res);
 
@@ -110,7 +128,7 @@ describe('Start round route', () => {
       roundId: startedRound.id
     });
     const res = new Response();
-    const route = new StartRoundRoute(repo);
+    const route = new GenerateGroupsRoute(repo);
 
     await route.route(req, res);
 

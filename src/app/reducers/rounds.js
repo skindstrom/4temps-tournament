@@ -16,9 +16,9 @@ function rounds(
   case 'DELETE_ROUND':
     return deleteRound(state, action);
   case 'START_ROUND':
-    return startRound(state, action);
+  case 'GENERATE_GROUPS':
   case 'START_NEXT_DANCE':
-    return startDance(state, action);
+    return payloadIsRound(state, action);
   case 'GET_JUDGE_TOURNAMENT':
     return getJudgeTournament(state, action);
   default:
@@ -128,24 +128,7 @@ function getJudgeTournament(
   });
 }
 
-function startRound(
-  state: RoundsReduxState,
-  action: ReduxPackAction
-): RoundsReduxState {
-  const { payload } = action;
-
-  return handle(state, action, {
-    success: prevState => ({
-      ...prevState,
-      byId: {
-        ...prevState.byId,
-        [payload.id]: payload
-      }
-    })
-  });
-}
-
-function startDance(
+function payloadIsRound(
   state: RoundsReduxState,
   action: ReduxPackAction
 ): RoundsReduxState {
