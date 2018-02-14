@@ -3,6 +3,16 @@ import GroupGeneratorImpl from '../group-pairing-generator';
 import { createRound, createParticipant } from '../../test-utils';
 
 describe('GroupGenerator', () => {
+  test('No participants generates empty list', () => {
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 2
+    };
+    const generator = new GroupGeneratorImpl(round, []);
+    expect(generator.generateGroups()).toEqual([]);
+  });
+
   test('Zero min & max returns empty list', () => {
     const round = {
       ...createRound(),
@@ -288,15 +298,42 @@ describe('GroupGenerator', () => {
       ]
     ]);
   });
+
+  test('Only matches attending participants', () => {
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
+
+    const participants = [
+      { ...createParticipant(), role: 'leader', isAttending: true },
+      { ...createParticipant(), role: 'follower', isAttending: false }
+    ];
+
+    const generator = new GroupGeneratorImpl(round, participants);
+
+    expect(generator.generateGroups()).toEqual([
+      [{ leader: participants[0].id, follower: null }]
+    ]);
+  });
 });
 
 function createParticipants(count: number) {
   const participants: Array<Participant> = [];
   for (let i = 0; i < count; ++i) {
     if (i % 2 === 0) {
-      participants.push({ ...createParticipant(), role: 'leader' });
+      participants.push({
+        ...createParticipant(),
+        role: 'leader',
+        isAttending: true
+      });
     } else {
-      participants.push({ ...createParticipant(), role: 'follower' });
+      participants.push({
+        ...createParticipant(),
+        role: 'follower',
+        isAttending: true
+      });
     }
   }
   return participants;

@@ -88,14 +88,19 @@ class GenerateGroupsRouteHandler {
       this._tournament.participants
     );
 
+    return generator.generateGroups().map(pairs => ({
+      id: ObjectId.generate(),
+      pairs,
+      dances: this._createDances(this._round.danceCount)
+    }));
+  };
+
+  _createDances = (danceCount: number) => {
     let dances: Array<Dance> = [];
-    for (let i = 0; i < this._round.danceCount; ++i) {
+    for (let i = 0; i < danceCount; ++i) {
       dances.push({ id: ObjectId.generate(), active: false, finished: false });
     }
-
-    return generator
-      .generateGroups()
-      .map(pairs => ({ id: ObjectId.generate(), pairs, dances }));
+    return dances;
   };
 
   _getTournament = async (): Promise<Tournament> => {

@@ -17,7 +17,7 @@ class WinnerPicker {
 
   pickWinners = (
     notes: Array<JudgeNote>
-  ): { leaders: Array<Score>, followers: Array<Score> } => {
+  ): { leaders: Array<string>, followers: Array<string> } => {
     const scores = this._getScores(notes);
 
     return {
@@ -31,20 +31,20 @@ class WinnerPicker {
     return scorer.scoreRound(notes);
   };
 
-  _pickTopLeaders = (scores: Array<Score>): Array<Score> => {
+  _pickTopLeaders = (scores: Array<Score>): Array<string> => {
     return this._pickTopRole(scores, 'leader');
   };
 
-  _pickTopFollowers = (scores: Array<Score>): Array<Score> => {
+  _pickTopFollowers = (scores: Array<Score>): Array<string> => {
     return this._pickTopRole(scores, 'follower');
   };
 
   _pickTopRole = (scores: Array<Score>, role: Role) => {
     const participants = this._getRole(role);
-    const top: Array<Score> = [];
+    const top: Array<string> = [];
     for (const score of scores) {
       if (participants.includes(score.participantId)) {
-        top.push(score);
+        top.push(score.participantId);
       }
 
       if (top.length === this._round.passingCouplesCount) {

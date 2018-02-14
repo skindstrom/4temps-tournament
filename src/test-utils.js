@@ -241,6 +241,10 @@ export class NoteRepositoryImpl implements NoteRepository {
       this._notes.push(note);
     }
   };
+
+  getForDance = async (danceId: string) => {
+    return this._notes.filter(note => note.danceId === danceId);
+  };
 }
 
 export function createAdmin(): AdminModel {
@@ -281,7 +285,7 @@ export function createRound(): Round {
     active: false,
     finished: false,
     scores: [],
-    winners: []
+    winners: { leaders: [], followers: [] }
   };
 }
 
@@ -303,8 +307,8 @@ export function createParticipant(): Participant {
     id: generateId(),
     name: 'John Smith',
     role: 'leaderAndFollower',
-    isAttending: false,
-    attendanceId: 0
+    isAttending: true,
+    attendanceId: 1
   };
 }
 

@@ -5,11 +5,13 @@ import { Router } from 'express';
 import { allow } from '../auth-middleware';
 
 import { TournamentRepositoryImpl } from '../../data/tournament';
+import { SubmittedNoteRepository } from '../../data/note';
 import CreateRoundRoute from './create-round';
 import DeleteRoundRoute from './delete-round';
 import StartRoundRoute from './start-round';
 import StartDanceRoute from './start-dance';
 import GenerateGroupsRoute from './generate-groups';
+import EndDanceRoute from './end-dance';
 
 const router = Router();
 
@@ -43,6 +45,12 @@ router.post(
   '/:tournamentId/generate-groups/:roundId',
   allow('admin'),
   new GenerateGroupsRoute(tournamentRepository).route
+);
+
+router.post(
+  '/:tournamentId/end-dance/',
+  allow('admin'),
+  new EndDanceRoute(tournamentRepository, new SubmittedNoteRepository()).route()
 );
 
 export default router;

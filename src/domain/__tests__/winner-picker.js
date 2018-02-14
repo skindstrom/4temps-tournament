@@ -61,8 +61,8 @@ describe('Winner picker', () => {
     const picker = new WinnerPicker(round);
 
     expect(picker.pickWinners(notes)).toEqual({
-      leaders: [{ participantId: leaders[0], score: 20 }],
-      followers: [{ participantId: followers[0], score: 22 }]
+      leaders: [leaders[0]],
+      followers: [followers[0]]
     });
   });
 
@@ -70,14 +70,8 @@ describe('Winner picker', () => {
     const picker = new WinnerPicker({ ...round, passingCouplesCount: 2 });
 
     expect(picker.pickWinners(notes)).toEqual({
-      leaders: [
-        { participantId: leaders[0], score: 20 },
-        { participantId: leaders[1], score: 1 }
-      ],
-      followers: [
-        { participantId: followers[0], score: 22 },
-        { participantId: followers[1], score: 2 }
-      ]
+      leaders: [leaders[0], leaders[1]],
+      followers: [followers[0], followers[1]]
     });
   });
 
@@ -85,14 +79,8 @@ describe('Winner picker', () => {
     const picker = new WinnerPicker({ ...round, passingCouplesCount: 10 });
 
     expect(picker.pickWinners(notes)).toEqual({
-      leaders: [
-        { participantId: leaders[0], score: 20 },
-        { participantId: leaders[1], score: 1 }
-      ],
-      followers: [
-        { participantId: followers[0], score: 22 },
-        { participantId: followers[1], score: 2 }
-      ]
+      leaders: [leaders[0], leaders[1]],
+      followers: [followers[0], followers[1]]
     });
   });
 });

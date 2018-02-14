@@ -18,6 +18,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
   }
 
   generateGroups = () => {
+    this._removeAbsentParticipants();
     this._updateCounts();
 
     const groups: Array<Array<Pair>> = [];
@@ -29,6 +30,12 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     this._balanceUntilMinPairFulfilled(groups);
 
     return groups;
+  };
+
+  _removeAbsentParticipants = () => {
+    this._participants = new Set(
+      Array.from(this._participants).filter(p => p.isAttending)
+    );
   };
 
   _updateCounts = () => {

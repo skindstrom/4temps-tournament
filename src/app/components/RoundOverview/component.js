@@ -32,6 +32,7 @@ export type RoundViewModel = {
 export type Props = {
   round: RoundViewModel,
   startDance: () => void,
+  endDance: () => void,
   generateGroups: () => void
 };
 
@@ -52,9 +53,13 @@ class RoundOverview extends Component<Props> {
                 {round.activeDance != null ? round.activeGroup : 'None'}
               </TableCell>
               <TableCell>
-                <Button onClick={this.props.startDance}>
-                  Start next dance
-                </Button>
+                {round.activeDance != null ? (
+                  <Button onClick={this.props.endDance}>Stop dance</Button>
+                ) : (
+                  <Button onClick={this.props.startDance}>
+                    Start next dance
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           </TableBody>

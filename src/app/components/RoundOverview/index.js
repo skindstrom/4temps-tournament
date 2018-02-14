@@ -7,7 +7,11 @@ import PreloadContainer from '../PreloadContainer';
 import Component from './component';
 import type { RoundViewModel } from './component';
 import { getTournamentsForUser } from '../../api/tournament';
-import { startNextDance, generateGroupsForRound } from '../../api/round';
+import {
+  startNextDance,
+  generateGroupsForRound,
+  endDance
+} from '../../api/round';
 
 type Props = {
   match: Match,
@@ -34,8 +38,8 @@ function createViewModelsForRound(
 
   const { groups, ...rest } = round;
 
-  let activeDance: ?number = null;
-  let activeGroup: ?number = null;
+  let activeDance: ?number;
+  let activeGroup: ?number;
 
   for (let i = 0; i < groups.length; ++i) {
     for (let j = 0; j < groups[i].dances.length; ++j) {
@@ -89,7 +93,12 @@ function mapDispatchToProps(
           match.params.roundId || ''
         )
       });
-    }
+    },
+    endDance: () =>
+      dispatch({
+        type: 'END_DANCE',
+        promise: endDance(match.params.tournamentId || '')
+      })
   };
 }
 

@@ -18,6 +18,7 @@ function rounds(
   case 'START_ROUND':
   case 'GENERATE_GROUPS':
   case 'START_NEXT_DANCE':
+  case 'END_DANCE':
     return payloadIsRound(state, action);
   case 'GET_JUDGE_TOURNAMENT':
     return getJudgeTournament(state, action);

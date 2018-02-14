@@ -16,7 +16,7 @@ function parseRound(bodyRound: mixed): Round {
     active: false,
     finished: false,
     scores: [],
-    winners: []
+    winners: { leaders: [], followers: [] }
   };
 
   if (typeof bodyRound === 'object' && bodyRound != null) {

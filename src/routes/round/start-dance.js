@@ -20,7 +20,7 @@ export default class StartDanceRoute {
       await handler.startDance();
       res.json(handler.getUpdatedRound());
     } catch (e) {
-      res.status(this._statusFromError(e));
+      res.sendStatus(this._statusFromError(e));
     }
   };
 

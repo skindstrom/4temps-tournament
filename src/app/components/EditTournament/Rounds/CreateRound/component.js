@@ -300,7 +300,7 @@ class EditTournamentRounds extends Component<Props, State> {
             <input
               id="couple-pass-count"
               placeholder="25"
-              value={this.state.passingCouplesCount}
+              value={this._countOrEmptyString(this.state.passingCouplesCount)}
               onChange={this._onChangePassingCouplesCount}
             />
           </FormField>

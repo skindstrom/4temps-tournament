@@ -58,7 +58,7 @@ declare type Round = {
   active: boolean,
   finished: boolean,
   groups: Array<DanceGroup>,
-  winners: Array<string>,
+  winners: { leaders: Array<string>, followers: Array<string> },
   scores: Array<Score>
 };
 
@@ -315,6 +315,7 @@ declare type ReduxAction =
   | LoginJudgeAction
   | GetAccessKeys
   | StartNextDanceAction
+  | EndDanceAction
   | ChangeAttendance
   | GetJudgeTournament
   | GenerateGroupsAction;
@@ -417,5 +418,10 @@ declare type GetJudgeTournament = {
 
 declare type GenerateGroupsAction = {
   type: 'GENERATE_GROUPS',
+  promise: mixed
+};
+
+declare type EndDanceAction = {
+  type: 'END_DANCE',
   promise: mixed
 };
