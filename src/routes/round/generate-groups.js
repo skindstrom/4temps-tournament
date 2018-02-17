@@ -77,9 +77,20 @@ class GenerateGroupsRouteHandler {
       throw new AlreadyFinishedError();
     }
 
-    this._round.groups = this._generateGroups();
+    const groups = this._generateGroups();
+    this._addGroupsToRound(groups);
 
     await this._repository.updateRound(this._tournamentId, this._round);
+  };
+
+  _addGroupsToRound = (groups: Array<DanceGroup>) => {
+    this._round.groups = [];
+    if (groups.length >= 1) {
+      this._round.groups.push(groups[0]);
+    }
+    if (groups.length >= 2) {
+      this._round.groups.push(groups[1]);
+    }
   };
 
   _generateGroups = (): Array<DanceGroup> => {

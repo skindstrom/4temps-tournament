@@ -208,7 +208,7 @@ export default class GroupGeneratorImpl implements GroupGenerator {
       let i = groups.length - 2;
       while (
         groups[lastIndex].length < this._round.minPairCountPerGroup &&
-        groups[lastIndex].length < groups[i].length
+        groups[lastIndex].length + 1 < groups[i].length
       ) {
         groups[lastIndex].push(groups[i].pop());
         i = i - 1;

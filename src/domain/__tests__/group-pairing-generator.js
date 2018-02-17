@@ -269,6 +269,25 @@ describe('GroupGenerator', () => {
     ]);
   });
 
+  test('If not enough participants, null is set in the last group, fill first group', () => {
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 2,
+      maxPairCountPerGroup: 3
+    };
+    const participants = createParticipants(5);
+    const generator = new GroupGeneratorImpl(round, participants);
+    stubRandom(generator);
+
+    expect(generator.generateGroups()).toEqual([
+      [
+        { leader: participants[0].id, follower: participants[1].id },
+        { leader: participants[2].id, follower: participants[3].id }
+      ],
+      [{ leader: participants[4].id, follower: null }]
+    ]);
+  });
+
   test('Does not pick a leaderAndFollower if it fails criteria', () => {
     const round = {
       ...createRound(),
