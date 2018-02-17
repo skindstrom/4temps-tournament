@@ -14,7 +14,6 @@ import {
 } from 'semantic-ui-react';
 
 type CriterionType = 'none' | 'both' | 'one';
-type TieRule = 'none' | 'random' | 'all';
 type MultipleDanceScoringRule = 'none' | 'average' | 'best';
 
 type Props = {
@@ -39,7 +38,6 @@ export type RoundViewModel = {
   minPairCountPerGroup: ?number,
   maxPairCountPerGroup: ?number,
   passingCouplesCount: ?number,
-  tieRule: TieRule,
   multipleDanceScoringRule: MultipleDanceScoringRule,
   criteria: Array<CriterionViewModel>
 };
@@ -52,7 +50,6 @@ class EditTournamentRounds extends Component<Props, State> {
     minPairCountPerGroup: null,
     maxPairCountPerGroup: null,
     passingCouplesCount: null,
-    tieRule: 'none',
     multipleDanceScoringRule: 'none',
     criteria: [
       {
@@ -93,11 +90,6 @@ class EditTournamentRounds extends Component<Props, State> {
     const count = parseInt(event.target.value);
     return isNaN(count) ? null : count;
   };
-
-  _onChangeTieRule = (
-    event: SyntheticInputEvent<HTMLInputElement>,
-    { value }: { value: TieRule }
-  ) => this.setState({ tieRule: value });
 
   _onChangeMultipleDanceScoringRule = (
     event: SyntheticInputEvent<HTMLInputElement>,
@@ -278,7 +270,6 @@ class EditTournamentRounds extends Component<Props, State> {
   };
 
   render() {
-    const { tieRule } = this.state;
     const { validation } = this.props;
     return (
       <Form error={!validation.isValidRound} loading={this.props.isLoading}>
@@ -338,26 +329,6 @@ class EditTournamentRounds extends Component<Props, State> {
           />
         </FormGroup>
         {this._renderDanceRule()}
-        <span className="field">
-          <label htmlFor="tie-rules">How are ties settled?</label>
-        </span>
-        <FormGroup id="tie-rules" widths="equal">
-          <FormRadio
-            label="Randomly pick one pair"
-            value="random"
-            onChange={this._onChangeTieRule}
-            checked={tieRule === 'random'}
-          />
-          <FormRadio
-            label="Pick both"
-            value="all"
-            onChange={this._onChangeTieRule}
-            checked={tieRule === 'all'}
-          />
-        </FormGroup>
-        {!validation.isValidTieRule && (
-          <Message error content="Must pick at least one rule" />
-        )}
         <Divider />
         <Header as="h2">
           Criteria

@@ -163,28 +163,6 @@ describe('Round validator', () => {
     });
   });
 
-  test('Tie rule must be set', () => {
-    expect(validateRound(createRound({ tieRule: 'none' }))).toMatchObject({
-      isValidRound: false,
-      isValidTieRule: false
-    });
-
-    expect(validateRound(createRound({ tieRule: 'random' }))).toMatchObject({
-      isValidRound: true,
-      isValidTieRule: true
-    });
-
-    expect(validateRound(createRound({ tieRule: 'all' }))).toMatchObject({
-      isValidRound: true,
-      isValidTieRule: true
-    });
-  });
-  test('Tie rule must have a valid value', () => {
-    expect(
-      validateRound(createRound({ tieRule: 'bogus_value' }))
-    ).toMatchObject({ isValidRound: false, isValidTieRule: false });
-  });
-
   test('Multiple dances scoring rule may not be set if the dance count is 1', () => {
     ['none', 'average', 'best'].map(multipleDanceScoringRule => {
       expect(
