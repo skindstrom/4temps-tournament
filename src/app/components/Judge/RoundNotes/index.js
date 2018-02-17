@@ -2,11 +2,16 @@
 import { connect } from 'react-redux';
 import RoundNotes from './component';
 
-function mapStateToProps({ tournaments, rounds }: ReduxState) {
+function mapStateToProps({ tournaments, rounds, participants }: ReduxState) {
   const tournamentRounds: Array<Round> = tournaments.byId[
     tournaments.forJudge
   ].rounds.map(id => rounds.byId[id]);
-  const activePairs = getActivePairs(tournamentRounds);
+  const activePairs = getActivePairs(tournamentRounds).map(pair => ({
+    // $FlowFixMe
+    follower: participants.byId[pair.follower],
+    // $FlowFixMe
+    leader: participants.byId[pair.leader]
+  }));
   return {
     pairs: activePairs
   };

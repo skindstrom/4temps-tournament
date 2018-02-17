@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import  {
+import {
   Grid,
   GridColumn,
   GridRow,
@@ -14,24 +14,22 @@ import  {
 
 type Props = {
   criteria: Array<RoundCriterion>
-}
+};
 
 class Notes extends Component<Props> {
-
-
   getFollowerCriteria(): Array<RoundCriterion> {
-    return this.getCriteria((c) => c.type === 'one' || c.type === 'follower');
+    return this.getCriteria(c => c.type === 'one' || c.type === 'follower');
   }
 
   getLeaderCriteria(): Array<RoundCriterion> {
-    return this.getCriteria((c) => c.type === 'one' || c.type === 'leader');
+    return this.getCriteria(c => c.type === 'one' || c.type === 'leader');
   }
 
   getCoupleCriteria(): Array<RoundCriterion> {
-    return this.getCriteria((c) => c.type === 'both');
+    return this.getCriteria(c => c.type === 'both');
   }
 
-  getCriteria(condition: (RoundCriterion) => boolean): Array<RoundCriterion> {
+  getCriteria(condition: RoundCriterion => boolean): Array<RoundCriterion> {
     return this.props.criteria.filter(condition);
   }
 
@@ -50,31 +48,26 @@ class Notes extends Component<Props> {
       return (
         <Form key={c.name}>
           <FormField>
-            {c.name} <Icon name='info circle' />:
+            {c.name} <Icon name="info circle" />:
           </FormField>
           {this.getAlternatives(c)}
         </Form>
       );
     });
-    return (
-      <GridRow>
-        {notes}
-      </GridRow>
-    );
+    return <GridRow>{notes}</GridRow>;
   }
 
   render() {
-
     let nbGridColumns = 0;
 
     if (this.getFollowerCriteria().length > 0) {
-      nbGridColumns +=1;
+      nbGridColumns += 1;
     }
     if (this.getCoupleCriteria().length > 0) {
-      nbGridColumns +=1;
+      nbGridColumns += 1;
     }
     if (this.getLeaderCriteria().length > 0) {
-      nbGridColumns +=1;
+      nbGridColumns += 1;
     }
 
     return (
@@ -82,35 +75,29 @@ class Notes extends Component<Props> {
         <Grid padded>
           <GridRow columns={nbGridColumns}>
             {this.getFollowerCriteria().length > 0 ? (
-              <GridColumn key='follower'>
+              <GridColumn key="follower">
                 <GridRow>
-                  <Header>
-                    Follower
-                  </Header>
+                  <Header>Follower</Header>
                 </GridRow>
                 {this.buildNotes(this.getFollowerCriteria())}
-              </GridColumn>   
-            ) : (null)}
+              </GridColumn>
+            ) : null}
             {this.getCoupleCriteria().length > 0 ? (
-              <GridColumn key='couple'>
+              <GridColumn key="couple">
                 <GridRow>
-                  <Header>
-                    Couple
-                  </Header>
+                  <Header>Couple</Header>
                 </GridRow>
                 {this.buildNotes(this.getCoupleCriteria())}
-              </GridColumn>   
-            ) : (null)}
+              </GridColumn>
+            ) : null}
             {this.getLeaderCriteria().length > 0 ? (
-              <GridColumn key='leader'>
+              <GridColumn key="leader">
                 <GridRow>
-                  <Header>
-                    Leader
-                  </Header>
+                  <Header>Leader</Header>
                 </GridRow>
                 {this.buildNotes(this.getLeaderCriteria())}
-              </GridColumn>   
-            ) : (null)}
+              </GridColumn>
+            ) : null}
           </GridRow>
         </Grid>
       </Container>

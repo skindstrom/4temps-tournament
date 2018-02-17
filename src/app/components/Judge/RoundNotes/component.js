@@ -10,17 +10,25 @@ import {
 } from 'semantic-ui-react';
 import NotesContainer from './Notes';
 
-type Props = {
-  pairs: Array<Pair>
+type PairViewModel = {
+  leader: Participant,
+  follower: Participant
 };
 
-class RoundNotes extends Component<Props> {
-  // $FlowFixMe
-  state: { activePair: Pair } = {
+type Props = {
+  pairs: Array<PairViewModel>
+};
+
+type State = {
+  activePair: PairViewModel
+};
+
+class RoundNotes extends Component<Props, State> {
+  state = {
     activePair: this.props.pairs[0]
   };
 
-  onClick(pair: Pair) {
+  onClick(pair: PairViewModel) {
     // $FlowFixMe
     this.setState({ activePair: pair });
   }
@@ -52,7 +60,7 @@ class RoundNotes extends Component<Props> {
       }
     });
   }
-  isActive(pair: Pair): boolean {
+  isActive(pair: PairViewModel): boolean {
     return (
       this.state.activePair.follower === pair.follower &&
       this.state.activePair.leader === pair.leader
