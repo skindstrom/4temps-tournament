@@ -241,6 +241,22 @@ describe('GroupGenerator', () => {
     const round = {
       ...createRound(),
       minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1
+    };
+    const participants = createParticipants(3);
+    const generator = new GroupGeneratorImpl(round, participants);
+    stubRandom(generator);
+
+    expect(generator.generateGroups()).toEqual([
+      [{ leader: participants[0].id, follower: participants[1].id }],
+      [{ leader: participants[2].id, follower: null }]
+    ]);
+  });
+
+  test('If not enough participants, null is set in the last group, but not the first', () => {
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
       maxPairCountPerGroup: 4
     };
     const participants = createParticipants(3);
@@ -248,10 +264,8 @@ describe('GroupGenerator', () => {
     stubRandom(generator);
 
     expect(generator.generateGroups()).toEqual([
-      [
-        { leader: participants[0].id, follower: participants[1].id },
-        { leader: participants[2].id, follower: null }
-      ]
+      [{ leader: participants[0].id, follower: participants[1].id }],
+      [{ leader: participants[2].id, follower: null }]
     ]);
   });
 
