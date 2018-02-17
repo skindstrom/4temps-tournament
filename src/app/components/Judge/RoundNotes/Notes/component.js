@@ -77,7 +77,7 @@ class Notes extends Component<Props> {
             {this.getFollowerCriteria().length > 0 ? (
               <GridColumn key="follower">
                 <GridRow>
-                  <Header>Follower</Header>
+                  <Header>Follower {this.props.pair.follower.attendanceId}</Header>
                 </GridRow>
                 {this.buildNotes(this.getFollowerCriteria())}
               </GridColumn>
@@ -85,7 +85,7 @@ class Notes extends Component<Props> {
             {this.getCoupleCriteria().length > 0 ? (
               <GridColumn key="couple">
                 <GridRow>
-                  <Header>Couple</Header>
+                  <Header>Couple L{this.props.pair.leader.attendanceId} - F{this.props.pair.follower.attendanceId}</Header>
                 </GridRow>
                 {this.buildNotes(this.getCoupleCriteria())}
               </GridColumn>
@@ -93,7 +93,7 @@ class Notes extends Component<Props> {
             {this.getLeaderCriteria().length > 0 ? (
               <GridColumn key="leader">
                 <GridRow>
-                  <Header>Leader</Header>
+                  <Header>Leader {this.props.pair.leader.attendanceId}</Header>
                 </GridRow>
                 {this.buildNotes(this.getLeaderCriteria())}
               </GridColumn>

@@ -51,7 +51,7 @@ class RoundNotes extends Component<Props, State> {
               active={this.isActive(pair)}
               onClick={() => this.onClick(pair)}
             >
-              {i + 1}
+              L {pair.leader.attendanceId} - F {pair.follower.attendanceId}
             </Button>
           </GridColumn>
         );
