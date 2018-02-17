@@ -64,34 +64,53 @@ class Notes extends Component<Props> {
   }
 
   render() {
+
+    let nbGridColumns = 0;
+
+    if (this.getFollowerCriteria().length > 0) {
+      nbGridColumns +=1;
+    }
+    if (this.getCoupleCriteria().length > 0) {
+      nbGridColumns +=1;
+    }
+    if (this.getLeaderCriteria().length > 0) {
+      nbGridColumns +=1;
+    }
+
     return (
       <Container>
         <Grid padded>
-          <GridRow columns={3}>
-            <GridColumn key='follower'>
-              <GridRow>
-                <Header>
-                  Follower
-                </Header>
-              </GridRow>
-              {this.buildNotes(this.getFollowerCriteria())}
-            </GridColumn>
-            <GridColumn key='couple'>
-              <GridRow>
-                <Header>
-                  Couple
-                </Header>
-              </GridRow>
-              {this.buildNotes(this.getCoupleCriteria())}
-            </GridColumn>
-            <GridColumn key='leader'>
-              <GridRow>
-                <Header>
-                  Leader
-                </Header>
-              </GridRow>
-              {this.buildNotes(this.getLeaderCriteria())}
-            </GridColumn>
+          <GridRow columns={nbGridColumns}>
+            {this.getFollowerCriteria().length > 0 ? (
+              <GridColumn key='follower'>
+                <GridRow>
+                  <Header>
+                    Follower
+                  </Header>
+                </GridRow>
+                {this.buildNotes(this.getFollowerCriteria())}
+              </GridColumn>   
+            ) : (null)}
+            {this.getCoupleCriteria().length > 0 ? (
+              <GridColumn key='couple'>
+                <GridRow>
+                  <Header>
+                    Couple
+                  </Header>
+                </GridRow>
+                {this.buildNotes(this.getCoupleCriteria())}
+              </GridColumn>   
+            ) : (null)}
+            {this.getLeaderCriteria().length > 0 ? (
+              <GridColumn key='leader'>
+                <GridRow>
+                  <Header>
+                    Leader
+                  </Header>
+                </GridRow>
+                {this.buildNotes(this.getLeaderCriteria())}
+              </GridColumn>   
+            ) : (null)}
           </GridRow>
         </Grid>
       </Container>
