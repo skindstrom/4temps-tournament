@@ -22,7 +22,7 @@ export default class GenerateGroupsRoute {
       await handler.startRound();
       res.json(handler.getUpdatedRound());
     } catch (e) {
-      res.status(this._statusFromError(e));
+      res.sendStatus(this._statusFromError(e));
     }
   };
 
@@ -71,7 +71,7 @@ class GenerateGroupsRouteHandler {
 
     if (!this._round.active) {
       throw new NotStartedError();
-    } else if (this._hasActiveDance()) {
+    } else if (this._hasActiveOrFinishedDance()) {
       throw new DanceStartedError();
     } else if (this._round.finished) {
       throw new AlreadyFinishedError();
@@ -135,10 +135,14 @@ class GenerateGroupsRouteHandler {
     return matches[0];
   };
 
-  _hasActiveDance = (): boolean => {
+  _hasActiveOrFinishedDance = (): boolean => {
     return this._round.groups.reduce(
       (acc, group) =>
-        acc || group.dances.reduce((acc, dance) => acc || dance.active, false),
+        acc ||
+        group.dances.reduce(
+          (acc, dance) => acc || dance.active || dance.finished,
+          false
+        ),
       false
     );
   };
