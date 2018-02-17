@@ -88,10 +88,13 @@ class StartDanceRouteHandler {
       throw new NotAllNotesError();
     }
 
-    if (this._isLastDanceInGroup(round, dance)) {
+    if (
+      this._isLastDanceInGroup(round, dance) &&
+      (this._isLastGroup(round, dance) || this._isSecondLastGroup(round, dance))
+    ) {
       await this._generateNextGroup(tournament, round);
       // if it's still the last after having generated a new one, it's the very last
-      if (this._isLastDanceInGroup(round, dance)) {
+      if (this._isLastGroup(round, dance)) {
         await this._endRound(round);
       }
     }
@@ -136,9 +139,38 @@ class StartDanceRouteHandler {
   };
 
   _isLastDanceInGroup = (round: Round, activeDance: Dance): boolean => {
-    const group = round.groups[round.groups.length - 1];
-    const index = group.dances.findIndex(dance => dance.id === activeDance.id);
-    return index === group.dances.length - 1;
+    for (let i = 0; i < round.groups.length; ++i) {
+      for (let j = 0; j < round.groups[i].dances.length; ++j) {
+        if (round.groups[i].dances[j].id === activeDance.id) {
+          return j === round.groups[i].dances.length - 1;
+        }
+      }
+    }
+    throw new NoStartedDanceError();
+  };
+
+  _isLastGroup = (round: Round, activeDance: Dance): boolean => {
+    for (let i = 0; i < round.groups.length; ++i) {
+      for (let j = 0; j < round.groups[i].dances.length; ++j) {
+        if (round.groups[i].dances[j].id === activeDance.id) {
+          return i === round.groups.length - 1;
+        }
+      }
+    }
+
+    throw new NoStartedDanceError();
+  };
+
+  _isSecondLastGroup = (round: Round, activeDance: Dance): boolean => {
+    for (let i = 0; i < round.groups.length; ++i) {
+      for (let j = 0; j < round.groups[i].dances.length; ++j) {
+        if (round.groups[i].dances[j].id === activeDance.id) {
+          return i === round.groups.length - 2;
+        }
+      }
+    }
+
+    throw new NoStartedDanceError();
   };
 
   _generateNextGroup = async (
@@ -183,6 +215,7 @@ class StartDanceRouteHandler {
           await this._getFollowerWithWorstLeader(tournament, round)
         );
       }
+
       pairs = new GroupGeneratorImpl(
         round,
         remainingParticipants
@@ -235,9 +268,16 @@ class StartDanceRouteHandler {
     const scorer = new RoundScorer(round);
     const scores = scorer.scoreRound(await this._getNotes(round));
 
-    const worstFollower = scores
+    const worstFollowers = scores
       .reverse()
-      .filter(score => followers.has(score.participantId))[0].participantId;
+      .filter(score => followers.has(score.participantId));
+    let worstFollower: string;
+    if (worstFollowers.length === 0) {
+      // $FlowFixMe
+      worstFollower = followers.entries().next().value[0];
+    } else {
+      worstFollower = worstFollowers[0].participantId;
+    }
 
     for (const group of round.groups) {
       const pair = group.pairs.find(pair => pair.follower === worstFollower);
@@ -272,9 +312,16 @@ class StartDanceRouteHandler {
     const scorer = new RoundScorer(round);
     const scores = scorer.scoreRound(await this._getNotes(round));
 
-    const worstLeader = scores
+    const worstLeaders = scores
       .reverse()
-      .filter(score => leaders.has(score.participantId))[0].participantId;
+      .filter(score => leaders.has(score.participantId));
+    let worstLeader: string;
+    if (worstLeaders.length === 0) {
+      // $FlowFixMe
+      worstLeader = leaders.entries().next().value[0];
+    } else {
+      worstLeader = worstLeaders[0].participantId;
+    }
 
     for (const group of round.groups) {
       const pair = group.pairs.find(pair => pair.leader === worstLeader);

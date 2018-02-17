@@ -441,5 +441,95 @@ describe('End dance route', () => {
       expect(res.getStatus()).toBe(200);
       expect(res.getBody()).toEqual(expectedRound);
     });
+
+    test("Generates a new group if it's the second last group", async () => {
+      const updatedRound: Round = {
+        ...tournament.rounds[0],
+        groups: [
+          {
+            ...tournament.rounds[0].groups[0],
+            dances: [
+              { ...dance, active: false, finished: true },
+              {
+                ...tournament.rounds[0].groups[0].dances[1],
+                active: true,
+                finished: false
+              }
+            ]
+          },
+          // $FlowFixMe
+          {
+            dances: [],
+            pairs: []
+          }
+        ]
+      };
+
+      const expectedRound = {
+        ...tournament.rounds[0],
+        groups: [
+          {
+            ...tournament.rounds[0].groups[0],
+            dances: [
+              { ...dance, active: false, finished: true },
+              {
+                ...tournament.rounds[0].groups[0].dances[1],
+                active: false,
+                finished: true
+              }
+            ]
+          },
+          // $FlowFixMe
+          {
+            dances: [],
+            pairs: []
+          },
+          {
+            pairs: [
+              {
+                leader: participants[2].id, // new participant
+                follower: participants[1].id
+              }
+            ],
+            dances: [
+              {
+                active: false,
+                finished: false
+              }
+            ]
+          }
+        ]
+      };
+
+      const danceId = tournament.rounds[0].groups[0].dances[1].id;
+      await noteRepo.createOrUpdate({
+        judgeId: judge.id,
+        criterionId: criterion.id,
+        participantId: participants[0].id,
+        value: 3,
+        danceId
+      });
+      await noteRepo.createOrUpdate({
+        judgeId: judge.id,
+        criterionId: criterion.id,
+        participantId: participants[1].id,
+        value: 3,
+        danceId
+      });
+
+      tournamentRepo.updateRound(tournament.id, updatedRound);
+
+      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+
+      const req = Request.withParams({ tournamentId: tournament.id });
+      const res = new Response();
+
+      await route.route()(req, res);
+
+      expect(res.getStatus()).toBe(200);
+      expect((await tournamentRepo.get(tournament.id)).rounds[0]).toMatchObject(
+        expectedRound
+      );
+    });
   });
 });
