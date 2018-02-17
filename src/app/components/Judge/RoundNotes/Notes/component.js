@@ -12,8 +12,14 @@ import {
   Icon
 } from 'semantic-ui-react';
 
+type PairViewModel = {
+  leader: Participant,
+  follower: Participant
+};
+
 type Props = {
-  criteria: Array<RoundCriterion>
+  criteria: Array<RoundCriterion>,
+  pair: PairViewModel
 };
 
 class Notes extends Component<Props> {
@@ -77,7 +83,9 @@ class Notes extends Component<Props> {
             {this.getFollowerCriteria().length > 0 ? (
               <GridColumn key="follower">
                 <GridRow>
-                  <Header>Follower {this.props.pair.follower.attendanceId}</Header>
+                  <Header>
+                    Follower {this.props.pair.follower.attendanceId}
+                  </Header>
                 </GridRow>
                 {this.buildNotes(this.getFollowerCriteria())}
               </GridColumn>
@@ -85,7 +93,11 @@ class Notes extends Component<Props> {
             {this.getCoupleCriteria().length > 0 ? (
               <GridColumn key="couple">
                 <GridRow>
-                  <Header>Couple L{this.props.pair.leader.attendanceId} - F{this.props.pair.follower.attendanceId}</Header>
+                  <Header>
+                    Couple L{this.props.pair.leader.attendanceId} - F{
+                      this.props.pair.follower.attendanceId
+                    }
+                  </Header>
                 </GridRow>
                 {this.buildNotes(this.getCoupleCriteria())}
               </GridColumn>
