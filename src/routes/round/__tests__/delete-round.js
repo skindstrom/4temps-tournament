@@ -24,7 +24,7 @@ describe('/api/round/delete', () => {
     response = new Response();
     tournamentRepository = new TournamentRepository();
 
-    tournamentRepository.create(tournament);
+    tournamentRepository.create({ ...tournament, rounds: [round] });
 
     route = new DeleteRoundRoute(tournamentRepository);
   });
@@ -69,7 +69,27 @@ describe('/api/round/delete', () => {
     expect(response.getStatus()).toBe(401);
   });
 
+  test('If a round is started, status 401 is returned', async () => {
+    await tournamentRepository.create({
+      ...createTournament(),
+      rounds: [{ ...round, active: true }]
+    });
+
+    await route.route(
+      Request.withParams({
+        roundId,
+        tournamentId
+      }),
+      response
+    );
+
+    expect(response.getStatus()).toBe(401);
+  });
+
   test('If tournament could not get fetched, status 500 is returned', async () => {
+    await tournamentRepository.create({
+      ...createTournament()
+    });
     tournamentRepository.get = () => {
       throw {};
     };

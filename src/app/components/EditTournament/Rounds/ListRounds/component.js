@@ -8,7 +8,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Icon,
   Button
 } from 'semantic-ui-react';
 
@@ -23,8 +22,10 @@ type Props = {
 class RoundList extends Component<Props> {
   _renderItem = (round: Round) => {
     return (
-      <TableRow key={round.id} onClick={() => this.props.onClick(round.id)}>
-        <TableCell>{round.name}</TableCell>
+      <TableRow key={round.id}>
+        <TableCell selectable onClick={() => this.props.onClick(round.id)}>
+          {round.name}
+        </TableCell>
         <TableCell textAlign="right">
           {round.id === this.props.nextRound &&
             !round.active && (
@@ -39,10 +40,15 @@ class RoundList extends Component<Props> {
           {round.active && 'Started!'}
         </TableCell>
         <TableCell textAlign="right">
-          <Icon
-            name="delete"
-            onClick={() => this.props.deleteRound(round.id)}
-          />
+          {!(round.active || round.finished) && (
+            <Button
+              size="tiny"
+              floated="right"
+              onClick={() => this.props.deleteRound(round.id)}
+            >
+              Delete
+            </Button>
+          )}
         </TableCell>
       </TableRow>
     );
@@ -50,7 +56,7 @@ class RoundList extends Component<Props> {
 
   render() {
     return (
-      <Table fixed selectable unstackable basic="very">
+      <Table fixed unstackable basic="very">
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>

@@ -37,7 +37,7 @@ function mapDispatchToProps(
         type: 'GET_ADMIN_TOURNAMENTS',
         promise: getTournamentsForUser()
       }),
-    deleteFromRounds: (deleteId: string) =>
+    deleteRound: (deleteId: string) =>
       dispatch({
         type: 'DELETE_ROUND',
         promise: deleteRound(tournamentId, deleteId)

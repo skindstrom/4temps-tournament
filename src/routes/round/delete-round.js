@@ -17,7 +17,10 @@ class DeleteRoundRoute {
 
     try {
       handler.parseParams(req.params);
-      if (await handler.isUserAuthorized()) {
+      if (
+        (await handler.isUserAuthorized()) &&
+        !await handler.isRoundStartedOrFinished()
+      ) {
         await handler.deleteRound();
         res.json({
           tournamentId: handler.getTournamentId(),
@@ -91,6 +94,22 @@ class DeleteRoundRouteHandler {
 
   deleteRound = async () => {
     this._tournamentRepository.deleteRound(this._tournamentId, this._roundId);
+  };
+
+  isRoundStartedOrFinished = async () => {
+    const tournament = await this._tournamentRepository.get(this._tournamentId);
+
+    if (tournament == null) {
+      throw { status: 404 };
+    }
+
+    for (const round of tournament.rounds) {
+      if (round.id === this._roundId) {
+        return round.active || round.finished;
+      }
+    }
+
+    throw { status: 404 };
   };
 }
 
