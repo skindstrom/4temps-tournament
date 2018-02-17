@@ -15,7 +15,11 @@ import {
 
 type GroupViewModel = {
   id: string,
-  pairs: Array<{ id: string, follower: string, leader: string }>
+  pairs: Array<{
+    id: string,
+    follower: { name: string, number: string },
+    leader: { name: string, number: string }
+  }>
 };
 
 export type RoundViewModel = {
@@ -96,18 +100,30 @@ class RoundOverview extends Component<Props> {
 
   _renderGroup = (group: GroupViewModel) => {
     return (
-      <Table collapsing unstackable>
+      <Table unstackable>
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>Leader</TableHeaderCell>
-            <TableHeaderCell>Follower</TableHeaderCell>
+            <TableHeaderCell colSpan="2">Leader</TableHeaderCell>
+            <TableHeaderCell colSpan="2">Follower</TableHeaderCell>
+          </TableRow>
+          <TableRow>
+            <TableHeaderCell collapsing>Number</TableHeaderCell>
+            <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell collapsing>Number</TableHeaderCell>
+            <TableHeaderCell>Name</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
           {group.pairs.map(({ id, leader, follower }) => (
             <TableRow key={id}>
-              <TableCell>{leader}</TableCell>
-              <TableCell>{follower}</TableCell>
+              <TableCell>
+                <Header as="h4">{leader.number}</Header>
+              </TableCell>
+              <TableCell>{leader.name}</TableCell>
+              <TableCell>
+                <Header as="h4">{follower.number}</Header>
+              </TableCell>
+              <TableCell>{follower.name}</TableCell>
             </TableRow>
           ))}
         </TableBody>

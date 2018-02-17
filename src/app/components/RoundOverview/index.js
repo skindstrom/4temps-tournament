@@ -58,13 +58,23 @@ function createViewModelsForRound(
       id: g.id,
       pairs: g.pairs.map((p, i) => ({
         id: i.toString(),
-        leader: p.leader == null ? '' : participants.byId[p.leader].name,
-        follower: p.follower == null ? '' : participants.byId[p.follower].name
+        leader: createParticipantViewModel(participants.byId[p.leader || '']),
+        follower: createParticipantViewModel(
+          participants.byId[p.follower || '']
+        )
       }))
     }))
   };
 
   return viewModel;
+}
+
+function createParticipantViewModel(participant: ?Participant) {
+  if (participant) {
+    const { name, attendanceId } = participant;
+    return { name, number: attendanceId.toString() };
+  }
+  return { name: '', number: '' };
 }
 
 function mapDispatchToProps(
