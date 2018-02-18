@@ -34,17 +34,19 @@ class RoundNotes extends Component<Props, State> {
   state = {
     activeIndex: 0,                                  // index of the tab
     activePair: this.props.pairs[0],
-    noteStorage: this.createEmptyNotesMatrix()
+    coupleNoteStorage: this.createEmptyNotesMatrix(this.getCoupleCriteria().length),
+    leaderNoteStorage: this.createEmptyNotesMatrix(this.getLeaderCriteria().length),
+    followerNoteStorage: this.createEmptyNotesMatrix(this.getFollowerCriteria().length)
   };
   handleTabChange = (e, { activeIndex }) => {
     /** When the tab changes, change the activePair. **/
-    this.setState({ activeIndex: activeIndex })
+    this.setState({ activeIndex: activeIndex });
     this.setState({ activePair: this.props.pairs[activeIndex] });
   }
   handlePairChange(i) {
     /** When the active pair changes, change the tab. **/
     // $FlowFixMe
-    this.setState({ activeIndex: i })
+    this.setState({ activeIndex: i });
     this.setState({ activePair: this.props.pairs[i] });
   }
   isActive(pair: PairViewModel): boolean {
@@ -53,10 +55,34 @@ class RoundNotes extends Component<Props, State> {
       this.state.activePair.leader === pair.leader
     );
   }
-  createEmptyNotesMatrix() {
+  createEmptyNotesMatrix(len) {
     /**the matrix of scores per couples. works only for couples criteria!!!**/
     // FixMe
-    return Array(this.props.pairs.length).fill().map(()=>Array(this.props.criteria.length).fill())
+    if (len > 0) {
+      return Array(this.props.pairs.length).fill().map(()=>Array(len).fill());
+    } else {
+      return null;
+    }
+  }
+
+  /****************
+   * GET CRITERIA *
+   ****************/
+
+  getFollowerCriteria(): Array<RoundCriterion> {
+    return this.getCriteria(c => c.type === 'one');
+  }
+
+  getLeaderCriteria(): Array<RoundCriterion> {
+    return this.getCriteria(c => c.type === 'one');
+  }
+
+  getCoupleCriteria(): Array<RoundCriterion> {
+    return this.getCriteria(c => c.type === 'both');
+  }
+
+  getCriteria(condition: RoundCriterion => boolean): Array<RoundCriterion> {
+    return this.props.criteria.filter(condition);
   }
 
 /*************
@@ -92,16 +118,6 @@ class RoundNotes extends Component<Props, State> {
     });
   }
 
-  handleRadioChange = (e, { value }, index) => {
-    const newStorage = JSON.parse(JSON.stringify(this.state.noteStorage));
-    newStorage[this.state.activeIndex][index] = value;
-    this.setState({noteStorage: newStorage});
-
-    // TODO add temp save
-
-
-  }
-
   /************
    * TABS ROW *
    ************/
@@ -111,34 +127,95 @@ class RoundNotes extends Component<Props, State> {
       return (
         {menuItem: 'L' + pair.leader.attendanceId + ' - F' + pair.follower.attendanceId, render: () =>
           <Tab.Pane>
-            {this.buildNotes(this.props.criteria)}
+          <GridRow columns={3}>
+            {this.getFollowerCriteria().length > 0 ? (
+              <GridColumn key="follower">
+                <GridRow>
+                  <Header>
+                    Noter la cavalière
+                  </Header>
+                </GridRow>
+                {this.buildNotes(this.getFollowerCriteria(), 'follow')}
+              </GridColumn>
+            ) : null}
+            {this.getCoupleCriteria().length > 0 ? (
+              <GridColumn key="couple">
+                <GridRow>
+                  <Header>
+                    Noter le couple
+                  </Header>
+                </GridRow>
+                {this.buildNotes(this.getCoupleCriteria(), 'couple')}
+              </GridColumn>
+            ) : null}
+            {this.getLeaderCriteria().length > 0 ? (
+              <GridColumn key="leader">
+                <GridRow>
+                  <Header>Noter le cavalier</Header>
+                </GridRow>
+                {this.buildNotes(this.getLeaderCriteria(), 'lead')}
+              </GridColumn>
+            ) : null}
+          </GridRow>
           </Tab.Pane>}
       );
     });
   }
 
-  buildNotes(criteria: Array<RoundCriterion>) {
+  buildNotes(criteria: Array<RoundCriterion>, whoseCriteria) {
     const notes = criteria.map((c, index) => {
       return (
         <FormGroup>
           <FormField>
             {c.name}<Icon name="info circle" />
           </FormField>
-          {this.getAlternatives(c, index)}
+          {this.getAlternatives(c, index, whoseCriteria)}
         </FormGroup>
       );
     });
     return <GridRow>{notes}</GridRow>;
   }
 
-  getAlternatives(criterion: RoundCriterion, index) {
+  getAlternatives(criterion: RoundCriterion, index, whoseCriteria) {
     return [...Array(criterion.maxValue + 1).keys()].map(i => {
-      return (
-        <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.noteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index)}/>
-      );
+      if (whoseCriteria=='couple') {
+        return (
+          <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.coupleNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
+        );
+      } else if (whoseCriteria=='lead') {
+        return (
+          <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.leaderNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
+        );
+      } else if (whoseCriteria=='follow') {
+        return (
+          <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.followerNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
+        );
+      } else {
+        console.log("not implemented")
+        return null
+      }
     });
   }
 
+  handleRadioChange = (e, { value }, index, whoseCriteria) => {
+    if (whoseCriteria=='couple') {
+      const newStorage = JSON.parse(JSON.stringify(this.state.coupleNoteStorage));
+      newStorage[this.state.activeIndex][index] = value;
+      this.setState({coupleNoteStorage: newStorage});
+    } else if (whoseCriteria=='lead') {
+      const newStorage = JSON.parse(JSON.stringify(this.state.leaderNoteStorage));
+      newStorage[this.state.activeIndex][index] = value;
+      this.setState({leaderNoteStorage: newStorage});
+    } else if (whoseCriteria=='follow') {
+      const newStorage = JSON.parse(JSON.stringify(this.state.followerNoteStorage));
+      newStorage[this.state.activeIndex][index] = value;
+      this.setState({followerNoteStorage: newStorage});
+    } else {
+      console.log("not implemented")
+      return null
+    }
+    // TODO add temp save
+  }
 
   /**********
    * RENDER *
@@ -153,7 +230,7 @@ class RoundNotes extends Component<Props, State> {
       <Container>
         <Grid padded>
           <GridRow>
-            <Header as="h3">Pairs</Header>
+            <Header as="h3">Placements des couples</Header>
           </GridRow>
           <GridRow columns={this.props.pairs.length}>{upperPairs}</GridRow>
           <GridRow columns={this.props.pairs.length}>{lowerPairs}</GridRow>
