@@ -12,9 +12,19 @@ function mapStateToProps({ tournaments, rounds, participants }: ReduxState) {
     // $FlowFixMe
     leader: participants.byId[pair.leader]
   }));
+  const activeRound = getActiveRound(tournamentRounds);
+  const criteria = activeRound.criteria;
   return {
+    criteria: criteria,
     pairs: activePairs
   };
+}
+
+function getActiveRound(tournamentRounds: Array<Round>): Round {
+  for (let round of tournamentRounds) {
+    if (round.active) return round;
+  }
+  throw new Error('There is no active round!');
 }
 
 function getActivePairs(rounds: Array<Round>): Array<Pair> {
