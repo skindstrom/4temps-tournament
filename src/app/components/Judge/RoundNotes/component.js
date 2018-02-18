@@ -36,7 +36,10 @@ class RoundNotes extends Component<Props, State> {
     activePair: this.props.pairs[0],
     coupleNoteStorage: this.createEmptyNotesMatrix(this.getCoupleCriteria().length),
     leaderNoteStorage: this.createEmptyNotesMatrix(this.getLeaderCriteria().length),
-    followerNoteStorage: this.createEmptyNotesMatrix(this.getFollowerCriteria().length)
+    followerNoteStorage: this.createEmptyNotesMatrix(this.getFollowerCriteria().length),
+    coupleNote: Array(this.getCoupleCriteria().length).fill(0),
+    leaderNote: Array(this.getLeaderCriteria().length).fill(0),
+    followerNote: Array(this.getFollowerCriteria().length).fill(0)
   };
   handleTabChange = (e, { activeIndex }) => {
     /** When the tab changes, change the activePair. **/
@@ -109,7 +112,7 @@ class RoundNotes extends Component<Props, State> {
         }
         return (
           <GridColumn key={i} textAlign="center">
-            <Button              
+            <Button
               color={bcolor}
               active={this.isActive(pair)}
               onClick={() => this.handlePairChange(i)}
@@ -142,6 +145,9 @@ class RoundNotes extends Component<Props, State> {
                   </Header>
                 </GridRow>
                 {this.buildNotes(this.getFollowerCriteria(), 'follow')}
+                <GridRow>
+                  Total : {this.computeNote(i, 'follow')}
+                </GridRow>
               </GridColumn>
             ) : null}
             {this.getCoupleCriteria().length > 0 ? (
@@ -152,6 +158,9 @@ class RoundNotes extends Component<Props, State> {
                   </Header>
                 </GridRow>
                 {this.buildNotes(this.getCoupleCriteria(), 'couple')}
+                <GridRow>
+                  Total : {this.computeNote(i, 'couple')}
+                </GridRow>
               </GridColumn>
             ) : null}
             {this.getLeaderCriteria().length > 0 ? (
@@ -160,6 +169,9 @@ class RoundNotes extends Component<Props, State> {
                   <Header>Noter le cavalier</Header>
                 </GridRow>
                 {this.buildNotes(this.getLeaderCriteria(), 'lead')}
+                <GridRow>
+                  Total : {this.computeNote(i, 'lead')}
+                </GridRow>
               </GridColumn>
             ) : null}
           </GridRow>
@@ -222,6 +234,27 @@ class RoundNotes extends Component<Props, State> {
     }
     // TODO add temp save
   }
+
+  computeNote(coupleNb, whoseCriteria) {
+    let sum = 0;
+    if (whoseCriteria == 'couple') {
+      for (var i = 0; i < this.state.coupleNoteStorage[coupleNb].length; i++) {
+        sum += parseInt(this.state.coupleNoteStorage[coupleNb][i])
+      }
+    } else if (whoseCriteria == 'lead') {
+      for (var i = 0; i < this.state.leaderNoteStorage[coupleNb].length; i++) {
+        sum += parseInt(this.state.leaderNoteStorage[coupleNb][i])
+      }
+    } else if (whoseCriteria == 'follow') {
+      for (var i = 0; i < this.state.followerNoteStorage[coupleNb].length; i++) {
+        sum += parseInt(this.state.followerNoteStorage[coupleNb][i])
+      }
+    } else {
+      console.log("not implemented");
+    }
+    return sum
+  }
+
 
   /**********
    * RENDER *
