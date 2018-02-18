@@ -92,6 +92,16 @@ class RoundNotes extends Component<Props, State> {
     });
   }
 
+  handleRadioChange = (e, { value }, index) => {
+    const newStorage = JSON.parse(JSON.stringify(this.state.noteStorage));
+    newStorage[this.state.activeIndex][index] = value;
+    this.setState({noteStorage: newStorage});
+
+    // TODO add temp save
+
+
+  }
+
   /************
    * TABS ROW *
    ************/
@@ -101,18 +111,33 @@ class RoundNotes extends Component<Props, State> {
       return (
         {menuItem: 'L' + pair.leader.attendanceId + ' - F' + pair.follower.attendanceId, render: () =>
           <Tab.Pane>
-            <FormGroup>
-              <FormField>
-                Hey <Icon name="info circle" />
-              </FormField>
-              <FormRadio label={0}/>
-              <FormRadio label={2}/>
-              <FormRadio label={1}/>
-            </FormGroup>
+            {this.buildNotes(this.props.criteria)}
           </Tab.Pane>}
       );
     });
-  } //<NotesContainer pair={pair} />
+  }
+
+  buildNotes(criteria: Array<RoundCriterion>) {
+    const notes = criteria.map((c, index) => {
+      return (
+        <FormGroup>
+          <FormField>
+            {c.name}<Icon name="info circle" />
+          </FormField>
+          {this.getAlternatives(c, index)}
+        </FormGroup>
+      );
+    });
+    return <GridRow>{notes}</GridRow>;
+  }
+
+  getAlternatives(criterion: RoundCriterion, index) {
+    return [...Array(criterion.maxValue + 1).keys()].map(i => {
+      return (
+        <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.noteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index)}/>
+      );
+    });
+  }
 
 
   /**********
