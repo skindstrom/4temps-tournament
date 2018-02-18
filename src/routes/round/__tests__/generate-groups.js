@@ -134,4 +134,59 @@ describe('Generate groups route', () => {
 
     expect(res.getStatus()).toBe(400);
   });
+
+  test('Uses the winners of the previous round', async () => {
+    const participants = [
+      { ...createParticipant(), role: 'leader' },
+      { ...createParticipant(), role: 'follower' },
+      { ...createParticipant(), role: 'leader' },
+      { ...createParticipant(), role: 'follower' }
+    ];
+    const round1 = {
+      ...createRound(),
+      active: false,
+      finished: true,
+      winners: {
+        leaders: [participants[0].id],
+        followers: [participants[1].id]
+      }
+    };
+    const round2 = { ...createRound(), active: true };
+
+    const tournament = {
+      ...createTournament(),
+      id: generateId(),
+      rounds: [round1, round2],
+      participants
+    };
+    const repo = new TournamentRepositoryImpl();
+    await repo.create(tournament);
+
+    const expectedRound = {
+      ...round2,
+      active: true,
+      groups: [
+        {
+          pairs: [
+            {
+              leader: participants[0].id,
+              follower: participants[1].id
+            }
+          ]
+        }
+      ]
+    };
+
+    const req = Request.withParams({
+      tournamentId: tournament.id,
+      roundId: round2.id
+    });
+    const res = new Response();
+    const route = new GenerateGroupsRoute(repo);
+
+    await route.route(req, res);
+
+    expect(res.getStatus()).toBe(200);
+    expect(res.getBody()).toMatchObject(expectedRound);
+  });
 });

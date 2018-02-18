@@ -96,7 +96,7 @@ class GenerateGroupsRouteHandler {
   _generateGroups = (): Array<DanceGroup> => {
     const generator = new PairingGeneratorImpl(
       this._getRound(),
-      this._tournament.participants
+      this._getParticipants()
     );
 
     return generator.generateGroups().map(pairs => ({
@@ -145,6 +145,32 @@ class GenerateGroupsRouteHandler {
         ),
       false
     );
+  };
+
+  _getParticipants = (): Array<Participant> => {
+    if (this._hasPreviousRound()) {
+      return this._getWinnersOfPreviousRound();
+    }
+    return this._tournament.participants;
+  };
+
+  _hasPreviousRound = () => {
+    return this._tournament.rounds[0].id !== this._round.id;
+  };
+
+  _getWinnersOfPreviousRound = (): Array<Participant> => {
+    let prevRound: ?Round = null;
+    for (const round of this._tournament.rounds) {
+      if (round.id === this._round.id && prevRound != null) {
+        return [
+          ...prevRound.winners.leaders,
+          ...prevRound.winners.followers
+          // $FlowFixMe
+        ].map(id => this._tournament.participants.find(p => p.id === id));
+      }
+      prevRound = round;
+    }
+    throw new RoundNotFoundError();
   };
 }
 

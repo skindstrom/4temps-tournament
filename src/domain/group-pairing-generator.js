@@ -23,9 +23,8 @@ export default class GroupGeneratorImpl implements GroupGenerator {
 
     const groups: Array<Array<Pair>> = [];
 
-    let i = 0;
     while (this._participants.size > 0) {
-      groups.push(this._generateGroup(i++));
+      groups.push(this._generateGroup());
     }
 
     this._balanceUntilMinPairFulfilled(groups);
@@ -59,9 +58,8 @@ export default class GroupGeneratorImpl implements GroupGenerator {
     }
   };
 
-  _generateGroup = (index: number): Array<Pair> => {
+  _generateGroup = (): Array<Pair> => {
     const group: Array<Pair> = [];
-    let didSetNullParticipant = false;
     while (
       this._participants.size > 0 &&
       group.length < this._round.maxPairCountPerGroup
@@ -73,14 +71,6 @@ export default class GroupGeneratorImpl implements GroupGenerator {
       const p2 = this._getParticipantWithParticipantRole(
         p1.role === 'leader' ? 'follower' : 'leader'
       );
-
-      if (!didSetNullParticipant && index == 0 && p2 == null) {
-        didSetNullParticipant = true;
-        if (group.length > 0) {
-          this._participants.add(p1);
-          break;
-        }
-      }
 
       // $FlowFixMe
       this._participants.delete(p2);
