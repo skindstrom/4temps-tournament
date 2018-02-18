@@ -101,10 +101,16 @@ class RoundNotes extends Component<Props, State> {
     return Array.from(Array(this.props.pairs.length).keys()).map(i => {
       if (condition(i)) {
         const pair = this.props.pairs[i];
+        let bcolor = 'yellow'
+        if (this.state.coupleNoteStorage[i].some(function (el) {return el == null;})) {
+          bcolor = 'red'
+        } else {
+          bcolor = 'green'
+        }
         return (
           <GridColumn key={i} textAlign="center">
-            <Button
-              toggle
+            <Button              
+              color={bcolor}
               active={this.isActive(pair)}
               onClick={() => this.handlePairChange(i)}
             >
