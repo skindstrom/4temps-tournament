@@ -12,6 +12,8 @@ import {
   FormRadio,
   Tab,
   Icon,
+  Modal,
+  Table,
   Container
 } from 'semantic-ui-react';
 import NotesContainer from './Notes';
@@ -36,10 +38,7 @@ class RoundNotes extends Component<Props, State> {
     activePair: this.props.pairs[0],
     coupleNoteStorage: this.createEmptyNotesMatrix(this.getCoupleCriteria().length),
     leaderNoteStorage: this.createEmptyNotesMatrix(this.getLeaderCriteria().length),
-    followerNoteStorage: this.createEmptyNotesMatrix(this.getFollowerCriteria().length),
-    coupleNote: Array(this.getCoupleCriteria().length).fill(0),
-    leaderNote: Array(this.getLeaderCriteria().length).fill(0),
-    followerNote: Array(this.getFollowerCriteria().length).fill(0)
+    followerNoteStorage: this.createEmptyNotesMatrix(this.getFollowerCriteria().length)
   };
   handleTabChange = (e, { activeIndex }) => {
     /** When the tab changes, change the activePair. **/
@@ -209,7 +208,7 @@ class RoundNotes extends Component<Props, State> {
           <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.followerNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
         );
       } else {
-        console.log("not implemented")
+        console.log("not implemented 1")
         return null
       }
     });
@@ -229,7 +228,7 @@ class RoundNotes extends Component<Props, State> {
       newStorage[this.state.activeIndex][index] = value;
       this.setState({followerNoteStorage: newStorage});
     } else {
-      console.log("not implemented")
+      console.log("not implemented 2")
       return null
     }
     // TODO add temp save
@@ -237,24 +236,46 @@ class RoundNotes extends Component<Props, State> {
 
   computeNote(coupleNb, whoseCriteria) {
     let sum = 0;
-    if (whoseCriteria == 'couple') {
+    if (whoseCriteria == 'couple' && this.state.coupleNoteStorage!=null) {
       for (var i = 0; i < this.state.coupleNoteStorage[coupleNb].length; i++) {
         sum += parseInt(this.state.coupleNoteStorage[coupleNb][i])
       }
-    } else if (whoseCriteria == 'lead') {
+    } else if (whoseCriteria == 'lead' && this.state.leaderNoteStorage!=null) {
       for (var i = 0; i < this.state.leaderNoteStorage[coupleNb].length; i++) {
         sum += parseInt(this.state.leaderNoteStorage[coupleNb][i])
       }
-    } else if (whoseCriteria == 'follow') {
+    } else if (whoseCriteria == 'follow' && this.state.followerNoteStorage!=null) {
       for (var i = 0; i < this.state.followerNoteStorage[coupleNb].length; i++) {
         sum += parseInt(this.state.followerNoteStorage[coupleNb][i])
       }
     } else {
-      console.log("not implemented");
+      null
     }
+
+    if (sum==null) {
+      sum = 0;
+    }
+
     return sum
   }
 
+  /**********
+   * MODAL *
+   **********/
+
+  notesTable() {
+    // TODO array of couples !!!
+
+    const index=0;
+    return(
+      <Table.Row>
+        <Table.Cell>L {this.props.pairs[index].leader.attendanceId} - F{this.props.pairs[index].follower.attendanceId}</Table.Cell>
+        <Table.Cell>{this.computeNote(index,'couple')}</Table.Cell>
+        <Table.Cell>{this.computeNote(index,'follow')}</Table.Cell>
+        <Table.Cell>{this.computeNote(index,'lead')}</Table.Cell>
+      </Table.Row>
+    )
+  }
 
   /**********
    * RENDER *
@@ -281,9 +302,31 @@ class RoundNotes extends Component<Props, State> {
               <FormGroup>
                 <Tab panes={panes} activeIndex={activeIndex} onTabChange={this.handleTabChange}/>
               </FormGroup>
-              <Button type="submit" onClick={this.onSubmit}>
-                Submit
-              </Button>
+
+              <Modal trigger={<Button>Vérifier les notes</Button>}>
+                <Modal.Header>Vérifier les notes</Modal.Header>
+                <Modal.Content>
+                  <Table definition>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell />
+                        <Table.HeaderCell>Couple</Table.HeaderCell>
+                        <Table.HeaderCell>Cavalière</Table.HeaderCell>
+                        <Table.HeaderCell>Cavalier</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
+                      {this.notesTable()}
+                    </Table.Body>
+                  </Table>
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button color='green' type="submit" onClick={this.onSubmit}>
+                    Valider les notes
+                  </Button>
+                </Modal.Actions>
+              </Modal>
             </Form>
           </GridRow>
         </Grid>
