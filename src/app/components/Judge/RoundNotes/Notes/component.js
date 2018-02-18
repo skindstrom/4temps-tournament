@@ -8,7 +8,10 @@ import {
   Container,
   FormField,
   Form,
-  Radio,
+  FormGroup,
+  Button,
+  FormRadio,
+  Tab,
   Icon
 } from 'semantic-ui-react';
 
@@ -42,9 +45,12 @@ class Notes extends Component<Props> {
   getAlternatives(criterion: RoundCriterion) {
     return [...Array(criterion.maxValue + 1).keys()].map(i => {
       return (
-        <FormField key={i}>
-          <Radio label={'' + (i + criterion.minValue)} />
-        </FormField>
+        <FormRadio
+          label={'' + (i + criterion.minValue)}
+        />
+        // <FormField key={i}>
+        //   <Radio label={'' + (i + criterion.minValue)} />
+        // </FormField>
       );
     });
   }
@@ -52,12 +58,19 @@ class Notes extends Component<Props> {
   buildNotes(criteria: Array<RoundCriterion>) {
     const notes = criteria.map(c => {
       return (
-        <Form key={c.name}>
+        <FormGroup>
           <FormField>
-            {c.name} <Icon name="info circle" />:
+            {c.name} <Icon name="info circle" />
           </FormField>
           {this.getAlternatives(c)}
-        </Form>
+        </FormGroup>
+
+        // <Form key={c.name}>
+        //   <FormField>
+        //     {c.name} <Icon name="info circle" />:
+        //   </FormField>
+        //   {this.getAlternatives(c)}
+        // </Form>
       );
     });
     return <GridRow>{notes}</GridRow>;
