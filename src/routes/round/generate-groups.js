@@ -1,7 +1,7 @@
 // @flow
 import ObjectId from 'bson-objectid';
 import type { TournamentRepository } from '../../data/tournament';
-import PairingGeneratorImpl from '../../domain/group-pairing-generator';
+import NextGroupGenerator from '../../domain/next-group-generator';
 
 export default class GenerateGroupsRoute {
   _repository: TournamentRepository;
@@ -77,33 +77,28 @@ class GenerateGroupsRouteHandler {
       throw new AlreadyFinishedError();
     }
 
-    const groups = this._generateGroups();
-    this._addGroupsToRound(groups);
+    this._generateGroups();
 
     await this._repository.updateRound(this._tournamentId, this._round);
   };
 
-  _addGroupsToRound = (groups: Array<DanceGroup>) => {
-    this._round.groups = [];
-    if (groups.length >= 1) {
-      this._round.groups.push(groups[0]);
+  _generateGroups = () => {
+    const groupOne = this._generateGroup();
+
+    if (groupOne != null) {
+      this._round.groups = [groupOne];
     }
-    if (groups.length >= 2) {
-      this._round.groups.push(groups[1]);
+
+    const groupTwo = this._generateGroup();
+
+    if (groupTwo != null) {
+      this._round.groups.push(groupTwo);
     }
   };
 
-  _generateGroups = (): Array<DanceGroup> => {
-    const generator = new PairingGeneratorImpl(
-      this._getRound(),
-      this._getParticipants()
-    );
-
-    return generator.generateGroups().map(pairs => ({
-      id: ObjectId.generate(),
-      pairs,
-      dances: this._createDances(this._round.danceCount)
-    }));
+  _generateGroup = (): ?DanceGroup => {
+    const generator = new NextGroupGenerator(this._tournament, []);
+    return generator.generateForRound(this._round.id);
   };
 
   _createDances = (danceCount: number) => {
@@ -145,32 +140,6 @@ class GenerateGroupsRouteHandler {
         ),
       false
     );
-  };
-
-  _getParticipants = (): Array<Participant> => {
-    if (this._hasPreviousRound()) {
-      return this._getWinnersOfPreviousRound();
-    }
-    return this._tournament.participants;
-  };
-
-  _hasPreviousRound = () => {
-    return this._tournament.rounds[0].id !== this._round.id;
-  };
-
-  _getWinnersOfPreviousRound = (): Array<Participant> => {
-    let prevRound: ?Round = null;
-    for (const round of this._tournament.rounds) {
-      if (round.id === this._round.id && prevRound != null) {
-        return [
-          ...prevRound.winners.leaders,
-          ...prevRound.winners.followers
-          // $FlowFixMe
-        ].map(id => this._tournament.participants.find(p => p.id === id));
-      }
-      prevRound = round;
-    }
-    throw new RoundNotFoundError();
   };
 }
 

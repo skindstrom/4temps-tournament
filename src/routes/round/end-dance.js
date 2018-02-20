@@ -1,10 +1,9 @@
 // @flow
 
-import ObjectId from 'bson-objectid';
 import NoteChecker from '../../domain/note-checker';
-import GroupGeneratorImpl from '../../domain/group-pairing-generator';
 import RoundScorer from '../../domain/round-scorer';
 import WinnerPicker from '../../domain/winner-picker';
+import NextGroupGenerator from '../../domain/next-group-generator';
 import type { TournamentRepository } from '../../data/tournament';
 import type { NoteRepository } from '../../data/note';
 
@@ -177,163 +176,15 @@ class StartDanceRouteHandler {
     tournament: Tournament,
     round: Round
   ): Promise<void> => {
-    const participants = tournament.participants;
-    const alreadyDanceParticipants = new Set(
-      this._getAlreadyDancedParticipants(round)
+    const generator = new NextGroupGenerator(
+      tournament,
+      await this._getNotes(round)
     );
 
-    const remainingParticipants = participants.filter(
-      ({ id }) => !alreadyDanceParticipants.has(id)
-    );
-
-    if (remainingParticipants.length === 0) {
-      return;
+    const group = generator.generateForRound(round.id);
+    if (group != null) {
+      round.groups.push(group);
     }
-
-    let pairs = new GroupGeneratorImpl(
-      round,
-      remainingParticipants
-    ).generateGroups()[0];
-
-    const isUneven = pairs.reduce(
-      (acc, pair) => acc || pair.follower == null || pair.leader == null,
-      false
-    );
-
-    if (isUneven) {
-      const wantsLeader = pairs.reduce(
-        (acc, pair) => acc || pair.leader == null,
-        false
-      );
-
-      if (wantsLeader) {
-        remainingParticipants.push(
-          await this._getLeaderWithWorstFollower(tournament, round)
-        );
-      } else {
-        remainingParticipants.push(
-          await this._getFollowerWithWorstLeader(tournament, round)
-        );
-      }
-
-      pairs = new GroupGeneratorImpl(
-        round,
-        remainingParticipants
-      ).generateGroups()[0];
-    }
-
-    const dances: Array<Dance> = [];
-    for (let i = 0; i < round.danceCount; ++i) {
-      dances.push({ id: ObjectId.generate(), active: false, finished: false });
-    }
-
-    round.groups.push({
-      id: ObjectId.generate(),
-      pairs,
-      dances
-    });
-  };
-
-  _getAlreadyDancedParticipants = (round: Round): Array<string> => {
-    // $FlowFixMe
-    return round.groups.reduce(
-      (participants, group) => [
-        ...participants,
-        ...group.pairs
-          .map(pair => [pair.follower, pair.leader])
-          .reduce((acc, ids) => [...acc, ...ids], [])
-          .filter(id => id != null)
-      ],
-      []
-    );
-  };
-
-  _getLeaderWithWorstFollower = async (
-    tournament: Tournament,
-    round: Round
-  ): Promise<Participant> => {
-    const followers = new Set(
-      round.groups.reduce(
-        (participants, group) => [
-          ...participants,
-          ...group.pairs
-            .map(pair => [pair.follower])
-            .reduce((acc, ids) => [...acc, ...ids], [])
-            .filter(id => id != null)
-        ],
-        []
-      )
-    );
-
-    const scorer = new RoundScorer(round);
-    const scores = scorer.scoreRound(await this._getNotes(round));
-
-    const worstFollowers = scores
-      .reverse()
-      .filter(score => followers.has(score.participantId));
-    let worstFollower: string;
-    if (worstFollowers.length === 0) {
-      // $FlowFixMe
-      worstFollower = followers.entries().next().value[0];
-    } else {
-      worstFollower = worstFollowers[0].participantId;
-    }
-
-    for (const group of round.groups) {
-      const pair = group.pairs.find(pair => pair.follower === worstFollower);
-      if (pair != null) {
-        for (const participant of tournament.participants) {
-          if (participant.id === pair.leader) {
-            return participant;
-          }
-        }
-      }
-    }
-    throw new NoParticipantError();
-  };
-
-  _getFollowerWithWorstLeader = async (
-    tournament: Tournament,
-    round: Round
-  ): Promise<Participant> => {
-    const leaders = new Set(
-      round.groups.reduce(
-        (participants, group) => [
-          ...participants,
-          ...group.pairs
-            .map(pair => [pair.leader])
-            .reduce((acc, ids) => [...acc, ...ids], [])
-            .filter(id => id != null)
-        ],
-        []
-      )
-    );
-
-    const scorer = new RoundScorer(round);
-    const scores = scorer.scoreRound(await this._getNotes(round));
-
-    const worstLeaders = scores
-      .reverse()
-      .filter(score => leaders.has(score.participantId));
-    let worstLeader: string;
-    if (worstLeaders.length === 0) {
-      // $FlowFixMe
-      worstLeader = leaders.entries().next().value[0];
-    } else {
-      worstLeader = worstLeaders[0].participantId;
-    }
-
-    for (const group of round.groups) {
-      const pair = group.pairs.find(pair => pair.leader === worstLeader);
-      if (pair != null) {
-        for (const participant of tournament.participants) {
-          if (participant.id === pair.follower) {
-            return participant;
-          }
-        }
-      }
-    }
-    throw new NoParticipantError();
   };
 
   _endRound = async (round: Round) => {
@@ -360,4 +211,3 @@ class StartDanceRouteHandler {
 function TournamentNotFoundError() {}
 function NoStartedDanceError() {}
 function NotAllNotesError() {}
-function NoParticipantError() {}

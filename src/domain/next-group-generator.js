@@ -188,11 +188,14 @@ export default class NextGroupGenerator {
     excluding: Array<Participant>
   ): Participant => {
     const excludeIds = new Set(excluding.map(({ id }) => id));
-    const worst = this._getParticipantWithWorstScore(
+    let worst = this._getParticipantWithWorstScore(
       this._getScoresOfParticipantsWithRole(role).filter(
         ({ participantId }) => !excludeIds.has(participantId)
       )
     );
+    if (worst == null) {
+      worst = this._getRandomParticipantWithRole(role);
+    }
     return this._getParticipantWithId(worst);
   };
 
@@ -220,8 +223,16 @@ export default class NextGroupGenerator {
     );
   };
 
-  _getParticipantWithWorstScore = (scores: Array<Score>): string => {
+  _getParticipantWithWorstScore = (scores: Array<Score>): ?string => {
+    if (scores.length === 0) {
+      return null;
+    }
     return scores.sort((a, b) => a.score - b.score).reverse()[0].participantId;
+  };
+
+  _getRandomParticipantWithRole = (role: Role): string => {
+    const participants = Array.from(this._getParticipantsWithRole(role));
+    return participants[Math.floor(Math.random() * participants.length)];
   };
 
   _getParticipantWithId = (participantId: string): Participant => {
