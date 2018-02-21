@@ -16,7 +16,9 @@ export default class RoundScorer {
     score: number
   }> => {
     const danceScorer = new DanceScorer(notes);
-    const totals: { [id: string]: Array<number> } = {};
+    const totals: { [id: string]: Array<number> } = this._initializeTotals(
+      this._getParticipants()
+    );
 
     for (const dance of this._getDances()) {
       const danceScore = danceScorer.scoreDance(dance.id);
@@ -36,6 +38,31 @@ export default class RoundScorer {
         score: this._scoreFromDanceRule(totals[participantId])
       }))
       .sort((a, b) => b.score - a.score);
+  };
+
+  _getParticipants = (): Array<string> => {
+    return this._round.groups.reduce(
+      (pairs, group) => [
+        ...pairs,
+        ...group.pairs.reduce((acc, pair) => {
+          const arr = [];
+          if (pair.follower != null) {
+            arr.push(pair.follower);
+          }
+          if (pair.leader != null) {
+            arr.push(pair.leader);
+          }
+          return [...acc, ...arr];
+        }, [])
+      ],
+      []
+    );
+  };
+
+  _initializeTotals = (
+    participants: Array<string>
+  ): { [id: string]: Array<number> } => {
+    return participants.reduce((totals, id) => ({ ...totals, [id]: [0] }), {});
   };
 
   _scoreFromDanceRule = (danceScores: Array<number>) => {

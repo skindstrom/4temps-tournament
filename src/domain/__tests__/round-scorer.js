@@ -75,6 +75,33 @@ describe('Round scorer', () => {
       { participantId: participants[0].id, score: 5.5 }
     ]);
   });
+
+  test('Generates 0-score if no notes', () => {
+    const leader = { ...createParticipant(), role: 'leader' };
+    const follower = { ...createParticipant(), role: 'follower' };
+
+    const round: Round = {
+      ...createRound(),
+      groups: [
+        {
+          id: 'group1',
+          pairs: [{ leader: leader.id, follower: follower.id }],
+          dances: [
+            {
+              id: 'dance1',
+              active: false,
+              finished: true
+            }
+          ]
+        }
+      ]
+    };
+
+    const scorer = new RoundScorer(round);
+    const scores = scorer.scoreRound([]);
+    expect(scores).toContainEqual({ participantId: leader.id, score: 0 });
+    expect(scores).toContainEqual({ participantId: follower.id, score: 0 });
+  });
 });
 
 function createRoundWithGroups(danceIds: Array<string>): Round {
