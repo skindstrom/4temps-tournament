@@ -76,7 +76,7 @@ class RoundNotes extends Component<Props, State> {
       this.state.activePair.leader === pair.leader
     );
   };
-  createEmptyNotesMatrix = (len: number) => {
+  createEmptyNotesMatrix(len: number) {
     /**the matrix of scores per couples. works only for couples criteria!!!**/
     // FixMe
     if (len > 0) {
@@ -86,29 +86,27 @@ class RoundNotes extends Component<Props, State> {
     } else {
       return null;
     }
-  };
+  }
 
   /****************
    * GET CRITERIA *
    ****************/
 
-  getFollowerCriteria = (): Array<RoundCriterion> => {
+  getFollowerCriteria(): Array<RoundCriterion> {
     return this.getCriteria(c => c.type === 'one');
-  };
+  }
 
-  getLeaderCriteria = (): Array<RoundCriterion> => {
+  getLeaderCriteria(): Array<RoundCriterion> {
     return this.getCriteria(c => c.type === 'one');
-  };
+  }
 
-  getCoupleCriteria = (): Array<RoundCriterion> => {
+  getCoupleCriteria(): Array<RoundCriterion> {
     return this.getCriteria(c => c.type === 'both');
-  };
+  }
 
-  getCriteria = (
-    condition: RoundCriterion => boolean
-  ): Array<RoundCriterion> => {
+  getCriteria(condition: RoundCriterion => boolean): Array<RoundCriterion> {
     return this.props.criteria.filter(condition);
-  };
+  }
 
   /*************
    * PAIRS ROW *

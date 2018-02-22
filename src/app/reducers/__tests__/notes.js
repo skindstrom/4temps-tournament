@@ -38,6 +38,14 @@ describe('Notes reducer', () => {
           )
         ).toMatchObject({ isLoading: false });
       });
+      test('sets didLoad to true', () => {
+        expect(
+          reducer(
+            { ...getInitialState(), didLoad: false },
+            makePackAction(LIFECYCLE.SUCCESS, 'GET_NOTES', notes)
+          )
+        ).toMatchObject({ didLoad: true });
+      });
     });
 
     describe('failure', () => {
@@ -48,6 +56,14 @@ describe('Notes reducer', () => {
             makePackAction(LIFECYCLE.FAILURE, 'GET_NOTES')
           )
         ).toMatchObject({ isLoading: false });
+      });
+      test('sets didLoad to false', () => {
+        expect(
+          reducer(
+            { ...getInitialState(), didLoad: true },
+            makePackAction(LIFECYCLE.FAILURE, 'GET_NOTES', notes)
+          )
+        ).toMatchObject({ didLoad: false });
       });
     });
   });

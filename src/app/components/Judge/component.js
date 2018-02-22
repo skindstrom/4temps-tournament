@@ -1,32 +1,52 @@
 // @flow
-import { Container } from 'semantic-ui-react';
+import { Header, Container } from 'semantic-ui-react';
 
-import React, { Component } from 'react';
+import React from 'react';
 import RoundInformation from './RoundInformation';
-import RoundNotes from './RoundNotes';
+import NoteTaker from './NoteTaker';
+import SelectPairGrid from './SelectPairGrid';
 
 type Props = {
-  hasActiveDance: boolean
+  tournamentId: string,
+  activeRound: ?Round,
+  activeDanceId: ?string
 };
-class Judge extends Component<Props> {
-  _renderNoActiveDance = () => {
-    return <h1>Theres no active dance</h1>;
-  };
 
-  _renderActiveDance = () => {
-    return (
-      <Container>
-        <RoundInformation />
-        <RoundNotes />
-      </Container>
-    );
-  };
-
-  render() {
-    return this.props.hasActiveDance
-      ? this._renderActiveDance()
-      : this._renderNoActiveDance();
-  }
+export default function Judge({
+  tournamentId,
+  activeRound,
+  activeDanceId
+}: Props) {
+  return activeRound != null && activeDanceId != null ? (
+    <ActiveDance
+      tournamentId={tournamentId}
+      roundId={activeRound.id}
+      danceId={activeDanceId}
+    />
+  ) : (
+    <NoActiveDance />
+  );
 }
 
-export default Judge;
+function NoActiveDance() {
+  return (
+    <Header as="h1" textAlign="center" vertical>
+      No active dance
+    </Header>
+  );
+}
+
+type ActiveDanceProps = {
+  roundId: string,
+  danceId: string,
+  tournamentId: string
+};
+function ActiveDance({ roundId, danceId, tournamentId }: ActiveDanceProps) {
+  return (
+    <Container>
+      <RoundInformation />
+      <SelectPairGrid roundId={roundId} />
+      <NoteTaker danceId={danceId} tournamentId={tournamentId} />
+    </Container>
+  );
+}

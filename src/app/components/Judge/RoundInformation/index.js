@@ -26,8 +26,7 @@ function getActiveGroupInformation(
   round: Round
 ): {
   group: DanceGroup,
-  groupNumber: number,
-  numberOfGroups: number
+  groupNumber: number
 } {
   const numberOfGroups = round.groups.length;
   for (let i = 0; i < numberOfGroups; i++) {
@@ -35,8 +34,7 @@ function getActiveGroupInformation(
     if (dances.filter(dance => dance.active).length > 0)
       return {
         group: round.groups[i],
-        groupNumber: i + 1,
-        numberOfGroups: numberOfGroups
+        groupNumber: i + 1
       };
   }
   throw new Error('No active groups!');
@@ -45,8 +43,7 @@ function getActiveGroupInformation(
 function getActiveDanceInformation(
   group: DanceGroup
 ): {
-  danceNumber: number,
-  numberOfDances: number
+  danceNumber: number
 } {
   const numberOfDances = group.dances.length;
   for (let i = 0; i < numberOfDances; i++) {

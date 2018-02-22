@@ -15,7 +15,7 @@ export default function notesReducer(
 }
 
 export function getInitialState(): NotesReduxState {
-  return { isLoading: false };
+  return { isLoading: false, didLoad: false };
 }
 
 function getNotes(
@@ -31,6 +31,7 @@ function getNotes(
     success: prevState => ({
       ...prevState,
       isLoading: false,
+      didLoad: true,
       ...payload.reduce((acc, note) => {
         return {
           ...acc,
@@ -43,7 +44,8 @@ function getNotes(
     }),
     failure: prevState => ({
       ...prevState,
-      isLoading: false
+      isLoading: false,
+      didLoad: false
     })
   });
 }

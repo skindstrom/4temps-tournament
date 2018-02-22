@@ -5,14 +5,23 @@ import PreloadContainer from '../PreloadContainer';
 import { getTournamentForJudge } from '../../api/tournament';
 
 function mapStateToProps({ tournaments, rounds }: ReduxState) {
+  const activeRound =
+    tournaments.forJudge !== ''
+      ? getActiveRound(
+        tournaments.byId[tournaments.forJudge].rounds.map(
+          id => rounds.byId[id]
+        )
+      )
+      : null;
+
+  const activeDanceId =
+    activeRound != null ? getActiveDanceId(activeRound) : null;
   return {
     Child: Judge,
     shouldLoad: tournaments.forJudge === '',
-    hasActiveDance:
-      tournaments.forJudge !== '' &&
-      hasActiveDance(
-        tournaments.byId[tournaments.forJudge].rounds.map(id => rounds.byId[id])
-      )
+    tournamentId: tournaments.forJudge,
+    activeDanceId,
+    activeRound
   };
 }
 
@@ -26,8 +35,23 @@ function mapDispatchToProps(dispatch: ReduxDispatch) {
   };
 }
 
-function hasActiveDance(rounds: Array<Round>): boolean {
-  return rounds.reduce((a, b) => a || isRoundActive(b), false);
+function getActiveDanceId(round: Round): string {
+  return round.groups.reduce((res, group) => {
+    const dance = group.dances.find(({ active }) => active);
+    if (dance) {
+      return dance.id;
+    }
+    return res;
+  }, '');
+}
+
+function getActiveRound(rounds: Array<Round>): ?Round {
+  return rounds.reduce((acc, round) => {
+    if (isRoundActive(round)) {
+      return round;
+    }
+    return acc;
+  }, null);
 }
 
 function isRoundActive(round: Round): boolean {

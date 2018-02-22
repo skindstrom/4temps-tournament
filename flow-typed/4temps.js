@@ -182,7 +182,9 @@ declare type ReduxState = {
 
     createParticipant: UiCreateParticipantsReduxState,
     createRound: UiCreateRoundReduxState,
-    createJudge: UiCreateJudgeReduxState
+    createJudge: UiCreateJudgeReduxState,
+
+    notes: UiNotesReduxState
   }
 };
 
@@ -248,6 +250,7 @@ declare type AccessKeysReduxState = {
 
 declare type NotesReduxState = {
   isLoading: boolean,
+  didLoad: boolean,
   [participantId: string]: { [criterionId: string]: JudgeNote }
 };
 
@@ -298,6 +301,10 @@ declare type UiCreateJudgeReduxState = {
   isValid: boolean
 };
 
+declare type UiNotesReduxState = {
+  selectedPair: ?string
+};
+
 declare type ReduxPackAction = {
   type: string,
   payload: any
@@ -323,7 +330,9 @@ declare type ReduxAction =
   | ChangeAttendance
   | GetJudgeTournament
   | GenerateGroupsAction
-  | GetNotesAction;
+  | GetNotesAction
+  | SetNoteAction
+  | SelectPairAction;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -434,4 +443,14 @@ declare type EndDanceAction = {
 declare type GetNotesAction = {
   type: 'GET_NOTES',
   promise: mixed
+};
+
+declare type SetNoteAction = {
+  type: 'SET_NOTE',
+  promise: mixed
+};
+
+declare type SelectPairAction = {
+  type: 'SELECT_PAIR',
+  payload: string
 };
