@@ -1,4 +1,6 @@
 // @flow
+
+/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import {
   Grid,
@@ -16,7 +18,8 @@ import {
   Table,
   Container
 } from 'semantic-ui-react';
-import NotesContainer from './Notes';
+
+type WhoseCriteria = 'follow' | 'couple' | 'lead';
 
 type PairViewModel = {
   leader: Participant,
@@ -29,85 +32,110 @@ type Props = {
 };
 
 type State = {
-  activePair: PairViewModel
+  activePair: PairViewModel,
+  activeIndex: number,
+  // $FlowFixMe
+  coupleNoteStorage: any,
+  // $FlowFixMe
+  leaderNoteStorage: any,
+  // $FlowFixMe
+  followerNoteStorage: any
 };
 
 class RoundNotes extends Component<Props, State> {
   state = {
-    activeIndex: 0,                                  // index of the tab
+    activeIndex: 0, // index of the tab
     activePair: this.props.pairs[0],
-    coupleNoteStorage: this.createEmptyNotesMatrix(this.getCoupleCriteria().length),
-    leaderNoteStorage: this.createEmptyNotesMatrix(this.getLeaderCriteria().length),
-    followerNoteStorage: this.createEmptyNotesMatrix(this.getFollowerCriteria().length)
+    coupleNoteStorage: this.createEmptyNotesMatrix(
+      this.getCoupleCriteria().length
+    ),
+    leaderNoteStorage: this.createEmptyNotesMatrix(
+      this.getLeaderCriteria().length
+    ),
+    followerNoteStorage: this.createEmptyNotesMatrix(
+      this.getFollowerCriteria().length
+    )
   };
-  handleTabChange = (e, { activeIndex }) => {
+  handleTabChange = (
+    e: SyntheticEvent<*>,
+    { activeIndex }: { activeIndex: number }
+  ) => {
     /** When the tab changes, change the activePair. **/
     this.setState({ activeIndex: activeIndex });
     this.setState({ activePair: this.props.pairs[activeIndex] });
-  }
-  handlePairChange(i) {
+  };
+  handlePairChange = (i: number) => {
     /** When the active pair changes, change the tab. **/
     // $FlowFixMe
     this.setState({ activeIndex: i });
     this.setState({ activePair: this.props.pairs[i] });
-  }
-  isActive(pair: PairViewModel): boolean {
+  };
+  isActive = (pair: PairViewModel): boolean => {
     return (
       this.state.activePair.follower === pair.follower &&
       this.state.activePair.leader === pair.leader
     );
-  }
-  createEmptyNotesMatrix(len) {
+  };
+  createEmptyNotesMatrix = (len: number) => {
     /**the matrix of scores per couples. works only for couples criteria!!!**/
     // FixMe
     if (len > 0) {
-      return Array(this.props.pairs.length).fill().map(()=>Array(len).fill());
+      return Array(this.props.pairs.length)
+        .fill()
+        .map(() => Array(len).fill());
     } else {
       return null;
     }
-  }
+  };
 
   /****************
    * GET CRITERIA *
    ****************/
 
-  getFollowerCriteria(): Array<RoundCriterion> {
+  getFollowerCriteria = (): Array<RoundCriterion> => {
     return this.getCriteria(c => c.type === 'one');
-  }
+  };
 
-  getLeaderCriteria(): Array<RoundCriterion> {
+  getLeaderCriteria = (): Array<RoundCriterion> => {
     return this.getCriteria(c => c.type === 'one');
-  }
+  };
 
-  getCoupleCriteria(): Array<RoundCriterion> {
+  getCoupleCriteria = (): Array<RoundCriterion> => {
     return this.getCriteria(c => c.type === 'both');
-  }
+  };
 
-  getCriteria(condition: RoundCriterion => boolean): Array<RoundCriterion> {
+  getCriteria = (
+    condition: RoundCriterion => boolean
+  ): Array<RoundCriterion> => {
     return this.props.criteria.filter(condition);
-  }
+  };
 
-/*************
- * PAIRS ROW *
- *************/
+  /*************
+   * PAIRS ROW *
+   *************/
 
-  arrangeUpperLayer() {
+  arrangeUpperLayer = () => {
     const condition = (index: number) => index % 2 !== 0;
     return this.conditionalLayer(condition);
-  }
-  arrangeLowerLayer() {
+  };
+  arrangeLowerLayer = () => {
     const condition = (index: number) => index % 2 === 0;
     return this.conditionalLayer(condition);
-  }
-  conditionalLayer(condition: (index: number) => boolean) {
+  };
+  conditionalLayer = (condition: (index: number) => boolean) => {
     return Array.from(Array(this.props.pairs.length).keys()).map(i => {
       if (condition(i)) {
         const pair = this.props.pairs[i];
-        let bcolor = 'yellow'
-        if (this.state.coupleNoteStorage[i].some(function (el) {return el == null;})) {
-          bcolor = 'red'
+        let bcolor = 'yellow';
+        if (
+          // $FlowFixMe
+          this.state.coupleNoteStorage[i].some(function(el) {
+            return el == null;
+          })
+        ) {
+          bcolor = 'red';
         } else {
-          bcolor = 'green'
+          bcolor = 'green';
         }
         return (
           <GridColumn key={i} textAlign="center">
@@ -124,158 +152,221 @@ class RoundNotes extends Component<Props, State> {
         return <GridColumn key={i} />;
       }
     });
-  }
+  };
 
   /************
    * TABS ROW *
    ************/
-  createPanes() {
+  createPanes = () => {
     return Array.from(Array(this.props.pairs.length).keys()).map(i => {
       const pair = this.props.pairs[i];
-      return (
-        {menuItem: 'L' + pair.leader.attendanceId + ' - F' + pair.follower.attendanceId, render: () =>
+      return {
+        menuItem:
+          'L' + pair.leader.attendanceId + ' - F' + pair.follower.attendanceId,
+        render: () => (
           <Tab.Pane>
-          <GridRow columns={3}>
-            {this.getFollowerCriteria().length > 0 ? (
-              <GridColumn key="follower">
-                <GridRow>
-                  <Header>
-                    Noter la cavalière
-                  </Header>
-                </GridRow>
-                {this.buildNotes(this.getFollowerCriteria(), 'follow')}
-                <GridRow>
-                  Total : {this.computeNote(i, 'follow')}
-                </GridRow>
-              </GridColumn>
-            ) : null}
-            {this.getCoupleCriteria().length > 0 ? (
-              <GridColumn key="couple">
-                <GridRow>
-                  <Header>
-                    Noter le couple
-                  </Header>
-                </GridRow>
-                {this.buildNotes(this.getCoupleCriteria(), 'couple')}
-                <GridRow>
-                  Total : {this.computeNote(i, 'couple')}
-                </GridRow>
-              </GridColumn>
-            ) : null}
-            {this.getLeaderCriteria().length > 0 ? (
-              <GridColumn key="leader">
-                <GridRow>
-                  <Header>Noter le cavalier</Header>
-                </GridRow>
-                {this.buildNotes(this.getLeaderCriteria(), 'lead')}
-                <GridRow>
-                  Total : {this.computeNote(i, 'lead')}
-                </GridRow>
-              </GridColumn>
-            ) : null}
-          </GridRow>
-          </Tab.Pane>}
-      );
+            <GridRow columns={3}>
+              {this.getFollowerCriteria().length > 0 ? (
+                <GridColumn key="follower">
+                  <GridRow>
+                    <Header>Noter la cavalière</Header>
+                  </GridRow>
+                  {this.buildNotes(this.getFollowerCriteria(), 'follow')}
+                  <GridRow>Total : {this.computeNote(i, 'follow')}</GridRow>
+                </GridColumn>
+              ) : null}
+              {this.getCoupleCriteria().length > 0 ? (
+                <GridColumn key="couple">
+                  <GridRow>
+                    <Header>Noter le couple</Header>
+                  </GridRow>
+                  {this.buildNotes(this.getCoupleCriteria(), 'couple')}
+                  <GridRow>Total : {this.computeNote(i, 'couple')}</GridRow>
+                </GridColumn>
+              ) : null}
+              {this.getLeaderCriteria().length > 0 ? (
+                <GridColumn key="leader">
+                  <GridRow>
+                    <Header>Noter le cavalier</Header>
+                  </GridRow>
+                  {this.buildNotes(this.getLeaderCriteria(), 'lead')}
+                  <GridRow>Total : {this.computeNote(i, 'lead')}</GridRow>
+                </GridColumn>
+              ) : null}
+            </GridRow>
+          </Tab.Pane>
+        )
+      };
     });
-  }
+  };
 
-  buildNotes(criteria: Array<RoundCriterion>, whoseCriteria) {
+  buildNotes = (
+    criteria: Array<RoundCriterion>,
+    whoseCriteria: WhoseCriteria
+  ) => {
     const notes = criteria.map((c, index) => {
+      /* eslint-disable react/jsx-key */
       return (
         <FormGroup>
           <FormField>
-            {c.name}<Icon name="info circle" />
+            {c.name}
+            <Icon name="info circle" />
           </FormField>
           {this.getAlternatives(c, index, whoseCriteria)}
         </FormGroup>
       );
+      /* eslint-enable react/jsx-key */
     });
     return <GridRow>{notes}</GridRow>;
-  }
+  };
 
-  getAlternatives(criterion: RoundCriterion, index, whoseCriteria) {
+  getAlternatives = (
+    criterion: RoundCriterion,
+    index: number,
+    whoseCriteria: WhoseCriteria
+  ) => {
     return [...Array(criterion.maxValue + 1).keys()].map(i => {
-      if (whoseCriteria=='couple') {
+      if (whoseCriteria == 'couple') {
         return (
-          <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.coupleNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
+          <FormRadio
+            label={'' + (i + criterion.minValue)}
+            value={'' + (i + criterion.minValue)}
+            checked={
+              // $FlowFixMe
+              this.state.coupleNoteStorage[this.state.activeIndex][index] ===
+              '' + (i + criterion.minValue)
+            }
+            onChange={(e, { value }) =>
+              this.handleRadioChange(e, { value }, index, whoseCriteria)
+            }
+          />
         );
-      } else if (whoseCriteria=='lead') {
+      } else if (whoseCriteria == 'lead') {
         return (
-          <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.leaderNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
+          <FormRadio
+            label={'' + (i + criterion.minValue)}
+            value={'' + (i + criterion.minValue)}
+            checked={
+              // $FlowFixMe
+              this.state.leaderNoteStorage[this.state.activeIndex][index] ===
+              '' + (i + criterion.minValue)
+            }
+            onChange={(e, { value }) =>
+              this.handleRadioChange(e, { value }, index, whoseCriteria)
+            }
+          />
         );
-      } else if (whoseCriteria=='follow') {
+      } else if (whoseCriteria == 'follow') {
         return (
-          <FormRadio label={'' + (i + criterion.minValue)} value={'' + (i + criterion.minValue)} checked={this.state.followerNoteStorage[this.state.activeIndex][index] === '' + (i + criterion.minValue)} onChange={(e, { value }) => this.handleRadioChange(e, { value }, index, whoseCriteria)}/>
+          <FormRadio
+            label={'' + (i + criterion.minValue)}
+            value={'' + (i + criterion.minValue)}
+            checked={
+              // $FlowFixMe
+              this.state.followerNoteStorage[this.state.activeIndex][index] ===
+              '' + (i + criterion.minValue)
+            }
+            onChange={(e, { value }) =>
+              this.handleRadioChange(e, { value }, index, whoseCriteria)
+            }
+          />
         );
       } else {
-        console.log("not implemented 1")
-        return null
+        return null;
       }
     });
-  }
+  };
 
-  handleRadioChange = (e, { value }, index, whoseCriteria) => {
-    if (whoseCriteria=='couple') {
-      const newStorage = JSON.parse(JSON.stringify(this.state.coupleNoteStorage));
+  handleRadioChange = (
+    e: SyntheticEvent<*>,
+    { value }: { value: number },
+    index: number,
+    whoseCriteria: WhoseCriteria
+  ) => {
+    if (whoseCriteria == 'couple') {
+      const newStorage = JSON.parse(
+        JSON.stringify(this.state.coupleNoteStorage)
+      );
       newStorage[this.state.activeIndex][index] = value;
-      this.setState({coupleNoteStorage: newStorage});
-    } else if (whoseCriteria=='lead') {
-      const newStorage = JSON.parse(JSON.stringify(this.state.leaderNoteStorage));
+      this.setState({ coupleNoteStorage: newStorage });
+    } else if (whoseCriteria == 'lead') {
+      const newStorage = JSON.parse(
+        JSON.stringify(this.state.leaderNoteStorage)
+      );
       newStorage[this.state.activeIndex][index] = value;
-      this.setState({leaderNoteStorage: newStorage});
-    } else if (whoseCriteria=='follow') {
-      const newStorage = JSON.parse(JSON.stringify(this.state.followerNoteStorage));
+      this.setState({ leaderNoteStorage: newStorage });
+    } else if (whoseCriteria == 'follow') {
+      const newStorage = JSON.parse(
+        JSON.stringify(this.state.followerNoteStorage)
+      );
       newStorage[this.state.activeIndex][index] = value;
-      this.setState({followerNoteStorage: newStorage});
+      this.setState({ followerNoteStorage: newStorage });
     } else {
-      console.log("not implemented 2")
-      return null
+      return null;
     }
     // TODO add temp save
-  }
+  };
 
-  computeNote(coupleNb, whoseCriteria) {
+  computeNote = (coupleNb: number, whoseCriteria: WhoseCriteria) => {
     let sum = 0;
-    if (whoseCriteria == 'couple' && this.state.coupleNoteStorage!=null) {
-      for (var i = 0; i < this.state.coupleNoteStorage[coupleNb].length; i++) {
-        sum += parseInt(this.state.coupleNoteStorage[coupleNb][i])
+    if (whoseCriteria == 'couple' && this.state.coupleNoteStorage != null) {
+      for (let i = 0; i < this.state.coupleNoteStorage[coupleNb].length; i++) {
+        sum += parseInt(this.state.coupleNoteStorage[coupleNb][i]);
       }
-    } else if (whoseCriteria == 'lead' && this.state.leaderNoteStorage!=null) {
-      for (var i = 0; i < this.state.leaderNoteStorage[coupleNb].length; i++) {
-        sum += parseInt(this.state.leaderNoteStorage[coupleNb][i])
+    } else if (
+      whoseCriteria == 'lead' &&
+      this.state.leaderNoteStorage != null
+    ) {
+      for (let i = 0; i < this.state.leaderNoteStorage[coupleNb].length; i++) {
+        sum += parseInt(this.state.leaderNoteStorage[coupleNb][i]);
       }
-    } else if (whoseCriteria == 'follow' && this.state.followerNoteStorage!=null) {
-      for (var i = 0; i < this.state.followerNoteStorage[coupleNb].length; i++) {
-        sum += parseInt(this.state.followerNoteStorage[coupleNb][i])
+    } else if (
+      whoseCriteria == 'follow' &&
+      this.state.followerNoteStorage != null
+    ) {
+      for (
+        let i = 0;
+        i < this.state.followerNoteStorage[coupleNb].length;
+        i++
+      ) {
+        sum += parseInt(this.state.followerNoteStorage[coupleNb][i]);
       }
     } else {
-      null
+      null;
     }
 
-    if (sum==null) {
+    if (sum == null) {
       sum = 0;
     }
 
-    return sum
-  }
+    return sum;
+  };
 
   /**********
    * MODAL *
    **********/
 
-  notesTable() {
+  notesTable = () => {
     // TODO array of couples !!!
 
-    const index=0;
-    return(
+    const index = 0;
+    return (
       <Table.Row>
-        <Table.Cell>L {this.props.pairs[index].leader.attendanceId} - F{this.props.pairs[index].follower.attendanceId}</Table.Cell>
-        <Table.Cell>{this.computeNote(index,'couple')}</Table.Cell>
-        <Table.Cell>{this.computeNote(index,'follow')}</Table.Cell>
-        <Table.Cell>{this.computeNote(index,'lead')}</Table.Cell>
+        <Table.Cell>
+          L {this.props.pairs[index].leader.attendanceId} - F{
+            this.props.pairs[index].follower.attendanceId
+          }
+        </Table.Cell>
+        <Table.Cell>{this.computeNote(index, 'couple')}</Table.Cell>
+        <Table.Cell>{this.computeNote(index, 'follow')}</Table.Cell>
+        <Table.Cell>{this.computeNote(index, 'lead')}</Table.Cell>
       </Table.Row>
-    )
-  }
+    );
+  };
+
+  _onSubmit = () => {
+    alert('submit not implemented');
+  };
 
   /**********
    * RENDER *
@@ -300,7 +391,11 @@ class RoundNotes extends Component<Props, State> {
           <GridRow>
             <Form>
               <FormGroup>
-                <Tab panes={panes} activeIndex={activeIndex} onTabChange={this.handleTabChange}/>
+                <Tab
+                  panes={panes}
+                  activeIndex={activeIndex}
+                  onTabChange={this.handleTabChange}
+                />
               </FormGroup>
 
               <Modal trigger={<Button>Vérifier les notes</Button>}>
@@ -316,13 +411,11 @@ class RoundNotes extends Component<Props, State> {
                       </Table.Row>
                     </Table.Header>
 
-                    <Table.Body>
-                      {this.notesTable()}
-                    </Table.Body>
+                    <Table.Body>{this.notesTable()}</Table.Body>
                   </Table>
                 </Modal.Content>
                 <Modal.Actions>
-                  <Button color='green' type="submit" onClick={this.onSubmit}>
+                  <Button color="green" type="submit" onClick={this._onSubmit}>
                     Valider les notes
                   </Button>
                 </Modal.Actions>
