@@ -170,6 +170,7 @@ declare type ReduxState = {
   rounds: RoundsReduxState,
   judges: JudgesReduxState,
   accessKeys: AccessKeysReduxState,
+  notes: NotesReduxState,
 
   ui: {
     judgeLogin: UiJudgeLoginReduxState,
@@ -245,6 +246,11 @@ declare type AccessKeysReduxState = {
   [id: string]: AccessKey
 };
 
+declare type NotesReduxState = {
+  isLoading: boolean,
+  [participantId: string]: { [criterionId: string]: JudgeNote }
+};
+
 declare type UiLoginReduxState = {
   isLoading: boolean,
   isValid: boolean,
@@ -316,7 +322,8 @@ declare type ReduxAction =
   | EndDanceAction
   | ChangeAttendance
   | GetJudgeTournament
-  | GenerateGroupsAction;
+  | GenerateGroupsAction
+  | GetNotesAction;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -421,5 +428,10 @@ declare type GenerateGroupsAction = {
 
 declare type EndDanceAction = {
   type: 'END_DANCE',
+  promise: mixed
+};
+
+declare type GetNotesAction = {
+  type: 'GET_NOTES',
   promise: mixed
 };
