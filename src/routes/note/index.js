@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { allow } from '../auth-middleware';
 import setNoteRoute from './set-note';
 import submitNotesRoute from './submit-notes';
+import getNotesForDanceRoute from './get-notes-for-dance';
 import { TournamentRepositoryImpl } from '../../data/tournament';
 import {
   TemporaryNoteRepository,
@@ -12,14 +13,20 @@ import {
 
 const router = Router();
 const tournamentRepository = new TournamentRepositoryImpl();
+const temporaryNotesRepository = new TemporaryNoteRepository();
 
 router.post(
-  '/:tournamentId/set',
+  '/:tournamentId/temporary/set',
   allow('judge'),
-  setNoteRoute(tournamentRepository, new TemporaryNoteRepository())
+  setNoteRoute(tournamentRepository, temporaryNotesRepository)
+);
+router.get(
+  '/:tournamentId/temporary/dance/:danceId',
+  allow('judge'),
+  getNotesForDanceRoute(temporaryNotesRepository)
 );
 router.post(
-  '/:tournamentId/submit',
+  '/:tournamentId/final/submit',
   allow('judge'),
   submitNotesRoute(tournamentRepository, new SubmittedNoteRepository())
 );
