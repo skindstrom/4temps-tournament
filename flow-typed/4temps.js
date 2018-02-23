@@ -251,7 +251,9 @@ declare type AccessKeysReduxState = {
 declare type NotesReduxState = {
   isLoading: boolean,
   didLoad: boolean,
-  [participantId: string]: { [criterionId: string]: JudgeNote }
+  byParticipant: {
+    [participantId: string]: { [criterionId: string]: JudgeNote }
+  }
 };
 
 declare type UiLoginReduxState = {

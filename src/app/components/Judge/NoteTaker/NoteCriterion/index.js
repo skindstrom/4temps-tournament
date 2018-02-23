@@ -62,7 +62,7 @@ function NoteCriterion({ notedEntity, criterion, onClick }: Props) {
 
 function getRange(minValue: number, maxValue: number) {
   return Array.from(
-    { length: maxValue + Math.abs(minValue) + 1 },
+    { length: maxValue - minValue + 1 },
     (v, i) => minValue + i
   );
 }

@@ -57,10 +57,12 @@ function hasAllNotes(
   notes: NotesReduxState,
   criterionCount: number
 ) {
-  if (notes[participantId] == null) {
+  if (notes.byParticipant[participantId] == null) {
     return false;
   }
-  return Object.keys(notes[participantId]).length === criterionCount;
+  return (
+    Object.keys(notes.byParticipant[participantId]).length === criterionCount
+  );
 }
 
 function getPairsOfRound(round: Round): Array<Pair> {

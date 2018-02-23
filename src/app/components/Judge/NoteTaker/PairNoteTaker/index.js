@@ -85,16 +85,16 @@ function getValue(notes: NotesReduxState, pairId: string, criterionId: string) {
   const { leaderId, followerId } = getIds(pairId);
 
   const leaderValue =
-    notes[leaderId] != null
-      ? notes[leaderId][criterionId] != null
-        ? notes[leaderId][criterionId].value
+    notes.byParticipant[leaderId] != null
+      ? notes.byParticipant[leaderId][criterionId] != null
+        ? notes.byParticipant[leaderId][criterionId].value
         : null
       : null;
 
   const followerValue =
-    notes[followerId] != null
-      ? notes[followerId][criterionId] != null
-        ? notes[followerId][criterionId].value
+    notes.byParticipant[followerId] != null
+      ? notes.byParticipant[followerId][criterionId] != null
+        ? notes.byParticipant[followerId][criterionId].value
         : null
       : null;
 

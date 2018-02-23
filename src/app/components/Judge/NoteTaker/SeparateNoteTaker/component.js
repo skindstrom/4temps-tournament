@@ -42,7 +42,7 @@ function PairNoteTaker({
     <Grid columns={2}>
       <GridColumn>
         <GridRow>
-          <Header as="h3">Leaders</Header>
+          <Header as="h3">Leader</Header>
         </GridRow>
         <GridRow>
           {leaderCriteria.map(criterion => (
@@ -65,7 +65,7 @@ function PairNoteTaker({
       </GridColumn>
       <GridColumn>
         <GridRow>
-          <Header as="h3">Followers</Header>
+          <Header as="h3">Follower</Header>
         </GridRow>
         <GridRow>
           {followerCriteria.map(criterion => (

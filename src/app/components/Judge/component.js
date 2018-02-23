@@ -1,10 +1,12 @@
 // @flow
-import { Header, Container } from 'semantic-ui-react';
+import { Header, Container, Divider } from 'semantic-ui-react';
 
 import React from 'react';
 import RoundInformation from './RoundInformation';
 import NoteTaker from './NoteTaker';
 import SelectPairGrid from './SelectPairGrid';
+// $FlowFixMe
+import SubmitNotesModal from './SubmitNotesModal';
 
 type Props = {
   tournamentId: string,
@@ -46,7 +48,10 @@ function ActiveDance({ roundId, danceId, tournamentId }: ActiveDanceProps) {
     <Container>
       <RoundInformation />
       <SelectPairGrid roundId={roundId} />
+      <Divider />
       <NoteTaker danceId={danceId} tournamentId={tournamentId} />
+      <Divider />
+      <SubmitNotesModal />
     </Container>
   );
 }

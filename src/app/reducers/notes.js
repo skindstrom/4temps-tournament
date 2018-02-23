@@ -15,7 +15,7 @@ export default function notesReducer(
 }
 
 export function getInitialState(): NotesReduxState {
-  return { isLoading: false, didLoad: false };
+  return { isLoading: false, didLoad: false, byParticipant: {} };
 }
 
 function getNotes(
@@ -32,15 +32,17 @@ function getNotes(
       ...prevState,
       isLoading: false,
       didLoad: true,
-      ...payload.reduce((acc, note) => {
-        return {
-          ...acc,
-          [note.participantId]: {
-            ...acc[note.participantId],
-            [note.criterionId]: note
-          }
-        };
-      }, {})
+      byParticipant: {
+        ...payload.reduce((acc, note) => {
+          return {
+            ...acc,
+            [note.participantId]: {
+              ...acc[note.participantId],
+              [note.criterionId]: note
+            }
+          };
+        }, {})
+      }
     }),
     failure: prevState => ({
       ...prevState,
@@ -58,9 +60,12 @@ function setNote(
   return handle(state, action, {
     success: prevState => ({
       ...prevState,
-      [payload.participantId]: {
-        ...prevState[payload.participantId],
-        [payload.criterionId]: payload
+      byParticipant: {
+        ...prevState.byParticipant,
+        [payload.participantId]: {
+          ...prevState.byParticipant[payload.participantId],
+          [payload.criterionId]: payload
+        }
       }
     })
   });

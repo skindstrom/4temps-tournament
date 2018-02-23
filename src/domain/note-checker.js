@@ -111,24 +111,31 @@ export default class NoteChecker {
     danceId: string,
     judgeId: string
   ) => {
+    const noteSet = new Set(notes.map(note => hashNote(note)));
     for (const participantId of participants) {
       for (const criterionId of criteria) {
-        if (
-          notes.find(({ value, ...rest }) => {
-            return (
-              judgeId === rest.judgeId &&
-              danceId === rest.danceId &&
-              participantId === rest.participantId &&
-              criterionId === rest.criterionId
-            );
-          }) == null
-        ) {
+        const supposedNote = { judgeId, danceId, participantId, criterionId };
+        if (!noteSet.has(hashNote(supposedNote))) {
           return false;
         }
       }
     }
     return true;
   };
+}
+
+function hashNote({
+  judgeId,
+  danceId,
+  participantId,
+  criterionId
+}: {
+  judgeId: string,
+  danceId: string,
+  participantId: string,
+  criterionId: string
+}) {
+  return `${judgeId}:${danceId}:${participantId}:${criterionId}`;
 }
 
 function DanceNotFoundError() {}

@@ -1,6 +1,15 @@
 // @flow
 
 import mongoose from 'mongoose';
+import type { ObjectId } from 'mongoose';
+
+type NoteDbModel = {
+  judgeId: ObjectId,
+  danceId: ObjectId,
+  criterionId: ObjectId,
+  participantId: ObjectId,
+  value: number
+};
 
 const schema = new mongoose.Schema({
   judgeId: {
@@ -40,7 +49,9 @@ export class TemporaryNoteRepository implements NoteRepository {
   }
 
   async getForDance(danceId: string) {
-    return await TempModel.find({ danceId });
+    return (await TempModel.find({ danceId })).map(a =>
+      mapToDomainModel(a.toObject())
+    );
   }
 }
 
@@ -50,6 +61,18 @@ export class SubmittedNoteRepository implements NoteRepository {
     await SubmittedModel.update({ ...ids }, note, { upsert: true });
   }
   async getForDance(danceId: string) {
-    return await TempModel.find({ danceId });
+    return (await SubmittedModel.find({ danceId })).map(a =>
+      mapToDomainModel(a.toObject())
+    );
   }
+}
+
+function mapToDomainModel(note: NoteDbModel): JudgeNote {
+  return {
+    judgeId: note.judgeId.toString(),
+    danceId: note.danceId.toString(),
+    criterionId: note.criterionId.toString(),
+    participantId: note.participantId.toString(),
+    value: note.value
+  };
 }

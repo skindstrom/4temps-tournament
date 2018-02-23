@@ -85,9 +85,9 @@ function getValue(
   participantId: string,
   criterionId: string
 ) {
-  return notes[participantId] != null
-    ? notes[participantId][criterionId] != null
-      ? notes[participantId][criterionId].value
+  return notes.byParticipant[participantId] != null
+    ? notes.byParticipant[participantId][criterionId] != null
+      ? notes.byParticipant[participantId][criterionId].value
       : null
     : null;
 }

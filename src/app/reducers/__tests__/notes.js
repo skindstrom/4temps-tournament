@@ -28,7 +28,7 @@ describe('Notes reducer', () => {
             undefined,
             makePackAction(LIFECYCLE.SUCCESS, 'GET_NOTES', notes)
           )
-        ).toMatchObject(expectedNotes());
+        ).toMatchObject({ byParticipant: expectedNotes() });
       });
       test('sets isLoading to false', () => {
         expect(
@@ -78,7 +78,9 @@ describe('Notes reducer', () => {
         value: 5
       };
       const expected = {
-        p1: { crit: { ...payload } }
+        byParticipant: {
+          p1: { crit: { ...payload } }
+        }
       };
       test('sets the note', () => {
         expect(
