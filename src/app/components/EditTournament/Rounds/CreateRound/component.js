@@ -13,7 +13,6 @@ import {
   FormField
 } from 'semantic-ui-react';
 
-type CriterionType = 'none' | 'both' | 'one';
 type MultipleDanceScoringRule = 'none' | 'average' | 'best';
 
 type Props = {
@@ -28,8 +27,7 @@ type CriterionViewModel = {
   name: string,
   minValue: ?number,
   maxValue: ?number,
-  description: string,
-  type: CriterionType
+  description: string
 };
 
 export type RoundViewModel = {
@@ -153,16 +151,7 @@ class EditTournamentRounds extends Component<Props, State> {
         index
       );
     };
-    const onChangeRadio = (event, { value }) =>
-      this._onChangeCriterion(
-        {
-          ...criterion,
-          type: value
-        },
-        index
-      );
 
-    const { type } = criterion;
     const { validation } = this.props;
 
     const criterionValidation =
@@ -174,7 +163,6 @@ class EditTournamentRounds extends Component<Props, State> {
           isValidMinValue: true,
           isValidMaxValue: true,
           isValidValueCombination: true,
-          isValidType: true,
           isValidDescription: true
         };
 
@@ -220,26 +208,6 @@ class EditTournamentRounds extends Component<Props, State> {
             }
           />
         </FormGroup>
-        <span className="field">
-          <label htmlFor="criterion-type">What does the criterion affect</label>
-        </span>
-        <FormGroup id="criterion-type" widths="equal">
-          <FormRadio
-            label="Each participant"
-            value="one"
-            onChange={onChangeRadio}
-            checked={type === 'one'}
-          />
-          <FormRadio
-            label="Each couple"
-            value="both"
-            onChange={onChangeRadio}
-            checked={type === 'both'}
-          />
-        </FormGroup>
-        {!criterionValidation.isValidType && (
-          <Message error content="Must pick a type" />
-        )}
         <Divider />
       </div>
     );
@@ -259,8 +227,7 @@ class EditTournamentRounds extends Component<Props, State> {
           name: '',
           description: '',
           minValue: null,
-          maxValue: null,
-          type: 'none'
+          maxValue: null
         }
       ]
     });

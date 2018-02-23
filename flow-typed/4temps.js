@@ -34,15 +34,12 @@ declare type Participant = {
   isAttending: boolean
 };
 
-declare type RoundCriterionType = 'none' | 'both' | 'one';
-
 declare type RoundCriterion = {
   id: string,
   name: string,
   minValue: number,
   maxValue: number,
-  description: string,
-  type: RoundCriterionType
+  description: string
 };
 
 declare type Round = {
@@ -156,7 +153,6 @@ declare type RoundValidationSummary = {
     isValidMinValue: boolean,
     isValidMaxValue: boolean,
     isValidValueCombination: boolean,
-    isValidType: boolean,
     isValidDescription: boolean
   }>
 };

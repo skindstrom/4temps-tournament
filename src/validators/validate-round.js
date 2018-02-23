@@ -91,8 +91,7 @@ function validateCriterion({
   name,
   description,
   minValue,
-  maxValue,
-  type
+  maxValue
 }: RoundCriterion) {
   const isValidName = name.length > 0;
   const isValidMinValue = minValue != null;
@@ -100,11 +99,6 @@ function validateCriterion({
 
   const isValidValueCombination =
     maxValue != null && minValue != null ? maxValue > minValue : true;
-  // it has to be at least on of these types
-  const isValidType = ['both', 'one', 'follower', 'leader'].reduce(
-    (acc, cur) => acc || cur === type,
-    false
-  );
 
   const isValidDescription = description.length > 0;
 
@@ -114,13 +108,11 @@ function validateCriterion({
       isValidMinValue &&
       isValidMaxValue &&
       isValidValueCombination &&
-      isValidType &&
       isValidDescription,
     isValidName,
     isValidMinValue,
     isValidMaxValue,
     isValidValueCombination,
-    isValidType,
     isValidDescription
   };
 }

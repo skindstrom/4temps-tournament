@@ -48,19 +48,8 @@ export default class NoteChecker {
     throw new DanceNotFoundError();
   };
 
-  _getCriteriaForLeaders = (): Array<string> =>
-    this._getCriteriaForRole('leader');
-
-  _getCriteriaForFollowers = (): Array<string> =>
-    this._getCriteriaForRole('follower');
-
-  _getCriteriaForRole = (role: Role): Array<string> => {
-    return this._getActiveRound()
-      .criteria.filter(
-        criterion =>
-          criterion.type !== (role === 'leader' ? 'follower' : 'leader')
-      )
-      .map(({ id }) => id);
+  _getCriteria = (): Array<string> => {
+    return this._getActiveRound().criteria.map(({ id }) => id);
   };
 
   _getActiveRound = (): Round => {
@@ -78,10 +67,9 @@ export default class NoteChecker {
     judgeId: string
   ) => {
     const leaders = this._getLeadersInDance(danceId);
-    const criteria = this._getCriteriaForLeaders();
     return this._isAllParticipantsNotedInDanceByJudge(
       leaders,
-      criteria,
+      this._getCriteria(),
       notes,
       danceId,
       judgeId
@@ -94,10 +82,9 @@ export default class NoteChecker {
     judgeId: string
   ) => {
     const followers = this._getFollowersInDance(danceId);
-    const criteria = this._getCriteriaForFollowers();
     return this._isAllParticipantsNotedInDanceByJudge(
       followers,
-      criteria,
+      this._getCriteria(),
       notes,
       danceId,
       judgeId

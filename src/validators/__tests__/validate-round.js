@@ -435,61 +435,6 @@ describe('Round validator', () => {
     });
   });
 
-  test('A criterion may not have "none" as type', () => {
-    expect(
-      validateRound(
-        createRound({
-          criteria: [createCriterion({ type: 'none' })]
-        })
-      )
-    ).toMatchObject({
-      isValidRound: false,
-      isValidCriteria: false,
-      criteriaValidation: [
-        {
-          isValidCriterion: false,
-          isValidType: false
-        }
-      ]
-    });
-  });
-
-  test('A criterion may not have an arbitrary value as type', () => {
-    expect(
-      validateRound(
-        createRound({
-          criteria: [createCriterion({ type: 'wutisthis' })]
-        })
-      )
-    ).toMatchObject({
-      isValidRound: false,
-      isValidCriteria: false,
-      criteriaValidation: [
-        {
-          isValidCriterion: false,
-          isValidType: false
-        }
-      ]
-    });
-  });
-
-  test('A criterion may have one of the enum values as type', () => {
-    expect(
-      validateRound(
-        createRound({
-          criteria: [
-            createCriterion({ type: 'both' }),
-            createCriterion({ type: 'one' }),
-            createCriterion({ type: 'leader' }),
-            createCriterion({ type: 'follower' })
-          ]
-        })
-      )
-    ).toMatchObject({
-      isValidRound: true
-    });
-  });
-
   test('All criteria are validated and are ordered', () => {
     expect(
       validateRound(
@@ -498,8 +443,7 @@ describe('Round validator', () => {
             createCriterion({ name: '' }),
             createCriterion({ minValue: null }),
             createCriterion({ maxValue: null }),
-            createCriterion({ description: '' }),
-            createCriterion({ type: 'none' })
+            createCriterion({ description: '' })
           ]
         })
       )
@@ -522,10 +466,6 @@ describe('Round validator', () => {
         {
           isValidCriterion: false,
           isValidDescription: false
-        },
-        {
-          isValidCriterion: false,
-          isValidType: false
         }
       ]
     });

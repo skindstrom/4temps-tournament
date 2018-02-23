@@ -8,8 +8,7 @@ type CriterionDbModel = {
   name: string,
   minValue: number,
   maxValue: number,
-  description: string,
-  type: RoundCriterionType
+  description: string
 };
 
 export type RoundDbModel = {
@@ -88,8 +87,7 @@ export const schema = new mongoose.Schema({
       name: { type: String, required: true },
       minValue: { type: Number, required: true },
       maxValue: { type: Number, required: true },
-      description: { type: String, required: true },
-      type: { type: String, required: true }
+      description: { type: String, required: true }
     }
   ],
   active: {
