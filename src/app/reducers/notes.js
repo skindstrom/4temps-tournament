@@ -10,6 +10,8 @@ export default function notesReducer(
     return getNotes(state, action);
   case 'SET_NOTE':
     return setNote(state, action);
+  case 'LOGOUT_USER':
+    return logout(state, action);
   }
   return state;
 }
@@ -68,5 +70,14 @@ function setNote(
         }
       }
     })
+  });
+}
+
+function logout(
+  state: NotesReduxState = getInitialState(),
+  action: ReduxPackAction
+): NotesReduxState {
+  return handle(state, action, {
+    success: () => getInitialState()
   });
 }

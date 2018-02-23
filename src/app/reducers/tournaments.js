@@ -19,7 +19,7 @@ function tournaments(
   case 'EDIT_TOURNAMENT':
     return editTournament(state, action);
   case 'LOGOUT_USER':
-    return logoutAdmin(state, action);
+    return logout(state, action);
   default:
     return state;
   }
@@ -139,7 +139,7 @@ function editTournament(
   });
 }
 
-function logoutAdmin(
+function logout(
   state: TournamentsReduxState,
   action: ReduxPackAction
 ): TournamentsReduxState {
@@ -147,6 +147,7 @@ function logoutAdmin(
     success: prevState => ({
       ...prevState,
       forAdmin: [],
+      forJudge: '',
       didLoadAdminTournaments: false
     })
   });
