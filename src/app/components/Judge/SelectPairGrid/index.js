@@ -47,7 +47,9 @@ function getPairViewModels(
     return {
       id: leader.id + follower.id,
       name: `L${leader.attendanceId} - F${follower.attendanceId}`,
-      hasAllNotes: hasAllNotes(leader.id, notes, criterionCount)
+      hasAllNotes:
+        hasAllNotes(leader.id, notes, criterionCount) &&
+        hasAllNotes(follower.id, notes, criterionCount)
     };
   });
 }
