@@ -33,13 +33,13 @@ function createViewModelsForRound(
   const { groups, ...rest } = round;
 
   let activeDance: ?number;
-  let activeGroup: ?number;
-
+  let activeGroup: ?number = getActiveGroup(groups);
+  let nextDance: ?number = getNextDance(groups);
+  let nextGroup: ?number = getNextGroup(groups);
   for (let i = 0; i < groups.length; ++i) {
     for (let j = 0; j < groups[i].dances.length; ++j) {
       if (groups[i].dances[j].active) {
         activeDance = j + 1;
-        activeGroup = i + 1;
       }
     }
   }
@@ -48,6 +48,8 @@ function createViewModelsForRound(
     ...rest,
     activeDance,
     activeGroup,
+    nextDance,
+    nextGroup,
     groups: groups.map(g => ({
       id: g.id,
       pairs: g.pairs.map((p, i) => ({
@@ -61,6 +63,45 @@ function createViewModelsForRound(
   };
 
   return viewModel;
+}
+
+function getActiveGroup(groups) {
+  const activeGroups = [...Array(groups.length).keys()].filter(i => {
+    const group = groups[i];
+    return group.dances.map(d => !d.finished)
+      .reduce((ack, r) => ack || r, false);
+  });
+  return (activeGroups.length > 0) ? activeGroups[0] + 1 : null;
+}
+
+function getNextGroup(groups) {
+  const groupsNotDanced =  [...Array(groups.length).keys()].filter(i => {
+    return notDanced(groups[i]);
+  });
+  return (groupsNotDanced.length > 0) ? groupsNotDanced[0] + 1 : null;
+}
+
+function notDanced(group) {
+  return !group.dances.map(dance => dance.finished || dance.active)
+    .reduce((ack, r) => ack || r, false);
+}
+
+function getNextDance(groups) {
+  let nextDance = 1;
+  const relevantGroups = groups.filter(group => {
+    return !group.dances.map(d => d.finished)
+      .reduce((ack, r) => ack && r, true);
+  });
+  if (relevantGroups.length != 0) {
+    const dances = relevantGroups[0].dances;
+    const nonStartedDances = [...Array(dances.length).keys()].filter(i => {
+      return !(dances[i].finished || dances[i].active);
+    });
+    if(nonStartedDances.length > 0) {
+      nextDance = nonStartedDances[0] + 1;
+    }
+  }
+  return nextDance;
 }
 
 function createParticipantViewModel(participant: ?Participant) {

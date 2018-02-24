@@ -29,6 +29,8 @@ export type RoundViewModel = {
   finished: boolean,
   activeGroup: ?number,
   activeDance: ?number,
+  nextGroup: ?number,
+  nextDance: ?number,
   groups: Array<GroupViewModel>
 };
 
@@ -47,14 +49,8 @@ class RoundOverview extends Component<Props> {
         <Table basic="very" collapsing>
           <TableBody>
             <TableRow>
-              <TableCell>
-                Current group:{' '}
-                {round.activeGroup != null ? round.activeGroup : 'None'}
-              </TableCell>
-              <TableCell>
-                Current dance:{' '}
-                {round.activeDance != null ? round.activeDance : 'None'}
-              </TableCell>
+              {this._groupInformation()}
+              {this._danceInformation()}
               <TableCell>
                 {round.activeDance != null ? (
                   <Button onClick={this.props.endDance}>Stop dance</Button>
@@ -74,6 +70,36 @@ class RoundOverview extends Component<Props> {
       return 'Not started';
     }
   };
+
+  _groupInformation() {
+    const round = this.props.round;
+    let groupInformation = 'Current Group: None';
+    if (round.activeGroup != null) {
+      groupInformation = 'Current Group: ' + round.activeGroup.toString();
+    } else if (round.nextGroup != null) {
+      groupInformation = 'Next Group: ' + round.nextGroup.toString();
+    }
+    return (
+      <TableCell>
+        {groupInformation}
+      </TableCell>
+    );
+  }
+
+  _danceInformation() {
+    const round = this.props.round;
+    let danceInformation = 'Current Dance: None';
+    if (round.activeDance != null) {
+      danceInformation = 'Current Dance: ' + round.activeDance.toString();
+    } else if(round.nextDance != null) {
+      danceInformation = 'Next Dance: ' + round.nextDance.toString();
+    }
+    return (
+      <TableCell>
+        {danceInformation}
+      </TableCell>
+    );
+  }
 
   _renderGroups = () => {
     const { active, groups } = this.props.round;
