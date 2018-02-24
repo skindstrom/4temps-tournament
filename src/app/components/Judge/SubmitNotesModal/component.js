@@ -11,6 +11,7 @@ import {
   Loader,
   Message
 } from 'semantic-ui-react';
+// $FlowFixMe
 import NoteTable from '../NoteTable';
 
 export type StateProps = {
