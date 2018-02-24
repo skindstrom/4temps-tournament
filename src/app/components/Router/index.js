@@ -34,7 +34,6 @@ const Router = () => {
         path="/tournament/edit/:tournamentId"
         component={EditTournament}
       />
-      <PrivateRoute path="/judge" component={Judge} />
       <PrivateRoute
         path="/tournament/:tournamentId/round/:roundId"
         component={RoundOverview}
