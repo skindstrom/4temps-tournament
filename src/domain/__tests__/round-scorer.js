@@ -163,7 +163,7 @@ describe('Round scorer', () => {
     const scorer = new RoundScorer(round);
     const leaderWinners = new Set();
     const followerWinners = new Set();
-    for (let i = 0; i < 20; ++i) {
+    for (let i = 0; i < 200; ++i) {
       const scores = scorer.scoreRound(notes);
       // leaders have higher score, should have pos. 0 and 1
       leaderWinners.add(scores[0].participantId);

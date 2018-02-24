@@ -11,7 +11,6 @@ import Home from '../Home';
 import Login from '../Login';
 import FourOFour from '../FourOFour';
 import RoundOverview from '../RoundOverview';
-import Judge from '../Judge';
 import PrivateRoute from './private-route';
 
 const Router = () => {

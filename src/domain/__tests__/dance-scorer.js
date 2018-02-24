@@ -96,7 +96,7 @@ describe('Dance scorer', () => {
 
     const scorer = new DanceScorer(notes);
     const winners = new Set();
-    for (let i = 0; i < 20; ++i) {
+    for (let i = 0; i < 200; ++i) {
       winners.add(scorer.scoreDance(danceId)[0].participantId);
     }
     expect(winners).toContainEqual('p1');

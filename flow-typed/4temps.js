@@ -185,7 +185,7 @@ declare type ReduxState = {
 
 declare type UserReduxState = {
   id: string,
-  role: 'admin' | 'judge'
+  role: '' | 'admin' | 'judge'
 };
 
 declare type TournamentsReduxState = {
