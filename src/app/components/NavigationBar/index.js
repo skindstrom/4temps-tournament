@@ -23,7 +23,8 @@ function getActivePath(location: string): string {
 function mapStateToProps({ user }: ReduxState, { location }: Props) {
   return {
     activePath: getActivePath(location.pathname),
-    isAuthenticated: user.id !== ''
+    isAuthenticated: user.id !== '',
+    role: user.role
   };
 }
 

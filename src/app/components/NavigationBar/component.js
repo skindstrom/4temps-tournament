@@ -15,6 +15,7 @@ import './styles.css';
 type Props = {
   activeItem: string,
   isAuthenticated: boolean,
+  role: string,
   onClickLogout: () => Promise<void>
 };
 
@@ -27,7 +28,7 @@ class NavigationBar extends PureComponent<Props, State> {
 
   toggleSideBar = () => this.setState({ visible: !this.state.visible });
 
-  _renderNotAuthenticated = () => {
+  _renderSignUpLogIn = () => {
     return (
       <MenuMenu position="right">
         <MenuItem name="signup">
@@ -44,7 +45,7 @@ class NavigationBar extends PureComponent<Props, State> {
     );
   };
 
-  _renderAuthenticated = () => {
+  _renderLogOut = () => {
     return (
       <MenuItem
         position="right"
@@ -56,34 +57,63 @@ class NavigationBar extends PureComponent<Props, State> {
     );
   };
 
-  _renderDesktopView = () => {
+  _renderForRole = () => {
+    if (this.props.isAuthenticated) {
+      if (this.props.role == 'admin') {
+        return this._renderAuthenticatedAdmin();
+      } else if (this.props.role == 'judge') {
+        return this._renderAuthenticatedJudge();
+      } else {
+        //Undefined role, for now do nothing
+      }
+    } else {
+      // Not authed, for now do nothing
+    }
+  };
+
+  _renderAuthenticatedAdmin = () => {
     const { activeItem } = this.props;
+    return [
+      <Menu.Item
+        key="create"
+        as={Link}
+        to="/tournament/create"
+        active={activeItem === 'tournament/create'}
+        onClick={this.toggleSideBar}
+      >
+        <Icon name="plus" />
+        Create Tournament
+      </Menu.Item>,
+      <Menu.Item
+        as={Link}
+        key="edit"
+        to="/tournament/edit"
+        active={activeItem === 'tournament/edit'}
+        onClick={this.toggleSideBar}
+      >
+        <Icon name="edit" />
+        Edit Tournament
+      </Menu.Item>
+    ];
+  };
+
+  _renderAuthenticatedJudge = () => {
+    // Judge specific navigation goes here
+    // For now we dont want the judge to be able to navigate anywhere
+    // Therefore, return empty menu item
+    return <Menu.Item />;
+  };
+
+  _renderDesktopView = () => {
     return (
       <Menu secondary>
         <MenuItem as={Link} to="/" name="header" header>
           4 Temps Tournaments
         </MenuItem>
-        <Menu.Item
-          as={Link}
-          to="/tournament/create"
-          active={activeItem === 'tournament/create'}
-          onClick={this.toggleSideBar}
-        >
-          <Icon name="plus" />
-          Create Tournament
-        </Menu.Item>
-        <Menu.Item
-          as={Link}
-          to="/tournament/edit"
-          active={activeItem === 'tournament/edit'}
-          onClick={this.toggleSideBar}
-        >
-          <Icon name="edit" />
-          Edit Tournament
-        </Menu.Item>
+        {this._renderForRole()}
         {this.props.isAuthenticated
-          ? this._renderAuthenticated()
-          : this._renderNotAuthenticated()}
+          ? this._renderLogOut()
+          : this._renderSignUpLogIn()}
       </Menu>
     );
   };
@@ -95,10 +125,10 @@ class NavigationBar extends PureComponent<Props, State> {
         <MenuItem as={Link} to="/" name="header" header>
           4 Temps Tournaments
         </MenuItem>
-        <MenuMenu position="right">
+        <Menu.Item position="right">
           <Button icon="sidebar" onClick={this.toggleSideBar} />
           {this._renderSideBar()}
-        </MenuMenu>
+        </Menu.Item>
       </Menu>
     );
   };
@@ -108,7 +138,7 @@ class NavigationBar extends PureComponent<Props, State> {
 
     const { activeItem } = this.props;
     return (
-      <MenuMenu>
+      <Menu secondary>
         <Sidebar
           as={Menu}
           animation="push"
@@ -129,50 +159,32 @@ class NavigationBar extends PureComponent<Props, State> {
             Home
           </Menu.Item>
 
-          <Menu.Item
-            as={Link}
-            to="/tournament/create"
-            active={activeItem === 'tournament/create'}
-            onClick={this.toggleSideBar}
-          >
-            <Icon name="plus" />
-            Create Tournament
-          </Menu.Item>
+          {this._renderForRole()}
 
-          <Menu.Item
-            as={Link}
-            to="/tournament/edit"
-            active={activeItem === 'tournament/edit'}
-            onClick={this.toggleSideBar}
-          >
-            <Icon name="edit" />
-            Edit Tournament
-          </Menu.Item>
           <div styleName="filler" />
+
           {this.props.isAuthenticated ? (
-            <MenuMenu>
-              <MenuItem
-                onClick={() => {
-                  this.toggleSideBar();
-                  this.props.onClickLogout();
-                }}
-              >
-                <h3>Log out</h3>
-              </MenuItem>
-            </MenuMenu>
+            <Menu.Item
+              onClick={() => {
+                this.toggleSideBar();
+                this.props.onClickLogout();
+              }}
+            >
+              <h3>Log out</h3>
+            </Menu.Item>
           ) : (
-            <MenuMenu>
-              <MenuItem as={Link} to="/login" onClick={this.toggleSideBar}>
+            <div position="bottom">
+              <Menu.Item as={Link} to="/login" onClick={this.toggleSideBar}>
                 <h3>Log in</h3>
-              </MenuItem>
-              <MenuItem as={Link} to="/signup" onClick={this.toggleSideBar}>
+              </Menu.Item>
+              <Menu.Item as={Link} to="/signup" onClick={this.toggleSideBar}>
                 <h3>Sign up</h3>
-              </MenuItem>
-            </MenuMenu>
+              </Menu.Item>
+            </div>
           )}
           <div styleName="bottom-filler" />
         </Sidebar>
-      </MenuMenu>
+      </Menu>
     );
   };
 
