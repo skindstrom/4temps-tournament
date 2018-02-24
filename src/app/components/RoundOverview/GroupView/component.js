@@ -53,9 +53,9 @@ class RoundOverview extends Component<Props> {
               {this._danceInformation()}
               <TableCell>
                 {round.activeDance != null ? (
-                  <Button onClick={this.props.endDance}>Stop dance</Button>
+                  <Button color='red' onClick={this.props.endDance}>Stop dance</Button>
                 ) : (
-                  <Button onClick={this.props.startDance}>
+                  <Button color='green' onClick={this.props.startDance}>
                     Start next dance
                   </Button>
                 )}
