@@ -53,7 +53,7 @@ class RoundOverview extends Component<Props> {
               </TableCell>
               <TableCell>
                 Current dance:{' '}
-                {round.activeDance != null ? round.activeGroup : 'None'}
+                {round.activeDance != null ? round.activeDance : 'None'}
               </TableCell>
               <TableCell>
                 {round.activeDance != null ? (
