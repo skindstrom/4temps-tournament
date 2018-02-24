@@ -9,7 +9,8 @@ import {
   ModalHeader,
   Dimmer,
   Loader,
-  Message
+  Message,
+  Popup
 } from 'semantic-ui-react';
 // $FlowFixMe
 import NoteTable from '../NoteTable';
@@ -19,7 +20,8 @@ export type StateProps = {
   notes: Array<JudgeNote>,
   isLoading: boolean,
   didSubmit: boolean,
-  successfulSubmit: boolean
+  successfulSubmit: boolean,
+  hasAllNotes: boolean
 };
 
 export type DispatchProps = {
@@ -51,10 +53,10 @@ class SubmitNotesModal extends PureComponent<Props> {
     );
   }
 
-  render() {
+  _submitModal() {
     const failureMessage = this._didFail() ? this._failureMessage() : null;
     return (
-      <Modal trigger={<Button>Vérifier les notes</Button>}>
+      <Modal trigger={<Button color='green'>Vérifier les notes</Button>}>
         <Dimmer active={this.props.isLoading}>
           <Loader>Submitting</Loader>
         </Dimmer>
@@ -71,7 +73,21 @@ class SubmitNotesModal extends PureComponent<Props> {
       </Modal>
     );
   }
+  render() {
+    return (
+      this.props.hasAllNotes ? this._submitModal() : <CannotSubmitButton />
+    );
+  }
 }
 
+function CannotSubmitButton() {
+  return (
+    <Popup
+      trigger={<Button color='red'>Vérifier les notes</Button>}
+      content='You must score all pairs'
+      on={['hover', 'click']}
+    />
+  );
+}
 
 export default SubmitNotesModal;

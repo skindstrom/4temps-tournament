@@ -2,22 +2,32 @@
 /* eslint-disable flowtype/no-types-missing-file-annotation */
 
 import { connect } from 'react-redux';
-import DanceScorer from '../../../../domain/dance-scorer';
-import type { StateProps, DispatchProps, ColumnViewModel } from './component';
+import type { StateProps, DispatchProps } from './component';
 import { submitNotes } from '../../../api/note';
 import Component from './component';
+import NoteChecker from '../../../../domain/note-checker';
 
 function mapStateToProps(state: ReduxState): StateProps {
+  const tournament = getTournament(state);
   const danceId = getActiveDanceId(getActiveRound(state));
   const notes = getNotesForActiveDance(state, danceId);
-  const scores = new DanceScorer(notes).scoreDance(danceId);
   const uiNotes = state.ui.notes;
   return {
     ...uiNotes,
-    columns: divideScoreIntoColumns(state, scores),
     tournamentId: state.tournaments.forJudge,
-    notes
+    notes,
+    hasAllNotes: hasAllNotes(tournament, danceId, notes, state.user.id)
   };
+}
+
+function hasAllNotes(
+  tournament: Tournament,
+  danceId: string,
+  notes: Array<JudgeNote>,
+  judgeId: string
+) {
+  const noteChecker = new NoteChecker(tournament);
+  return noteChecker.allSetForDanceByJudge(danceId, notes, judgeId);
 }
 
 function getNotesForActiveDance(
@@ -50,82 +60,18 @@ function getActiveDanceId(round: Round): string {
 }
 
 function getActiveRound(state: ReduxState): Round {
-  const tournament = state.tournaments.byId[state.tournaments.forJudge];
-  const rounds = tournament.rounds.map(id => state.rounds.byId[id]);
+  const tournament = getTournament(state);
   // $FlowFixMe
-  return rounds.reduce((res, round) => (round.active ? round : res), null);
+  return tournament.rounds
+    .reduce((res, round) => (round.active ? round : res), null);
 }
 
-function divideScoreIntoColumns(
-  state: ReduxState,
-  scores: Array<Score>
-): Array<ColumnViewModel> {
-  const scoreMap = scores.reduce(
-    (acc, score) => ({
-      ...acc,
-      [score.participantId]: score
-    }),
-    {}
-  );
-  if (isLastRound(state)) {
-    return [getPairColumn(state, scoreMap, getPairs(state))];
-  }
-  return getSeparateColumns(state, scoreMap, getPairs(state));
-}
-
-function isLastRound(state: ReduxState) {
+function getTournament(state: ReduxState): Tournament {
   const tournament = state.tournaments.byId[state.tournaments.forJudge];
-  const activeRound = getActiveRound(state);
-  return activeRound.id === tournament.rounds[tournament.rounds.length - 1];
-}
-
-function getPairs(state: ReduxState): Array<Pair> {
-  return getActiveRound(state).groups.reduce((res, group) => {
-    const dance = group.dances.find(({ active }) => active);
-    if (dance) {
-      return group.pairs;
-    }
-    return res;
-  }, []);
-}
-
-function getPairColumn(
-  state: ReduxState,
-  scores: { [id: string]: Array<Score> },
-  pairs: Array<Pair>
-): ColumnViewModel {
-  const scoreViewModels = pairs
-    .map(({ leader, follower }) => ({
-      name: `L${state.participants.byId[leader].attendanceId} - F${
-        state.participants.byId[follower].attendanceId
-      }`,
-      value: scores[leader] != null ? scores[leader].score : 0
-    }))
-    .sort((a, b) => b.value - a.value);
-  return { title: 'Couples', scores: scoreViewModels };
-}
-
-function getSeparateColumns(
-  state: ReduxState,
-  scores: { [id: string]: Array<Score> },
-  pairs: Array<Pair>
-): Array<ColumnViewModel> {
-  const leaderViewModels = pairs
-    .map(({ leader }) => ({
-      name: `L${state.participants.byId[leader].attendanceId}`,
-      value: scores[leader] != null ? scores[leader].score : 0
-    }))
-    .sort((a, b) => b.value - a.value);
-  const followerViewModels = pairs
-    .map(({ follower }) => ({
-      name: `L${state.participants.byId[follower].attendanceId}`,
-      value: scores[follower] != null ? scores[follower].score : 0
-    }))
-    .sort((a, b) => b.value - a.value);
-  return [
-    { title: 'Leaders', scores: leaderViewModels },
-    { title: 'Followers', scores: followerViewModels }
-  ];
+  return {
+    ...tournament,
+    rounds: tournament.rounds.map(id => state.rounds.byId[id])
+  };
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
