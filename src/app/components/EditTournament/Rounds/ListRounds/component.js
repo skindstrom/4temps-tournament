@@ -37,7 +37,6 @@ class RoundList extends Component<Props> {
                 Start round
               </Button>
             )}
-          {round.active && 'Started!'}
         </TableCell>
         <TableCell textAlign="right">
           {!(round.active || round.finished) && (
@@ -48,6 +47,12 @@ class RoundList extends Component<Props> {
             >
               Delete
             </Button>
+          )}
+          {(round.finished) && (
+            <span floated="right">Round Finished</span>
+          )}
+          {(round.active) && (
+            <span floated="right">Round Started!</span>
           )}
         </TableCell>
       </TableRow>
