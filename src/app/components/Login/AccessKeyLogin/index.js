@@ -19,7 +19,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
         type: 'LOGIN_WITH_ACCESS_KEY',
         promise: loginJudge(accessKey),
         meta: {
-          onSuccess: () => history.push('/judge')
+          onSuccess: () => history.push('/')
         }
       })
   };
