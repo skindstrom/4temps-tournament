@@ -1,6 +1,10 @@
 // @flow
 import NextGroupGenerator from '../next-group-generator';
-import { createTournament, createRound } from '../../test-utils';
+import {
+  createTournament,
+  createRound,
+  createParticipant
+} from '../../test-utils';
 
 describe('Next group generator', () => {
   const leaders: Array<Participant> = [
@@ -180,28 +184,28 @@ describe('Next group generator', () => {
           criterionId,
           participantId: leaders[0].id,
           judgeId,
-          value: 10
+          value: 1
         },
         {
           danceId,
           criterionId,
           participantId: followers[0].id, // follower with worst leader
           judgeId,
-          value: 100
+          value: 2
         },
         {
           danceId,
           criterionId,
           participantId: leaders[1].id,
           judgeId,
-          value: 100
+          value: 3
         },
         {
           danceId,
           criterionId,
           participantId: followers[1].id,
           judgeId,
-          value: 10
+          value: 4
         }
       ];
 
@@ -281,28 +285,28 @@ describe('Next group generator', () => {
           criterionId,
           participantId: leaders[0].id,
           judgeId,
-          value: 10
+          value: 1
         },
         {
           danceId,
           criterionId,
           participantId: followers[0].id, // follower with worst leader
           judgeId,
-          value: 100
+          value: 2
         },
         {
           danceId,
           criterionId,
           participantId: leaders[1].id,
           judgeId,
-          value: 100
+          value: 3
         },
         {
           danceId,
           criterionId,
           participantId: followers[1].id,
           judgeId,
-          value: 10
+          value: 4
         }
       ];
 
@@ -384,6 +388,130 @@ describe('Next group generator', () => {
             finished: false
           }
         ]
+      });
+    });
+
+    test('A participant may dance at most once more than any other', () => {
+      const leaders: Array<Participant> = Array.from({ length: 2 }, (_, i) => ({
+        ...createParticipant(),
+        id: `L${i + 1}`,
+        role: 'leader',
+        isAttending: true
+      }));
+      const followers: Array<Participant> = Array.from(
+        { length: 4 },
+        (_, i) => ({
+          ...createParticipant(),
+          id: `F${i + 1}`,
+          role: 'follower',
+          isAttending: true
+        })
+      );
+
+      // in this round, L1 has danced twice as it had the worst follower
+      const round: Round = {
+        ...createRound(),
+        active: true,
+        finished: false,
+        minPairCountPerGroup: 1,
+        maxPairCountPerGroup: 1,
+        groups: [
+          {
+            id: 'group1',
+            pairs: [{ leader: 'L1', follower: 'F1' }],
+            dances: [
+              {
+                id: 'dance1',
+                active: false,
+                finished: true
+              }
+            ]
+          },
+          {
+            id: 'group2',
+            pairs: [{ leader: 'L2', follower: 'F2' }],
+            dances: [
+              {
+                id: 'dance2',
+                active: false,
+                finished: true
+              }
+            ]
+          },
+          {
+            id: 'group3',
+            pairs: [{ leader: 'L1', follower: 'F3' }],
+            dances: [
+              {
+                id: 'dance3',
+                active: false,
+                finished: true
+              }
+            ]
+          }
+        ]
+      };
+
+      const tournament: Tournament = {
+        ...createTournament(),
+        participants: [...leaders, ...followers],
+        rounds: [round]
+      };
+
+      const criterionId = 'crit1';
+      const judgeId = 'judge1';
+
+      // L1 has worst follower twice in a row
+      const notes: Array<JudgeNote> = [
+        {
+          danceId: 'dance1',
+          criterionId,
+          participantId: 'L1',
+          judgeId,
+          value: 50
+        },
+        {
+          danceId: 'dance1',
+          criterionId,
+          participantId: 'F1',
+          judgeId,
+          value: 1
+        },
+        {
+          danceId: 'dance2',
+          criterionId,
+          participantId: 'L2',
+          judgeId,
+          value: 10
+        },
+        {
+          danceId: 'dance2',
+          criterionId,
+          participantId: 'F2',
+          judgeId,
+          value: 100
+        },
+        {
+          danceId: 'dance3',
+          criterionId,
+          participantId: 'L1',
+          judgeId,
+          value: 50
+        },
+        {
+          danceId: 'dance3',
+          criterionId,
+          participantId: 'F3',
+          judgeId,
+          value: 1
+        }
+      ];
+
+      expect(
+        new NextGroupGenerator(tournament, notes).generateForRound(round.id)
+      ).toMatchObject({
+        // L1 already danced twice, L2's turn
+        pairs: [{ leader: 'L2', follower: 'F4' }]
       });
     });
   });

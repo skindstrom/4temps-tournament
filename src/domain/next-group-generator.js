@@ -188,15 +188,43 @@ export default class NextGroupGenerator {
     excluding: Array<Participant>
   ): Participant => {
     const excludeIds = new Set(excluding.map(({ id }) => id));
-    let worst = this._getParticipantWithWorstScore(
-      this._getScoresOfParticipantsWithRole(role).filter(
-        ({ participantId }) => !excludeIds.has(participantId)
-      )
-    );
-    if (worst == null) {
-      worst = this._getRandomParticipantWithRole(role);
+    const worstParticipants = this._getScoresOfParticipantsWithRole(
+      role === 'leader' ? 'follower' : 'leader'
+    )
+      .map(({ participantId }) => participantId)
+      .reverse();
+
+    let counterPart: string = '';
+    for (const worstId of worstParticipants) {
+      counterPart = this._getCounterPartOf(worstId);
+      if (
+        !excludeIds.has(counterPart) &&
+        !this._didDanceMoreThanOthers(counterPart)
+      ) {
+        break;
+      }
     }
-    return this._getParticipantWithId(worst);
+
+    return this._getParticipantWithId(counterPart);
+  };
+
+  _getCounterPartOf = (participantId: string): string => {
+    for (const group of this._round.groups) {
+      const pair = group.pairs.find(pair => {
+        return pair.follower === participantId || pair.leader === participantId;
+      });
+      if (pair != null) {
+        if (pair.leader === participantId) {
+          // $FlowFixMe
+          return pair.follower;
+        } else {
+          // $FlowFixMe
+          return pair.leader;
+        }
+      }
+    }
+
+    throw new ParticipantNotFoundError();
   };
 
   _getScoresOfParticipantsWithRole = (role: Role): Array<Score> => {
@@ -223,13 +251,6 @@ export default class NextGroupGenerator {
     );
   };
 
-  _getParticipantWithWorstScore = (scores: Array<Score>): ?string => {
-    if (scores.length === 0) {
-      return null;
-    }
-    return scores.sort((a, b) => a.score - b.score).reverse()[0].participantId;
-  };
-
   _getRandomParticipantWithRole = (role: Role): string => {
     const participants = Array.from(this._getParticipantsWithRole(role));
     return participants[Math.floor(Math.random() * participants.length)];
@@ -252,6 +273,50 @@ export default class NextGroupGenerator {
       dances.push({ id: ObjectId.generate(), active: false, finished: false });
     }
     return dances;
+  };
+
+  _didDanceMoreThanOthers = (participantId: string) => {
+    const { leaders, followers } = this._getDanceCountPerParticipant();
+    if (participantId in leaders) {
+      return (
+        leaders[participantId] >
+        Math.min(...Object.keys(leaders).map(id => leaders[id]))
+      );
+    } else {
+      return (
+        followers[participantId] >
+        Math.min(...Object.keys(followers).map(id => followers[id]))
+      );
+    }
+  };
+
+  _getDanceCountPerParticipant = (): {
+    leaders: { [id: string]: number },
+    followers: { [id: string]: number }
+  } => {
+    return this._round.groups.reduce(
+      (acc, group) => {
+        for (const pair of group.pairs) {
+          // $FlowFixMe
+          if (acc.leaders[pair.leader]) {
+            acc.leaders[pair.leader] += 1;
+          } else {
+            // $FlowFixMe
+            acc.leaders[pair.leader] = 1;
+          }
+          // $FlowFixMe
+          if (acc.followers[pair.follower]) {
+            acc.followers[pair.follower] += 1;
+          } else {
+            // $FlowFixMe
+            acc.followers[pair.follower] = 1;
+          }
+        }
+
+        return acc;
+      },
+      { leaders: {}, followers: {} }
+    );
   };
 }
 
