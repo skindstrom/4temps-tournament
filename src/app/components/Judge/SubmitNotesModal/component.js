@@ -2,36 +2,23 @@
 
 import React, { PureComponent } from 'react';
 import {
-  Header,
   Modal,
   ModalActions,
   Button,
   ModalContent,
   ModalHeader,
-  Table,
-  TableRow,
-  TableHeader,
-  TableBody,
-  TableHeaderCell,
-  TableCell,
-  Grid,
-  GridColumn
+  Dimmer,
+  Loader,
+  Message
 } from 'semantic-ui-react';
+import NoteTable from '../NoteTable';
 
 export type StateProps = {
-  columns: Array<ColumnViewModel>,
   tournamentId: string,
-  notes: Array<JudgeNote>
-};
-
-export type ColumnViewModel = {
-  title: string,
-  scores: Array<ScoreViewModel>
-};
-
-export type ScoreViewModel = {
-  name: string,
-  value: number
+  notes: Array<JudgeNote>,
+  isLoading: boolean,
+  didSubmit: boolean,
+  successfulSubmit: boolean
 };
 
 export type DispatchProps = {
@@ -45,16 +32,35 @@ class SubmitNotesModal extends PureComponent<Props> {
     this.props.onSubmit(this.props.tournamentId, this.props.notes);
   };
 
+  _failureMessage() {
+    return (
+      <Message
+        negative
+        header='Failed to submit scores!'
+        content='Please try again.'
+      />
+    );
+  }
+
+  _didFail(): boolean {
+    return (
+      this.props.didSubmit &&
+      !this.props.successfulSubmit &&
+      !this.props.isLoading
+    );
+  }
+
   render() {
+    const failureMessage = this._didFail() ? this._failureMessage() : null;
     return (
       <Modal trigger={<Button>Vérifier les notes</Button>}>
+        <Dimmer active={this.props.isLoading}>
+          <Loader>Submitting</Loader>
+        </Dimmer>
         <ModalHeader>Vérifier les notes</ModalHeader>
+        {failureMessage}
         <ModalContent>
-          <Grid columns={this.props.columns.length} stackable>
-            {this.props.columns.map(col => (
-              <NoteColumn key={col.title} {...col} />
-            ))}
-          </Grid>
+          <NoteTable />
         </ModalContent>
         <ModalActions>
           <Button color="green" type="submit" onClick={this._onSubmit}>
@@ -66,33 +72,5 @@ class SubmitNotesModal extends PureComponent<Props> {
   }
 }
 
-// eslint-disable-next-line
-class NoteColumn extends PureComponent<ColumnViewModel> {
-  render() {
-    return (
-      <GridColumn>
-        <Header as="h3">{this.props.title}</Header>
-        <Table unstackable>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderCell>Position</TableHeaderCell>
-              <TableHeaderCell>ID</TableHeaderCell>
-              <TableHeaderCell>Score</TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {this.props.scores.map((score, i) => (
-              <TableRow key={score.name}>
-                <TableCell>{i + 1}</TableCell>
-                <TableCell>{score.name}</TableCell>
-                <TableCell>{score.value}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </GridColumn>
-    );
-  }
-}
 
 export default SubmitNotesModal;

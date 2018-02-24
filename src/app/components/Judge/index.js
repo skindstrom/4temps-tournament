@@ -4,7 +4,7 @@ import Judge from './component';
 import PreloadContainer from '../PreloadContainer';
 import { getTournamentForJudge } from '../../api/tournament';
 
-function mapStateToProps({ tournaments, rounds }: ReduxState) {
+function mapStateToProps({ tournaments, rounds, ui }: ReduxState) {
   const activeRound =
     tournaments.forJudge !== ''
       ? getActiveRound(
@@ -16,13 +16,24 @@ function mapStateToProps({ tournaments, rounds }: ReduxState) {
 
   const activeDanceId =
     activeRound != null ? getActiveDanceId(activeRound) : null;
+  const notes = ui.notes;
   return {
     Child: Judge,
     shouldLoad: tournaments.forJudge === '',
     tournamentId: tournaments.forJudge,
     activeDanceId,
-    activeRound
+    activeRound,
+    notesSubmitted: isNotesSubmitted(notes)
+
   };
+}
+
+function isNotesSubmitted({
+  isLoading, didSubmit, successfulSubmit
+}: UiNotesReduxState) {
+  return !isLoading &&
+    didSubmit &&
+    successfulSubmit;
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch) {

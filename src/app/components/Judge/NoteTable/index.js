@@ -3,20 +3,16 @@
 
 import { connect } from 'react-redux';
 import DanceScorer from '../../../../domain/dance-scorer';
-import type { StateProps, DispatchProps, ColumnViewModel } from './component';
-import { submitNotes } from '../../../api/note';
+import type { StateProps, ColumnViewModel } from './component';
 import Component from './component';
 
 function mapStateToProps(state: ReduxState): StateProps {
   const danceId = getActiveDanceId(getActiveRound(state));
   const notes = getNotesForActiveDance(state, danceId);
   const scores = new DanceScorer(notes).scoreDance(danceId);
-  const uiNotes = state.ui.notes;
   return {
-    ...uiNotes,
     columns: divideScoreIntoColumns(state, scores),
-    tournamentId: state.tournaments.forJudge,
-    notes
+    tournamentId: state.tournaments.forJudge
   };
 }
 
@@ -128,19 +124,8 @@ function getSeparateColumns(
   ];
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
-  return {
-    onSubmit: (tournamentId: string, notes: Array<JudgeNote>) => {
-      dispatch({
-        type: 'SUBMIT_NOTES',
-        promise: submitNotes(tournamentId, notes)
-      });
-    }
-  };
-}
-
-const SubmitNotesModalContainer = connect(mapStateToProps, mapDispatchToProps)(
+const NoteTableContainer = connect(mapStateToProps)(
   Component
 );
 
-export default SubmitNotesModalContainer;
+export default NoteTableContainer;

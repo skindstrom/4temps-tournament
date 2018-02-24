@@ -300,7 +300,10 @@ declare type UiCreateJudgeReduxState = {
 };
 
 declare type UiNotesReduxState = {
-  selectedPair: ?string
+  selectedPair: ?string,
+  isLoading: boolean,
+  didSubmit: boolean,
+  successfulSubmit: boolean
 };
 
 declare type ReduxPackAction = {
