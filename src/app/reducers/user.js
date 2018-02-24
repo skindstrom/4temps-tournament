@@ -10,8 +10,9 @@ function userReducer(
 
   switch (type) {
   case 'LOGIN_USER':
-  case 'LOGIN_WITH_ACCESS_KEY':
     return loginUser(state, action);
+  case 'LOGIN_WITH_ACCESS_KEY':
+    return loginJudge(state, action);
   case 'LOGOUT_USER':
     return logoutUser(state, action);
   default:
@@ -20,7 +21,7 @@ function userReducer(
 }
 
 export function getInitialState(): UserReduxState {
-  return { id: '' };
+  return { id: '', role: '' };
 }
 
 function loginUser(
@@ -29,7 +30,17 @@ function loginUser(
 ): UserReduxState {
   const { payload } = action;
   return handle(state, action, {
-    success: () => ({ id: payload.userId })
+    success: () => ({ id: payload.userId, role: 'admin' })
+  });
+}
+
+function loginJudge(
+  state: UserReduxState,
+  action: ReduxPackAction
+): UserReduxState {
+  const { payload } = action;
+  return handle(state, action, {
+    success: () => ({ id: payload.userId, role: 'judge' })
   });
 }
 
@@ -38,7 +49,7 @@ function logoutUser(
   action: ReduxPackAction
 ): UserReduxState {
   return handle(state, action, {
-    success: () => ({ id: '' })
+    success: () => ({ id: '', role: '' })
   });
 }
 
