@@ -3,24 +3,30 @@ import React, { PureComponent } from 'react';
 import type { Location, RouterHistory } from 'react-router-dom';
 
 import LoginContainer from '../Login';
+import Judge from '../Judge';
+import EditTournamentList from '../EditTournamentList';
 
 type Props = {
   isAuthenticated: boolean,
+  role: string,
   location: Location,
   history: RouterHistory
 };
 
 class Home extends PureComponent<Props> {
-  _renderAuthenticated() {
-    return <h1>Authenticated</h1>;
+
+  _renderForRole(){
+    if(this.props.role == 'admin'){
+      return <EditTournamentList history={this.props.history} />;
+    }else if(this.props.role == 'judge'){
+      return <Judge />;
+    }else{
+      return <LoginContainer {...this.props} />;
+    }
   }
-  _renderNotAuthenticated() {
-    return <LoginContainer {...this.props} />;
-  }
+
   render() {
-    return this.props.isAuthenticated
-      ? this._renderAuthenticated()
-      : this._renderNotAuthenticated();
+    return this._renderForRole();
   }
 }
 
