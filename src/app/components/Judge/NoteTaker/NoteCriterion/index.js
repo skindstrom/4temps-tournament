@@ -7,7 +7,8 @@ import {
   Table,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
+  Popup
 } from 'semantic-ui-react';
 
 export type StateProps = {
@@ -38,7 +39,12 @@ function NoteCriterion({ notedEntity, criterion, onClick }: Props) {
           <TableCell>
             <FormField>
               {criterion.name}
-              <Icon name="info circle" />
+              <Popup
+                trigger={<Icon name="info circle" />}
+                header="Description"
+                content={criterion.description}
+                on={['hover']}
+              />
             </FormField>
           </TableCell>
           {getRange(criterion.minValue, criterion.maxValue).map(val => (
