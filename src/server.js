@@ -193,7 +193,9 @@ class Server {
 
     const user = {
       // $FlowFixMe: Add user to req type
-      id: req.session.user != null ? req.session.user.id : ''
+      id: req.session.user != null ? req.session.user.id : '',
+      // $FlowFixMe: Add user to req type
+      role: req.session.user != null ? req.session.user.role : ''
     };
 
     const html = renderToString(
