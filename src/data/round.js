@@ -23,7 +23,6 @@ export type RoundDbModel = {
   active: boolean,
   finished: boolean,
   groups: Array<DanceGroupDbModel>,
-  winners: { leaders: Array<ObjectId>, followers: Array<ObjectId> },
   scores: Array<{ participantId: ObjectId, score: number }>
 };
 
@@ -99,17 +98,13 @@ export const schema = new mongoose.Schema({
     required: true
   },
   groups: [groupSchema],
-  winners: {
-    leaders: { type: [mongoose.Schema.Types.ObjectId] },
-    followers: { type: [mongoose.Schema.Types.ObjectId] }
-  },
   scores: {
     type: [{ participantId: mongoose.Schema.Types.ObjectId, score: Number }]
   }
 });
 
 export function mapToDomainModel(round: RoundDbModel): Round {
-  const { _id, groups, criteria, scores, winners, ...same } = round;
+  const { _id, groups, criteria, scores, ...same } = round;
 
   return {
     id: _id.toString(),
@@ -129,10 +124,6 @@ export function mapToDomainModel(round: RoundDbModel): Round {
         finished: d.finished
       }))
     })),
-    winners: {
-      leaders: winners.leaders.map(id => id.toString()),
-      followers: winners.followers.map(id => id.toString())
-    },
     scores: scores.map(entry => ({
       participantId: entry.participantId.toString(),
       score: entry.score
@@ -142,7 +133,7 @@ export function mapToDomainModel(round: RoundDbModel): Round {
 }
 
 export function mapToDbModel(round: Round): RoundDbModel {
-  const { id, groups, criteria, winners, scores, ...same } = round;
+  const { id, groups, criteria, scores, ...same } = round;
 
   return {
     _id: new mongoose.Types.ObjectId(id),
@@ -163,10 +154,6 @@ export function mapToDbModel(round: Round): RoundDbModel {
         finished: d.finished
       }))
     })),
-    winners: {
-      leaders: winners.leaders.map(id => new mongoose.Types.ObjectId(id)),
-      followers: winners.followers.map(id => new mongoose.Types.ObjectId(id))
-    },
     scores: scores.map(entry => ({
       participantId: new mongoose.Types.ObjectId(entry.participantId),
       score: entry.score

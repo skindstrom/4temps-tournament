@@ -54,7 +54,6 @@ declare type Round = {
   active: boolean,
   finished: boolean,
   groups: Array<DanceGroup>,
-  winners: { leaders: Array<string>, followers: Array<string> },
   scores: Array<Score>
 };
 

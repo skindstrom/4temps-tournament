@@ -345,7 +345,19 @@ describe('Next group generator', () => {
       ...createRound(),
       active: false,
       finished: true,
-      winners: { leaders: [leaders[0].id], followers: [followers[0].id] },
+      passingCouplesCount: 1,
+      scores: [
+        {
+          participantId: leaders[0].id,
+          score: 10
+        },
+        { participantId: followers[0].id, score: 5 },
+        {
+          participantId: leaders[1].id,
+          score: 5
+        },
+        { participantId: followers[1].id, score: 3 }
+      ],
       groups: [
         {
           id: 'group1',

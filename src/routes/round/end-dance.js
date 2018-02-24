@@ -2,7 +2,6 @@
 
 import NoteChecker from '../../domain/note-checker';
 import RoundScorer from '../../domain/round-scorer';
-import WinnerPicker from '../../domain/winner-picker';
 import NextGroupGenerator from '../../domain/next-group-generator';
 import type { TournamentRepository } from '../../data/tournament';
 import type { NoteRepository } from '../../data/note';
@@ -191,7 +190,6 @@ class StartDanceRouteHandler {
     const notes = await this._getNotes(round);
 
     round.scores = new RoundScorer(round).scoreRound(notes);
-    round.winners = new WinnerPicker(round).pickWinners(notes);
 
     round.active = false;
     round.finished = true;

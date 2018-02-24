@@ -146,10 +146,32 @@ describe('Generate groups route', () => {
       ...createRound(),
       active: false,
       finished: true,
-      winners: {
-        leaders: [participants[0].id],
-        followers: [participants[1].id]
-      }
+      passingCouplesCount: 1,
+      scores: [
+        {
+          participantId: participants[0].id,
+          score: 10
+        },
+        { participantId: participants[1].id, score: 6 },
+        { participantId: participants[2].id, score: 5 },
+        { participantId: participants[3].id, score: 4 }
+      ],
+      groups: [
+        {
+          id: 'group1',
+          pairs: [
+            { leader: participants[0].id, follower: participants[1].id },
+            { leader: participants[2].id, follower: participants[3].id }
+          ],
+          dances: [
+            {
+              id: 'dance1',
+              active: false,
+              finished: true
+            }
+          ]
+        }
+      ]
     };
     const round2 = { ...createRound(), active: true };
 

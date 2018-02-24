@@ -1,6 +1,6 @@
 // @flow
 import { connect } from 'react-redux';
-import type { Props as ComponentProps, ScoreViewModel } from './component';
+import type { Props as ComponentProps } from './component';
 import Component from './component';
 
 type Props = {
@@ -13,42 +13,26 @@ function mapStateToProps(
 ): ComponentProps {
   const round = rounds.byId[roundId];
   const scores = hydrateScores(round.scores, participants);
-  const scoresMap: { [id: string]: ScoreViewModel } = scores.reduce(
-    (acc, score) => ({ ...acc, [score.participant.id]: score }),
-    {}
-  );
 
   const pairs = getPairs(round);
 
-  const winningLeaders = new Set(round.winners.leaders);
-  const winningFollowers = new Set(round.winners.followers);
+  const leaders = new Set(getLeaders(pairs));
+  const followers = new Set(getFollowers(pairs));
 
-  const losingLeaders = getLeaders(pairs).filter(id => !winningLeaders.has(id));
-  const losingFollowers = getFollowers(pairs).filter(
-    id => !winningFollowers.has(id)
-  );
+  const leaderScores = scores
+    .filter(({ participant }) => leaders.has(participant.id))
+    .map((score, i) => ({ ...score, position: i + 1 }));
 
-  const winningLeaderScores = round.winners.leaders.map((id, i) => ({
-    ...scoresMap[id],
-    position: i + 1
-  }));
-  const winningFollowerScores = round.winners.followers.map((id, i) => ({
-    ...scoresMap[id],
-    position: i + 1
-  }));
+  const followerScores = scores
+    .filter(({ participant }) => followers.has(participant.id))
+    .map((score, i) => ({ ...score, position: i + 1 }));
 
   return {
     isFinished: round.finished,
-    winningLeaderScores,
-    winningFollowerScores,
-    losingLeaderScores: losingLeaders.map((id, i) => ({
-      ...scoresMap[id],
-      position: winningLeaderScores.length + i + 1
-    })),
-    losingFollowerScores: losingFollowers.map((id, i) => ({
-      ...scoresMap[id],
-      position: winningFollowerScores.length + i + 1
-    }))
+    winningLeaderScores: leaderScores.slice(0, round.passingCouplesCount),
+    winningFollowerScores: followerScores.slice(0, round.passingCouplesCount),
+    losingLeaderScores: leaderScores.slice(round.passingCouplesCount),
+    losingFollowerScores: followerScores.slice(round.passingCouplesCount)
   };
 }
 

@@ -42,7 +42,6 @@ export default class NextGroupGenerator {
     } else {
       participants = this._tournament.participants;
     }
-
     return participants.filter(par => par.isAttending);
   };
 
@@ -54,15 +53,48 @@ export default class NextGroupGenerator {
     let prevRound: ?Round = null;
     for (const round of this._tournament.rounds) {
       if (round.id === this._round.id && prevRound != null) {
-        return [
-          ...prevRound.winners.leaders,
-          ...prevRound.winners.followers
-          // $FlowFixMe
-        ].map(id => this._tournament.participants.find(p => p.id === id));
+        const winners = this._getWinnersOfRound(prevRound);
+        return (
+          winners
+            // $FlowFixMe
+            .map(id => this._tournament.participants.find(p => p.id === id))
+        );
       }
       prevRound = round;
     }
     throw new RoundNotFoundError();
+  };
+
+  _getWinnersOfRound = (round: Round): Array<string> => {
+    const leaders = [];
+    const followers = [];
+    for (const group of round.groups) {
+      for (const pair of group.pairs) {
+        leaders.push(pair.leader);
+        followers.push(pair.follower);
+      }
+    }
+
+    const leaderSet = new Set(leaders);
+    const followerSet = new Set(followers);
+
+    const isAttending = this._tournament.participants.reduce((acc, par) => {
+      acc[par.id] = par.isAttending;
+      return acc;
+    }, {});
+
+    const count = round.passingCouplesCount;
+    const passingLeaders = round.scores
+      .map(({ participantId }) => participantId)
+      .filter(id => isAttending[id] && leaderSet.has(id))
+      .slice(0, count);
+    const passingFollowers = round.scores
+      .map(({ participantId }) => participantId)
+      .filter(id => isAttending[id] && followerSet.has(id))
+      .slice(0, count);
+
+    // $FlowFixMe
+    return passingLeaders.concat(passingFollowers);
   };
 
   _generateGroup = (): ?DanceGroup => {
@@ -72,7 +104,6 @@ export default class NextGroupGenerator {
     }
 
     let pairs = this._generatePairsFromParticipants(remainingParticipants);
-
     if (this._isUnevenPairing(pairs)) {
       try {
         pairs = this._makeEvenPairing();

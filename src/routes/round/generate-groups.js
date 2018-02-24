@@ -68,6 +68,7 @@ class GenerateGroupsRouteHandler {
   startRound = async () => {
     this._tournament = await this._getTournament();
     this._round = this._getRound();
+    this._round.groups = [];
 
     if (!this._round.active) {
       throw new NotStartedError();
