@@ -102,6 +102,79 @@ describe('Round scorer', () => {
     expect(scores).toContainEqual({ participantId: leader.id, score: 0 });
     expect(scores).toContainEqual({ participantId: follower.id, score: 0 });
   });
+
+  test('Selects random participant if equal score', () => {
+    const judgeId = 'j1';
+    const criterionId = 'c1';
+    const danceId = 'd1';
+
+    const round: Round = {
+      ...createRound(),
+      groups: [
+        {
+          id: 'group1',
+          pairs: [
+            { leader: 'l1', follower: 'f1' },
+            { leader: 'l2', follower: 'f2' }
+          ],
+          dances: [
+            {
+              id: 'dance1',
+              active: false,
+              finished: true
+            }
+          ]
+        }
+      ]
+    };
+
+    // leaders have same score, followers have same score
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId,
+        criterionId,
+        danceId,
+        participantId: 'l1',
+        value: 3
+      },
+      {
+        judgeId,
+        criterionId,
+        danceId,
+        participantId: 'l2',
+        value: 3
+      },
+      {
+        judgeId,
+        criterionId,
+        danceId,
+        participantId: 'f1',
+        value: 1
+      },
+      {
+        judgeId,
+        criterionId,
+        danceId,
+        participantId: 'f2',
+        value: 1
+      }
+    ];
+
+    const scorer = new RoundScorer(round);
+    const leaderWinners = new Set();
+    const followerWinners = new Set();
+    for (let i = 0; i < 20; ++i) {
+      const scores = scorer.scoreRound(notes);
+      // leaders have higher score, should have pos. 0 and 1
+      leaderWinners.add(scores[0].participantId);
+      // followers have lower score, should have pos. 2 and 3
+      followerWinners.add(scores[2].participantId);
+    }
+    expect(leaderWinners).toContainEqual('l1');
+    expect(leaderWinners).toContainEqual('l2');
+    expect(followerWinners).toContainEqual('f1');
+    expect(followerWinners).toContainEqual('f2');
+  });
 });
 
 function createRoundWithGroups(danceIds: Array<string>): Round {

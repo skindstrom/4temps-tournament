@@ -25,7 +25,7 @@ class DanceScorer {
           score: totals[participantId]
         };
       })
-      .sort((a, b) => b.score - a.score);
+      .sort(this._sort);
   };
 
   _addNoteToTotal = (note: JudgeNote, total: { [id: string]: number }) => {
@@ -35,6 +35,13 @@ class DanceScorer {
     } else {
       total[participantId] = note.value;
     }
+  };
+
+  _sort = (a: Score, b: Score) => {
+    if (a.score == b.score) {
+      return Math.random() - 0.5;
+    }
+    return b.score - a.score;
   };
 }
 

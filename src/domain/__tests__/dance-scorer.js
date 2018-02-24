@@ -70,4 +70,36 @@ describe('Dance scorer', () => {
       { participantId: participants[0].id, score: 8 }
     ]);
   });
+
+  test('Selects random participant if equal score', () => {
+    const participants = ['p1', 'p2'];
+    const judgeId = 'j1';
+    const criterionId = 'c1';
+    const danceId = 'd1';
+
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId,
+        criterionId,
+        danceId,
+        participantId: participants[0],
+        value: 1
+      },
+      {
+        judgeId,
+        criterionId,
+        danceId,
+        participantId: participants[1],
+        value: 1
+      }
+    ];
+
+    const scorer = new DanceScorer(notes);
+    const winners = new Set();
+    for (let i = 0; i < 20; ++i) {
+      winners.add(scorer.scoreDance(danceId)[0].participantId);
+    }
+    expect(winners).toContainEqual('p1');
+    expect(winners).toContainEqual('p2');
+  });
 });

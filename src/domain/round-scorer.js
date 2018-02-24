@@ -37,7 +37,7 @@ export default class RoundScorer {
         participantId,
         score: this._scoreFromDanceRule(totals[participantId])
       }))
-      .sort((a, b) => b.score - a.score);
+      .sort(this._sort);
   };
 
   _getParticipants = (): Array<string> => {
@@ -84,5 +84,12 @@ export default class RoundScorer {
     });
 
     return dances;
+  };
+
+  _sort = (a: Score, b: Score) => {
+    if (a.score == b.score) {
+      return Math.random() - 0.5;
+    }
+    return b.score - a.score;
   };
 }
