@@ -7,7 +7,13 @@ import PreloadContainer from '../PreloadContainer';
 import TournamentList from '../TournamentList';
 import { getTournamentsForUser } from '../../api/tournament';
 
-function mapStateToProps({ tournaments }: ReduxState) {
+function mapStateToProps({ tournaments }: ReduxState,
+  { history }: { history: RouterHistory }) {
+  if (tournaments.didLoadAdminTournaments
+      && tournaments.forAdmin.length === 0) {
+    // If we loaded all tournaments and list was empty redirect to create
+    history.push('/tournament/create');
+  }
   return {
     shouldLoad: !tournaments.didLoadAdminTournaments,
     isLoading: tournaments.isLoading,
