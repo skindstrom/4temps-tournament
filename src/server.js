@@ -136,10 +136,7 @@ class Server {
             ],
             fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
             formAction: ["'self'"],
-            connectSrc: [
-              "'self'",
-              `ws://${String(process.env.HOSTNAME)}:${String(process.env.PORT)}`
-            ]
+            connectSrc: ["'self'", this._getWebsocketConnectionString()]
           }
         }
       })
@@ -152,6 +149,12 @@ class Server {
       res.locals.cspNonce = uuid();
       return next();
     });
+  };
+
+  _getWebsocketConnectionString = () => {
+    const port =
+      this._isProduction() || process.env.PORT === '' ? '80' : process.env.PORT;
+    return `ws://${String(process.env.HOSTNAME)}:${String(port)}`;
   };
 
   _enableRouting = () => {
