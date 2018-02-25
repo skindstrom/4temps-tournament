@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import PreloadContainer from '../../../PreloadContainer';
 import Component from './component';
 
-import { getTournamentsForUser } from '../../../../api/tournament';
 import { getAccessKeysForTournament } from '../../../../api/access-key';
+import { getAdminTournaments } from '../../../../action-creators';
 
 type Props = {
   tournamentId: string
@@ -35,10 +35,7 @@ function mapStateToProps(
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
     load: () => {
-      dispatch({
-        type: 'GET_ADMIN_TOURNAMENTS',
-        promise: getTournamentsForUser()
-      });
+      getAdminTournaments(dispatch);
       dispatch({
         type: 'GET_ACCESS_KEYS',
         promise: getAccessKeysForTournament(tournamentId)

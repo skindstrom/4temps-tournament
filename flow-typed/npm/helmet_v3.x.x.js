@@ -1,5 +1,5 @@
-// flow-typed signature: 189611a01ef81ac8983fca0766f43b08
-// flow-typed version: eabee4c061/helmet_v3.x.x/flow_>=v0.38.x
+// flow-typed signature: 8f71a139ed8ba2cc270e0b6f1008f924
+// flow-typed version: f62f6c2f4b/helmet_v3.x.x/flow_>=v0.38.x
 
 declare type Middleware = (req: http$IncomingMessage, res: http$ServerResponse, next: (err?: ?Error) => mixed) => mixed;
 
@@ -12,9 +12,9 @@ declare type helmet$ReferrerPolicyOptions = {
 }
 
 declare type helmet$HstsOptions = {
-  maxAge: number;
-  includeSubDomains: boolean;
-  preload: boolean;
+  maxAge?: number;
+  includeSubDomains?: boolean;
+  preload?: boolean;
   setIf?: (req: http$IncomingMessage, res: http$ServerResponse) => boolean;
 }
 

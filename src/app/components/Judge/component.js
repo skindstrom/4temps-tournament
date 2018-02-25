@@ -14,14 +14,14 @@ type Props = {
   tournamentId: string,
   activeRound: ?Round,
   activeDanceId: ?string,
-  notesSubmitted: boolean,
+  notesSubmitted: boolean
 };
 
 export default function Judge({
   tournamentId,
   activeRound,
   activeDanceId,
-  notesSubmitted,
+  notesSubmitted
 }: Props) {
   return activeRound != null && activeDanceId != null ? (
     <ActiveDance
@@ -37,7 +37,7 @@ export default function Judge({
 
 function NoActiveDance() {
   return (
-    <Header as="h1" textAlign="center" vertical>
+    <Header as="h1" textAlign="center">
       No active dance
     </Header>
   );
@@ -51,9 +51,7 @@ function ActiveDance(props: ActiveDanceProps) {
     <Container>
       <RoundInformation />
       <Divider />
-      { props.notesSubmitted ?
-        <ShowNotes /> :
-        <TakeNotes {...props} />}
+      {props.notesSubmitted ? <ShowNotes /> : <TakeNotes {...props} />}
     </Container>
   );
 }
@@ -61,10 +59,10 @@ function ActiveDance(props: ActiveDanceProps) {
 type TakeNotesProps = {
   roundId: string,
   danceId: string,
-  tournamentId: string,
-}
+  tournamentId: string
+};
 
-function TakeNotes({danceId, tournamentId, roundId}: TakeNotesProps) {
+function TakeNotes({ danceId, tournamentId, roundId }: TakeNotesProps) {
   return (
     <Container>
       <SelectPairGrid roundId={roundId} />

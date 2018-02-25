@@ -5,7 +5,7 @@ import type { Match, RouterHistory } from 'react-router-dom';
 
 import PreloadContainer from '../PreloadContainer';
 import Component from './component';
-import { getTournamentsForUser } from '../../api/tournament';
+import { getAdminTournaments } from '../../action-creators';
 
 type Props = {
   match: Match,
@@ -23,16 +23,9 @@ function mapStateToProps(state: ReduxState, { match }: Props) {
   };
 }
 
-function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
+function mapDispatchToProps(dispatch: ReduxDispatch) {
   return {
-    load: () =>
-      dispatch({
-        type: 'GET_ADMIN_TOURNAMENTS',
-        promise: getTournamentsForUser(),
-        meta: {
-          onFailure: () => history.push('/404')
-        }
-      })
+    load: () => getAdminTournaments(dispatch)
   };
 }
 

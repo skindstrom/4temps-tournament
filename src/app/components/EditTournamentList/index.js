@@ -5,12 +5,16 @@ import type { RouterHistory } from 'react-router-dom';
 
 import PreloadContainer from '../PreloadContainer';
 import TournamentList from '../TournamentList';
-import { getTournamentsForUser } from '../../api/tournament';
+import { getAdminTournaments } from '../../action-creators';
 
-function mapStateToProps({ tournaments }: ReduxState,
-  { history }: { history: RouterHistory }) {
-  if (tournaments.didLoadAdminTournaments
-      && tournaments.forAdmin.length === 0) {
+function mapStateToProps(
+  { tournaments }: ReduxState,
+  { history }: { history: RouterHistory }
+) {
+  if (
+    tournaments.didLoadAdminTournaments &&
+    tournaments.forAdmin.length === 0
+  ) {
     // If we loaded all tournaments and list was empty redirect to create
     history.push('/tournament/create');
   }
@@ -27,11 +31,7 @@ function mapDispatchToProps(
   { history }: { history: RouterHistory }
 ) {
   return {
-    load: () =>
-      dispatch({
-        type: 'GET_ADMIN_TOURNAMENTS',
-        promise: getTournamentsForUser()
-      }),
+    load: () => getAdminTournaments(dispatch),
     onClick: (id: string) => history.push(`/tournament/edit/${id}`)
   };
 }

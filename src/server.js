@@ -1,6 +1,7 @@
 // @flow
 
 import Express from 'express';
+import HTTP from 'http';
 import Session from 'express-session';
 import ConnectMongo from 'connect-mongo';
 import Helmet from 'helmet';
@@ -22,6 +23,7 @@ import getDbConnection from './data/setup';
 
 import renderHtmlTemplate from './ssr-template';
 import { appWithPreloadedState, getReduxState } from './app/components/App';
+import { setup as setupRealTime } from './realtime';
 
 class Server {
   _app: ExpressApplication;
@@ -31,6 +33,7 @@ class Server {
 
   constructor() {
     this._app = Express();
+    this._server = HTTP.createServer(this._app);
   }
 
   static initialize() {
@@ -43,12 +46,13 @@ class Server {
     server._enableSecurePolicies();
     server._enableRouting();
     server._enableServerSideRendering();
+    server._enableRealTimeUpdates();
 
     return server;
   }
 
   listen = () => {
-    this._server = this._app.listen(3000, () => {
+    this._server.listen(process.env.PORT, () => {
       // eslint-disable-next-line no-console
       console.log('Application started');
     });
@@ -131,7 +135,11 @@ class Server {
               'fonts.googleapis.com'
             ],
             fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
-            formAction: ["'self'"]
+            formAction: ["'self'"],
+            connectSrc: [
+              "'self'",
+              `ws://${String(process.env.HOSTNAME)}:${String(process.env.PORT)}`
+            ]
           }
         }
       })
@@ -221,6 +229,10 @@ class Server {
       );
     }
     res.end();
+  };
+
+  _enableRealTimeUpdates = () => {
+    setupRealTime(this._server);
   };
 }
 

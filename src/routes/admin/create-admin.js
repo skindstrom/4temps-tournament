@@ -34,9 +34,13 @@ export const createAdminRoute = async (
 
 export default async (req: $Request, res: $Response) => {
   const admin: AdminWithPassword = {
+    // $FlowFixMe
     email: req.body.email || '',
+    // $FlowFixMe
     firstName: req.body.firstName || '',
+    // $FlowFixMe
     lastName: req.body.lastName || '',
+    // $FlowFixMe
     password: req.body.password || ''
   };
 

@@ -1,10 +1,9 @@
 // @flow
 import { connect } from 'react-redux';
 
-import {
-  updateTournament,
-  getTournamentsForUser
-} from '../../../api/tournament';
+import { updateTournament } from '../../../api/tournament';
+
+import { getAdminTournaments } from '../../../action-creators';
 
 import EditTournamentGeneral from './component';
 import PreloadContainer from '../../PreloadContainer';
@@ -48,11 +47,7 @@ function mapDispatchToProps(
         promise: updateTournament(tournamentId, tournament)
       }),
 
-    load: () =>
-      dispatch({
-        type: 'GET_ADMIN_TOURNAMENTS',
-        promise: getTournamentsForUser()
-      })
+    load: () => getAdminTournaments(dispatch)
   };
 }
 

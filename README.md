@@ -35,6 +35,8 @@ An example `.env` file can be seen below
 NODE_ENV=development
 DB_URI=mongodb://localhost/4temps
 COOKIE_SECRET="super secret cookie secret"
+HOSTNAME=localhost
+PORT=3000
 ```
 
 # Usage

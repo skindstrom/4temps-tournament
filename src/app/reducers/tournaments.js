@@ -18,6 +18,8 @@ function tournaments(
     return createTournament(state, action);
   case 'EDIT_TOURNAMENT':
     return editTournament(state, action);
+  case 'TOURNAMENT_UPDATED':
+    return tournamentUpdated(state, action);
   case 'LOGOUT_USER':
     return logout(state, action);
   default:
@@ -151,6 +153,20 @@ function logout(
       didLoadAdminTournaments: false
     })
   });
+}
+
+function tournamentUpdated(
+  state: TournamentsReduxState,
+  action: ReduxPackAction
+) {
+  const { payload } = action;
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      ...payload.entities.tournaments
+    }
+  };
 }
 
 export default tournaments;

@@ -18,6 +18,14 @@ export function getReduxState(): ReduxState {
   return getInitialState();
 }
 
+export function appWithStore(store: mixed) {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
+
 export function appWithPreloadedState(preloadedState: mixed) {
   store = initializeStore(preloadedState);
   return (
@@ -27,7 +35,7 @@ export function appWithPreloadedState(preloadedState: mixed) {
   );
 }
 
-function initializeStore(preloadedState: mixed) {
+export function initializeStore(preloadedState: mixed) {
   const state: ReduxState = { ...getInitialState(), ...preloadedState };
   return createStore(reducer, state, applyMiddleware(reduxPackMiddleware));
 }

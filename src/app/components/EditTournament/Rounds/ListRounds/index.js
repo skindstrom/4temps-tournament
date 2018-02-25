@@ -5,7 +5,7 @@ import type { RouterHistory } from 'react-router-dom';
 import PreloadContainer from '../../../PreloadContainer';
 import List from './component';
 import { deleteRound, startRound } from '../../../../api/round';
-import { getTournamentsForUser } from '../../../../api/tournament';
+import { getAdminTournaments } from '../../../../action-creators';
 
 type Props = {
   tournamentId: string,
@@ -32,11 +32,7 @@ function mapDispatchToProps(
   { tournamentId, history }: Props
 ) {
   return {
-    load: () =>
-      dispatch({
-        type: 'GET_ADMIN_TOURNAMENTS',
-        promise: getTournamentsForUser()
-      }),
+    load: () => getAdminTournaments(dispatch),
     deleteRound: (deleteId: string) =>
       dispatch({
         type: 'DELETE_ROUND',

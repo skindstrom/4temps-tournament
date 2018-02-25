@@ -22,6 +22,8 @@ function rounds(
     return payloadIsRound(state, action);
   case 'GET_JUDGE_TOURNAMENT':
     return getJudgeTournament(state, action);
+  case 'TOURNAMENT_UPDATED':
+    return tournamentUpdated(state, action);
   default:
     return state;
   }
@@ -46,10 +48,12 @@ function createRound(
       ...prevState,
       forTournament: {
         ...prevState.forTournament,
-        [payload.tournamentId]: [
-          ...(prevState.forTournament[payload.tournamentId] || []),
-          payload.round.id
-        ]
+        [payload.tournamentId]: Array.from(
+          new Set([
+            ...prevState.forTournament[payload.tournamentId],
+            payload.round.id
+          ]).values()
+        )
       },
       byId: {
         ...prevState.byId,
@@ -144,6 +148,24 @@ function payloadIsRound(
       }
     })
   });
+}
+
+function tournamentUpdated(
+  state: RoundsReduxState,
+  action: ReduxPackAction
+): RoundsReduxState {
+  const { payload } = action;
+  return {
+    ...state,
+    forTournament: {
+      ...state.forTournament,
+      [payload.result]: payload.entities.tournaments[payload.result].rounds
+    },
+    byId: {
+      ...state.byId,
+      ...payload.entities.rounds
+    }
+  };
 }
 
 export default rounds;

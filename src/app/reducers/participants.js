@@ -15,11 +15,13 @@ function participants(
   case 'GET_ADMIN_TOURNAMENTS':
     return getTournaments(state, action);
   case 'GET_JUDGE_TOURNAMENT':
-    return getJudgeTournament(state, action);
+    return getSingleTournament(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);
   case 'CHANGE_ATTENDANCE':
     return changeAttendance(state, action);
+  case 'TOURNAMENT_UPDATED':
+    return tournamentUpdated(state, action);
   default:
     return state;
   }
@@ -44,10 +46,12 @@ function createParticipant(
       ...prevState,
       forTournament: {
         ...prevState.forTournament,
-        [payload.tournamentId]: [
-          ...(prevState.forTournament[payload.tournamentId] || []),
-          payload.participant.id
-        ]
+        [payload.tournamentId]: Array.from(
+          new Set([
+            ...prevState.forTournament[payload.tournamentId],
+            payload.participant.id
+          ]).values()
+        )
       },
       byId: {
         ...prevState.byId,
@@ -57,7 +61,7 @@ function createParticipant(
   });
 }
 
-function getJudgeTournament(
+function getSingleTournament(
   state: ParticipantsReduxState,
   action: ReduxPackAction
 ): ParticipantsReduxState {
@@ -136,6 +140,25 @@ function changeAttendance(
       }
     })
   });
+}
+
+function tournamentUpdated(
+  state: ParticipantsReduxState,
+  action: ReduxPackAction
+): ParticipantsReduxState {
+  const { payload } = action;
+  return {
+    ...state,
+    forTournament: {
+      ...state.forTournament,
+      [payload.result]:
+        payload.entities.tournaments[payload.result].participants
+    },
+    byId: {
+      ...state.byId,
+      ...payload.entities.participants
+    }
+  };
 }
 
 export default participants;

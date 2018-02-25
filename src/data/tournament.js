@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import type { ObjectId } from 'mongoose';
 import moment from 'moment';
+import { pushTournamentUpdate } from '../realtime';
 import type { ParticipantDbModel } from './participant';
 import {
   schema as participantSchema,
@@ -131,29 +132,36 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         $set: { name, date }
       }
     );
+
+    pushTournamentUpdate(tournament);
   }
   async createParticipant(tournamentId: string, participant: Participant) {
-    await Model.update(
+    const tournament = await Model.findOneAndUpdate(
       { _id: tournamentId },
       {
         $push: {
           participants: mapParticipantToDbModel(participant)
         }
-      }
+      },
+      { new: true }
     );
+
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
   async createRound(tournamentId: string, round: Round) {
-    await Model.update(
+    const tournament = await Model.findOneAndUpdate(
       { _id: tournamentId },
       {
         $push: {
           rounds: mapRoundToDbModel(round)
         }
-      }
+      },
+      { new: true }
     );
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
   async deleteRound(tournamentId: string, roundId: string) {
-    await Model.update(
+    const tournament = await Model.findOneAndUpdate(
       { _id: tournamentId },
       {
         $pull: {
@@ -161,6 +169,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         }
       }
     );
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
 
   async updateRound(tournamentId: string, round: Round) {
@@ -173,6 +182,8 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         break;
       }
     }
+
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
 
   async addJudge(tournamentId: string, judge: Judge) {
@@ -180,14 +191,16 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       _id: new mongoose.Types.ObjectId(judge.id),
       name: judge.name
     };
-    await Model.update(
+    const tournament = await Model.findOneAndUpdate(
       { _id: tournamentId },
       {
         $push: {
           judges: db
         }
-      }
+      },
+      { new: true }
     );
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
 
   async updateParticipantAttendance(
@@ -222,6 +235,8 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       },
       { new: true }
     );
+
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
 
     return tournament
       .toObject()

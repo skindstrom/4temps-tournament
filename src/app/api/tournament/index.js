@@ -25,7 +25,7 @@ export const createTournament = async (
   );
 };
 
-const deserializeTournament = (tour: Tournament): Tournament => {
+export const deserializeTournament = (tour: Tournament): Tournament => {
   const { date, ...rest } = tour;
   return { date: moment(date), ...rest };
 };

@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import Judge from './component';
 import PreloadContainer from '../PreloadContainer';
-import { getTournamentForJudge } from '../../api/tournament';
+import { getJudgeTournament } from '../../action-creators';
 
 function mapStateToProps({ tournaments, rounds, ui }: ReduxState) {
   const activeRound =
@@ -24,25 +24,20 @@ function mapStateToProps({ tournaments, rounds, ui }: ReduxState) {
     activeDanceId,
     activeRound,
     notesSubmitted: isNotesSubmitted(notes)
-
   };
 }
 
 function isNotesSubmitted({
-  isLoading, didSubmit, successfulSubmit
+  isLoading,
+  didSubmit,
+  successfulSubmit
 }: UiNotesReduxState) {
-  return !isLoading &&
-    didSubmit &&
-    successfulSubmit;
+  return !isLoading && didSubmit && successfulSubmit;
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch) {
   return {
-    load: () =>
-      dispatch({
-        type: 'GET_JUDGE_TOURNAMENT',
-        promise: getTournamentForJudge()
-      })
+    load: () => getJudgeTournament(dispatch)
   };
 }
 

@@ -316,6 +316,7 @@ declare type ReduxAction =
   | LoginAction
   | GetAllTournamentsAction
   | GetAdminTournamentsAction
+  | TournamentUpdatedAction
   | CreateTournamentAction
   | EditTournamentAction
   | CreateParticipantAction
@@ -360,6 +361,11 @@ declare type GetAllTournamentsAction = {
 declare type GetAdminTournamentsAction = {
   type: 'GET_ADMIN_TOURNAMENTS',
   promise: Promise<mixed>
+};
+
+declare type TournamentUpdatedAction = {
+  type: 'TOURNAMENT_UPDATED',
+  payload: mixed
 };
 
 declare type CreateTournamentAction = {

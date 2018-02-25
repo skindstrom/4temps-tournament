@@ -13,7 +13,9 @@ export default function reducer(
   case 'CREATE_JUDGE':
     return createJudge(state, action);
   case 'GET_JUDGE_TOURNAMENT':
-    return getJudgeTournament(state, action);
+    return getSingleTournament(state, action);
+  case 'TOURNAMENT_UPDATED':
+    return tournamentUpdated(state, action);
   default:
     return state;
   }
@@ -59,10 +61,12 @@ function createJudge(
       ...prevState,
       forTournament: {
         ...prevState.byId,
-        [payload.tournamentId]: [
-          ...(prevState.forTournament[payload.tournamentId] || []),
-          payload.judge.id
-        ]
+        [payload.tournamentId]: Array.from(
+          new Set([
+            ...prevState.forTournament[payload.tournamentId],
+            payload.judge.id
+          ]).values()
+        )
       },
       byId: {
         ...prevState.byId,
@@ -72,7 +76,7 @@ function createJudge(
   });
 }
 
-function getJudgeTournament(
+function getSingleTournament(
   state: JudgesReduxState,
   action: ReduxPackAction
 ): JudgesReduxState {
@@ -90,4 +94,22 @@ function getJudgeTournament(
       }
     })
   });
+}
+
+function tournamentUpdated(
+  state: JudgesReduxState,
+  action: ReduxPackAction
+): JudgesReduxState {
+  const { payload } = action;
+  return {
+    ...state,
+    forTournament: {
+      ...state.forTournament,
+      [payload.result]: payload.entities.tournaments[payload.result].judges
+    },
+    byId: {
+      ...state.byId,
+      ...payload.entities.judges
+    }
+  };
 }

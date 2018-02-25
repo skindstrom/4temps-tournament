@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import ListParticipants from './component';
 import PreloadContainer from '../../../PreloadContainer';
-import { getTournamentsForUser } from '../../../../api/tournament';
 import { changeAttendance } from '../../../../api/participant';
+import { getAdminTournaments } from '../../../../action-creators';
 
 type Props = {
   tournamentId: string
@@ -25,11 +25,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
-    load: () =>
-      dispatch({
-        type: 'GET_ADMIN_TOURNAMENTS',
-        promise: getTournamentsForUser()
-      }),
+    load: () => getAdminTournaments(dispatch),
     onChangeAttending: (id, isAttending) =>
       dispatch({
         type: 'CHANGE_ATTENDANCE',
