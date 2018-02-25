@@ -15,6 +15,7 @@ declare type Tournament = {
   name: string,
   date: Moment,
   type: TournamentType,
+  dancesNoted: { [judgeId: string]: Array<string> },
   judges: Array<Judge>,
   participants: Array<Participant>,
   rounds: Array<Round>
@@ -205,7 +206,8 @@ declare type TournamentsReduxState = {
       type: TournamentType,
       judges: Array<string>,
       participants: Array<string>,
-      rounds: Array<string>
+      rounds: Array<string>,
+      dancesNoted: { [judgeId: string]: Array<string> }
     }
   }
 };

@@ -24,7 +24,8 @@ type TournamentModel = {
   type: TournamentType,
   judges: Array<{ _id: ObjectId, name: string }>,
   participants: Array<ParticipantDbModel>,
-  rounds: Array<RoundDbModel>
+  rounds: Array<RoundDbModel>,
+  dancesNoted: { [judgeId: string]: Array<string> }
 };
 
 const judgeSchema = new mongoose.Schema({
@@ -55,7 +56,8 @@ const schema = new mongoose.Schema({
   },
   judges: [judgeSchema],
   participants: [participantSchema],
-  rounds: [roundSchema]
+  rounds: [roundSchema],
+  dancesNoted: mongoose.Schema.Types.Mixed
 });
 
 const Model = mongoose.model('tournament', schema);
@@ -82,6 +84,11 @@ export interface TournamentRepository {
   updateRound(tournamentId: string, round: Round): Promise<void>;
 
   addJudge(tournamentId: string, judge: Judge): Promise<void>;
+  markDanceAsNoted(
+    tournamentId: string,
+    judgeId: string,
+    danceId: string
+  ): Promise<void>;
 }
 
 export class TournamentRepositoryImpl implements TournamentRepository {
@@ -242,6 +249,23 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       .toObject()
       .participants.map(mapParticipantToDomainModel)
       .filter(({ id }) => id === participantId)[0];
+  }
+
+  async markDanceAsNoted(
+    tournamentId: string,
+    judgeId: string,
+    danceId: string
+  ) {
+    const tournament = await Model.findOneAndUpdate(
+      { _id: tournamentId },
+      {
+        $push: {
+          [`dancesNoted.${judgeId}`]: danceId
+        }
+      },
+      { new: true }
+    );
+    pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
 }
 

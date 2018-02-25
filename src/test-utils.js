@@ -188,6 +188,17 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   addJudge = async (tournamentId: string, judge: Judge) => {
     this._tournaments[tournamentId].judges.push(judge);
   };
+
+  markDanceAsNoted = async (
+    tournamentId: string,
+    judgeId: string,
+    danceId: string
+  ) => {
+    this._tournaments[tournamentId].dancesNoted[judgeId] = [
+      ...(this._tournaments[tournamentId].dancesNoted[judgeId] || []),
+      danceId
+    ];
+  };
 }
 
 export class AccessKeyRepositoryImpl implements AccessKeyRepository {
@@ -298,7 +309,8 @@ export function createTournament(): Tournament {
     type: 'jj',
     judges: [],
     participants: [],
-    rounds: []
+    rounds: [],
+    dancesNoted: {}
   };
 }
 

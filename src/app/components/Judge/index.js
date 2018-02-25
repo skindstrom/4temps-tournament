@@ -4,7 +4,8 @@ import Judge from './component';
 import PreloadContainer from '../PreloadContainer';
 import { getJudgeTournament } from '../../action-creators';
 
-function mapStateToProps({ tournaments, rounds, ui }: ReduxState) {
+function mapStateToProps(state: ReduxState) {
+  const { tournaments, rounds } = state;
   const activeRound =
     tournaments.forJudge !== ''
       ? getActiveRound(
@@ -16,23 +17,29 @@ function mapStateToProps({ tournaments, rounds, ui }: ReduxState) {
 
   const activeDanceId =
     activeRound != null ? getActiveDanceId(activeRound) : null;
-  const notes = ui.notes;
   return {
     Child: Judge,
     shouldLoad: tournaments.forJudge === '',
     tournamentId: tournaments.forJudge,
     activeDanceId,
     activeRound,
-    notesSubmitted: isNotesSubmitted(notes)
+    notesSubmitted:
+      tournaments.forJudge === ''
+        ? false
+        : isNotesSubmittedForDance(state, activeDanceId)
   };
 }
 
-function isNotesSubmitted({
-  isLoading,
-  didSubmit,
-  successfulSubmit
-}: UiNotesReduxState) {
-  return !isLoading && didSubmit && successfulSubmit;
+function isNotesSubmittedForDance(
+  { user, tournaments }: ReduxState,
+  danceId: ?string
+) {
+  const tournament = tournaments.byId[tournaments.forJudge];
+  if (tournament.dancesNoted && tournament.dancesNoted[user.id]) {
+    return tournament.dancesNoted[user.id].includes(danceId);
+  } else {
+    return false;
+  }
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch) {

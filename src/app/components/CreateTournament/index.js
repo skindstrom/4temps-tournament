@@ -28,7 +28,8 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
           type,
           judges: [],
           participants: [],
-          rounds: []
+          rounds: [],
+          dancesNoted: {}
         }),
         meta: {
           onSuccess: ({ id }: { id: string }) =>

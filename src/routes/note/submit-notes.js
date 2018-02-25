@@ -48,10 +48,23 @@ class SubmitNotesRouteHandler {
       const notes = parseNotes(this._req.body);
       await this._validateNotes(notes);
 
-      for (const note of notes) {
-        await this._noteRepository.createOrUpdate(note);
+      const danceId = notes[0].danceId;
+
+      if (await this._hasPreviouslySubmitted(danceId)) {
+        this._res.sendStatus(400);
+      } else {
+        await this._tournamentRepository.markDanceAsNoted(
+          this._req.params.tournamentId,
+          // $FlowFixMe
+          this._req.session.user.id,
+          danceId
+        );
+
+        for (const note of notes) {
+          await this._noteRepository.createOrUpdate(note);
+        }
+        this._res.sendStatus(200);
       }
-      this._res.sendStatus(200);
     } catch (e) {
       this._handleError(e);
     }
@@ -62,6 +75,17 @@ class SubmitNotesRouteHandler {
     notes.forEach(note =>
       validateNoteForTournamentAndUser(note, tournament, this._req.session.user)
     );
+  };
+
+  _hasPreviouslySubmitted = async (danceId: string) => {
+    // $FlowFixMe
+    const userId = this._req.session.user.id;
+    const tournament = await this._getTournament();
+    if (tournament.dancesNoted && tournament.dancesNoted[userId]) {
+      return tournament.dancesNoted[userId].includes(danceId);
+    }
+
+    return false;
   };
 
   _getTournament = async (): Promise<Tournament> => {

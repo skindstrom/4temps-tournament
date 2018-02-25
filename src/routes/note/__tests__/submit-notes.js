@@ -110,6 +110,24 @@ describe('Create note route', () => {
     expect(res.getStatus()).toBe(404);
   });
 
+  test('All notes must be for active dance', async () => {
+    const tournamentRepository = new TournamentRepositoryImpl();
+    await tournamentRepository.create(hydratedTournament);
+
+    const req = Request.withJudgeAndParams(judge, {
+      tournamentId: hydratedTournament.id
+    });
+    req.body = [validNote, { ...validNote, danceId: 'dance2' }];
+    const res = new Response();
+
+    await submitNotesRoute(tournamentRepository, new NoteRepositoryImpl())(
+      req,
+      res
+    );
+
+    expect(res.getStatus()).toBe(404);
+  });
+
   test('404 is returned if there is no such criterion', async () => {
     const tournamentRepository = new TournamentRepositoryImpl();
     await tournamentRepository.create(hydratedTournament);
@@ -185,7 +203,9 @@ describe('Create note route', () => {
 
   test('200 and the note is returned if success', async () => {
     const tournamentRepository = new TournamentRepositoryImpl();
-    await tournamentRepository.create(hydratedTournament);
+    await tournamentRepository.create(
+      JSON.parse(JSON.stringify(hydratedTournament))
+    );
 
     const req = Request.withJudgeAndParams(judge, {
       tournamentId: hydratedTournament.id
@@ -203,7 +223,9 @@ describe('Create note route', () => {
 
   test('Note is added to the note repository', async () => {
     const tournamentRepository = new TournamentRepositoryImpl();
-    await tournamentRepository.create(hydratedTournament);
+    await tournamentRepository.create(
+      JSON.parse(JSON.stringify(hydratedTournament))
+    );
 
     const noteRepository = new NoteRepositoryImpl();
 
@@ -216,5 +238,26 @@ describe('Create note route', () => {
     await submitNotesRoute(tournamentRepository, noteRepository)(req, res);
 
     expect(noteRepository.getAll()).toEqual([validNote]);
+  });
+
+  test('400 is returned if submits multiple times', async () => {
+    const tournamentRepository = new TournamentRepositoryImpl();
+    await tournamentRepository.create(
+      JSON.parse(JSON.stringify(hydratedTournament))
+    );
+
+    const noteRepository = new NoteRepositoryImpl();
+
+    const req = Request.withJudgeAndParams(judge, {
+      tournamentId: hydratedTournament.id
+    });
+    req.body = [validNote];
+    const res = new Response();
+
+    await submitNotesRoute(tournamentRepository, noteRepository)(req, res);
+    expect(noteRepository.getAll()).toEqual([validNote]);
+
+    await submitNotesRoute(tournamentRepository, noteRepository)(req, res);
+    expect(res.getStatus()).toBe(400);
   });
 });
