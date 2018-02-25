@@ -48,7 +48,7 @@ function createParticipant(
         ...prevState.forTournament,
         [payload.tournamentId]: Array.from(
           new Set([
-            ...prevState.forTournament[payload.tournamentId],
+            ...(prevState.forTournament[payload.tournamentId] || []),
             payload.participant.id
           ]).values()
         )

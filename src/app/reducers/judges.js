@@ -63,7 +63,7 @@ function createJudge(
         ...prevState.byId,
         [payload.tournamentId]: Array.from(
           new Set([
-            ...prevState.forTournament[payload.tournamentId],
+            ...(prevState.forTournament[payload.tournamentId] || []),
             payload.judge.id
           ]).values()
         )

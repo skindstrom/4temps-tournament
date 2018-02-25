@@ -50,7 +50,7 @@ function createRound(
         ...prevState.forTournament,
         [payload.tournamentId]: Array.from(
           new Set([
-            ...prevState.forTournament[payload.tournamentId],
+            ...(prevState.forTournament[payload.tournamentId] || []),
             payload.round.id
           ]).values()
         )
