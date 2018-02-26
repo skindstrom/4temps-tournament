@@ -44,6 +44,7 @@ describe('Create note route', () => {
     rounds: [
       {
         ...createRound(),
+        active: true,
         criteria: [criterion],
         groups: [
           {
@@ -126,6 +127,44 @@ describe('Create note route', () => {
     );
 
     expect(res.getStatus()).toBe(404);
+  });
+
+  test('Must submit all notes for dance', async () => {
+    const tournamentRepository = new TournamentRepositoryImpl();
+
+    const tournamentWithTwoCriteria: Tournament = {
+      ...hydratedTournament,
+      participants: [participant],
+      judges: [judge],
+      rounds: [
+        {
+          ...createRound(),
+          active: true,
+          criteria: [criterion, { ...criterion, id: 'crit2' }],
+          groups: [
+            {
+              id: generateId(),
+              pairs: [{ leader: participant.id, follower: null }],
+              dances: [dance]
+            }
+          ]
+        }
+      ]
+    };
+    await tournamentRepository.create(tournamentWithTwoCriteria);
+
+    const req = Request.withJudgeAndParams(judge, {
+      tournamentId: tournamentWithTwoCriteria.id
+    });
+    req.body = [validNote]; //missing note for crit2
+    const res = new Response();
+
+    await submitNotesRoute(tournamentRepository, new NoteRepositoryImpl())(
+      req,
+      res
+    );
+
+    expect(res.getStatus()).toBe(400);
   });
 
   test('404 is returned if there is no such criterion', async () => {

@@ -10,6 +10,7 @@ import validateNoteForTournamentAndUser, {
   WrongJudgeError
 } from './validate-note';
 import { parseNotes, InvalidBodyError } from './parse-note';
+import NoteChecker from '../../domain/note-checker';
 
 export default function submitNotesRoute(
   tournamentRepository: TournamentRepository,
@@ -46,11 +47,15 @@ class SubmitNotesRouteHandler {
   route = async () => {
     try {
       const notes = parseNotes(this._req.body);
-      await this._validateNotes(notes);
+      const tournament = await this._getTournament();
+      this._validateNotes(notes, tournament);
 
       const danceId = notes[0].danceId;
 
-      if (await this._hasPreviouslySubmitted(danceId)) {
+      if (
+        this._hasPreviouslySubmitted(danceId, tournament) ||
+        !this._hasAllNotes(notes, tournament)
+      ) {
         this._res.sendStatus(400);
       } else {
         await this._tournamentRepository.markDanceAsNoted(
@@ -70,22 +75,34 @@ class SubmitNotesRouteHandler {
     }
   };
 
-  _validateNotes = async (notes: Array<JudgeNote>) => {
-    const tournament: Tournament = await this._getTournament();
+  _validateNotes = (notes: Array<JudgeNote>, tournament: Tournament) => {
     notes.forEach(note =>
       validateNoteForTournamentAndUser(note, tournament, this._req.session.user)
     );
   };
 
-  _hasPreviouslySubmitted = async (danceId: string) => {
+  _hasPreviouslySubmitted = (danceId: string, tournament: Tournament) => {
     // $FlowFixMe
     const userId = this._req.session.user.id;
-    const tournament = await this._getTournament();
     if (tournament.dancesNoted && tournament.dancesNoted[userId]) {
       return tournament.dancesNoted[userId].includes(danceId);
     }
 
     return false;
+  };
+
+  _hasAllNotes = (notes: Array<JudgeNote>, tournament: Tournament) => {
+    const danceId = notes[0].danceId;
+    // $FlowFixMe
+    const userId = this._req.session.user.id;
+
+    const hasAll = new NoteChecker(tournament).allSetForDanceByJudge(
+      danceId,
+      notes,
+      userId
+    );
+
+    return hasAll;
   };
 
   _getTournament = async (): Promise<Tournament> => {
