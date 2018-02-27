@@ -122,7 +122,9 @@ class RoundOverview extends Component<Props> {
             <Header as="h4">Group {i + 1}</Header>
             {!group.isStarted && (
               <Button onClick={() => this.props.regenerateGroup(group.id)}>
-                Regenerate group
+                {i !== this.props.round.groups.length - 1
+                  ? 'Regenerate all later groups'
+                  : 'Regenerate this group'}
               </Button>
             )}
             {this._renderGroup(group)}
