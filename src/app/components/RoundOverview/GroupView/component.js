@@ -9,7 +9,9 @@ import {
   TableCell,
   TableHeader,
   TableBody,
-  TableHeaderCell
+  TableHeaderCell,
+  Container,
+  Grid
 } from 'semantic-ui-react';
 
 type GroupViewModel = {
@@ -31,7 +33,13 @@ export type RoundViewModel = {
   activeDance: ?number,
   nextGroup: ?number,
   nextDance: ?number,
-  groups: Array<GroupViewModel>
+  groups: Array<GroupViewModel>,
+  notes: DanceNotes
+};
+
+export type DanceNotes = {
+  judgesNoted: Array<Judge>,
+  judgesNotNoted: Array<Judge>
 };
 
 export type Props = {
@@ -156,22 +164,84 @@ class RoundOverview extends Component<Props> {
     );
   };
 
+  _renderScoreTable = () => {
+    const judgesNoted = this.props.round.notes.judgesNoted;
+    const judgesNotNoted = this.props.round.notes.judgesNotNoted;
+    const judgeCount = judgesNoted.length + judgesNotNoted.length;
+    return (
+      <Grid columns={2} divided>
+        <Grid.Row>
+          <Grid.Column>
+            <Table color='green' key='green' inverted>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>
+                    Has Voted ({judgesNoted.length}/{judgeCount})
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {judgesNoted.map(judge => {
+                  return (
+                    <Table.Row key={judge.id}>
+                      <Table.Cell>{judge.name}</Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table>
+          </Grid.Column>
+          <Grid.Column>
+            <Table color='red' key='red' inverted>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>
+                    Waiting For ({judgesNotNoted.length}/{judgeCount})
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {judgesNotNoted.map(judge => {
+                  return (
+                    <Table.Row key={judge.id}>
+                      <Table.Cell>{judge.name}</Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
+  };
+
   _canGenerateGroups = () => {
     const { active, activeDance, activeGroup } = this.props.round;
     return active && activeDance == null && activeGroup == null;
   };
+
+  _hasActiveDance = () => {
+    return this.props.round.activeDance != null;
+  }
 
   render() {
     return (
       <div>
         <Header as="h2">{this.props.round.name}</Header>
         {this._renderState()}
-        <Header as="h3">Groups</Header>
+        {this._hasActiveDance() && (
+          <Container>
+            <Header as="h2">Scores</Header>
+            {this._renderScoreTable()}
+          </Container>
+        )}
         {this._canGenerateGroups() && (
           <Button onClick={this.props.generateGroups}>
             Re-generate groups
           </Button>
         )}
+        <Header as="h2">Groups</Header>
         {this._renderGroups()}
       </div>
     );

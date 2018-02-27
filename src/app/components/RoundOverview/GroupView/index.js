@@ -3,7 +3,7 @@
 import { connect } from 'react-redux';
 
 import Component from './component';
-import type { RoundViewModel } from './component';
+import type { RoundViewModel, DanceNotes } from './component';
 import {
   startNextDance,
   generateGroupsForRound,
@@ -15,15 +15,16 @@ type Props = {
   roundId: string
 };
 
-function mapStateToProps(state: ReduxState, { roundId }: Props) {
+function mapStateToProps(state: ReduxState, { roundId, tournamentId }: Props) {
   return {
-    round: createViewModelsForRound(state, roundId)
+    round: createViewModelsForRound(state, roundId, tournamentId)
   };
 }
 
 function createViewModelsForRound(
-  { rounds, participants }: ReduxState,
-  roundId: string
+  { rounds, participants, tournaments, judges }: ReduxState,
+  roundId: string,
+  tournamentId: string
 ): ?RoundViewModel {
   const round = rounds.byId[roundId];
   if (!round) {
@@ -31,18 +32,22 @@ function createViewModelsForRound(
   }
 
   const { groups, ...rest } = round;
-
+  let activeDanceId: ?string;
   let activeDance: ?number;
-  let activeGroup: ?number = getActiveGroup(groups);
-  let nextDance: ?number = getNextDance(groups);
-  let nextGroup: ?number = getNextGroup(groups);
+  const activeGroup: ?number = getActiveGroup(groups);
+  const nextDance: ?number = getNextDance(groups);
+  const nextGroup: ?number = getNextGroup(groups);
   for (let i = 0; i < groups.length; ++i) {
     for (let j = 0; j < groups[i].dances.length; ++j) {
       if (groups[i].dances[j].active) {
         activeDance = j + 1;
+        activeDanceId = groups[i].dances[j].id;
       }
     }
   }
+  const notes: DanceNotes = (activeDance != null) ?
+    getNotes(activeDanceId, tournaments.byId[tournamentId], judges) :
+    {judgesNoted: [], judgesNotNoted: []};
 
   const viewModel: RoundViewModel = {
     ...rest,
@@ -50,6 +55,7 @@ function createViewModelsForRound(
     activeGroup,
     nextDance,
     nextGroup,
+    notes,
     groups: groups.map(g => ({
       id: g.id,
       pairs: g.pairs.map((p, i) => ({
@@ -63,6 +69,26 @@ function createViewModelsForRound(
   };
 
   return viewModel;
+}
+
+function getNotes(danceId, tournament, judges) {
+  const tournamentJudges = judges.forTournament[tournament.id];
+  const dancesNoted = tournament.dancesNoted || {};
+  const judgesNoted = [];
+  const judgesNotNoted = [];
+  for (let judgeId of tournamentJudges) {
+    const judgeNotes = dancesNoted[judgeId] || [];
+    const judge = judges.byId[judgeId];
+    if (judgeNotes.includes(danceId)) {
+      judgesNoted.push(judge);
+    } else {
+      judgesNotNoted.push(judge);
+    }
+  }
+  return {
+    judgesNoted,
+    judgesNotNoted
+  };
 }
 
 function getActiveGroup(groups) {
