@@ -102,6 +102,49 @@ describe('Regenerate group route', () => {
     expect(tournament.rounds[0].groups[0]).toEqual(createTestGroup());
     expect(tournament.rounds[0].groups[1]).not.toEqual(group2);
   });
+
+  describe('Three groups', () => {
+    let group2: DanceGroup;
+    let group3: DanceGroup;
+    beforeEach(() => {
+      group2 = { ...createTestGroup(), id: 'group2' };
+      group3 = { ...createTestGroup(), id: 'group3' };
+      tournament.rounds[0].groups.push(group2);
+      tournament.rounds[0].groups.push(group3);
+    });
+
+    test('May generate the two last', async () => {
+      const req = Request.withParams({
+        tournamentId: 'tournament1',
+        roundId: 'round1',
+        groupId: 'group2'
+      });
+      const res = new Response();
+
+      await route(tournamentRepository, noteRepository)(req, res);
+
+      expect(res.getStatus()).toBe(200);
+      expect(tournament.rounds[0].groups[0]).toEqual(createTestGroup());
+      expect(tournament.rounds[0].groups[1]).not.toEqual(group2);
+      expect(tournament.rounds[0].groups[2]).not.toEqual(group3);
+    });
+
+    test('May request only last', async () => {
+      const req = Request.withParams({
+        tournamentId: 'tournament1',
+        roundId: 'round1',
+        groupId: 'group3'
+      });
+      const res = new Response();
+
+      await route(tournamentRepository, noteRepository)(req, res);
+
+      expect(res.getStatus()).toBe(200);
+      expect(tournament.rounds[0].groups[0]).toEqual(createTestGroup());
+      expect(tournament.rounds[0].groups[1]).toEqual(group2);
+      expect(tournament.rounds[0].groups[2]).not.toEqual(group3);
+    });
+  });
 });
 
 function createTestTournament(): Tournament {

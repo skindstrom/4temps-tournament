@@ -83,7 +83,8 @@ function isGroupActive(group: DanceGroup): boolean {
 }
 
 function removeLaterGroupsIncluding(round: Round, group: DanceGroup): void {
-  round.groups = round.groups.slice(0, round.groups.indexOf(group) - 2);
+  const index = round.groups.indexOf(group);
+  round.groups = round.groups.slice(0, index);
 }
 
 async function getNotesForRound(
@@ -108,7 +109,8 @@ function generateGroups(
   round: Round,
   notes: Array<JudgeNote>
 ) {
-  for (let i = 0; i < howManyGroupsToGenerate(round); ++i) {
+  const howMany = howManyGroupsToGenerate(round);
+  for (let i = 0; i < howMany; ++i) {
     const generator = new NextGroupGenerator(tournament, notes);
     if (i == 0) {
       generator.removeUneven();
