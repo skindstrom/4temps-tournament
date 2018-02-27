@@ -52,3 +52,13 @@ export async function startNextDance(tournamentId: string): Promise<mixed> {
 export async function endDance(tournamentId: string): Promise<mixed> {
   return apiPostRequest(`/api/round/${tournamentId}/end-dance`);
 }
+
+export async function regenerateGroup(
+  tournamentId: string,
+  roundId: string,
+  groupId: string
+): Promise<mixed> {
+  return apiPostRequest(
+    `/api/round/${tournamentId}/regenerate/${roundId}/group/${groupId}`
+  );
+}

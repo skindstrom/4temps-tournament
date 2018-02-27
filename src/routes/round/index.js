@@ -11,10 +11,12 @@ import DeleteRoundRoute from './delete-round';
 import StartRoundRoute from './start-round';
 import StartDanceRoute from './start-dance';
 import EndDanceRoute from './end-dance';
+import RegenerateGroupRoute from './regenerate-group';
 
 const router = Router();
 
 const tournamentRepository = new TournamentRepositoryImpl();
+const noteRepository = new SubmittedNoteRepository();
 
 router.post(
   '/:tournamentId/create',
@@ -43,7 +45,12 @@ router.post(
 router.post(
   '/:tournamentId/end-dance/',
   allow('admin'),
-  new EndDanceRoute(tournamentRepository, new SubmittedNoteRepository()).route()
+  new EndDanceRoute(tournamentRepository, noteRepository).route()
+);
+
+router.post(
+  '/:tournamentId/regenerate/:roundId/group/:groupId/',
+  RegenerateGroupRoute(tournamentRepository, noteRepository)
 );
 
 export default router;
