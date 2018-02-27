@@ -24,6 +24,8 @@ export default function regenerateGroupRoute(
           await getNotesForRound(noteRepository, round)
         );
 
+        await tournamentRepository.updateRound(tournament.id, round);
+
         res.sendStatus(200);
       } else {
         res.sendStatus(400);

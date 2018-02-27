@@ -20,7 +20,8 @@ type GroupViewModel = {
     id: string,
     follower: { name: string, number: string },
     leader: { name: string, number: string }
-  }>
+  }>,
+  isStarted: boolean
 };
 
 export type RoundViewModel = {
@@ -46,7 +47,8 @@ export type Props = {
   round: RoundViewModel,
   startDance: () => void,
   endDance: () => void,
-  generateGroups: () => void
+  generateGroups: () => void,
+  regenerateGroup: (groupId: string) => void
 };
 
 class RoundOverview extends Component<Props> {
@@ -61,9 +63,11 @@ class RoundOverview extends Component<Props> {
               {this._danceInformation()}
               <TableCell>
                 {round.activeDance != null ? (
-                  <Button color='red' onClick={this.props.endDance}>Stop dance</Button>
+                  <Button color="red" onClick={this.props.endDance}>
+                    Stop dance
+                  </Button>
                 ) : (
-                  <Button color='green' onClick={this.props.startDance}>
+                  <Button color="green" onClick={this.props.startDance}>
                     Start next dance
                   </Button>
                 )}
@@ -87,11 +91,7 @@ class RoundOverview extends Component<Props> {
     } else if (round.nextGroup != null) {
       groupInformation = 'Next Group: ' + round.nextGroup.toString();
     }
-    return (
-      <TableCell>
-        {groupInformation}
-      </TableCell>
-    );
+    return <TableCell>{groupInformation}</TableCell>;
   }
 
   _danceInformation() {
@@ -99,14 +99,10 @@ class RoundOverview extends Component<Props> {
     let danceInformation = 'Current Dance: None';
     if (round.activeDance != null) {
       danceInformation = 'Current Dance: ' + round.activeDance.toString();
-    } else if(round.nextDance != null) {
+    } else if (round.nextDance != null) {
       danceInformation = 'Next Dance: ' + round.nextDance.toString();
     }
-    return (
-      <TableCell>
-        {danceInformation}
-      </TableCell>
-    );
+    return <TableCell>{danceInformation}</TableCell>;
   }
 
   _renderGroups = () => {
@@ -124,6 +120,11 @@ class RoundOverview extends Component<Props> {
         {this.props.round.groups.map((group, i) => (
           <div key={group.id}>
             <Header as="h4">Group {i + 1}</Header>
+            {!group.isStarted && (
+              <Button onClick={() => this.props.regenerateGroup(group.id)}>
+                Regenerate group
+              </Button>
+            )}
             {this._renderGroup(group)}
           </div>
         ))}
@@ -172,7 +173,7 @@ class RoundOverview extends Component<Props> {
       <Grid columns={2} divided>
         <Grid.Row>
           <Grid.Column>
-            <Table color='green' key='green' inverted>
+            <Table color="green" key="green" inverted>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>
@@ -192,7 +193,7 @@ class RoundOverview extends Component<Props> {
             </Table>
           </Grid.Column>
           <Grid.Column>
-            <Table color='red' key='red' inverted>
+            <Table color="red" key="red" inverted>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>
@@ -223,7 +224,7 @@ class RoundOverview extends Component<Props> {
 
   _hasActiveDance = () => {
     return this.props.round.activeDance != null;
-  }
+  };
 
   render() {
     return (

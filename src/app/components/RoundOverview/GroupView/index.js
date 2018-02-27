@@ -7,7 +7,8 @@ import type { RoundViewModel, DanceNotes } from './component';
 import {
   startNextDance,
   generateGroupsForRound,
-  endDance
+  endDance,
+  regenerateGroup
 } from '../../../api/round';
 
 type Props = {
@@ -45,9 +46,10 @@ function createViewModelsForRound(
       }
     }
   }
-  const notes: DanceNotes = (activeDance != null) ?
-    getNotes(activeDanceId, tournaments.byId[tournamentId], judges) :
-    {judgesNoted: [], judgesNotNoted: []};
+  const notes: DanceNotes =
+    activeDance != null
+      ? getNotes(activeDanceId, tournaments.byId[tournamentId], judges)
+      : { judgesNoted: [], judgesNotNoted: [] };
 
   const viewModel: RoundViewModel = {
     ...rest,
@@ -64,7 +66,11 @@ function createViewModelsForRound(
         follower: createParticipantViewModel(
           participants.byId[p.follower || '']
         )
-      }))
+      })),
+      isStarted: g.dances.reduce(
+        (isStarted, { active, finished }) => isStarted || active || finished,
+        false
+      )
     }))
   };
 
@@ -94,28 +100,31 @@ function getNotes(danceId, tournament, judges) {
 function getActiveGroup(groups) {
   const activeGroups = [...Array(groups.length).keys()].filter(i => {
     const group = groups[i];
-    return group.dances.map(d => !d.finished)
+    return group.dances
+      .map(d => !d.finished)
       .reduce((ack, r) => ack || r, false);
   });
-  return (activeGroups.length > 0) ? activeGroups[0] + 1 : null;
+  return activeGroups.length > 0 ? activeGroups[0] + 1 : null;
 }
 
 function getNextGroup(groups) {
-  const groupsNotDanced =  [...Array(groups.length).keys()].filter(i => {
+  const groupsNotDanced = [...Array(groups.length).keys()].filter(i => {
     return notDanced(groups[i]);
   });
-  return (groupsNotDanced.length > 0) ? groupsNotDanced[0] + 1 : null;
+  return groupsNotDanced.length > 0 ? groupsNotDanced[0] + 1 : null;
 }
 
 function notDanced(group) {
-  return !group.dances.map(dance => dance.finished || dance.active)
+  return !group.dances
+    .map(dance => dance.finished || dance.active)
     .reduce((ack, r) => ack || r, false);
 }
 
 function getNextDance(groups) {
   let nextDance = 1;
   const relevantGroups = groups.filter(group => {
-    return !group.dances.map(d => d.finished)
+    return !group.dances
+      .map(d => d.finished)
       .reduce((ack, r) => ack && r, true);
   });
   if (relevantGroups.length != 0) {
@@ -123,7 +132,7 @@ function getNextDance(groups) {
     const nonStartedDances = [...Array(dances.length).keys()].filter(i => {
       return !(dances[i].finished || dances[i].active);
     });
-    if(nonStartedDances.length > 0) {
+    if (nonStartedDances.length > 0) {
       nextDance = nonStartedDances[0] + 1;
     }
   }
@@ -158,7 +167,10 @@ function mapDispatchToProps(
       dispatch({
         type: 'END_DANCE',
         promise: endDance(tournamentId)
-      })
+      }),
+    regenerateGroup: (groupId: string) => {
+      regenerateGroup(tournamentId, roundId, groupId);
+    }
   };
 }
 
