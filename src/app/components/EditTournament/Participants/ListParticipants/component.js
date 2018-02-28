@@ -154,7 +154,7 @@ class ListParticipants extends Component<Props, State> {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
-  };
+  }
 
   _searchParticipants = (participants: Array<Participant>) => {
     return participants.filter(p => {
@@ -171,6 +171,7 @@ class ListParticipants extends Component<Props, State> {
     participants = this._searchParticipants(participants);
     return (
       <Container>
+        {this._renderUnattendModal()}
         <Table basic="very">
           <TableBody>
             <TableRow>
