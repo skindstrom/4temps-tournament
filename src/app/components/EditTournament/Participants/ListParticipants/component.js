@@ -141,21 +141,6 @@ class ListParticipants extends Component<Props, State> {
     return this.props.participants.filter(p => !p.isAttending);
   }
 
-  debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-      var context = this, args = arguments;
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-  }
-
   _searchParticipants = (participants: Array<Participant>) => {
     return participants.filter(p => {
       const name = p.name.toLowerCase();
