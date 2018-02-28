@@ -35,7 +35,7 @@ class RoundList extends Component<Props, State> {
   state = {
     activeIndex: -1
   }
-  handleClick = (e: SyntheticEvent, titleProps: Object) => {
+  handleClick = (e: SyntheticEvent, titleProps: {index: number}) => {
     const { index } = titleProps;
     const { activeIndex } = this.state;
     const newIndex = activeIndex === index ? -1 : index;
@@ -48,17 +48,17 @@ class RoundList extends Component<Props, State> {
         <TableCell selectable onClick={() => this.props.onClick(round.id)}>
           {round.name}
         </TableCell>
-          {!(round.active || round.finished) && (
+        {!(round.active || round.finished) && (
           <TableCell textAlign="right">
             <Button
               size="tiny"
               floated="right"
               onClick={() => this.props.deleteRound(round.id)}
             >
-              Delete
+            Delete
             </Button>
           </TableCell>
-          )}
+        )}
       </TableRow>
     );
   };
@@ -204,19 +204,33 @@ class RoundList extends Component<Props, State> {
     return (
       <Container styleName='pad'>
         <Header as='h2'>Next Round</Header>
-        <Card>
-          <Card.Content>
-            <Card.Header onClick={() => this.props.onClick(nextRound.id)}>
-              {nextRound.name}
-            </Card.Header>
-          </Card.Content>
-          <Card.Content extra>
-            <Button basic color='green' onClick={() => this.props.startRound(nextRound.id)}>Start Round</Button>
-            <Button basic color='red' onClick={() => this.props.deleteRound(nextRound.id)}>Delete</Button>
-          </Card.Content>
-        </Card>
+        {nextRound && (
+          <Card>
+            <Card.Content>
+              <Card.Header onClick={() => this.props.onClick(nextRound.id)}>
+                {nextRound.name}
+              </Card.Header>
+            </Card.Content>
+            <Card.Content extra>
+              <Button
+                basic
+                color='green'
+                onClick={() => this.props.startRound(nextRound.id)}
+              >
+                Start Round
+              </Button>
+              <Button
+                basic
+                color='red'
+                onClick={() => this.props.deleteRound(nextRound.id)}
+              >
+                Delete
+              </Button>
+            </Card.Content>
+          </Card>
+        )}
       </Container>
-    )
+    );
   }
 
   render() {
