@@ -20,6 +20,7 @@ function mapStateToProps({ rounds }: ReduxState, { tournamentId }: Props) {
   const nextRound = tournamentRounds.find(({ finished }) => !finished);
 
   return {
+    tournamentId: String,
     Child: List,
     shouldLoad: !rounds.forTournament[tournamentId],
     rounds: tournamentRounds,
