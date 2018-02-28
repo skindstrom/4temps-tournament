@@ -121,6 +121,28 @@ declare type User = { id: string, role: PermissionRole };
 
 declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
 
+declare type Leaderboard = {
+  tournamentId: string,
+  rounds: Array<LeaderboardRound>
+};
+
+declare type LeaderboardRound = {
+  roundId: string,
+  name: string,
+  isFinished: boolean,
+  winningLeaderScores: Array<LeaderboardScore>,
+  winningFollowerScores: Array<LeaderboardScore>,
+  losingLeaderScores: Array<LeaderboardScore>,
+  losingFollowerScores: Array<LeaderboardScore>
+};
+
+declare type LeaderboardScore = {
+  id: string,
+  attendanceId: number,
+  position: number,
+  score: number
+};
+
 // Express interface
 declare interface ServerApiRequest {
   session: { user: ?User };

@@ -9,6 +9,7 @@ import ParticipantRoute from './participant';
 import RoundRoute from './round';
 import JudgeRoute from './judge';
 import NoteRoute from './note';
+import LeaderboardRoute from './leaderboard';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/participant', ParticipantRoute);
 router.use('/round', RoundRoute);
 router.use('/judge', JudgeRoute);
 router.use('/note', NoteRoute);
+router.use('/leaderboard', LeaderboardRoute);
 
 export default router;
