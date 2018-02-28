@@ -14,7 +14,9 @@ import {
   ModalContent,
   Button,
   ModalActions,
-  Icon
+  Icon,
+  Search,
+  SyntheticEvent
 } from 'semantic-ui-react';
 
 type Props = {
@@ -23,6 +25,8 @@ type Props = {
 };
 
 type State = {
+  isSearchLoading: boolean,
+  searchValue: string,
   filterPresent: boolean,
   didClickUnAttend: boolean,
   unAttendParticipant: ?Participant
@@ -30,6 +34,8 @@ type State = {
 
 class ListParticipants extends Component<Props, State> {
   state = {
+    isSearchLoading: false,
+    searchValue: '',
     filterPresent: false,
     didClickUnAttend: false,
     unAttendParticipant: null
@@ -126,27 +132,68 @@ class ListParticipants extends Component<Props, State> {
     );
   }
 
+  handleSearchChange = (e: SyntheticEvent, { value }: {value: string}) => {
+    this.setState({isSearchLoading: true, searchValue: value});
+    this.setState({isSearchLoading: false});
+  }
+
   _getNotPresent = () => {
     return this.props.participants.filter(p => !p.isAttending);
   }
 
+  debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+
+  _searchParticipants = (participants: Array<Participant>) => {
+    return participants.filter(p => {
+      const name = p.name.toLowerCase();
+      const search = this.state.searchValue.toLowerCase();
+      return name.indexOf(search) !== -1;
+    });
+  }
+
   render() {
-    const participants = this.state.filterPresent ? this._getNotPresent() : this.props.participants;
+    let participants = this.state.filterPresent ?
+      this._getNotPresent() :
+      this.props.participants;
+    participants = this._searchParticipants(participants);
     return (
       <Container>
         <Table basic="very">
-          <TableRow>
-            <TableCell>
-            </TableCell>
-            <TableCell>
-              <Checkbox
-                toggle
-                checker={this.state.filterPresent}
-                onChange={this._handleFilterChange}
-              />
-              Show only NOT present
-            </TableCell>
-          </TableRow>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <Search
+                  loading={this.state.isSearchLoading}
+                  onSearchChange={this.handleSearchChange}
+                  value={this.state.searchValue}
+                  showNoResults={false}
+                />
+              </TableCell>
+              <TableCell textAlign='right'>
+                <Checkbox
+                  toggle
+                  checked={this.state.filterPresent}
+                  onChange={this._handleFilterChange}
+                />
+              </TableCell>
+              <TableCell textAlign='left'>
+                <b>Show only NOT present</b>
+              </TableCell>
+            </TableRow>
+          </TableBody>
         </Table>
         <Table selectable basic="very">
           <TableHeader>
