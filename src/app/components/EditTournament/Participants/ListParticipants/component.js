@@ -98,9 +98,6 @@ class ListParticipants extends Component<Props, State> {
             </p>
           </ModalContent>
           <ModalActions>
-            <Button color="red" onClick={this._hideModal}>
-              <Icon name="remove" /> No
-            </Button>
             <Button
               color="green"
               inverted
@@ -114,6 +111,9 @@ class ListParticipants extends Component<Props, State> {
               }}
             >
               <Icon name="checkmark" /> OK
+            </Button>
+            <Button color="red" onClick={this._hideModal}>
+              <Icon name="remove" /> No
             </Button>
           </ModalActions>
         </Modal>
