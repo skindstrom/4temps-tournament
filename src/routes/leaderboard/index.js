@@ -10,13 +10,18 @@ router.get('/:tournamentId', allow('public'), getLeaderboard);
 
 const tournamentRepository = new TournamentRepositoryImpl();
 async function getLeaderboard(req: ServerApiRequest, res: ServerApiResponse) {
-  const tournament = await tournamentRepository.get(req.params.tournamentId);
-  if (tournament == null) {
-    res.sendStatus(404);
-    return;
+  try {
+    const tournament = await tournamentRepository.get(req.params.tournamentId);
+    if (tournament == null) {
+      res.status(404);
+      res.json({ didFindTournament: false });
+    } else {
+      res.json(createLeaderboard(tournament));
+    }
+  } catch (e) {
+    res.status(500);
+    res.json({ serverError: true });
   }
-
-  res.json(createLeaderboard(tournament));
 }
 
 function createLeaderboard(tournament: Tournament): Leaderboard {
@@ -55,13 +60,9 @@ function createLeaderboardRound(
   const leaders = new Set(getLeaders(pairs));
   const followers = new Set(getFollowers(pairs));
 
-  const leaderScores = scores
-    .filter(({ id }) => leaders.has(id))
-    .map((score, i) => ({ ...score, position: i + 1 }));
+  const leaderScores = scores.filter(({ id }) => leaders.has(id));
 
-  const followerScores = scores
-    .filter(({ id }) => followers.has(id))
-    .map((score, i) => ({ ...score, position: i + 1 }));
+  const followerScores = scores.filter(({ id }) => followers.has(id));
 
   return {
     roundId: round.id,

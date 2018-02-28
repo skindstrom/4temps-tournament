@@ -189,6 +189,7 @@ declare type ReduxState = {
   judges: JudgesReduxState,
   accessKeys: AccessKeysReduxState,
   notes: NotesReduxState,
+  leaderboards: LeaderboardsReduxState,
 
   ui: {
     judgeLogin: UiJudgeLoginReduxState,
@@ -276,6 +277,10 @@ declare type NotesReduxState = {
   }
 };
 
+declare type LeaderboardsReduxState = {
+  byId: { [tournamentId: string]: Leaderboard }
+};
+
 declare type UiLoginReduxState = {
   isLoading: boolean,
   isValid: boolean,
@@ -358,7 +363,8 @@ declare type ReduxAction =
   | GenerateGroupsAction
   | GetNotesAction
   | SetNoteAction
-  | SelectPairAction;
+  | SelectPairAction
+  | GetLeaderboardAction;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -484,4 +490,9 @@ declare type SetNoteAction = {
 declare type SelectPairAction = {
   type: 'SELECT_PAIR',
   payload: string
+};
+
+declare type GetLeaderboardAction = {
+  type: 'GET_LEADERBOARD',
+  promise: mixed
 };

@@ -10,6 +10,7 @@ import participants from './participants';
 import rounds from './rounds';
 import judges from './judges';
 import notes from './notes';
+import leaderboards from './leaderboards';
 import ui from './ui';
 
 import makePackAction from './test-utils';
@@ -22,6 +23,7 @@ const reducer: Reducer<ReduxState, ReduxPackAction> = combineReducers({
   rounds,
   judges,
   notes,
+  leaderboards,
   ui
 });
 

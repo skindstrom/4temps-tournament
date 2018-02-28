@@ -12,6 +12,7 @@ import Login from '../Login';
 import FourOFour from '../FourOFour';
 import RoundOverview from '../RoundOverview';
 import PrivateRoute from './private-route';
+import Leaderboard from '../Leaderboard';
 
 const Router = () => {
   return (
@@ -19,6 +20,7 @@ const Router = () => {
       <Route path="/(|home)" exact component={Home} />
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={Login} />
+      <Route path="/leaderboard/:tournamentId" component={Leaderboard} />
       <PrivateRoute
         path="/tournament/create"
         exact
