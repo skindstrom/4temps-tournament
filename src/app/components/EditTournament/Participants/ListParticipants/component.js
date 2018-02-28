@@ -23,12 +23,14 @@ type Props = {
 };
 
 type State = {
+  filterPresent: boolean,
   didClickUnAttend: boolean,
   unAttendParticipant: ?Participant
 };
 
 class ListParticipants extends Component<Props, State> {
   state = {
+    filterPresent: false,
     didClickUnAttend: false,
     unAttendParticipant: null
   };
@@ -78,45 +80,74 @@ class ListParticipants extends Component<Props, State> {
     });
   };
 
+  _handleFilterChange = (e: SyntheticEvent, data: {checked: boolean}) => {
+    const { checked } = data;
+    this.setState({filterPresent: checked});
+  }
+
+  _renderUnattendModal = () => {
+    return (
+      <Modal open={this.state.didClickUnAttend} onClose={this._hideModal}>
+        <Header content="Un-attending participant" />
+        <ModalContent>
+          <p>
+            Marking{' '}
+            <b>
+              {this.state.unAttendParticipant == null
+                ? 'someone'
+                : this.state.unAttendParticipant.name +
+                  ' (' +
+                  this.state.unAttendParticipant.attendanceId +
+                  ')'}{' '}
+            </b>
+            as not-present
+          </p>
+        </ModalContent>
+        <ModalActions>
+          <Button
+            color="green"
+            inverted
+            onClick={() => {
+              this.props.onChangeAttending(
+                // $FlowFixMe
+                this.state.unAttendParticipant.id,
+                false
+              );
+              this._hideModal();
+            }}
+          >
+            <Icon name="checkmark" /> OK
+          </Button>
+          <Button color="red" onClick={this._hideModal}>
+            <Icon name="remove" /> No
+          </Button>
+        </ModalActions>
+      </Modal>
+    );
+  }
+
+  _getNotPresent = () => {
+    return this.props.participants.filter(p => !p.isAttending);
+  }
+
   render() {
+    const participants = this.state.filterPresent ? this._getNotPresent() : this.props.participants;
     return (
       <Container>
-        <Modal open={this.state.didClickUnAttend} onClose={this._hideModal}>
-          <Header content="Un-attending participant" />
-          <ModalContent>
-            <p>
-              Marking{' '}
-              <b>
-                {this.state.unAttendParticipant == null
-                  ? 'someone'
-                  : this.state.unAttendParticipant.name +
-                    ' (' +
-                    this.state.unAttendParticipant.attendanceId +
-                    ')'}{' '}
-              </b>
-              as not-present
-            </p>
-          </ModalContent>
-          <ModalActions>
-            <Button
-              color="green"
-              inverted
-              onClick={() => {
-                this.props.onChangeAttending(
-                  // $FlowFixMe
-                  this.state.unAttendParticipant.id,
-                  false
-                );
-                this._hideModal();
-              }}
-            >
-              <Icon name="checkmark" /> OK
-            </Button>
-            <Button color="red" onClick={this._hideModal}>
-              <Icon name="remove" /> No
-            </Button>
-          </ModalActions>
-        </Modal>
+        <Table basic="very">
+          <TableRow>
+            <TableCell>
+            </TableCell>
+            <TableCell>
+              <Checkbox
+                toggle
+                checker={this.state.filterPresent}
+                onChange={this._handleFilterChange}
+              />
+              Show only NOT present
+            </TableCell>
+          </TableRow>
+        </Table>
         <Table selectable basic="very">
           <TableHeader>
             <TableRow>
@@ -126,7 +157,7 @@ class ListParticipants extends Component<Props, State> {
               <TableHeaderCell>Role</TableHeaderCell>
             </TableRow>
           </TableHeader>
-          <TableBody>{this.props.participants.map(this._renderItem)}</TableBody>
+          <TableBody>{participants.map(this._renderItem)}</TableBody>
         </Table>
       </Container>
     );
