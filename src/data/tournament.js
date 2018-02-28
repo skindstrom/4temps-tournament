@@ -174,7 +174,8 @@ export class TournamentRepositoryImpl implements TournamentRepository {
         $pull: {
           rounds: { _id: roundId }
         }
-      }
+      },
+      { new: true }
     );
     pushTournamentUpdate(mapToDomainModel(tournament.toObject()));
   }
