@@ -1,11 +1,6 @@
 // @flow
 import React from 'react';
-import {
-  Container,
-  Header,
-  Divider,
-  Tab
-} from 'semantic-ui-react';
+import { Container, Header, Divider, Tab } from 'semantic-ui-react';
 import './styles.css';
 import RoundTables from './RoundTables';
 import RemainingParticipants from './RemainingParticipants';
@@ -24,20 +19,18 @@ export default function Leaderboard({ leaderboard }: Props) {
 function ActualLeaderboard({ leaderboard }: { leaderboard: Leaderboard }) {
   const panes = [
     {
+      menuItem: 'Round Results',
+      render: () => RenderRoundResults(leaderboard.rounds)
+    },
+    {
       menuItem: 'Remaining Participants',
       render: () =>
         RenderRemainingParticipants(leaderboard.remainingParticipants)
-    },
-    {
-      menuItem: 'Round Results',
-      render: () => RenderRoundResults(leaderboard.rounds)
     }
   ];
   return (
     <Container styleName="pad">
-      <Header as="h1">
-        {leaderboard.tournamentName}
-      </Header>
+      <Header as="h1">{leaderboard.tournamentName}</Header>
       <Divider />
       <Tab panes={panes} />
     </Container>
@@ -55,19 +48,15 @@ function Error() {
 function RenderRoundResults(rounds) {
   return (
     <Tab.Pane>
-      <RoundTables
-        rounds={rounds.filter(({ isFinished }) => isFinished)}
-      />
+      <RoundTables rounds={rounds.filter(({ isFinished }) => isFinished)} />
     </Tab.Pane>
   );
 }
 
-function RenderRemainingParticipants(remainingParticipants){
+function RenderRemainingParticipants(remainingParticipants) {
   return (
     <Tab.Pane>
-      <RemainingParticipants
-        participants={remainingParticipants}
-      />
+      <RemainingParticipants participants={remainingParticipants} />
     </Tab.Pane>
   );
 }
