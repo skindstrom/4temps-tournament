@@ -3,10 +3,8 @@ import React from 'react';
 import {
   Container,
   Header,
-  Grid,
-  GridRow,
-  GridColumn,
   Divider,
+  Tab
 } from 'semantic-ui-react';
 import './styles.css';
 import RoundTables from './RoundTables';
@@ -24,28 +22,24 @@ export default function Leaderboard({ leaderboard }: Props) {
 }
 
 function ActualLeaderboard({ leaderboard }: { leaderboard: Leaderboard }) {
+  const panes = [
+    {
+      menuItem: 'Remaining Participants',
+      render: () =>
+        RenderRemainingParticipants(leaderboard.remainingParticipants)
+    },
+    {
+      menuItem: 'Round Results',
+      render: () => RenderRoundResults(leaderboard.rounds)
+    }
+  ];
   return (
     <Container styleName="pad">
       <Header as="h1">
         {leaderboard.tournamentName}
       </Header>
       <Divider />
-      <Grid stackable>
-        <GridRow columns="2">
-          <GridColumn>
-            {<RemainingParticipants
-              participants={leaderboard.remainingParticipants}
-            />}
-          </GridColumn>
-          <GridColumn>
-            <RoundTables
-              rounds={leaderboard.rounds
-                .filter(({ isFinished }) => isFinished)
-              }
-            />
-          </GridColumn>
-        </GridRow>
-      </Grid>
+      <Tab panes={panes} />
     </Container>
   );
 }
@@ -55,5 +49,25 @@ function Error() {
     <Header as="h1" textAlign="center">
       Could not get leaderboard
     </Header>
+  );
+}
+
+function RenderRoundResults(rounds) {
+  return (
+    <Tab.Pane>
+      <RoundTables
+        rounds={rounds.filter(({ isFinished }) => isFinished)}
+      />
+    </Tab.Pane>
+  );
+}
+
+function RenderRemainingParticipants(remainingParticipants){
+  return (
+    <Tab.Pane>
+      <RemainingParticipants
+        participants={remainingParticipants}
+      />
+    </Tab.Pane>
   );
 }

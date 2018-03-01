@@ -12,9 +12,6 @@ export default function RemainingParticipants(
 ) {
   return (
     <Container styleName="pad">
-      <Header as="h2">
-        Remaining Participants
-      </Header>
       <Table unstackable>
         <Table.Header>
           <Table.Row>

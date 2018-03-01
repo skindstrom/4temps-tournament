@@ -44,35 +44,37 @@ export default class RoundTables extends Component<Props, State> {
         <Accordion.Content
           active={this.state.activeIndex === index}
         >
-          <Grid stackable>
-            <Grid.Row>
-              <Header as="h3">Winners</Header>
-            </Grid.Row>
-            <Grid.Row columns="2">
-              <Grid.Column>
-                <Header as="h4">Leaders</Header>
-                <ScoreTable scores={round.winningLeaderScores} />
-              </Grid.Column>
-              <Grid.Column>
-                <Header as="h4">Followers</Header>
-                <ScoreTable scores={round.winningFollowerScores} />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Divider />
-              <Header as="h3">Participants that did not pass</Header>
-            </Grid.Row>
-            <Grid.Row columns="2">
-              <Grid.Column>
-                <Header as="h4">Leaders</Header>
-                <ScoreTable scores={round.losingLeaderScores} />
-              </Grid.Column>
-              <Grid.Column>
-                <Header as="h4">Followers</Header>
-                <ScoreTable scores={round.losingFollowerScores} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          <Container styleName="pad">
+            <Grid stackable>
+              <Grid.Row>
+                <Header as="h3">Winners</Header>
+              </Grid.Row>
+              <Grid.Row columns="2">
+                <Grid.Column>
+                  <Header as="h4">Leaders</Header>
+                  <ScoreTable scores={round.winningLeaderScores} />
+                </Grid.Column>
+                <Grid.Column>
+                  <Header as="h4">Followers</Header>
+                  <ScoreTable scores={round.winningFollowerScores} />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Divider />
+                <Header as="h3">Participants that did not pass</Header>
+              </Grid.Row>
+              <Grid.Row columns="2">
+                <Grid.Column>
+                  <Header as="h4">Leaders</Header>
+                  <ScoreTable scores={round.losingLeaderScores} />
+                </Grid.Column>
+                <Grid.Column>
+                  <Header as="h4">Followers</Header>
+                  <ScoreTable scores={round.losingFollowerScores} />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Container>
         </Accordion.Content>
       </Container>
     );
@@ -81,10 +83,7 @@ export default class RoundTables extends Component<Props, State> {
     const { rounds } = this.props;
     return (
       <Container styleName="pad">
-        <Header as="h2">
-          Round Results
-        </Header>
-        <Accordion styled>
+        <Accordion fluid>
           {[...Array(rounds.length).keys()].map(i => this._renderRoundTable(i))}
         </Accordion>
       </Container>
