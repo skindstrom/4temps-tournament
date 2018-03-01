@@ -13,10 +13,9 @@ import {
   GridRow,
   GridColumn,
   Divider,
-  Accordion,
-  Icon
 } from 'semantic-ui-react';
 import './styles.css';
+import RoundTables from './RoundTables';
 
 type Props = {
   leaderboard: ?Leaderboard
@@ -48,11 +47,11 @@ function ActualLeaderboard({ leaderboard }: { leaderboard: Leaderboard }) {
               <Header as="h2">
                 Round Results
               </Header>
-              <Accordion styled>
-                {leaderboard.rounds
+              <RoundTables
+                rounds={leaderboard.rounds
                   .filter(({ isFinished }) => isFinished)
-                  .map(round => <RoundTables key={round.id} round={round} />)}
-              </Accordion>
+                }
+              />
             </Container>
           </GridColumn>
         </GridRow>
@@ -83,7 +82,6 @@ function RemainingParticipants(
     </Container>
   );
 }
-
 function RemainingEntry(
   participant: Participant
 ) {
@@ -91,73 +89,6 @@ function RemainingEntry(
     <TableRow key={participant.id}>
       <TableCell>{participant.attendanceId}</TableCell>
       <TableCell>{participant.role}</TableCell>
-    </TableRow>
-  );
-}
-
-function RoundTables({ round }: { round: LeaderboardRound }) {
-  return (
-    <Container>
-      <Accordion.Title>
-        <Icon name='dropdown' />
-        {round.name}
-      </Accordion.Title>
-      <Accordion.Content>
-        <Grid stackable>
-          <GridRow>
-            <Header as="h3">Winners</Header>
-          </GridRow>
-          <GridRow columns="2">
-            <GridColumn>
-              <Header as="h4">Leaders</Header>
-              <ScoreTable scores={round.winningLeaderScores} />
-            </GridColumn>
-            <GridColumn>
-              <Header as="h4">Followers</Header>
-              <ScoreTable scores={round.winningFollowerScores} />
-            </GridColumn>
-          </GridRow>
-          <GridRow>
-            <Divider />
-            <Header as="h3">Participants that did not pass</Header>
-          </GridRow>
-          <GridRow columns="2">
-            <GridColumn>
-              <Header as="h4">Leaders</Header>
-              <ScoreTable scores={round.losingLeaderScores} />
-            </GridColumn>
-            <GridColumn>
-              <Header as="h4">Followers</Header>
-              <ScoreTable scores={round.losingFollowerScores} />
-            </GridColumn>
-          </GridRow>
-        </Grid>
-      </Accordion.Content>
-    </Container>
-  );
-}
-
-function ScoreTable({ scores }: { scores: Array<LeaderboardScore> }) {
-  return (
-    <Table unstackable>
-      <TableHeader>
-        <TableRow>
-          <TableHeaderCell>Position</TableHeaderCell>
-          <TableHeaderCell>Score</TableHeaderCell>
-          <TableHeaderCell>Participant ID</TableHeaderCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody>{scores.map(ScoreTableRow)}</TableBody>
-    </Table>
-  );
-}
-
-function ScoreTableRow(score: LeaderboardScore) {
-  return (
-    <TableRow key={score.id}>
-      <TableCell>{score.position}</TableCell>
-      <TableCell>{score.score}</TableCell>
-      <TableCell>{score.attendanceId}</TableCell>
     </TableRow>
   );
 }
