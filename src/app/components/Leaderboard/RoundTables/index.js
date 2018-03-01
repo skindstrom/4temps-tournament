@@ -10,6 +10,7 @@ import {
   Divider,
   SyntheticEvent
 } from 'semantic-ui-react';
+import '../styles.css';
 
 type Props = {
   rounds: Array<LeaderboardRound>
@@ -79,9 +80,14 @@ export default class RoundTables extends Component<Props, State> {
   render() {
     const { rounds } = this.props;
     return (
-      <Accordion styled>
-        {[...Array(rounds.length).keys()].map(i => this._renderRoundTable(i))}
-      </Accordion>
+      <Container styleName="pad">
+        <Header as="h2">
+          Round Results
+        </Header>
+        <Accordion styled>
+          {[...Array(rounds.length).keys()].map(i => this._renderRoundTable(i))}
+        </Accordion>
+      </Container>
     );
   }
 }
