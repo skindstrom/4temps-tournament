@@ -7,7 +7,8 @@ import {
   Table,
   Container,
   Header,
-  Divider
+  Divider,
+  SyntheticEvent
 } from 'semantic-ui-react';
 
 type Props = {
@@ -17,14 +18,31 @@ type State = {
   activeIndex: number
 }
 export default class RoundTables extends Component<Props, State> {
-  _renderRoundTable = (round: LeaderboardRound) => {
+  state = {
+    activeIndex: -1
+  }
+  handleClick = (e: SyntheticEvent, titleProps: {index: number}) => {
+    const { index } = titleProps;
+    const { activeIndex } = this.state;
+    const newIndex = activeIndex === index ? -1 : index;
+    this.setState({ activeIndex: newIndex });
+  }
+
+  _renderRoundTable = (index: number) => {
+    const round = this.props.rounds[index];
     return (
       <Container>
-        <Accordion.Title>
+        <Accordion.Title
+          active={this.state.activeIndex === index}
+          index={index}
+          onClick={this.handleClick}
+        >
           <Icon name='dropdown' />
           {round.name}
         </Accordion.Title>
-        <Accordion.Content>
+        <Accordion.Content
+          active={this.state.activeIndex === index}
+        >
           <Grid stackable>
             <Grid.Row>
               <Header as="h3">Winners</Header>
@@ -59,9 +77,10 @@ export default class RoundTables extends Component<Props, State> {
     );
   }
   render() {
+    const { rounds } = this.props;
     return (
       <Accordion styled>
-        {this.props.rounds.map(r => this._renderRoundTable(r))}
+        {[...Array(rounds.length).keys()].map(i => this._renderRoundTable(i))}
       </Accordion>
     );
   }
