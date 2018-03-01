@@ -29,12 +29,44 @@ function createLeaderboard(tournament: Tournament): Leaderboard {
     acc[participant.id] = participant;
     return acc;
   }, {});
+  const rounds = tournament.rounds.map(round =>
+    createLeaderboardRound(round, participantMap)
+  );
   return {
     tournamentId: tournament.id,
-    rounds: tournament.rounds.map(round =>
-      createLeaderboardRound(round, participantMap)
-    )
+    rounds,
+    remainingParticipants: getRemainingParticipants(rounds, participantMap)
   };
+}
+
+function getRemainingParticipants(
+  rounds: Array<LeaderboardRound>,
+  participants: { [id: string]: Participant }
+) {
+  return Object.keys(participants).map(id => {
+    return participants[id];
+  }).filter(p => p.isAttending)
+    .filter(p => !hasLost(p, rounds)).map(p => {
+      return {
+        id: p.id,
+        attendanceId: p.attendanceId,
+        role: p.role
+      };
+    });
+}
+
+function hasLost(
+  participant: Participant,
+  rounds: Array<LeaderboardRound>
+) {
+  const losingFollowers = rounds.reduce((ack, r) =>
+    [...ack, ...r.losingFollowerScores], []
+  );
+  const losingLeaders = rounds.reduce((ack, r) =>
+    [...ack, ...r.losingLeaderScores], []
+  );
+  return losingFollowers.find(s => s.id === participant.id) ||
+    losingLeaders.find(s => s.id === participant.id);
 }
 
 function createLeaderboardRound(
