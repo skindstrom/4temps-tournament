@@ -50,6 +50,8 @@ function getRemainingParticipants(
     .filter(p => !hasLost(p, rounds)).map(p => {
       return {
         id: p.id,
+        name: '',
+        isAttending: true,
         attendanceId: p.attendanceId,
         role: p.role
       };
