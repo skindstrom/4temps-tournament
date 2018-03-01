@@ -12,7 +12,9 @@ import {
   Grid,
   GridRow,
   GridColumn,
-  Divider
+  Divider,
+  Accordion,
+  Icon
 } from 'semantic-ui-react';
 import './styles.css';
 
@@ -30,6 +32,10 @@ export default function Leaderboard({ leaderboard }: Props) {
 function ActualLeaderboard({ leaderboard }: { leaderboard: Leaderboard }) {
   return (
     <Container styleName="pad">
+      <Header as="h1">
+        {leaderboard.tournamentName}
+      </Header>
+      <Divider />
       <Grid stackable>
         <GridRow columns="2">
           <GridColumn>
@@ -38,9 +44,16 @@ function ActualLeaderboard({ leaderboard }: { leaderboard: Leaderboard }) {
             />}
           </GridColumn>
           <GridColumn>
-            {leaderboard.rounds
-              .filter(({ isFinished }) => isFinished)
-              .map(round => <RoundTables key={round.id} round={round} />)}
+            <Container styleName="pad">
+              <Header as="h2">
+                Round Results
+              </Header>
+              <Accordion styled>
+                {leaderboard.rounds
+                  .filter(({ isFinished }) => isFinished)
+                  .map(round => <RoundTables key={round.id} round={round} />)}
+              </Accordion>
+            </Container>
           </GridColumn>
         </GridRow>
       </Grid>
@@ -84,40 +97,42 @@ function RemainingEntry(
 
 function RoundTables({ round }: { round: LeaderboardRound }) {
   return (
-    <Container styleName="pad">
-      <Header as="h2">
-        Round Results
-      </Header>
-      <Grid stackable>
-        <Header as="h2">{round.name}</Header>
-        <GridRow>
-          <Header as="h3">Winners</Header>
-        </GridRow>
-        <GridRow columns="2">
-          <GridColumn>
-            <Header as="h4">Leaders</Header>
-            <ScoreTable scores={round.winningLeaderScores} />
-          </GridColumn>
-          <GridColumn>
-            <Header as="h4">Followers</Header>
-            <ScoreTable scores={round.winningFollowerScores} />
-          </GridColumn>
-        </GridRow>
-        <GridRow>
-          <Divider />
-          <Header as="h3">Participants that did not pass</Header>
-        </GridRow>
-        <GridRow columns="2">
-          <GridColumn>
-            <Header as="h4">Leaders</Header>
-            <ScoreTable scores={round.losingLeaderScores} />
-          </GridColumn>
-          <GridColumn>
-            <Header as="h4">Followers</Header>
-            <ScoreTable scores={round.losingFollowerScores} />
-          </GridColumn>
-        </GridRow>
-      </Grid>
+    <Container>
+      <Accordion.Title>
+        <Icon name='dropdown' />
+        {round.name}
+      </Accordion.Title>
+      <Accordion.Content>
+        <Grid stackable>
+          <GridRow>
+            <Header as="h3">Winners</Header>
+          </GridRow>
+          <GridRow columns="2">
+            <GridColumn>
+              <Header as="h4">Leaders</Header>
+              <ScoreTable scores={round.winningLeaderScores} />
+            </GridColumn>
+            <GridColumn>
+              <Header as="h4">Followers</Header>
+              <ScoreTable scores={round.winningFollowerScores} />
+            </GridColumn>
+          </GridRow>
+          <GridRow>
+            <Divider />
+            <Header as="h3">Participants that did not pass</Header>
+          </GridRow>
+          <GridRow columns="2">
+            <GridColumn>
+              <Header as="h4">Leaders</Header>
+              <ScoreTable scores={round.losingLeaderScores} />
+            </GridColumn>
+            <GridColumn>
+              <Header as="h4">Followers</Header>
+              <ScoreTable scores={round.losingFollowerScores} />
+            </GridColumn>
+          </GridRow>
+        </Grid>
+      </Accordion.Content>
     </Container>
   );
 }

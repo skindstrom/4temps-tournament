@@ -13,7 +13,6 @@ type Props = {
 
 function mapStateToProps({ leaderboards }: ReduxState, { match }: Props) {
   const tournamentId = match.params.tournamentId || '';
-  console.log(leaderboards.byId[tournamentId]);
   return {
     shouldLoad: leaderboards.byId[tournamentId] == null,
     Child: Component,

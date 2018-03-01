@@ -124,7 +124,8 @@ declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
 declare type Leaderboard = {
   tournamentId: string,
   rounds: Array<LeaderboardRound>,
-  remainingParticipants: Array<Participant>
+  remainingParticipants: Array<Participant>,
+  tournamentName: string
 };
 
 declare type LeaderboardRound = {

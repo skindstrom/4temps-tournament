@@ -35,14 +35,15 @@ function createLeaderboard(tournament: Tournament): Leaderboard {
   return {
     tournamentId: tournament.id,
     rounds,
-    remainingParticipants: getRemainingParticipants(rounds, participantMap)
+    remainingParticipants: getRemainingParticipants(rounds, participantMap),
+    tournamentName: tournament.name
   };
 }
 
 function getRemainingParticipants(
   rounds: Array<LeaderboardRound>,
   participants: { [id: string]: Participant }
-) {
+): Array<Participant> {
   return Object.keys(participants).map(id => {
     return participants[id];
   }).filter(p => p.isAttending)
