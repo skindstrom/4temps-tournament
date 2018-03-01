@@ -5,7 +5,8 @@ import {
   Form,
   FormButton,
   FormInput,
-  Message
+  Message,
+  Button
 } from 'semantic-ui-react';
 import DatePicker from 'react-datepicker';
 import type Moment from 'moment';
@@ -17,7 +18,8 @@ type Props = {
   isValidName: boolean,
   isValidDate: boolean,
 
-  onSubmit: (tournament: Tournament) => Promise<void>
+  onSubmit: (tournament: Tournament) => Promise<void>,
+  onClickLeaderboard: () => void
 };
 
 type State = {
@@ -60,6 +62,9 @@ class EditTournamentGeneral extends Component<Props, State> {
   render() {
     return (
       <Container>
+        <Button onClick={this.props.onClickLeaderboard}>
+          Go to leaderboard
+        </Button>
         <Form error={!this.props.isValidName || !this.props.isValidDate}>
           <FormInput
             label="Name"

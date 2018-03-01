@@ -1,5 +1,6 @@
 // @flow
 import { connect } from 'react-redux';
+import type { RouterHistory } from 'react-router-dom';
 
 import { updateTournament } from '../../../api/tournament';
 
@@ -9,7 +10,8 @@ import EditTournamentGeneral from './component';
 import PreloadContainer from '../../PreloadContainer';
 
 type ConnectedProps = {
-  tournamentId: string
+  tournamentId: string,
+  history: RouterHistory
 };
 
 function mapStateToProps(
@@ -38,7 +40,7 @@ function mapStateToProps(
 
 function mapDispatchToProps(
   dispatch: ReduxDispatch,
-  { tournamentId }: ConnectedProps
+  { tournamentId, history }: ConnectedProps
 ) {
   return {
     onSubmit: (tournament: Tournament) =>
@@ -46,7 +48,7 @@ function mapDispatchToProps(
         type: 'EDIT_TOURNAMENT',
         promise: updateTournament(tournamentId, tournament)
       }),
-
+    onClickLeaderboard: () => history.push(`/leaderboard/${tournamentId}`),
     load: () => getAdminTournaments(dispatch)
   };
 }

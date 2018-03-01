@@ -65,7 +65,12 @@ class EditTournament extends Component<Props, State> {
   };
 
   _renderGeneral = () => {
-    return <General tournamentId={this._getTournamentId()} />;
+    return (
+      <General
+        tournamentId={this._getTournamentId()}
+        history={this.props.history}
+      />
+    );
   };
 
   _renderRounds = () => (
