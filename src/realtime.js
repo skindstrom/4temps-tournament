@@ -16,5 +16,11 @@ function onConnection(socket: SocketIO) {
 }
 
 export function pushTournamentUpdate(tournament: Tournament) {
-  io.to(tournament.id).emit('tournament update', tournament);
+  io.to(`tournament/${tournament.id}`).emit('tournament update', tournament);
+}
+
+export function pushLeaderboardUpdate(leaderboard: Leaderboard) {
+  io
+    .to(`leaderboard/${leaderboard.tournamentId}`)
+    .emit('leaderboard update', leaderboard);
 }

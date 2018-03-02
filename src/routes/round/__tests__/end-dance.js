@@ -24,6 +24,8 @@ import EndDanceRoute from '../end-dance';
  */
 
 describe('End dance route', () => {
+  const updateLeaderboardFunc = () => {};
+
   const judge = createJudge();
   const participants = [
     { ...createParticipant(), role: 'leader' },
@@ -94,7 +96,11 @@ describe('End dance route', () => {
       ]
     });
 
-    const route = new EndDanceRoute(tournamentRepo, noteRepo);
+    const route = new EndDanceRoute(
+      tournamentRepo,
+      noteRepo,
+      updateLeaderboardFunc
+    );
 
     const req = Request.withParams({ tournamentId: tournament.id });
     const res = new Response();
@@ -119,7 +125,11 @@ describe('End dance route', () => {
       danceId: dance.id
     });
 
-    const route = new EndDanceRoute(tournamentRepo, noteRepo);
+    const route = new EndDanceRoute(
+      tournamentRepo,
+      noteRepo,
+      updateLeaderboardFunc
+    );
 
     const req = Request.withParams({ tournamentId: tournament.id });
     const res = new Response();
@@ -170,7 +180,11 @@ describe('End dance route', () => {
     });
 
     test('sets round to finished and returns it', async () => {
-      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
 
       const req = Request.withParams({ tournamentId: tournament.id });
       const res = new Response();
@@ -182,7 +196,11 @@ describe('End dance route', () => {
     });
 
     test('updates repository', async () => {
-      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
 
       const req = Request.withParams({ tournamentId: tournament.id });
       const res = new Response();
@@ -262,7 +280,11 @@ describe('End dance route', () => {
 
       tournamentRepo.updateRound(tournament.id, updatedRound);
 
-      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
 
       const req = Request.withParams({ tournamentId: tournament.id });
       const res = new Response();
@@ -322,7 +344,11 @@ describe('End dance route', () => {
         ]
       };
 
-      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
 
       const req = Request.withParams({ tournamentId: tournament.id });
       const res = new Response();
@@ -423,7 +449,11 @@ describe('End dance route', () => {
         ]
       };
 
-      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
 
       const req = Request.withParams({ tournamentId: tournament.id });
       const res = new Response();
@@ -511,7 +541,11 @@ describe('End dance route', () => {
 
       tournamentRepo.updateRound(tournament.id, updatedRound);
 
-      const route = new EndDanceRoute(tournamentRepo, noteRepo);
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
 
       const req = Request.withParams({ tournamentId: tournament.id });
       const res = new Response();

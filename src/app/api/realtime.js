@@ -16,8 +16,18 @@ export function setup(dispatch: ReduxDispatch) {
       payload: normalized
     });
   });
+  socket.on('leaderboard update', leaderboard => {
+    dispatch({
+      type: 'GET_LEADERBOARD',
+      promise: Promise.resolve(leaderboard)
+    });
+  });
 }
 
 export function subscribeToUpdatesForTournaments(ids: Array<string>) {
-  ids.forEach(id => socket.emit('subscribe', id));
+  ids.forEach(id => socket.emit('subscribe', `tournament/${id}`));
+}
+
+export function subscribeToLeaderboardForTournament(id: string) {
+  socket.emit('subscribe', `leaderboard/${id}`);
 }

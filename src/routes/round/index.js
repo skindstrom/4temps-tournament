@@ -6,6 +6,7 @@ import { allow } from '../auth-middleware';
 
 import { TournamentRepositoryImpl } from '../../data/tournament';
 import { SubmittedNoteRepository } from '../../data/note';
+import { pushLeaderboardUpdate } from '../../realtime';
 import CreateRoundRoute from './create-round';
 import DeleteRoundRoute from './delete-round';
 import StartRoundRoute from './start-round';
@@ -52,7 +53,11 @@ router.post(
 router.post(
   '/:tournamentId/end-dance/',
   allow('admin'),
-  new EndDanceRoute(tournamentRepository, noteRepository).route()
+  new EndDanceRoute(
+    tournamentRepository,
+    noteRepository,
+    pushLeaderboardUpdate
+  ).route()
 );
 
 router.post(

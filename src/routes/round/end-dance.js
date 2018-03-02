@@ -5,17 +5,23 @@ import RoundScorer from '../../domain/round-scorer';
 import NextGroupGenerator from '../../domain/next-group-generator';
 import type { TournamentRepository } from '../../data/tournament';
 import type { NoteRepository } from '../../data/note';
+import createLeaderboard from '../leaderboard/create-leaderboard';
+
+type UpdateLeaderboardFunc = (leaderboard: Leaderboard) => void;
 
 export default class StartDanceRoute {
   _tournamentRepository: TournamentRepository;
   _noteRepository: NoteRepository;
+  _updateLeaderboardFunc: UpdateLeaderboardFunc;
 
   constructor(
     repository: TournamentRepository,
-    noteRepository: NoteRepository
+    noteRepository: NoteRepository,
+    updateLeaderboard: UpdateLeaderboardFunc
   ) {
     this._tournamentRepository = repository;
     this._noteRepository = noteRepository;
+    this._updateLeaderboardFunc = updateLeaderboard;
   }
 
   route = () => async (req: ServerApiRequest, res: ServerApiResponse) => {
@@ -24,6 +30,7 @@ export default class StartDanceRoute {
       const handler = new StartDanceRouteHandler(
         this._tournamentRepository,
         this._noteRepository,
+        this._updateLeaderboardFunc,
         tournamentId
       );
 
@@ -53,6 +60,7 @@ export default class StartDanceRoute {
 class StartDanceRouteHandler {
   _tournamentRepository: TournamentRepository;
   _noteRepository: NoteRepository;
+  _updateLeaderboardFunc: UpdateLeaderboardFunc;
   _tournamentId: string;
 
   _tournament: Tournament;
@@ -61,10 +69,13 @@ class StartDanceRouteHandler {
   constructor(
     repository: TournamentRepository,
     noteRepository: NoteRepository,
+    updateLeaderboard: UpdateLeaderboardFunc,
     tournamentId: string
   ) {
     this._tournamentRepository = repository;
     this._noteRepository = noteRepository;
+
+    this._updateLeaderboardFunc = updateLeaderboard;
     this._tournamentId = tournamentId;
   }
 
@@ -103,6 +114,10 @@ class StartDanceRouteHandler {
     await this._tournamentRepository.updateRound(this._tournamentId, round);
 
     this._round = round;
+
+    if (this._round.finished) {
+      this._updateLeaderboardFunc(createLeaderboard(tournament));
+    }
   };
 
   _getActiveRound = (tournament: Tournament): Round => {

@@ -5,6 +5,7 @@ import type { Match, RouterHistory } from 'react-router-dom';
 import PreloadContainer from '../PreloadContainer';
 import { getLeaderboardForTournament } from '../../api/leaderboard';
 import Component from './component';
+import { subscribeToLeaderboardForTournament } from '../../api/realtime';
 
 type Props = {
   match: Match,
@@ -36,6 +37,8 @@ function mapDispatchToProps(
         type: 'GET_LEADERBOARD',
         promise: getLeaderboardForTournament(tournamentId || ''),
         meta: {
+          onSuccess: () =>
+            subscribeToLeaderboardForTournament(tournamentId || ''),
           onFailure: res => {
             if (!res.didFindTournament) {
               history.push('/404');
