@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
 import {
+  Segment,
   Icon,
-  FormField,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
+  Grid,
+  GridRow,
+  GridColumn,
   Popup
 } from 'semantic-ui-react';
 
@@ -34,25 +33,23 @@ type Props = StateProps & DispatchProps;
 
 function NoteCriterion({ notedEntity, criterion, onClick }: Props) {
   return (
-    <Table>
-      <TableBody>
-        <TableRow>
-          <TableCell>
-            <FormField>
-              <span styleName="text">
-                {criterion.name}
-                {'    '}
-                <Popup
-                  trigger={<Icon name="info circle" />}
-                  header="Description"
-                  content={criterion.description}
-                  on={['hover']}
-                />
-              </span>
-            </FormField>
-          </TableCell>
+    <Segment color={criterion.value == null ? 'red' : null}>
+      <Grid padded>
+        <GridRow>
+          <span styleName="text">
+            {criterion.name}
+            {'    '}
+            <Popup
+              trigger={<Icon name="info circle" />}
+              header="Description"
+              content={criterion.description}
+              on={['hover']}
+            />
+          </span>
+        </GridRow>
+        <GridRow columns="equal">
           {getRange(criterion.minValue, criterion.maxValue).map(val => (
-            <TableCell key={notedEntity + criterion.id + val}>
+            <GridColumn key={notedEntity + criterion.id + val}>
               <div className="field ui ">
                 <input
                   id={criterion.id}
@@ -66,11 +63,11 @@ function NoteCriterion({ notedEntity, criterion, onClick }: Props) {
                   {val}
                 </label>
               </div>
-            </TableCell>
+            </GridColumn>
           ))}
-        </TableRow>
-      </TableBody>
-    </Table>
+        </GridRow>
+      </Grid>
+    </Segment>
   );
 }
 

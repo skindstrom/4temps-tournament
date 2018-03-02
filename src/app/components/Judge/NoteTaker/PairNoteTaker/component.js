@@ -37,7 +37,7 @@ function PairNoteTaker({
   return (
     <Grid>
       <GridRow>
-        <Header as="h3">Couple</Header>
+        <Header as="h2">Couple</Header>
       </GridRow>
       <GridRow>
         {criteria.map(criterion => (
