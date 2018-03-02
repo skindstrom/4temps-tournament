@@ -3,13 +3,14 @@ import React from 'react';
 import {
   Icon,
   FormField,
-  FormRadio,
   Table,
   TableBody,
   TableRow,
   TableCell,
   Popup
 } from 'semantic-ui-react';
+
+import './styles.css';
 
 export type StateProps = {
   notedEntity: string,
@@ -38,26 +39,33 @@ function NoteCriterion({ notedEntity, criterion, onClick }: Props) {
         <TableRow>
           <TableCell>
             <FormField>
-              {criterion.name}
-              <Popup
-                trigger={<Icon name="info circle" />}
-                header="Description"
-                content={criterion.description}
-                on={['hover']}
-              />
+              <span styleName="text">
+                {criterion.name}
+                {'    '}
+                <Popup
+                  trigger={<Icon name="info circle" />}
+                  header="Description"
+                  content={criterion.description}
+                  on={['hover']}
+                />
+              </span>
             </FormField>
           </TableCell>
           {getRange(criterion.minValue, criterion.maxValue).map(val => (
             <TableCell key={notedEntity + criterion.id + val}>
-              <FormRadio
-                label={String(val)}
-                value={val}
-                checked={criterion.value === val}
-                onChange={(
-                  e: SyntheticEvent<*>,
-                  { value }: { value: number }
-                ) => onClick(value)}
-              />
+              <div className="field ui ">
+                <input
+                  id={criterion.id}
+                  styleName="radio"
+                  type="radio"
+                  value={val}
+                  checked={criterion.value === val}
+                  onChange={() => onClick(val)}
+                />
+                <label htmlFor={criterion.id} styleName="text">
+                  {val}
+                </label>
+              </div>
             </TableCell>
           ))}
         </TableRow>
