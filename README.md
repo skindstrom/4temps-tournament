@@ -20,17 +20,11 @@ git clone https://github.com/SimonKinds/4temps-tournament.git
 
 The directory **4temps-tournament** will henceforth be called the _root directory_.
 
-## Installing the project dependencies
-Go to the root directory of the project.
-Once there, run `npm install` to install all the dependencies of the project.
-**This may take a while**.
-
-**You're now all set to run the website!**
-
 ## Setting up the environment
 Some parts of the application is configured via environment variables.
 These can be set in a `.env` file in the root directory.
-An example `.env` file can be seen below
+An example `.env` file can be seen below.
+**Setting these are required. The example below will give you a fully functioning example.**
 ```sh
 NODE_ENV=development
 DB_URI=mongodb://localhost/4temps
@@ -39,8 +33,19 @@ HOSTNAME=localhost
 PORT=3000
 ```
 
+## Installing the project dependencies
+Go to the root directory of the project.
+Once there, run `npm install` to install all the dependencies of the project.
+**This may take a while**.
+
+**You're now all set to run the website!**
+
+
 # Usage
-From the root directory of the project run `npm start` and wait a short while.
+From the root directory of the project run `npm start` and wait for quite some time.
+The reason it takes a while is that `babel` compiles the server code, and `webpack` bundles all the frontend code into a single file.
+Once the bundle is created, the server will restart.
+<sub>_And here I thought javascript wasn't a compiled language..._</sub>
 
 You should now be able to visit `http://localhost:3000`.
 Any changes to the source files will automatically recompile the project and restart the server.
