@@ -63,10 +63,15 @@ function divideScoreIntoColumns(
     }),
     {}
   );
-  if (isLastRound(state)) {
+  if (isLastRound(state) || isClassicTournament(state)) {
     return [getPairColumn(state, scoreMap, getPairs(state))];
   }
   return getSeparateColumns(state, scoreMap, getPairs(state));
+}
+
+function isClassicTournament(state: ReduxState) {
+  const tournament = state.tournaments.byId[state.tournaments.forJudge];
+  return tournament.type === 'classic';
 }
 
 function isLastRound(state: ReduxState) {
@@ -91,14 +96,21 @@ function getPairColumn(
   pairs: Array<Pair>
 ): ColumnViewModel {
   const scoreViewModels = pairs
-    .map(({ leader, follower }) => ({
-      name: `L${state.participants.byId[leader].attendanceId} - F${
-        state.participants.byId[follower].attendanceId
-      }`,
-      value: scores[leader] != null ? scores[leader].score : 0
+    .map(pair => ({
+      name: getPairName(state, pair),
+      value: scores[pair.leader] != null ? scores[pair.leader].score : 0
     }))
     .sort((a, b) => b.value - a.value);
   return { title: 'Couples', scores: scoreViewModels };
+}
+
+function getPairName(state: ReduxState, { leader, follower }: Pair) {
+  if (isClassicTournament(state)) {
+    return state.participants.byId[leader].attendanceId;
+  }
+  return `L${state.participants.byId[leader].attendanceId} - F${
+    state.participants.byId[follower].attendanceId
+  }`;
 }
 
 function getSeparateColumns(
@@ -124,8 +136,6 @@ function getSeparateColumns(
   ];
 }
 
-const NoteTableContainer = connect(mapStateToProps)(
-  Component
-);
+const NoteTableContainer = connect(mapStateToProps)(Component);
 
 export default NoteTableContainer;

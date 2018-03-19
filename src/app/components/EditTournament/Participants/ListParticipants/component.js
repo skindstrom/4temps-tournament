@@ -20,6 +20,7 @@ import {
 } from 'semantic-ui-react';
 
 type Props = {
+  isClassic: boolean,
   participants: Array<Participant>,
   onChangeAttending: (id: string, isAttending: boolean) => void
 };
@@ -69,9 +70,16 @@ class ListParticipants extends Component<Props, State> {
   };
 
   _roleToString(role: ParticipantRole) {
+    const { isClassic } = this.props;
     if (role === 'leader') {
+      if (isClassic) {
+        return 'Pair';
+      }
       return 'Leader';
     } else if (role === 'follower') {
+      if (isClassic) {
+        return 'Dummy';
+      }
       return 'Follower';
     } else if (role === 'leaderAndFollower') {
       return 'Both';

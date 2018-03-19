@@ -35,14 +35,13 @@ function PairNoteTaker({
   danceId
 }: Props) {
   return (
-    <Grid>
+    <Grid centered>
       <GridRow>
         <Header as="h2">Couple</Header>
       </GridRow>
-      <GridRow>
-        {criteria.map(criterion => (
+      {criteria.map(criterion => (
+        <GridRow key={pairId + criterion.id}>
           <NoteCriterion
-            key={pairId + criterion.id}
             notedEntity={pairId}
             onClick={(value: number) =>
               onClick(tournamentId, {
@@ -55,8 +54,8 @@ function PairNoteTaker({
             }
             criterion={criterion}
           />
-        ))}
-      </GridRow>
+        </GridRow>
+      ))}
     </Grid>
   );
 }

@@ -12,6 +12,7 @@ import type { ParticipantValidationSummary } from '../../../../../validators/val
 
 type Props = {
   isLoading: boolean,
+  isClassic: boolean,
 
   createdSuccessfully: boolean,
 
@@ -43,7 +44,7 @@ class CreateParticipant extends Component<Props, State> {
   };
 
   render() {
-    const { isLoading, validation } = this.props;
+    const { isLoading, validation, isClassic } = this.props;
     const { isValidParticipant, isValidName, isValidRole } = validation;
     const { name, role } = this.state;
     return (
@@ -56,23 +57,25 @@ class CreateParticipant extends Component<Props, State> {
         <FormGroup id="role-radio" inline>
           <label htmlFor="role-radio">Role</label>
           <FormRadio
-            label="Leader"
+            label={isClassic ? 'Pair' : 'Leader'}
             value="leader"
             onChange={this._onChangeRadio}
             checked={role === 'leader'}
           />
           <FormRadio
-            label="Follower"
+            label={isClassic ? 'Dummy' : 'Follower'}
             value="follower"
             onChange={this._onChangeRadio}
             checked={role === 'follower'}
           />
-          <FormRadio
-            label="Both leader and follower"
-            value="leaderAndFollower"
-            onChange={this._onChangeRadio}
-            checked={role === 'leaderAndFollower'}
-          />
+          {!isClassic && (
+            <FormRadio
+              label="Both leader and follower"
+              value="leaderAndFollower"
+              onChange={this._onChangeRadio}
+              checked={role === 'leaderAndFollower'}
+            />
+          )}
         </FormGroup>
         {!isValidRole && <Message error content="Must select a role" />}
         <FormButton type="submit" onClick={this._onSubmit}>

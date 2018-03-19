@@ -11,15 +11,17 @@ type Props = {
 };
 
 function mapStateToProps(
-  { participants }: ReduxState,
+  { tournaments, participants }: ReduxState,
   { tournamentId }: Props
 ) {
+  const shouldLoad = !participants.forTournament[tournamentId];
   return {
     Child: ListParticipants,
-    shouldLoad: !participants.forTournament[tournamentId],
+    shouldLoad,
     participants: (participants.forTournament[tournamentId] || []).map(
       id => participants.byId[id]
-    )
+    ),
+    isClassic: !shouldLoad && tournaments.byId[tournamentId].type === 'classic'
   };
 }
 

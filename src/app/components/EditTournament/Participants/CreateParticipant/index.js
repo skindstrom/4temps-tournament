@@ -9,8 +9,16 @@ type Props = {
   tournamentId: string
 };
 
-function mapStateToProps({ ui }: ReduxState) {
-  return ui.createParticipant;
+function mapStateToProps(
+  { tournaments, ui }: ReduxState,
+  { tournamentId }: Props
+) {
+  return {
+    ...ui.createParticipant,
+    isClassic:
+      tournaments.byId[tournamentId] != null &&
+      tournaments.byId[tournamentId].type === 'classic'
+  };
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {

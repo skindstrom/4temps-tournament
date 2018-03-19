@@ -90,7 +90,6 @@ class CreateTournament extends Component<Props, State> {
               value="classic"
               onChange={this._onChangeRadio}
               checked={this.state.type === 'classic'}
-              disabled
             />
             <FormRadio
               label="Jack n' Jill"

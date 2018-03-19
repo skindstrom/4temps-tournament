@@ -64,7 +64,14 @@ function getFirstPair(round: Round): Pair {
 
 function getRound(state: ReduxState): Round {
   const tournament = state.tournaments.byId[state.tournaments.forJudge];
-  return state.rounds.byId[tournament.rounds[tournament.rounds.length - 1]];
+  // $FlowFixMe
+  return tournament.rounds.reduce((res, roundId) => {
+    const round = state.rounds.byId[roundId];
+    if (round.active) {
+      return round;
+    }
+    return res;
+  }, null);
 }
 
 function getCriteria(

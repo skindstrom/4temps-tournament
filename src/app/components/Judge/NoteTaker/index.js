@@ -21,7 +21,8 @@ function mapStateToProps({
     shouldLoad: !(notes.isLoading || notes.didLoad),
     Child: Component,
     isLastRound:
-      rounds.byId[tournament.rounds[tournament.rounds.length - 1]].active
+      rounds.byId[tournament.rounds[tournament.rounds.length - 1]].active,
+    isClassic: tournament.type === 'classic'
   };
 }
 

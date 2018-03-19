@@ -8,11 +8,16 @@ type Props = {
 };
 
 function mapStateToProps(
-  { ui, rounds, participants, notes }: ReduxState,
+  { tournaments, ui, rounds, participants, notes }: ReduxState,
   { roundId }: Props
 ): StateProps {
   const round = rounds.byId[roundId];
-  const pairs = getPairViewModels(round, participants, notes);
+  const pairs = getPairViewModels(
+    round,
+    participants,
+    notes,
+    isClassicTournament(tournaments)
+  );
   const activePairId =
     ui.notes.selectedPair == null ? pairs[0].id : ui.notes.selectedPair;
   return {
@@ -32,10 +37,16 @@ function mapStateToProps(
   };
 }
 
+function isClassicTournament(tournaments: TournamentsReduxState) {
+  const tournament = tournaments.byId[tournaments.forJudge];
+  return tournament.type === 'classic';
+}
+
 function getPairViewModels(
   round: Round,
   participants: ParticipantsReduxState,
-  notes: NotesReduxState
+  notes: NotesReduxState,
+  isClassic: boolean
 ): Array<PairViewModel> {
   const pairs = getPairsOfRound(round);
   const criterionCount = round.criteria.length;
@@ -46,12 +57,22 @@ function getPairViewModels(
 
     return {
       id: leader.id + follower.id,
-      name: `L${leader.attendanceId} - F${follower.attendanceId}`,
+      name: getPairName({ leader, follower }, isClassic),
       hasAllNotes:
         hasAllNotes(leader.id, notes, criterionCount) &&
         hasAllNotes(follower.id, notes, criterionCount)
     };
   });
+}
+
+function getPairName(
+  { leader, follower }: { leader: Participant, follower: Participant },
+  isClassic: boolean
+): string {
+  if (isClassic) {
+    return String(leader.attendanceId);
+  }
+  return `L${leader.attendanceId} - F${follower.attendanceId}`;
 }
 
 function hasAllNotes(
