@@ -16,8 +16,8 @@ export default (html: string, preloadedState: ReduxState, cspNonce: string) => {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
-        <link rel="stylesheet" href="/app.css"></link>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+        <link rel="stylesheet" href="/app.css">
+        <link rel="stylesheet" href="/semantic.min.css">
       </head>
       <body>
         <div id="root">${html}</div>

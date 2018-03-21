@@ -129,12 +129,7 @@ class Server {
                 // $FlowFixMe
                 `'nonce-${res.locals.cspNonce}'`
             ],
-            styleSrc: [
-              "'self'",
-              'cdnjs.cloudflare.com',
-              'fonts.googleapis.com'
-            ],
-            fontSrc: ['cdnjs.cloudflare.com', 'fonts.gstatic.com', 'data:'],
+            fontSrc: ["'self'", 'data:'],
             formAction: ["'self'"],
             connectSrc: ["'self'", this._getWebsocketConnectionString()]
           }
