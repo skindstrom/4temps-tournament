@@ -69,6 +69,30 @@ describe('Notes reducer', () => {
   });
 
   describe('SET_NOTE', () => {
+    describe('start', () => {
+      const payload: JudgeNote = {
+        danceId: 'dance',
+        criterionId: 'crit',
+        participantId: 'p1',
+        judgeId: 'judge',
+        value: 5
+      };
+      const expected = {
+        byParticipant: {
+          p1: { crit: { ...payload } }
+        }
+      };
+
+      test('optimistically sets the note', () => {
+        const action = {
+          ...makePackAction(LIFECYCLE.START, 'SET_NOTE', payload)
+        };
+
+        expect(
+          reducer({ ...getInitialState(), isLoading: true }, action)
+        ).toMatchObject(expected);
+      });
+    });
     describe('success', () => {
       const payload: JudgeNote = {
         danceId: 'dance',

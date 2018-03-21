@@ -58,19 +58,23 @@ function setNote(
   state: NotesReduxState = getInitialState(),
   action: ReduxPackAction
 ): NotesReduxState {
-  const { payload }: { payload: JudgeNote } = action;
   return handle(state, action, {
-    success: prevState => ({
-      ...prevState,
-      byParticipant: {
-        ...prevState.byParticipant,
-        [payload.participantId]: {
-          ...prevState.byParticipant[payload.participantId],
-          [payload.criterionId]: payload
-        }
-      }
-    })
+    start: prevState => updateNotesWithNote(prevState, action.payload),
+    success: prevState => updateNotesWithNote(prevState, action.payload)
   });
+}
+
+function updateNotesWithNote(prevState: NotesReduxState, note: JudgeNote) {
+  return {
+    ...prevState,
+    byParticipant: {
+      ...prevState.byParticipant,
+      [note.participantId]: {
+        ...prevState.byParticipant[note.participantId],
+        [note.criterionId]: note
+      }
+    }
+  };
 }
 
 function logout(

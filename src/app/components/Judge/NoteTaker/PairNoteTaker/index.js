@@ -124,14 +124,22 @@ function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
         promise: setTemporaryNote(tournamentId, {
           ...note,
           participantId: leaderId
-        })
+        }),
+        payload: {
+          ...note,
+          participantId: leaderId
+        }
       });
       dispatch({
         type: 'SET_NOTE',
         promise: setTemporaryNote(tournamentId, {
           ...note,
           participantId: followerId
-        })
+        }),
+        payload: {
+          ...note,
+          participantId: followerId
+        }
       });
     }
   };

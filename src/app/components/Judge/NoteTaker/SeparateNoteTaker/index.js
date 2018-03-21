@@ -109,7 +109,8 @@ function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
     onClick: (tournamentId: string, note: JudgeNote) => {
       dispatch({
         type: 'SET_NOTE',
-        promise: setTemporaryNote(tournamentId, note)
+        promise: setTemporaryNote(tournamentId, note),
+        payload: note
       });
     }
   };
