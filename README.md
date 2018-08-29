@@ -5,7 +5,7 @@
 Start by installing NodeJS and npm.
 [There's a straight forward tutorial on how to do that on the NodeJS website.](https://docs.npmjs.com/getting-started/installing-node)
 
-_The project is currently only tested with node version 9.2.1 and npm version 5.6.0, but any node version >= 9 and npm version >= 5 should be fine._
+**Requires Node v10 or later**
 
 ## Installing MongoDB
 We use `MongoDB` to store data.
