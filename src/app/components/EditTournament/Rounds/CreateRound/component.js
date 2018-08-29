@@ -48,7 +48,7 @@ class EditTournamentRounds extends Component<Props, State> {
     minPairCountPerGroup: null,
     maxPairCountPerGroup: null,
     passingCouplesCount: null,
-    multipleDanceScoringRule: 'none',
+    multipleDanceScoringRule: 'average',
     criteria: [
       {
         name: '',
