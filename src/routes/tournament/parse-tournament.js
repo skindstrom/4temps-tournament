@@ -1,8 +1,10 @@
 // @flow
 import moment from 'moment';
 
-// $FlowFixMe
-export default function parseTournament(body: any): Tournament {
+export default function parseTournament(
+  //$FlowFixMe
+  body: any
+): Tournament {
   return {
     id: body.id || '',
     name: body.name || '',
@@ -10,6 +12,7 @@ export default function parseTournament(body: any): Tournament {
     type: body.type || 'none',
     judges: body.judges || [],
     participants: body.participants || [],
+    assistants: body.assistants || [],
     rounds: body.rounds || [],
     creatorId: body.creatorId,
     dancesNoted: body.dancesNoted || {}
