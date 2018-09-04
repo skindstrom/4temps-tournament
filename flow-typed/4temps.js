@@ -17,6 +17,7 @@ declare type Tournament = {
   type: TournamentType,
   dancesNoted: { [judgeId: string]: Array<string> },
   judges: Array<Judge>,
+  assistants: Array<Assistant>,
   participants: Array<Participant>,
   rounds: Array<Round>
 };
@@ -120,6 +121,8 @@ declare type AdminCredentials = {
 declare type User = { id: string, role: PermissionRole };
 
 declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
+
+declare type Assistant = { id: string, name: string };
 
 declare type Leaderboard = {
   tournamentId: string,

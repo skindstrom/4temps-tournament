@@ -236,6 +236,19 @@ describe('Round route test helpers', () => {
         judges: [judge]
       });
     });
+
+    test('Add assistant adds an assistant', async () => {
+      const tournament = createTournament();
+      await repo.create(tournament);
+
+      const assistant = { name: 'nice name', id: '123' };
+      await repo.addAssistant(tournament.id, assistant);
+
+      expect(await repo.get(tournament.id)).toEqual({
+        ...tournament,
+        assistants: [assistant]
+      });
+    });
   });
 
   describe('AccessKey repository', () => {

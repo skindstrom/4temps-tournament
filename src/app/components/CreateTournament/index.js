@@ -27,6 +27,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
           date,
           type,
           judges: [],
+          assistants: [],
           participants: [],
           rounds: [],
           dancesNoted: {}

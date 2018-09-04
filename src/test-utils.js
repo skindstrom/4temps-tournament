@@ -199,6 +199,10 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       danceId
     ];
   };
+
+  addAssistant = async (tournamentId: string, assistant: Assistant) => {
+    this._tournaments[tournamentId].assistants.push(assistant);
+  };
 }
 
 export class AccessKeyRepositoryImpl implements AccessKeyRepository {
@@ -308,6 +312,7 @@ export function createTournament(): Tournament {
     date: moment(),
     type: 'jj',
     judges: [],
+    assistants: [],
     participants: [],
     rounds: [],
     dancesNoted: {}
