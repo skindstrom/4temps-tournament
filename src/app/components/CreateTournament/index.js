@@ -40,8 +40,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
   };
 }
 
-const CreateTournamentContainer = connect(mapStateToProps, mapDispatchToProps)(
-  CreateTournament
-);
+const CreateTournamentContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateTournament);
 
 export default CreateTournamentContainer;

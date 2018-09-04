@@ -62,8 +62,10 @@ function getActiveDanceId(round: Round): string {
 function getActiveRound(state: ReduxState): Round {
   const tournament = getTournament(state);
   // $FlowFixMe
-  return tournament.rounds
-    .reduce((res, round) => (round.active ? round : res), null);
+  return tournament.rounds.reduce(
+    (res, round) => (round.active ? round : res),
+    null
+  );
 }
 
 function getTournament(state: ReduxState): Tournament {
@@ -85,8 +87,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
   };
 }
 
-const SubmitNotesModalContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Component
-);
+const SubmitNotesModalContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default SubmitNotesModalContainer;

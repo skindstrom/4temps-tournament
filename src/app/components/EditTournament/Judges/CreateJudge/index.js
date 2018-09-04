@@ -22,8 +22,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   };
 }
 
-const CreateJudgeContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Component
-);
+const CreateJudgeContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default CreateJudgeContainer;

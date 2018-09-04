@@ -49,8 +49,9 @@ function mapDispatchToProps(
   };
 }
 
-const LeaderboardContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PreloadContainer
-);
+const LeaderboardContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default LeaderboardContainer;

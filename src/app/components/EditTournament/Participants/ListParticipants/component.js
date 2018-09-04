@@ -94,10 +94,10 @@ class ListParticipants extends Component<Props, State> {
     });
   };
 
-  _handleFilterChange = (e: SyntheticEvent, data: {checked: boolean}) => {
+  _handleFilterChange = (e: SyntheticEvent, data: { checked: boolean }) => {
     const { checked } = data;
-    this.setState({filterPresent: checked});
-  }
+    this.setState({ filterPresent: checked });
+  };
 
   _renderUnattendModal = () => {
     return (
@@ -138,16 +138,16 @@ class ListParticipants extends Component<Props, State> {
         </ModalActions>
       </Modal>
     );
-  }
+  };
 
-  handleSearchChange = (e: SyntheticEvent, { value }: {value: string}) => {
-    this.setState({isSearchLoading: true, searchValue: value});
-    this.setState({isSearchLoading: false});
-  }
+  handleSearchChange = (e: SyntheticEvent, { value }: { value: string }) => {
+    this.setState({ isSearchLoading: true, searchValue: value });
+    this.setState({ isSearchLoading: false });
+  };
 
   _getNotPresent = () => {
     return this.props.participants.filter(p => !p.isAttending);
-  }
+  };
 
   _searchParticipants = (participants: Array<Participant>) => {
     return participants.filter(p => {
@@ -155,12 +155,12 @@ class ListParticipants extends Component<Props, State> {
       const search = this.state.searchValue.toLowerCase();
       return name.indexOf(search) !== -1;
     });
-  }
+  };
 
   render() {
-    let participants = this.state.filterPresent ?
-      this._getNotPresent() :
-      this.props.participants;
+    let participants = this.state.filterPresent
+      ? this._getNotPresent()
+      : this.props.participants;
     participants = this._searchParticipants(participants);
     return (
       <Container>
@@ -176,14 +176,14 @@ class ListParticipants extends Component<Props, State> {
                   showNoResults={false}
                 />
               </TableCell>
-              <TableCell textAlign='right'>
+              <TableCell textAlign="right">
                 <Checkbox
                   toggle
                   checked={this.state.filterPresent}
                   onChange={this._handleFilterChange}
                 />
               </TableCell>
-              <TableCell textAlign='left'>
+              <TableCell textAlign="left">
                 <b>Show only NOT present</b>
               </TableCell>
             </TableRow>

@@ -39,8 +39,9 @@ function mapDispatchToProps(
   };
 }
 
-const NoteTakerContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PreloadContainer
-);
+const NoteTakerContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default NoteTakerContainer;

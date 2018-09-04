@@ -13,11 +13,11 @@ describe('User reducer', () => {
     expect(
       reducer(undefined, makePackAction(LIFECYCLE.SUCCESS, 'INVALID_ACTION'))
     ).toEqual({ id: '', role: '' });
-    expect(getInitialState()).toEqual({ id: '', role: ''});
+    expect(getInitialState()).toEqual({ id: '', role: '' });
   });
 
   test('Successful login sets id', () => {
-    const payload = { userId: id , role: ''};
+    const payload = { userId: id, role: '' };
 
     expect(
       reducer(
@@ -33,23 +33,35 @@ describe('User reducer', () => {
     ).toEqual(initialState);
 
     expect(
-      reducer({ id, role: 'admin' }, makePackAction(LIFECYCLE.FAILURE, 'LOGIN_USER'))
+      reducer(
+        { id, role: 'admin' },
+        makePackAction(LIFECYCLE.FAILURE, 'LOGIN_USER')
+      )
     ).toEqual({ id, role: 'admin' });
   });
 
   test('Successful logout sets id to empty string', () => {
     expect(
-      reducer({ id, role: 'admin' }, makePackAction(LIFECYCLE.SUCCESS, 'LOGOUT_USER'))
+      reducer(
+        { id, role: 'admin' },
+        makePackAction(LIFECYCLE.SUCCESS, 'LOGOUT_USER')
+      )
     ).toEqual({ id: '', role: '' });
   });
 
   test('Failed logout makes does not impact', () => {
     expect(
-      reducer({ id, role: 'admin' }, makePackAction(LIFECYCLE.FAILURE, 'LOGOUT_USER'))
+      reducer(
+        { id, role: 'admin' },
+        makePackAction(LIFECYCLE.FAILURE, 'LOGOUT_USER')
+      )
     ).toEqual({ id, role: 'admin' });
 
     expect(
-      reducer({ id, role: 'admin' }, makePackAction(LIFECYCLE.FAILURE, 'LOGOUT_USER'))
+      reducer(
+        { id, role: 'admin' },
+        makePackAction(LIFECYCLE.FAILURE, 'LOGOUT_USER')
+      )
     ).toEqual({ id, role: 'admin' });
   });
 });

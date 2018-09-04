@@ -53,7 +53,7 @@ class CreateRoundRouteHandler {
   async executeForUser(userId: string) {
     this._userId = userId;
 
-    if (!await this._userOwnsTournament()) {
+    if (!(await this._userOwnsTournament())) {
       throw { status: 401 };
     }
 

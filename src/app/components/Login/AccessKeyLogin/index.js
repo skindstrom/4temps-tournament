@@ -25,8 +25,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
   };
 }
 
-const LoginContainer = connect(mapStateToProps, mapDispatchToProps)(
-  LoginComponent
-);
+const LoginContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginComponent);
 
 export default LoginContainer;

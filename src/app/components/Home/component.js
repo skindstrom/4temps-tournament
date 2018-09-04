@@ -14,13 +14,12 @@ type Props = {
 };
 
 class Home extends PureComponent<Props> {
-
-  _renderForRole(){
-    if(this.props.role == 'admin'){
+  _renderForRole() {
+    if (this.props.role == 'admin') {
       return <EditTournamentList history={this.props.history} />;
-    }else if(this.props.role == 'judge'){
+    } else if (this.props.role == 'judge') {
       return <Judge />;
-    }else{
+    } else {
       return <LoginContainer {...this.props} />;
     }
   }

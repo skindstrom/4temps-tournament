@@ -145,8 +145,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
   };
 }
 
-const PairNoteTakerContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Component
-);
+const PairNoteTakerContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default PairNoteTakerContainer;

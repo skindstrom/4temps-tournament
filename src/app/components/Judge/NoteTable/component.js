@@ -25,7 +25,7 @@ export type ScoreViewModel = {
 
 export type NoteTableProps = {
   columns: Array<ColumnViewModel>
-}
+};
 
 class NoteTable extends PureComponent<NoteTableProps> {
   _createTable = (column: ColumnViewModel) => {
@@ -52,14 +52,12 @@ class NoteTable extends PureComponent<NoteTableProps> {
         </Table>
       </Container>
     );
-  }
+  };
   render() {
     return (
       <Grid columns={this.props.columns.length} stackable>
         {this.props.columns.map(col => (
-          <Grid.Column key={col.title}>
-            {this._createTable(col)}
-          </Grid.Column>
+          <Grid.Column key={col.title}>{this._createTable(col)}</Grid.Column>
         ))}
       </Grid>
     );

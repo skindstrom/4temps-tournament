@@ -30,6 +30,9 @@ function mapDispatchToProps(
   };
 }
 
-const SignUpContainer = connect(mapStateToProps, mapDispatchToProps)(SignUp);
+const SignUpContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUp);
 
 export default SignUpContainer;

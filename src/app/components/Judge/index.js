@@ -77,8 +77,9 @@ function isGroupActive(group: DanceGroup): boolean {
   return group.dances.reduce((a, b) => a || b.active, false);
 }
 
-const JudgeContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PreloadContainer
-);
+const JudgeContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default JudgeContainer;

@@ -116,8 +116,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
   };
 }
 
-const SeparateNoteTakerContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Component
-);
+const SeparateNoteTakerContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default SeparateNoteTakerContainer;

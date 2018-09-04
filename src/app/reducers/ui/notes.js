@@ -10,23 +10,23 @@ export default function uiNotesReducer(
     return { ...state, selectedPair: action.payload };
   case 'SUBMIT_NOTES':
     return handle(state, action, {
-      start: prevState => ({...prevState, isLoading: true, didSubmit: true}),
-      success: prevState => (
-        {
-          ...prevState,
-          isLoading: false,
-          didSubmit: true,
-          successfulSubmit: true
-        }
-      ),
-      failure: prevState => (
-        {
-          ...prevState,
-          isLoading: false,
-          didSubmit: true,
-          successfulSubmit: false
-        }
-      )
+      start: prevState => ({
+        ...prevState,
+        isLoading: true,
+        didSubmit: true
+      }),
+      success: prevState => ({
+        ...prevState,
+        isLoading: false,
+        didSubmit: true,
+        successfulSubmit: true
+      }),
+      failure: prevState => ({
+        ...prevState,
+        isLoading: false,
+        didSubmit: true,
+        successfulSubmit: false
+      })
     });
   }
 

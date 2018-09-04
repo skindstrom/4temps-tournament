@@ -174,8 +174,9 @@ function mapDispatchToProps(
   };
 }
 
-const RoundGroupContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Component
-);
+const RoundGroupContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default RoundGroupContainer;

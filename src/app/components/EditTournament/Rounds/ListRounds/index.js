@@ -53,8 +53,9 @@ function mapDispatchToProps(
   };
 }
 
-const ListRoundContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PreloadContainer
-);
+const ListRoundContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default ListRoundContainer;

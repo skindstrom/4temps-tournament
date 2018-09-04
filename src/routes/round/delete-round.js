@@ -19,7 +19,7 @@ class DeleteRoundRoute {
       handler.parseParams(req.params);
       if (
         (await handler.isUserAuthorized()) &&
-        !await handler.isRoundStartedOrFinished()
+        !(await handler.isRoundStartedOrFinished())
       ) {
         await handler.deleteRound();
         res.json({

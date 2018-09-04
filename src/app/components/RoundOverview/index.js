@@ -29,8 +29,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch) {
   };
 }
 
-const RoundOverviewContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PreloadContainer
-);
+const RoundOverviewContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default RoundOverviewContainer;

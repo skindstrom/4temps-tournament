@@ -36,8 +36,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   };
 }
 
-const ListParticipantsContainer = connect(mapStateToProps, mapDispatchToProps)(
-  PreloadContainer
-);
+const ListParticipantsContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreloadContainer);
 
 export default ListParticipantsContainer;

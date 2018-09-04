@@ -45,7 +45,10 @@ function mapDispatchToProps(
 }
 
 const NavigationBarContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NavigationBar)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(NavigationBar)
 );
 
 export default NavigationBarContainer;

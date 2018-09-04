@@ -10,9 +10,7 @@ type Props = {
 };
 
 function EditTournamentRounds({ tournamentId, history }: Props) {
-  return (
-    <ListRounds tournamentId={tournamentId} history={history} />
-  );
+  return <ListRounds tournamentId={tournamentId} history={history} />;
 }
 
 export default EditTournamentRounds;

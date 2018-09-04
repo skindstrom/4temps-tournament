@@ -105,8 +105,9 @@ function mapDispatchToProps(dispatch: ReduxDispatch): DispatchProps {
   };
 }
 
-const SelectPairGridContainer = connect(mapStateToProps, mapDispatchToProps)(
-  Component
-);
+const SelectPairGridContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
 
 export default SelectPairGridContainer;

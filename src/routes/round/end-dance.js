@@ -93,7 +93,7 @@ class StartDanceRouteHandler {
     const round = this._getActiveRound(tournament);
     const dance = this._getStartedDance(round);
 
-    if (!await this._hasAllNotesForDance(tournament, dance)) {
+    if (!(await this._hasAllNotesForDance(tournament, dance))) {
       throw new NotAllNotesError();
     }
 

@@ -39,8 +39,8 @@ class SubmitNotesModal extends PureComponent<Props> {
     return (
       <Message
         negative
-        header='Failed to submit scores!'
-        content='Please try again.'
+        header="Failed to submit scores!"
+        content="Please try again."
       />
     );
   }
@@ -56,7 +56,7 @@ class SubmitNotesModal extends PureComponent<Props> {
   _submitModal() {
     const failureMessage = this._didFail() ? this._failureMessage() : null;
     return (
-      <Modal trigger={<Button color='green'>Vérifier les notes</Button>}>
+      <Modal trigger={<Button color="green">Vérifier les notes</Button>}>
         <Dimmer active={this.props.isLoading}>
           <Loader>Submitting</Loader>
         </Dimmer>
@@ -74,8 +74,10 @@ class SubmitNotesModal extends PureComponent<Props> {
     );
   }
   render() {
-    return (
-      this.props.hasAllNotes ? this._submitModal() : <CannotSubmitButton />
+    return this.props.hasAllNotes ? (
+      this._submitModal()
+    ) : (
+      <CannotSubmitButton />
     );
   }
 }
@@ -83,8 +85,8 @@ class SubmitNotesModal extends PureComponent<Props> {
 function CannotSubmitButton() {
   return (
     <Popup
-      trigger={<Button color='red'>Vérifier les notes</Button>}
-      content='You must score all pairs'
+      trigger={<Button color="red">Vérifier les notes</Button>}
+      content="You must score all pairs"
       on={['hover', 'click']}
     />
   );

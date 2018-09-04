@@ -20,7 +20,8 @@ export function pushTournamentUpdate(tournament: Tournament) {
 }
 
 export function pushLeaderboardUpdate(leaderboard: Leaderboard) {
-  io
-    .to(`leaderboard/${leaderboard.tournamentId}`)
-    .emit('leaderboard update', leaderboard);
+  io.to(`leaderboard/${leaderboard.tournamentId}`).emit(
+    'leaderboard update',
+    leaderboard
+  );
 }
