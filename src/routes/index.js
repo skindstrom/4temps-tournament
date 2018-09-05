@@ -8,6 +8,7 @@ import TournamentRoute from './tournament';
 import ParticipantRoute from './participant';
 import RoundRoute from './round';
 import JudgeRoute from './judge';
+import AssistantRoute from './assistant';
 import NoteRoute from './note';
 import LeaderboardRoute from './leaderboard';
 
@@ -19,6 +20,7 @@ router.use('/tournament', TournamentRoute);
 router.use('/participant', ParticipantRoute);
 router.use('/round', RoundRoute);
 router.use('/judge', JudgeRoute);
+router.use('/assistant', AssistantRoute);
 router.use('/note', NoteRoute);
 router.use('/leaderboard', LeaderboardRoute);
 
