@@ -192,6 +192,8 @@ declare type ReduxState = {
   participants: ParticipantsReduxState,
   rounds: RoundsReduxState,
   judges: JudgesReduxState,
+  assistants: AssistantsReduxState,
+
   accessKeys: AccessKeysReduxState,
   notes: NotesReduxState,
   leaderboards: LeaderboardsReduxState,
@@ -207,6 +209,7 @@ declare type ReduxState = {
     createParticipant: UiCreateParticipantsReduxState,
     createRound: UiCreateRoundReduxState,
     createJudge: UiCreateJudgeReduxState,
+    createAssistant: UiCreateAssistantReduxState,
 
     notes: UiNotesReduxState
   }
@@ -267,6 +270,15 @@ declare type JudgesReduxState = {
   },
   byId: {
     [id: string]: Judge
+  }
+};
+
+declare type AssistantsReduxState = {
+  forTournament: {
+    [id: string]: Array<string>
+  },
+  byId: {
+    [id: string]: Assistant
   }
 };
 
@@ -333,6 +345,12 @@ declare type UiCreateJudgeReduxState = {
   isValid: boolean
 };
 
+declare type UiCreateAssistantReduxState = {
+  isLoading: boolean,
+  createdSuccessfully: boolean,
+  isValid: boolean
+};
+
 declare type UiNotesReduxState = {
   selectedPair: ?string,
   isLoading: boolean,
@@ -369,7 +387,8 @@ declare type ReduxAction =
   | GetNotesAction
   | SetNoteAction
   | SelectPairAction
-  | GetLeaderboardAction;
+  | GetLeaderboardAction
+  | CreateAssistantAction;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -440,6 +459,11 @@ declare type DeleteRoundAction = {
 
 declare type CreateJudgeAction = {
   type: 'CREATE_JUDGE',
+  promise: Promise<mixed>
+};
+
+declare type CreateAssistantAction = {
+  type: 'CREATE_ASSISTANT',
   promise: Promise<mixed>
 };
 

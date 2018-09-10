@@ -9,6 +9,7 @@ import createParticipant from './create-participant';
 import createRound from './create-round';
 import createJudge from './create-judge';
 import judgeLogin from './judge-login';
+import createAssistant from './create-assistant';
 import notes from './notes';
 
 export default combineReducers({
@@ -20,5 +21,6 @@ export default combineReducers({
   editTournament,
   createParticipant,
   createJudge,
+  createAssistant,
   notes
 });

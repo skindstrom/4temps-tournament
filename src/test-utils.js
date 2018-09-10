@@ -336,6 +336,13 @@ export function createJudge(): Judge {
   };
 }
 
+export function createAssistant(): Assistant {
+  return {
+    id: generateId(),
+    name: 'Assistant Name'
+  };
+}
+
 export function createCriterion(): RoundCriterion {
   return {
     id: generateId(),
