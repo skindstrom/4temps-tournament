@@ -17,9 +17,10 @@ export default function route(
 
       if (validateJudge(judge)) {
         await tournamentRepository.addJudge(tournamentId, judge);
-        await accessRepository.createForTournamentAndUser(
+        await accessRepository.createForTournamentAndUserWithRole(
           tournamentId,
-          judge.id
+          judge.id,
+          'judge'
         );
         res.json({ tournamentId, judge });
       } else {

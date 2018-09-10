@@ -212,13 +212,18 @@ export class AccessKeyRepositoryImpl implements AccessKeyRepository {
     return this._keys;
   }
 
-  async createForTournamentAndUser(tournamentId: string, userId: string) {
+  async createForTournamentAndUserWithRole(
+    tournamentId: string,
+    userId: string,
+    role: 'judge' | 'assistant'
+  ) {
     this._keys.push({
       userId,
       tournamentId,
       key: String(
         Math.max(0, ...this._keys.map(({ key }) => parseInt(key))) + 1
-      )
+      ),
+      role
     });
   }
 

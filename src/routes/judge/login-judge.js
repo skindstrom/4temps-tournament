@@ -2,7 +2,7 @@
 
 import type { TournamentRepository } from '../../data/tournament';
 import type { AccessKeyRepository } from '../../data/access-key';
-import validateJudgeLogin from '../../validators/validate-judge-login';
+import isValidAccessKey from '../../validators/validate-access-key';
 
 export default function route(
   tournamentRepository: TournamentRepository,
@@ -12,7 +12,7 @@ export default function route(
     try {
       const accessKey = parseAccessKey(req.body);
 
-      if (validateJudgeLogin(accessKey)) {
+      if (isValidAccessKey(accessKey)) {
         const dbModel = await accessRepository.getForKey(accessKey);
         if (dbModel) {
           const tournament = await tournamentRepository.get(

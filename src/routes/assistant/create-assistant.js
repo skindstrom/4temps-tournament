@@ -17,9 +17,10 @@ export default function route(
 
       if (validateAssistant(assistant)) {
         await tournamentRepository.addAssistant(tournamentId, assistant);
-        await accessRepository.createForTournamentAndUser(
+        await accessRepository.createForTournamentAndUserWithRole(
           tournamentId,
-          assistant.id
+          assistant.id,
+          'assistant'
         );
         res.json({ tournamentId, assistant });
       } else {

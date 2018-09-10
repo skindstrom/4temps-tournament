@@ -8,7 +8,8 @@ type AccessKeyDbModel = {
   _id: ObjectId,
   tournamentId: ObjectId,
   userId: ObjectId,
-  key: string
+  key: string,
+  role: 'assistant' | 'judge'
 };
 
 const schema = new mongoose.Schema({
@@ -23,29 +24,38 @@ const schema = new mongoose.Schema({
   key: {
     type: String,
     required: true
+  },
+  role: {
+    type: String,
+    required: true
   }
 });
 
 const Model = mongoose.model('accessKey', schema);
 
 export interface AccessKeyRepository {
-  createForTournamentAndUser(
+  createForTournamentAndUserWithRole(
     tournamentId: string,
-    userId: string
+    userId: string,
+    role: 'judge' | 'assistant'
   ): Promise<void>;
   getForKey(key: string): Promise<?AccessKey>;
   getForTournament(id: string): Promise<Array<AccessKey>>;
 }
 
 class AccessKeyRepositoryImpl implements AccessKeyRepository {
-  async createForTournamentAndUser(tournamentId: string, userId: string) {
+  async createForTournamentAndUserWithRole(
+    tournamentId: string,
+    userId: string,
+    role: 'judge' | 'assistant'
+  ) {
     const key = await this._generateUniqueKey();
     /*
      * There's a race condition between the generation of the key
      * and the insert. However, there will not be a lot of concurrent
      * inserts, and let's believe in the randomness for now
      */
-    await Model.create({ tournamentId, userId, key });
+    await Model.create({ tournamentId, userId, key, role });
   }
 
   async _generateUniqueKey() {
@@ -69,11 +79,12 @@ class AccessKeyRepositoryImpl implements AccessKeyRepository {
       return null;
     }
 
-    const { key, userId, tournamentId } = dbModel;
+    const { key, userId, tournamentId, role } = dbModel;
     return {
       key,
       userId: userId.toString(),
-      tournamentId: tournamentId.toString()
+      tournamentId: tournamentId.toString(),
+      role
     };
   }
 

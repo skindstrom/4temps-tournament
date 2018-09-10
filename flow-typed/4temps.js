@@ -84,7 +84,8 @@ declare type Pair = {
 declare type AccessKey = {
   userId: string,
   tournamentId: string,
-  key: string
+  key: string,
+  role: 'judge' | 'assistant'
 };
 
 declare type Judge = {
@@ -120,7 +121,12 @@ declare type AdminCredentials = {
 
 declare type User = { id: string, role: PermissionRole };
 
-declare type PermissionRole = 'public' | 'admin' | 'authenticated' | 'judge';
+declare type PermissionRole =
+  | 'public'
+  | 'admin'
+  | 'authenticated'
+  | 'judge'
+  | 'assistant';
 
 declare type Assistant = { id: string, name: string };
 
