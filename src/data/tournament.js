@@ -288,7 +288,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       { _id: tournamentId },
       {
         $push: {
-          judges: db
+          assistants: db
         }
       },
       { new: true }
