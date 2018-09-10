@@ -9,7 +9,7 @@ import Participants from './Participants';
 import Rounds from './Rounds';
 import Judges from './Judges';
 
-type TabName = 'general' | 'rounds' | 'staff' | 'participants';
+type TabName = 'general' | 'rounds' | 'judges' | 'participants';
 type Props = {
   match: Match,
   location: Location,
@@ -24,7 +24,7 @@ const getActiveTab = (pathname: string): TabName => {
   const tabName = splits[splits.length - 1];
   if (
     tabName !== 'rounds' &&
-    tabName !== 'staff' &&
+    tabName !== 'judges' &&
     tabName !== 'participants'
   ) {
     return 'general';
@@ -80,7 +80,7 @@ class EditTournament extends Component<Props, State> {
     />
   );
 
-  _renderStaff = () => <Judges tournamentId={this._getTournamentId()} />;
+  _renderJudges = () => <Judges tournamentId={this._getTournamentId()} />;
 
   _renderParticipants = () => (
     <Participants tournamentId={this._getTournamentId()} />
@@ -93,7 +93,7 @@ class EditTournament extends Component<Props, State> {
   components = {
     general: this._renderGeneral,
     rounds: this._renderRounds,
-    staff: this._renderStaff,
+    judges: this._renderJudges,
     participants: this._renderParticipants
   };
 
@@ -104,7 +104,7 @@ class EditTournament extends Component<Props, State> {
           {[
             { name: 'general', content: 'General' },
             { name: 'rounds', content: 'Rounds' },
-            { name: 'staff', content: 'Staff' },
+            { name: 'judges', content: 'Judges' },
             { name: 'participants', content: 'Participants' }
           ].map(({ name, content }) => this._renderMenuItem(name, content))}
         </Menu>
