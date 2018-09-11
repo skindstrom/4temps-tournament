@@ -5,6 +5,7 @@ import type { Location, RouterHistory } from 'react-router-dom';
 import LoginContainer from '../Login';
 import Judge from '../Judge';
 import EditTournamentList from '../EditTournamentList';
+import Assistant from '../Assistant';
 
 type Props = {
   isAuthenticated: boolean,
@@ -20,7 +21,7 @@ class Home extends PureComponent<Props> {
     } else if (this.props.role == 'judge') {
       return <Judge />;
     } else if (this.props.role == 'assistant') {
-      return 'Assistant view';
+      return <Assistant />;
     } else {
       return <LoginContainer {...this.props} />;
     }
