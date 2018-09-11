@@ -12,7 +12,7 @@ function userReducer(
   case 'LOGIN_USER':
     return loginUser(state, action);
   case 'LOGIN_WITH_ACCESS_KEY':
-    return loginJudge(state, action);
+    return loginWithAccessKey(state, action);
   case 'LOGOUT_USER':
     return logoutUser(state, action);
   default:
@@ -34,13 +34,13 @@ function loginUser(
   });
 }
 
-function loginJudge(
+function loginWithAccessKey(
   state: UserReduxState,
   action: ReduxPackAction
 ): UserReduxState {
   const { payload } = action;
   return handle(state, action, {
-    success: () => ({ id: payload.userId, role: 'judge' })
+    success: () => ({ id: payload.userId, role: payload.role })
   });
 }
 

@@ -1,7 +1,7 @@
 //@flow
 import { connect } from 'react-redux';
 import type { RouterHistory } from 'react-router-dom';
-import { loginJudge } from '../../../api/judge';
+import { loginWithAccessKey } from '../../../api/access-key';
 import LoginComponent from './component';
 
 type Props = {
@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch: ReduxDispatch, { history }: Props) {
     onSubmit: (accessKey: string) =>
       dispatch({
         type: 'LOGIN_WITH_ACCESS_KEY',
-        promise: loginJudge(accessKey),
+        promise: loginWithAccessKey(accessKey),
         meta: {
           onSuccess: () => history.push('/')
         }

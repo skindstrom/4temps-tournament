@@ -19,6 +19,8 @@ class Home extends PureComponent<Props> {
       return <EditTournamentList history={this.props.history} />;
     } else if (this.props.role == 'judge') {
       return <Judge />;
+    } else if (this.props.role == 'assistant') {
+      return 'Assistant view';
     } else {
       return <LoginContainer {...this.props} />;
     }
