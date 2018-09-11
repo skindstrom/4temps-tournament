@@ -55,18 +55,6 @@ describe('/api/participant/create', () => {
     expect(route.status).toBe(400);
   });
 
-  test('Wrong admin has status 401', async () => {
-    const otherAdminId = new generateId();
-    const route = new CreateParticipantRouteHandler(
-      otherAdminId,
-      tournamentRepository
-    );
-
-    route.parseBody(VALID_BODY);
-    await route.createParticipant();
-    expect(route.status).toBe(401);
-  });
-
   test('Non-existing tournament has status 404', async () => {
     const route = new CreateParticipantRouteHandler(
       admin._id.toString(),

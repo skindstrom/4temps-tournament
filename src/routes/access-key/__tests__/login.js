@@ -23,7 +23,7 @@ describe('/api/access-key/login', () => {
     accessKeyRepo = new AccessKeyRepository();
   });
 
-  test('returns user id and role on success', async () => {
+  test('returns user id, role and tournament id on success', async () => {
     const judge = createJudge();
     accessKeyRepo._keys.push({
       userId: judge.id,
@@ -36,7 +36,11 @@ describe('/api/access-key/login', () => {
     await route(accessKeyRepo)(req, res);
 
     expect(res.getStatus()).toBe(200);
-    expect(res.getBody()).toEqual({ userId: judge.id, role: 'judge' });
+    expect(res.getBody()).toEqual({
+      userId: judge.id,
+      role: 'judge',
+      tournamentId: tournament.id
+    });
   });
 
   test('sets user session variable to the role of the user if correct key', async () => {
@@ -52,7 +56,8 @@ describe('/api/access-key/login', () => {
     expect(res.getStatus()).toBe(200);
     expect(req.session.user).toEqual({
       id: 'assistantId',
-      role: 'assistant'
+      role: 'assistant',
+      tournamentId: tournament.id
     });
   });
 

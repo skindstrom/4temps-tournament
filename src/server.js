@@ -201,7 +201,9 @@ class Server {
       // $FlowFixMe: Add user to req type
       id: req.session.user != null ? req.session.user.id : '',
       // $FlowFixMe: Add user to req type
-      role: req.session.user != null ? req.session.user.role : ''
+      role: req.session.user != null ? req.session.user.role : '',
+      // $FlowFixMe
+      tournamentId: (req.session.user && req.session.user.tournamentId) || ''
     };
 
     const html = renderToString(

@@ -13,14 +13,14 @@ const tournamentRepository = new TournamentRepositoryImpl();
 const createParticipantRoute = new CreateParticipantRoute(tournamentRepository);
 router.post(
   '/:tournamentId/create',
-  allow('admin'),
+  allow('admin', 'assistant'),
   createParticipantRoute.route
 );
 
 const changeAttendance = new ChangeAttendance(tournamentRepository);
 router.post(
   '/:tournamentId/attendance',
-  allow('admin'),
+  allow('admin', 'assistant'),
   changeAttendance.route
 );
 

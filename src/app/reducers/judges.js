@@ -13,6 +13,7 @@ export default function reducer(
   case 'CREATE_JUDGE':
     return createJudge(state, action);
   case 'GET_JUDGE_TOURNAMENT':
+  case 'GET_SINGLE_TOURNAMENT':
     return getSingleTournament(state, action);
   case 'TOURNAMENT_UPDATED':
     return tournamentUpdated(state, action);

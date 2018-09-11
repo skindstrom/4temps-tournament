@@ -36,17 +36,4 @@ describe('/api/tournament/get', () => {
       body: null
     });
   });
-
-  test('Returns 401 and null tournament if tournament was not created by user', async () => {
-    expect(
-      await getTournamentRoute(
-        tournament.id,
-        generateId(),
-        tournamentRepository
-      )
-    ).toEqual({
-      status: 401,
-      body: null
-    });
-  });
 });

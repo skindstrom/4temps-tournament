@@ -30,9 +30,17 @@ async function loginWithKey(
     res.status(404);
     res.json({ doesAccessKeyExist: false });
   } else {
-    const user = { userId: accessKey.userId, role: accessKey.role };
+    const user = {
+      userId: accessKey.userId,
+      role: accessKey.role,
+      tournamentId: accessKey.tournamentId
+    };
 
-    req.session.user = { id: user.userId, role: user.role };
+    req.session.user = {
+      id: user.userId,
+      role: user.role,
+      tournamentId: user.tournamentId
+    };
     res.json(user);
   }
 }

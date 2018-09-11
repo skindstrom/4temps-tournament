@@ -76,6 +76,7 @@ export interface TournamentRepository {
   getAll(): Promise<Array<Tournament>>;
   getForUser(userId: string): Promise<Array<Tournament>>;
   getForJudge(judgeId: string): Promise<?Tournament>;
+  getForAssistant(assistantId: string): Promise<?Tournament>;
   update(tournament: Tournament): Promise<void>;
   updateParticipantAttendance(
     participantId: string,
@@ -133,6 +134,18 @@ export class TournamentRepositoryImpl implements TournamentRepository {
       return mapToDomainModel(
         (await Model.findOne({
           judges: { $elemMatch: { _id: judgeId } }
+        })).toObject()
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async getForAssistant(assistantId: string) {
+    try {
+      return mapToDomainModel(
+        (await Model.findOne({
+          assistants: { $elemMatch: { _id: assistantId } }
         })).toObject()
       );
     } catch (e) {

@@ -1,7 +1,8 @@
 // @flow
 import {
   getTournamentsForUser,
-  getTournamentForJudge
+  getTournamentForJudge,
+  getTournament
 } from '../api/tournament';
 import { subscribeToUpdatesForTournaments } from '../api/realtime';
 
@@ -23,6 +24,19 @@ export function getJudgeTournament(dispatch: ReduxDispatch) {
     meta: {
       onSuccess: (_, getState) =>
         subscribeToUpdatesForTournaments([getState().tournaments.forJudge])
+    }
+  });
+}
+
+export function getSingleTournament(
+  dispatch: ReduxDispatch,
+  tournamentId: string
+) {
+  dispatch({
+    type: 'GET_SINGLE_TOURNAMENT',
+    promise: getTournament(tournamentId),
+    meta: {
+      onSuccess: () => subscribeToUpdatesForTournaments([tournamentId])
     }
   });
 }

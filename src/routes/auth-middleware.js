@@ -3,8 +3,8 @@ import type { NextFunction } from 'express';
 import type { TournamentRepository } from '../data/tournament';
 import { TournamentRepositoryImpl } from '../data/tournament';
 
-export function allow(role: PermissionRole) {
-  return authorizationMiddleware(new TournamentRepositoryImpl())(role);
+export function allow(...role: Array<PermissionRole>) {
+  return authorizationMiddleware(new TournamentRepositoryImpl())(...role);
 }
 
 export function authorizationMiddleware(repository: TournamentRepository) {
@@ -53,7 +53,8 @@ class AuthorizationChecker {
       public: this._isAllowedPublic,
       authenticated: this._isAllowedAuthenticated,
       judge: this._isAllowedJudge,
-      admin: this._isAllowedAdmin
+      admin: this._isAllowedAdmin,
+      assistant: this._isAllowedAssistant
     };
 
     let accumulator: boolean = false;
@@ -99,6 +100,18 @@ class AuthorizationChecker {
   _isJudgeInTournament = (tournament: Tournament): boolean => {
     const judgeId = this._user == null ? '' : this._user.id;
     return tournament.judges.filter(({ id }) => id === judgeId).length === 1;
+  };
+
+  _isAllowedAssistant = async () =>
+    this._user != null &&
+    this._user.role === 'assistant' &&
+    this._isAssistantInTournament(await this._getTournament());
+
+  _isAssistantInTournament = (tournament: Tournament): boolean => {
+    const assistantId = this._user == null ? '' : this._user.id;
+    return (
+      tournament.assistants.filter(({ id }) => id === assistantId).length === 1
+    );
   };
 
   _handleError = (error: mixed) => {

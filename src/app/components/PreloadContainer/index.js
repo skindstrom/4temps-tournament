@@ -5,16 +5,17 @@ import type { ElementType } from 'react';
 import { Loader } from 'semantic-ui-react';
 
 type Props = {
-  load: () => void,
+  load: (args: mixed) => void,
   shouldLoad: boolean,
-  Child: ElementType
+  Child: ElementType,
+  loadArgs: mixed
 };
 
 class PreloadContainer extends Component<Props> {
   componentDidMount() {
-    const { load, shouldLoad } = this.props;
+    const { load, shouldLoad, loadArgs } = this.props;
     if (shouldLoad) {
-      load();
+      load(loadArgs);
     }
   }
 

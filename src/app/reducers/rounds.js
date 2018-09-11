@@ -21,6 +21,7 @@ function rounds(
   case 'END_DANCE':
     return payloadIsRound(state, action);
   case 'GET_JUDGE_TOURNAMENT':
+  case 'GET_SINGLE_TOURNAMENT':
     return getJudgeTournament(state, action);
   case 'TOURNAMENT_UPDATED':
     return tournamentUpdated(state, action);

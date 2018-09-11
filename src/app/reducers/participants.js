@@ -15,6 +15,7 @@ function participants(
   case 'GET_ADMIN_TOURNAMENTS':
     return getTournaments(state, action);
   case 'GET_JUDGE_TOURNAMENT':
+  case 'GET_SINGLE_TOURNAMENT':
     return getSingleTournament(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);

@@ -38,7 +38,7 @@ router.get(
 );
 router.get(
   '/get/:tournamentId',
-  allow('admin'),
+  allow('admin', 'judge', 'assistant'),
   new GetTournamentRoute(tournamentRepository).route
 );
 

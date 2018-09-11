@@ -13,6 +13,7 @@ function tournaments(
   case 'GET_ADMIN_TOURNAMENTS':
     return getUserTournaments(state, action);
   case 'GET_JUDGE_TOURNAMENT':
+  case 'GET_SINGLE_TOURNAMENT':
     return getJudgeTournament(state, action);
   case 'CREATE_TOURNAMENT':
     return createTournament(state, action);

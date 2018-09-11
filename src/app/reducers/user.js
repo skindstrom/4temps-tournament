@@ -21,7 +21,7 @@ function userReducer(
 }
 
 export function getInitialState(): UserReduxState {
-  return { id: '', role: '' };
+  return { id: '', role: '', tournamentId: '' };
 }
 
 function loginUser(
@@ -30,7 +30,7 @@ function loginUser(
 ): UserReduxState {
   const { payload } = action;
   return handle(state, action, {
-    success: () => ({ id: payload.userId, role: 'admin' })
+    success: () => ({ id: payload.userId, role: 'admin', tournamentId: '' })
   });
 }
 
@@ -40,7 +40,11 @@ function loginWithAccessKey(
 ): UserReduxState {
   const { payload } = action;
   return handle(state, action, {
-    success: () => ({ id: payload.userId, role: payload.role })
+    success: () => ({
+      id: payload.userId,
+      role: payload.role,
+      tournamentId: payload.tournamentId
+    })
   });
 }
 
@@ -49,7 +53,7 @@ function logoutUser(
   action: ReduxPackAction
 ): UserReduxState {
   return handle(state, action, {
-    success: () => ({ id: '', role: '' })
+    success: getInitialState
   });
 }
 

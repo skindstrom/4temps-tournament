@@ -36,6 +36,10 @@ export const getTournamentsForUser = (): Promise<Array<mixed>> => {
   );
 };
 
+export const getTournament = (id: string): Promise<mixed> => {
+  return apiGetRequest(`/api/tournament/get/${id}`, normalizeTournament);
+};
+
 export const getTournamentForJudge = (): Promise<mixed> => {
   return apiGetRequest('/api/tournament/get/judge', normalizeTournament);
 };

@@ -4,14 +4,17 @@ import { connect } from 'react-redux';
 import ListParticipants from './component';
 import PreloadContainer from '../../../PreloadContainer';
 import { changeAttendance } from '../../../../api/participant';
-import { getAdminTournaments } from '../../../../action-creators';
+import {
+  getAdminTournaments,
+  getSingleTournament
+} from '../../../../action-creators';
 
 type Props = {
   tournamentId: string
 };
 
 function mapStateToProps(
-  { tournaments, participants }: ReduxState,
+  { user, tournaments, participants }: ReduxState,
   { tournamentId }: Props
 ) {
   const shouldLoad = !participants.forTournament[tournamentId];
@@ -21,13 +24,20 @@ function mapStateToProps(
     participants: (participants.forTournament[tournamentId] || []).map(
       id => participants.byId[id]
     ),
-    isClassic: !shouldLoad && tournaments.byId[tournamentId].type === 'classic'
+    isClassic: !shouldLoad && tournaments.byId[tournamentId].type === 'classic',
+    loadArgs: user.role !== 'admin' ? user.tournamentId : null
   };
 }
 
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
-    load: () => getAdminTournaments(dispatch),
+    load: tournamentId => {
+      if (tournamentId) {
+        getSingleTournament(dispatch, tournamentId);
+      } else {
+        getAdminTournaments(dispatch);
+      }
+    },
     onChangeAttending: (id, isAttending) =>
       dispatch({
         type: 'CHANGE_ATTENDANCE',
