@@ -106,7 +106,7 @@ class NavigationBar extends PureComponent<Props, State> {
 
   _renderDesktopView = () => {
     return (
-      <Menu secondary>
+      <Menu secondary styleName="nav">
         <MenuItem as={Link} to="/" name="header" header>
           4 Temps Tournaments
         </MenuItem>
