@@ -41,7 +41,8 @@ declare type RoundCriterion = {
   name: string,
   minValue: number,
   maxValue: number,
-  description: string
+  description: string,
+  forJudgeType: JudgeType
 };
 
 declare type Round = {
@@ -88,9 +89,12 @@ declare type AccessKey = {
   role: 'judge' | 'assistant'
 };
 
+declare type JudgeType = 'normal' | 'sanctioner';
+
 declare type Judge = {
   id: string,
-  name: string
+  name: string,
+  type: JudgeType
 };
 
 declare type JudgeNote = {

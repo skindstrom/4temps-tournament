@@ -55,7 +55,8 @@ class EditTournamentRounds extends Component<Props, State> {
         description: '',
         minValue: null,
         maxValue: null,
-        type: 'none'
+        type: 'none',
+        forJudgeType: 'normal'
       }
     ]
   };
@@ -227,7 +228,8 @@ class EditTournamentRounds extends Component<Props, State> {
           name: '',
           description: '',
           minValue: null,
-          maxValue: null
+          maxValue: null,
+          forJudgeType: 'normal'
         }
       ]
     });

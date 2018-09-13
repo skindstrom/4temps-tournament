@@ -12,9 +12,10 @@ export default function route(
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const tournamentId = req.params.tournamentId;
-      const judgeName = parseName(req.body);
-      const judge = { name: judgeName, id: ObjectId.generate() };
+      const { name, type } = parseJudge(req.body);
+      const judge = { name, type, id: ObjectId.generate() };
 
+      // $FlowFixMe
       if (validateJudge(judge)) {
         await tournamentRepository.addJudge(tournamentId, judge);
         await accessRepository.createForTournamentAndUserWithRole(
@@ -32,13 +33,14 @@ export default function route(
   };
 }
 
-function parseName(body: mixed): string {
+function parseJudge(body: mixed): { name: string, type: string } {
   if (
     typeof body === 'object' &&
     body != null &&
-    typeof body.name === 'string'
+    typeof body.name === 'string' &&
+    typeof body.type === 'string'
   ) {
-    return body.name;
+    return { name: body.name, type: body.type };
   }
   throw new ParseError();
 }

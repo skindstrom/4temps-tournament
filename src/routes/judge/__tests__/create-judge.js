@@ -9,11 +9,12 @@ import {
   TournamentRepositoryImpl as TournamentRepository,
   AccessKeyRepositoryImpl as AccessKeyRepository
 } from '../../../test-utils';
+import {} from '../../../app/api/judge';
 
 describe('/api/judge/create', () => {
   const admin = createAdmin();
   const tournament = { ...createTournament(), creatorId: admin._id.toString() };
-  const name = 'Judge name';
+  const judge = { name: 'judgeName', type: 'normal' };
 
   let req: Request;
   let res: Response;
@@ -22,7 +23,7 @@ describe('/api/judge/create', () => {
 
   beforeEach(async () => {
     req = Request.withUserAndParams(admin, { tournamentId: tournament.id });
-    req.body = { name };
+    req.body = { ...judge };
     res = new Response();
     tournamentRepo = new TournamentRepository();
     accessRepo = new AccessKeyRepository();
@@ -44,7 +45,7 @@ describe('/api/judge/create', () => {
     expect(res.getStatus()).toBe(200);
     expect(await tournamentRepo.get(tournament.id)).toMatchObject({
       ...tournament,
-      judges: [{ name }]
+      judges: [judge]
     });
   });
 
@@ -54,7 +55,7 @@ describe('/api/judge/create', () => {
     expect(res.getStatus()).toBe(200);
     expect(res.getBody()).toMatchObject({
       tournamentId: tournament.id,
-      judge: { name }
+      judge: judge
     });
   });
 

@@ -228,7 +228,7 @@ describe('Round route test helpers', () => {
       const tournament = createTournament();
       await repo.create(tournament);
 
-      const judge = { name: 'nice name', id: '123' };
+      const judge = createJudge();
       await repo.addJudge(tournament.id, judge);
 
       expect(await repo.get(tournament.id)).toEqual({

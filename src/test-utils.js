@@ -302,7 +302,8 @@ export function createRound(): Round {
         minValue: 1,
         maxValue: 2,
         description: 'style...',
-        type: 'one'
+        type: 'one',
+        forJudgeType: 'normal'
       }
     ],
     groups: [],
@@ -341,7 +342,8 @@ export function createParticipant(): Participant {
 export function createJudge(): Judge {
   return {
     id: generateId(),
-    name: 'Jane Smith'
+    name: 'Jane Smith',
+    type: 'normal'
   };
 }
 
@@ -359,6 +361,7 @@ export function createCriterion(): RoundCriterion {
     minValue: 0,
     maxValue: 1,
     description: 'this is a criterion',
-    type: 'both'
+    type: 'both',
+    forJudgeType: 'normal'
   };
 }

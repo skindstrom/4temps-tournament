@@ -18,6 +18,7 @@ function createCriterion(vals: mixed): RoundCriterion {
     minValue: 0,
     maxValue: 100,
     type: 'both',
+    forJudgeType: 'normal',
     ...vals
   };
 }
@@ -432,6 +433,39 @@ describe('Round validator', () => {
           isValidValueCombination: false
         }
       ]
+    });
+  });
+
+  test('A criterion must be for a valid judge type', () => {
+    expect(
+      validateRound(
+        createRound({ criteria: [createCriterion({ forJudgeType: '' })] })
+      )
+    ).toMatchObject({
+      isValidRound: false,
+      isValidCriteria: false,
+      criteriaValidation: [
+        {
+          isValidCriterion: false,
+          isValidForJudgeType: false
+        }
+      ]
+    });
+    expect(
+      validateRound(
+        createRound({ criteria: [createCriterion({ forJudgeType: 'normal' })] })
+      )
+    ).toMatchObject({
+      isValidRound: true
+    });
+    expect(
+      validateRound(
+        createRound({
+          criteria: [createCriterion({ forJudgeType: 'sanctioner' })]
+        })
+      )
+    ).toMatchObject({
+      isValidRound: true
     });
   });
 

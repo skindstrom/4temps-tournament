@@ -24,7 +24,7 @@ type TournamentModel = {
   name: string,
   date: Date,
   type: TournamentType,
-  judges: Array<SimpleUser>,
+  judges: Array<SimpleUser & { type: JudgeType }>,
   assistants: Array<SimpleUser>,
   participants: Array<ParticipantDbModel>,
   rounds: Array<RoundDbModel>,
@@ -328,9 +328,9 @@ function mapToDbModel(tournament: Tournament): TournamentModel {
     date: date.toDate(),
     participants: participants.map(mapParticipantToDbModel),
     rounds: rounds.map(mapRoundToDbModel),
-    judges: judges.map(j => ({
-      name: j.name,
-      _id: new mongoose.Types.ObjectId(j.id)
+    judges: judges.map(({id, ...same}) => ({
+      _id: new mongoose.Types.ObjectId(id),
+      ...same
     })),
     assistants: assistants.map(a => ({
       name: a.name,
@@ -357,9 +357,9 @@ function mapToDomainModel(tournament: TournamentModel): Tournament {
     date: moment(date),
     participants: participants.map(mapParticipantToDomainModel),
     rounds: rounds.map(mapRoundToDomainModel),
-    judges: judges.map(j => ({
-      name: j.name,
-      id: j._id.toString()
+    judges: judges.map(({ _id, ...same }) => ({
+      id: _id.toString(),
+      ...same
     })),
     assistants: assistants.map(a => ({
       name: a.name,

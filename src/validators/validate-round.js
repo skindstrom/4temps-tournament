@@ -91,7 +91,8 @@ function validateCriterion({
   name,
   description,
   minValue,
-  maxValue
+  maxValue,
+  forJudgeType
 }: RoundCriterion) {
   const isValidName = name.length > 0;
   const isValidMinValue = minValue != null;
@@ -102,18 +103,23 @@ function validateCriterion({
 
   const isValidDescription = description.length > 0;
 
+  const isValidForJudgeType =
+    forJudgeType === 'normal' || forJudgeType === 'sanctioner';
+
   return {
     isValidCriterion:
       isValidName &&
       isValidMinValue &&
       isValidMaxValue &&
       isValidValueCombination &&
-      isValidDescription,
+      isValidDescription &&
+      isValidForJudgeType,
     isValidName,
     isValidMinValue,
     isValidMaxValue,
     isValidValueCombination,
-    isValidDescription
+    isValidDescription,
+    isValidForJudgeType
   };
 }
 

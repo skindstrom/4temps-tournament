@@ -9,7 +9,8 @@ import {
   createParticipant,
   createRound,
   createJudge,
-  NoteRepositoryImpl
+  NoteRepositoryImpl,
+  createCriterion
 } from '../../../test-utils';
 
 describe('Create note route', () => {
@@ -20,14 +21,7 @@ describe('Create note route', () => {
   };
   const dance = { id: generateId(), active: true, finished: false };
 
-  const criterion: RoundCriterion = {
-    id: generateId(),
-    name: 'crit',
-    description: 'desc',
-    minValue: 0,
-    maxValue: 2,
-    type: 'one'
-  };
+  const criterion: RoundCriterion = createCriterion();
 
   const validNote: JudgeNote = {
     judgeId: judge.id,
