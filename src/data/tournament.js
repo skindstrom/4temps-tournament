@@ -32,7 +32,8 @@ type TournamentModel = {
 };
 
 const judgeSchema = new mongoose.Schema({
-  name: { type: String, required: true }
+  name: { type: String, required: true },
+  type: { type: String, required: true }
 });
 
 const assistantSchema = new mongoose.Schema({
@@ -220,7 +221,8 @@ export class TournamentRepositoryImpl implements TournamentRepository {
   async addJudge(tournamentId: string, judge: Judge) {
     const db = {
       _id: new mongoose.Types.ObjectId(judge.id),
-      name: judge.name
+      name: judge.name,
+      type: judge.type
     };
     const tournament = await Model.findOneAndUpdate(
       { _id: tournamentId },
@@ -328,7 +330,7 @@ function mapToDbModel(tournament: Tournament): TournamentModel {
     date: date.toDate(),
     participants: participants.map(mapParticipantToDbModel),
     rounds: rounds.map(mapRoundToDbModel),
-    judges: judges.map(({id, ...same}) => ({
+    judges: judges.map(({ id, ...same }) => ({
       _id: new mongoose.Types.ObjectId(id),
       ...same
     })),
