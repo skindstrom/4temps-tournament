@@ -4,6 +4,7 @@ import ObjectId from 'bson-objectid';
 import validateRound from '../../validators/validate-round';
 import type { TournamentRepository } from '../../data/tournament';
 import parseRound from './utils';
+import { createMalusCriterion } from '../util';
 
 class CreateRoundRoute {
   _tournamentRepository: TournamentRepository;
@@ -53,28 +54,38 @@ class CreateRoundRouteHandler {
   async executeForUser(userId: string) {
     this._userId = userId;
 
-    if (!(await this._userOwnsTournament())) {
+    const tournament = await this.getTournament();
+    if (!this._userOwnsTournament(tournament)) {
       throw { status: 401 };
+    }
+
+    if (this._tournamentHasSanctioner(tournament)) {
+      this._addMalusCriterion();
     }
 
     await this._create();
   }
 
-  _userOwnsTournament = async (): Promise<boolean> => {
-    try {
-      const tournament = await this._tournamentRepository.get(
-        this._tournamentId
-      );
+  async getTournament(): Promise<Tournament> {
+    const tournament = await this._tournamentRepository.get(this._tournamentId);
 
-      if (tournament == null) {
-        throw { status: 404 };
-      }
-
-      return tournament.creatorId == this._userId;
-    } catch (e) {
-      if (e.status) throw e;
-      throw { status: 500 };
+    if (tournament == null) {
+      throw { status: 404 };
     }
+
+    return tournament;
+  }
+
+  _userOwnsTournament = (tournament: Tournament): boolean => {
+    return tournament.creatorId == this._userId;
+  };
+
+  _tournamentHasSanctioner = (tournament: Tournament): boolean => {
+    return tournament.judges.some(({ type }) => type === 'sanctioner');
+  };
+
+  _addMalusCriterion = () => {
+    this._round.criteria.push(createMalusCriterion());
   };
 
   parseBody = (body: mixed) => {

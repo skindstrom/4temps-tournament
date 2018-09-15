@@ -8,6 +8,7 @@ import {
   Response,
   createRound,
   createTournament,
+  createJudge,
   TournamentRepositoryImpl as TournamentRepository
 } from '../../../test-utils';
 
@@ -109,6 +110,29 @@ describe('/api/round/create route', () => {
     await route.route(Request.withBody(body), response);
 
     expect(response.getStatus()).toBe(404);
+  });
+
+  test('If tournament has a sanctioner, a malus criterion is added', async () => {
+    const response = new Response();
+    const { id, ...round } = createRound();
+    const route = new CreateRoundRoute(repo);
+
+    await repo.addJudge(tournament.id, {
+      ...createJudge(),
+      type: 'sanctioner'
+    });
+
+    await route.route(requestWithRound(round), response);
+
+    expect(response.getStatus()).toBe(200);
+    expect(
+      response
+        .getBody()
+        // $FlowFixMe
+        .round.criteria.some(
+          ({ forJudgeType }) => forJudgeType === 'sanctioner'
+        )
+    ).toBe(true);
   });
 });
 

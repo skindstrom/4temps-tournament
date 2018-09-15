@@ -4,7 +4,7 @@ import ObjectId from 'bson-objectid';
 import type { TournamentRepository } from '../../data/tournament';
 import type { AccessKeyRepository } from '../../data/access-key';
 import validateJudge from '../../validators/validate-judge';
-import { generateId } from '../../test-utils';
+import { createMalusCriterion } from '../util';
 
 export default function route(
   tournamentRepository: TournamentRepository,
@@ -82,17 +82,6 @@ function hasMalusCriterion(round: Round): boolean {
   return round.criteria.some(
     ({ forJudgeType }) => forJudgeType === 'sanctioner'
   );
-}
-
-function createMalusCriterion(): RoundCriterion {
-  return {
-    id: generateId(),
-    name: 'Malus',
-    description: 'Negative points in percentage of maximum possible score',
-    minValue: 0,
-    maxValue: 100,
-    forJudgeType: 'sanctioner'
-  };
 }
 
 function ParseError() {}
