@@ -463,4 +463,101 @@ describe('Checker that all notes are submitted', () => {
       true
     );
   });
+
+  test('Checks the judge type of the criteria', () => {
+    const normalJudge = { ...createJudge(), type: 'normal' };
+    const normalCriterion = { ...createCriterion(), forJudgeType: 'normal' };
+
+    const sanctioner = { ...createJudge(), type: 'sanctioner' };
+    const sanctionerCriterion = {
+      ...createCriterion(),
+      forJudgeType: 'sanctioner'
+    };
+
+    const participants: Array<Participant> = [
+      { ...createParticipant(), role: 'leader' },
+      { ...createParticipant(), role: 'follower' }
+    ];
+    const danceId = generateId();
+
+    const tournament: Tournament = {
+      ...createTournament(),
+      judges: [normalJudge, sanctioner],
+      participants,
+      rounds: [
+        {
+          ...createRound(),
+          active: true,
+          criteria: [normalCriterion, sanctionerCriterion],
+          groups: [
+            {
+              id: generateId(),
+              pairs: [
+                { follower: participants[1].id, leader: participants[0].id }
+              ],
+              dances: [
+                {
+                  id: danceId,
+                  active: true,
+                  finished: false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    const normalNotes = [
+      // leader
+      {
+        judgeId: normalJudge.id,
+        danceId,
+        criterionId: normalCriterion.id,
+        participantId: participants[0].id,
+        value: 0
+      },
+      // follower
+      {
+        judgeId: normalJudge.id,
+        danceId,
+        criterionId: normalCriterion.id,
+        participantId: participants[1].id,
+        value: 0
+      }
+    ];
+    const sanctionerNotes = [
+      // leader
+      {
+        judgeId: sanctioner.id,
+        danceId,
+        criterionId: sanctionerCriterion.id,
+        participantId: participants[0].id,
+        value: 0
+      },
+      // follower
+      {
+        judgeId: sanctioner.id,
+        danceId,
+        criterionId: sanctionerCriterion.id,
+        participantId: participants[1].id,
+        value: 0
+      }
+    ];
+
+    const checker = new NoteChecker(tournament);
+    expect(checker.allSetForDance(danceId, normalNotes)).toBe(false);
+    expect(
+      checker.allSetForDanceByJudge(danceId, normalNotes, normalJudge.id)
+    ).toBe(true);
+
+    expect(checker.allSetForDance(danceId, sanctionerNotes)).toBe(false);
+    expect(
+      checker.allSetForDanceByJudge(danceId, sanctionerNotes, sanctioner.id)
+    ).toBe(true);
+
+    expect(
+      checker.allSetForDance(danceId, [...normalNotes, ...sanctionerNotes])
+    ).toBe(true);
+  });
 });

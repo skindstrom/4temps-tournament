@@ -48,8 +48,19 @@ export default class NoteChecker {
     throw new DanceNotFoundError();
   };
 
-  _getCriteria = (): Array<string> => {
-    return this._getActiveRound().criteria.map(({ id }) => id);
+  _getJudgeTypeForJudgeId = (id: string): JudgeType => {
+    const judge = this._tournament.judges.find(judge => judge.id === id);
+    if (!judge) {
+      throw new JudgeNotFoundError();
+    }
+
+    return judge.type;
+  };
+
+  _getCriteriaForJudgeType = (type: JudgeType): Array<string> => {
+    return this._getActiveRound()
+      .criteria.filter(criterion => criterion.forJudgeType === type)
+      .map(({ id }) => id);
   };
 
   _getActiveRound = (): Round => {
@@ -69,7 +80,7 @@ export default class NoteChecker {
     const leaders = this._getLeadersInDance(danceId);
     return this._isAllParticipantsNotedInDanceByJudge(
       leaders,
-      this._getCriteria(),
+      this._getCriteriaForJudgeType(this._getJudgeTypeForJudgeId(judgeId)),
       notes,
       danceId,
       judgeId
@@ -84,7 +95,7 @@ export default class NoteChecker {
     const followers = this._getFollowersInDance(danceId);
     return this._isAllParticipantsNotedInDanceByJudge(
       followers,
-      this._getCriteria(),
+      this._getCriteriaForJudgeType(this._getJudgeTypeForJudgeId(judgeId)),
       notes,
       danceId,
       judgeId
@@ -127,3 +138,4 @@ function hashNote({
 
 function DanceNotFoundError() {}
 function NoActiveRoundError() {}
+function JudgeNotFoundError() {}
