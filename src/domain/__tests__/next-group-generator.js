@@ -98,7 +98,7 @@ describe('Next group generator', () => {
       };
 
       const danceId = 'dance1';
-      const criterionId = 'crit1';
+      const criterionId = round.criteria[0].id;
       const judgeId = 'judge1';
       const notes: Array<JudgeNote> = [
         {
@@ -176,7 +176,7 @@ describe('Next group generator', () => {
       };
 
       const danceId = 'dance1';
-      const criterionId = 'crit1';
+      const criterionId = round.criteria[0].id;
       const judgeId = 'judge1';
       const notes: Array<JudgeNote> = [
         {
@@ -277,7 +277,7 @@ describe('Next group generator', () => {
       };
 
       const danceId = 'dance1';
-      const criterionId = 'crit1';
+      const criterionId = round.criteria[0].id;
       const judgeId = 'judge1';
       const notes: Array<JudgeNote> = [
         {
@@ -470,7 +470,7 @@ describe('Next group generator', () => {
         rounds: [round]
       };
 
-      const criterionId = 'crit1';
+      const criterionId = round.criteria[0].id;
       const judgeId = 'judge1';
 
       // L1 has worst follower twice in a row

@@ -272,7 +272,7 @@ export default class NextGroupGenerator {
   _getScoresOfParticipantsWithRole = (role: Role): Array<Score> => {
     const participants = this._getParticipantsWithRole(role);
 
-    const scorer = new RoundScorer(this._round);
+    const scorer = new RoundScorer(this._tournament.judges, this._round);
     const scores = scorer.scoreRound(this._notes);
 
     return scores.filter(score => participants.has(score.participantId));

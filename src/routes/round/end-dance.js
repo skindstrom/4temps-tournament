@@ -104,7 +104,7 @@ class StartDanceRouteHandler {
       await this._generateNextGroup(tournament, round);
       // if it's still the last after having generated a new one, it's the very last
       if (this._isLastGroup(round, dance)) {
-        await this._endRound(round);
+        await this._endRoundOfTournament(tournament, round);
       }
     }
 
@@ -201,10 +201,10 @@ class StartDanceRouteHandler {
     }
   };
 
-  _endRound = async (round: Round) => {
+  _endRoundOfTournament = async (tournament: Tournament, round: Round) => {
     const notes = await this._getNotes(round);
 
-    round.scores = new RoundScorer(round).scoreRound(notes);
+    round.scores = new RoundScorer(tournament.judges, round).scoreRound(notes);
 
     round.active = false;
     round.finished = true;

@@ -9,9 +9,11 @@ type Score = {
 type Role = 'leader' | 'follower';
 
 class WinnerPicker {
+  _judges: Array<Judge>;
   _round: Round;
 
-  constructor(round: Round) {
+  constructor(judges: Array<Judge>, round: Round) {
+    this._judges = judges;
     this._round = round;
   }
 
@@ -27,7 +29,7 @@ class WinnerPicker {
   };
 
   _getScores = (notes: Array<JudgeNote>) => {
-    const scorer = new RoundScorer(this._round);
+    const scorer = new RoundScorer(this._judges, this._round);
     return scorer.scoreRound(notes);
   };
 

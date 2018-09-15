@@ -1,4 +1,4 @@
-import { createRound } from '../../test-utils';
+import { createRound, createJudge, createCriterion } from '../../test-utils';
 import WinnerPicker from '../winner-picker';
 
 // @flow
@@ -7,34 +7,34 @@ describe('Winner picker', () => {
   const leaders = ['l1', 'l2'];
   const followers = ['f1', 'f2'];
 
-  const judgeId = 'judge';
+  const judge = createJudge();
   const criterionId = 'crit';
   const danceId = 'dance';
 
   const notes: Array<JudgeNote> = [
     {
-      judgeId,
+      judgeId: judge.id,
       participantId: leaders[0],
       criterionId,
       danceId,
       value: 20
     },
     {
-      judgeId,
+      judgeId: judge.id,
       participantId: leaders[1],
       criterionId,
       danceId,
       value: 1
     },
     {
-      judgeId,
+      judgeId: judge.id,
       participantId: followers[0],
       criterionId,
       danceId,
       value: 22
     },
     {
-      judgeId,
+      judgeId: judge.id,
       participantId: followers[1],
       criterionId,
       danceId,
@@ -45,6 +45,7 @@ describe('Winner picker', () => {
   const round: Round = {
     ...createRound(),
     passingCouplesCount: 1,
+    criteria: [{ ...createCriterion(), id: criterionId }],
     groups: [
       {
         id: 'group1',
@@ -58,7 +59,7 @@ describe('Winner picker', () => {
   };
 
   test('Picks the top dancers', () => {
-    const picker = new WinnerPicker(round);
+    const picker = new WinnerPicker([judge], round);
 
     expect(picker.pickWinners(notes)).toEqual({
       leaders: [leaders[0]],
@@ -67,7 +68,10 @@ describe('Winner picker', () => {
   });
 
   test('Winners are ordered', () => {
-    const picker = new WinnerPicker({ ...round, passingCouplesCount: 2 });
+    const picker = new WinnerPicker([judge], {
+      ...round,
+      passingCouplesCount: 2
+    });
 
     expect(picker.pickWinners(notes)).toEqual({
       leaders: [leaders[0], leaders[1]],
@@ -76,7 +80,10 @@ describe('Winner picker', () => {
   });
 
   test('May return less couples if not enough', () => {
-    const picker = new WinnerPicker({ ...round, passingCouplesCount: 10 });
+    const picker = new WinnerPicker([judge], {
+      ...round,
+      passingCouplesCount: 10
+    });
 
     expect(picker.pickWinners(notes)).toEqual({
       leaders: [leaders[0], leaders[1]],

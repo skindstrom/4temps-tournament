@@ -11,32 +11,32 @@ describe('Round scorer', () => {
   test('Generates correct score, best dance', () => {
     const participants = [createParticipant()];
     const judges = [createJudge()];
-    const criterionIds = [generateId()];
     const dances = [generateId(), generateId()];
 
     const round = {
       ...createRoundWithGroups(dances),
       danceScoringRule: 'best'
     };
+    const criterionId = round.criteria[0].id;
 
     const notes: Array<JudgeNote> = [
       {
         judgeId: judges[0].id,
         participantId: participants[0].id,
-        criterionId: criterionIds[0],
+        criterionId,
         danceId: dances[0],
         value: 1
       },
       {
         judgeId: judges[0].id,
         participantId: participants[0].id,
-        criterionId: criterionIds[0],
+        criterionId,
         danceId: dances[1],
         value: 10
       }
     ];
 
-    const scorer = new RoundScorer(round);
+    const scorer = new RoundScorer(judges, round);
     expect(scorer.scoreRound(notes)).toEqual([
       { participantId: participants[0].id, score: 10 }
     ]);
@@ -45,32 +45,32 @@ describe('Round scorer', () => {
   test('Generates correct score, average', () => {
     const participants = [createParticipant()];
     const judges = [createJudge()];
-    const criterionIds = [generateId()];
     const dances = [generateId(), generateId()];
 
     const round = {
       ...createRoundWithGroups(dances),
       danceScoringRule: 'average'
     };
+    const criterionId = round.criteria[0].id;
 
     const notes: Array<JudgeNote> = [
       {
         judgeId: judges[0].id,
         participantId: participants[0].id,
-        criterionId: criterionIds[0],
+        criterionId,
         danceId: dances[0],
         value: 1
       },
       {
         judgeId: judges[0].id,
         participantId: participants[0].id,
-        criterionId: criterionIds[0],
+        criterionId,
         danceId: dances[1],
         value: 10
       }
     ];
 
-    const scorer = new RoundScorer(round);
+    const scorer = new RoundScorer(judges, round);
     expect(scorer.scoreRound(notes)).toEqual([
       { participantId: participants[0].id, score: 5.5 }
     ]);
@@ -97,15 +97,14 @@ describe('Round scorer', () => {
       ]
     };
 
-    const scorer = new RoundScorer(round);
+    const scorer = new RoundScorer([], round);
     const scores = scorer.scoreRound([]);
     expect(scores).toContainEqual({ participantId: leader.id, score: 0 });
     expect(scores).toContainEqual({ participantId: follower.id, score: 0 });
   });
 
   test('Selects random participant if equal score', () => {
-    const judgeId = 'j1';
-    const criterionId = 'c1';
+    const judge = createJudge();
     const danceId = 'd1';
 
     const round: Round = {
@@ -127,32 +126,33 @@ describe('Round scorer', () => {
         }
       ]
     };
+    const criterionId = round.criteria[0].id;
 
     // leaders have same score, followers have same score
     const notes: Array<JudgeNote> = [
       {
-        judgeId,
+        judgeId: judge.id,
         criterionId,
         danceId,
         participantId: 'l1',
         value: 3
       },
       {
-        judgeId,
+        judgeId: judge.id,
         criterionId,
         danceId,
         participantId: 'l2',
         value: 3
       },
       {
-        judgeId,
+        judgeId: judge.id,
         criterionId,
         danceId,
         participantId: 'f1',
         value: 1
       },
       {
-        judgeId,
+        judgeId: judge.id,
         criterionId,
         danceId,
         participantId: 'f2',
@@ -160,7 +160,7 @@ describe('Round scorer', () => {
       }
     ];
 
-    const scorer = new RoundScorer(round);
+    const scorer = new RoundScorer([judge], round);
     const leaderWinners = new Set();
     const followerWinners = new Set();
     for (let i = 0; i < 200; ++i) {
