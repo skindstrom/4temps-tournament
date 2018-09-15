@@ -76,8 +76,12 @@ class SubmitNotesRouteHandler {
   };
 
   _validateNotes = (notes: Array<JudgeNote>, tournament: Tournament) => {
+    const judge: ?Judge = tournament.judges.find(
+      judge =>
+        judge.id === (this._req.session.user && this._req.session.user.id)
+    );
     notes.forEach(note =>
-      validateNoteForTournamentAndUser(note, tournament, this._req.session.user)
+      validateNoteForTournamentAndUser(note, tournament, judge)
     );
   };
 

@@ -67,7 +67,7 @@ describe('Create note route', () => {
   });
 
   test('401 is returned if the judge on the note is not the one logged in', async () => {
-    const tournament = createTournament();
+    const tournament = { ...createTournament(), judges: [judge] };
     const tournamentRepository = new TournamentRepositoryImpl();
     await tournamentRepository.create(tournament);
 
@@ -87,7 +87,7 @@ describe('Create note route', () => {
   });
 
   test('404 is returned if there is no active dance', async () => {
-    const tournament = createTournament();
+    const tournament = { ...createTournament(), judges: [judge] };
     const tournamentRepository = new TournamentRepositoryImpl();
     await tournamentRepository.create(tournament);
 

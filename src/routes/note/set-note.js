@@ -58,7 +58,11 @@ class CreateNoteRouteHandler {
 
   _validateNote = async (note: JudgeNote) => {
     const tournament: Tournament = await this._getTournament();
-    validateNoteForTournamentAndUser(note, tournament, this._req.session.user);
+    const judge: ?Judge = tournament.judges.find(
+      judge =>
+        judge.id === (this._req.session.user && this._req.session.user.id)
+    );
+    validateNoteForTournamentAndUser(note, tournament, judge);
   };
 
   _getTournament = async (): Promise<Tournament> => {

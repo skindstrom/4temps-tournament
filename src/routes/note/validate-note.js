@@ -3,9 +3,9 @@
 export default function validateNoteForTournamentAndUser(
   note: JudgeNote,
   tournament: Tournament,
-  user: ?User
+  judge: ?Judge
 ) {
-  if (user == null || note.judgeId != user.id) {
+  if (judge == null || note.judgeId != judge.id) {
     throw new WrongJudgeError();
   }
 
@@ -15,6 +15,10 @@ export default function validateNoteForTournamentAndUser(
 
   const criterion = getCriterion(tournament, note.criterionId);
   const participant = getParticipant(tournament, note.participantId);
+
+  if (judge.type !== criterion.forJudgeType) {
+    throw new WrongJudgeType();
+  }
 
   if (!isValidCriterionForParticipant(criterion, participant)) {
     throw new InvalidCriterionForParticipant();
@@ -90,3 +94,4 @@ export function ParticipantNotFoundError() {}
 export function InvalidCriterionForParticipant() {}
 export function InvalidValueError() {}
 export function WrongJudgeError() {}
+export function WrongJudgeType() {}
