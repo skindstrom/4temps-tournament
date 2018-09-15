@@ -17,12 +17,14 @@ function mapStateToProps(state: ReduxState): StateProps {
   const judgeId = state.user.id;
   const pairId = getPairId(state);
 
+  const judge = state.judges.byId[judgeId];
+
   return {
     tournamentId,
     danceId,
     judgeId,
     pairId,
-    criteria: getCriteria(state, pairId)
+    criteria: getCriteriaForJudgeType(state, pairId, judge.type)
   };
 }
 
@@ -74,18 +76,22 @@ function getRound(state: ReduxState): Round {
   }, null);
 }
 
-function getCriteria(
+function getCriteriaForJudgeType(
   state: ReduxState,
-  pairId: string
+  pairId: string,
+  judgeType: JudgeType
 ): Array<CriterionViewModel> {
-  return getRound(state).criteria.map(crit => ({
-    id: crit.id,
-    name: crit.name,
-    description: crit.description,
-    minValue: crit.minValue,
-    maxValue: crit.maxValue,
-    value: getValue(state.notes, pairId, crit.id)
-  }));
+  return getRound(state)
+    .criteria.filter(crit => crit.forJudgeType === judgeType)
+    .map(crit => ({
+      id: crit.id,
+      name: crit.name,
+      description: crit.description,
+      minValue: crit.minValue,
+      maxValue: crit.maxValue,
+      value: getValue(state.notes, pairId, crit.id),
+      forJudgeType: crit.forJudgeType
+    }));
 }
 
 function getValue(notes: NotesReduxState, pairId: string, criterionId: string) {

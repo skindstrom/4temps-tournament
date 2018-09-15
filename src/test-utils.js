@@ -269,6 +269,18 @@ export class NoteRepositoryImpl implements NoteRepository {
   getForDance = async (danceId: string) => {
     return this._notes.filter(note => note.danceId === danceId);
   };
+
+  delete = async (note: JudgeNote) => {
+    this._notes = this._notes.filter(
+      arrNote =>
+        !(
+          arrNote.judgeId === note.judgeId &&
+          arrNote.participantId === note.judgeId &&
+          arrNote.criterionId === note.criterionId &&
+          arrNote.danceId === note.danceId
+        )
+    );
+  };
 }
 
 export function createAdmin(): AdminModel {

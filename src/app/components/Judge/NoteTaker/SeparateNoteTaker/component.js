@@ -19,7 +19,8 @@ export type CriterionViewModel = {
   minValue: number,
   maxValue: number,
   description: string,
-  value: ?number
+  value: ?number,
+  forJudgeType: JudgeType
 };
 
 export type DispatchProps = {
@@ -49,12 +50,13 @@ function PairNoteTaker({
             <NoteCriterion
               key={leaderId + criterion.id}
               notedEntity={leaderId}
-              onClick={(value: number) =>
+              onClick={(value: ?number) =>
                 onClick(tournamentId, {
                   danceId,
                   judgeId,
                   participantId: leaderId,
                   criterionId: criterion.id,
+                  // $FlowFixMe
                   value
                 })
               }
@@ -72,12 +74,13 @@ function PairNoteTaker({
             <NoteCriterion
               key={followerId + criterion.id}
               notedEntity={followerId}
-              onClick={(value: number) =>
+              onClick={(value: ?number) =>
                 onClick(tournamentId, {
                   danceId,
                   judgeId,
                   participantId: followerId,
                   criterionId: criterion.id,
+                  // $FlowFixMe
                   value
                 })
               }

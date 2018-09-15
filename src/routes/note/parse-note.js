@@ -12,15 +12,15 @@ export function parseNote(body: mixed): JudgeNote {
     body.criterionId != null &&
     typeof body.participantId === 'string' &&
     body.participantId != null &&
-    typeof body.value === 'number' &&
-    Number.isInteger(body.value) &&
-    body.value != null
+    (body.value == null ||
+      (typeof body.value === 'number' && Number.isInteger(body.value)))
   ) {
     const note: JudgeNote = {
       judgeId: body.judgeId,
       danceId: body.danceId,
       criterionId: body.criterionId,
       participantId: body.participantId,
+      // $FlowFixMe
       value: body.value
     };
     return note;

@@ -7,12 +7,31 @@ import type { StateProps, ColumnViewModel } from './component';
 import Component from './component';
 
 function mapStateToProps(state: ReduxState): StateProps {
-  const danceId = getActiveDanceId(getActiveRound(state));
+  const tournament = getTournament(state);
+  const activeRound = getActiveRound(state);
+
+  const danceId = getActiveDanceId(activeRound);
   const notes = getNotesForActiveDance(state, danceId);
-  const scores = new DanceScorer(notes).scoreDance(danceId);
+
+  const scores = new DanceScorer(
+    tournament.judges,
+    activeRound.criteria,
+    notes,
+    { allowNegative: true }
+  ).scoreDance(danceId);
+
   return {
     columns: divideScoreIntoColumns(state, scores),
     tournamentId: state.tournaments.forJudge
+  };
+}
+
+function getTournament(state: ReduxState): Tournament {
+  const tournament = state.tournaments.byId[state.tournaments.forJudge];
+  return {
+    ...tournament,
+    rounds: tournament.rounds.map(id => state.rounds.byId[id]),
+    judges: tournament.judges.map(id => state.judges.byId[id])
   };
 }
 

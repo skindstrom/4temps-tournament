@@ -13,8 +13,6 @@ function mapStateToProps(state: ReduxState): StateProps {
   const notes = getNotesForActiveDance(state, danceId);
   const uiNotes = state.ui.notes;
 
-  console.log(tournament, state.user);
-
   return {
     ...uiNotes,
     tournamentId: state.tournaments.forJudge,

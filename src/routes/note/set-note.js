@@ -48,8 +48,12 @@ class CreateNoteRouteHandler {
     try {
       const note = parseNote(this._req.body);
 
-      await this._validateNote(note);
-      await this._noteRepository.createOrUpdate(note);
+      if (note.value == null) {
+        await this._noteRepository.delete(note);
+      } else {
+        await this._validateNote(note);
+        await this._noteRepository.createOrUpdate(note);
+      }
 
       this._res.json(note);
     } catch (e) {

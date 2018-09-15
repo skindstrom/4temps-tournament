@@ -17,7 +17,8 @@ export type CriterionViewModel = {
   minValue: number,
   maxValue: number,
   description: string,
-  value: ?number
+  value: ?number,
+  forJudgeType: JudgeType
 };
 
 export type DispatchProps = {
@@ -43,12 +44,13 @@ function PairNoteTaker({
         <GridRow key={pairId + criterion.id}>
           <NoteCriterion
             notedEntity={pairId}
-            onClick={(value: number) =>
+            onClick={(value: ?number) =>
               onClick(tournamentId, {
                 danceId,
                 judgeId,
                 participantId: pairId,
                 criterionId: criterion.id,
+                // $FlowFixMe
                 value
               })
             }

@@ -65,7 +65,7 @@ function setNote(
 }
 
 function updateNotesWithNote(prevState: NotesReduxState, note: JudgeNote) {
-  return {
+  const newState = {
     ...prevState,
     byParticipant: {
       ...prevState.byParticipant,
@@ -75,6 +75,12 @@ function updateNotesWithNote(prevState: NotesReduxState, note: JudgeNote) {
       }
     }
   };
+
+  if (note.value == null) {
+    delete newState.byParticipant[note.participantId][note.criterionId];
+  }
+
+  return newState;
 }
 
 function logout(

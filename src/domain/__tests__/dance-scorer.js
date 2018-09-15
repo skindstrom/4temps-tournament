@@ -230,4 +230,51 @@ describe('Dance scorer', () => {
       { participantId: participant.id, score: 0 }
     ]);
   });
+
+  test('Sanctioner can cause negative score with configuration parameter', () => {
+    const participant = createParticipant();
+    const normalJudge = { ...createJudge(), type: 'normal' };
+    const sanctioner = { ...createJudge(), type: 'sanctioner' };
+    const danceId = 'danceId';
+
+    const normalCriterion = {
+      ...createCriterion(),
+      minValue: 0,
+      maxValue: 4,
+      forJudgeType: 'normal'
+    };
+
+    const malusCriterion = {
+      ...createCriterion(),
+      minValue: 0,
+      maxValue: 100,
+      forJudgeType: 'sanctioner'
+    };
+
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId: normalJudge.id,
+        participantId: participant.id,
+        criterionId: normalCriterion.id,
+        danceId,
+        value: 2
+      },
+      {
+        judgeId: sanctioner.id,
+        participantId: participant.id,
+        criterionId: malusCriterion.id,
+        danceId,
+        value: 100
+      }
+    ];
+    const scorer = new DanceScorer(
+      [normalJudge, sanctioner],
+      [normalCriterion, malusCriterion],
+      notes,
+      { allowNegative: true }
+    );
+    expect(scorer.scoreDance(danceId)).toEqual([
+      { participantId: participant.id, score: -2 }
+    ]);
+  });
 });

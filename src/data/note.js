@@ -40,6 +40,7 @@ const SubmittedModel = mongoose.model('submittedNote', schema);
 export interface NoteRepository {
   createOrUpdate(note: JudgeNote): Promise<void>;
   getForDance(danceId: string): Promise<Array<JudgeNote>>;
+  delete(note: JudgeNote): Promise<void>;
 }
 
 export class TemporaryNoteRepository implements NoteRepository {
@@ -53,6 +54,11 @@ export class TemporaryNoteRepository implements NoteRepository {
       mapToDomainModel(a.toObject())
     );
   }
+
+  async delete(note: JudgeNote) {
+    const { value, ...ids } = note;
+    return await TempModel.deleteOne(ids);
+  }
 }
 
 export class SubmittedNoteRepository implements NoteRepository {
@@ -64,6 +70,11 @@ export class SubmittedNoteRepository implements NoteRepository {
     return (await SubmittedModel.find({ danceId })).map(a =>
       mapToDomainModel(a.toObject())
     );
+  }
+
+  async delete(note: JudgeNote) {
+    const { value, ...ids } = note;
+    return await TempModel.deleteOne(ids);
   }
 }
 

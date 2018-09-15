@@ -4,11 +4,13 @@ class DanceScorer {
   _judges: Array<Judge>;
   _criteria: { [id: string]: RoundCriterion };
   _notes: Array<JudgeNote>;
+  _allowNegative: boolean;
 
   constructor(
     judges: Array<Judge>,
     criteria: Array<RoundCriterion>,
-    notes: Array<JudgeNote>
+    notes: Array<JudgeNote>,
+    { allowNegative }: { allowNegative: boolean } = { allowNegative: false }
   ) {
     this._judges = judges;
     this._criteria = criteria.reduce(
@@ -16,6 +18,7 @@ class DanceScorer {
       {}
     );
     this._notes = notes;
+    this._allowNegative = allowNegative;
   }
 
   scoreDance = (
@@ -105,10 +108,13 @@ class DanceScorer {
     positives: { [id: string]: number },
     negatives: { [id: string]: number }
   ) => {
-    return Object.keys(positives).reduce(
+    return [...Object.keys(positives), ...Object.keys(negatives)].reduce(
       (acc, key) => ({
         ...acc,
-        [key]: Math.max(positives[key] - (negatives[key] || 0), 0)
+        [key]:
+          this._allowNegative === true
+            ? (positives[key] || 0) - (negatives[key] || 0)
+            : Math.max((positives[key] || 0) - (negatives[key] || 0), 0)
       }),
       {}
     );
