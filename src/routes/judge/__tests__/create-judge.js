@@ -6,14 +6,19 @@ import {
   Response,
   createTournament,
   createAdmin,
+  createRound,
   TournamentRepositoryImpl as TournamentRepository,
   AccessKeyRepositoryImpl as AccessKeyRepository
 } from '../../../test-utils';
-import {} from '../../../app/api/judge';
 
 describe('/api/judge/create', () => {
   const admin = createAdmin();
-  const tournament = { ...createTournament(), creatorId: admin._id.toString() };
+  const round: Round = { ...createRound(), criteria: [] };
+  const tournament: Tournament = {
+    ...createTournament(),
+    creatorId: admin._id.toString(),
+    rounds: [round]
+  };
   const judge = { name: 'judgeName', type: 'normal' };
 
   let req: Request;
@@ -77,5 +82,16 @@ describe('/api/judge/create', () => {
     req.body = { name: null };
     await route(tournamentRepo, accessRepo)(req, res);
     expect(res.getStatus()).toBe(400);
+  });
+
+  test('If a sanctioner is added to a tournament with a round, a malus criterion is added to the round', async () => {
+    req.body = { ...judge, type: 'sanctioner' };
+
+    await route(tournamentRepo, accessRepo)(req, res);
+
+    expect(
+      tournamentRepo._tournaments[tournament.id].rounds[0].criteria[0]
+        .forJudgeType
+    ).toBe('sanctioner');
   });
 });

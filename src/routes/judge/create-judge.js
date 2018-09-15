@@ -4,6 +4,7 @@ import ObjectId from 'bson-objectid';
 import type { TournamentRepository } from '../../data/tournament';
 import type { AccessKeyRepository } from '../../data/access-key';
 import validateJudge from '../../validators/validate-judge';
+import { generateId } from '../../test-utils';
 
 export default function route(
   tournamentRepository: TournamentRepository,
@@ -23,6 +24,14 @@ export default function route(
           judge.id,
           'judge'
         );
+
+        if (judge.type === 'sanctioner') {
+          await addMalusCriterionToRoundsIfNotExists(
+            tournamentId,
+            tournamentRepository
+          );
+        }
+
         res.json({ tournamentId, judge });
       } else {
         res.sendStatus(400);
@@ -50,6 +59,40 @@ function statusFromError(e: mixed) {
     return 400;
   }
   return 500;
+}
+
+async function addMalusCriterionToRoundsIfNotExists(
+  tournamentId: string,
+  tournamentRepository: TournamentRepository
+) {
+  const tournament = await tournamentRepository.get(tournamentId);
+  if (!tournament) {
+    throw 'Tournament not found';
+  }
+
+  for (const round of tournament.rounds) {
+    if (!hasMalusCriterion(round)) {
+      round.criteria.push(createMalusCriterion());
+      await tournamentRepository.updateRound(tournamentId, round);
+    }
+  }
+}
+
+function hasMalusCriterion(round: Round): boolean {
+  return round.criteria.some(
+    ({ forJudgeType }) => forJudgeType === 'sanctioner'
+  );
+}
+
+function createMalusCriterion(): RoundCriterion {
+  return {
+    id: generateId(),
+    name: 'Malus',
+    description: 'Negative points in percentage of maximum possible score',
+    minValue: 0,
+    maxValue: 100,
+    forJudgeType: 'sanctioner'
+  };
 }
 
 function ParseError() {}
