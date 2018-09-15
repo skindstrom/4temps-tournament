@@ -12,6 +12,9 @@ function mapStateToProps(state: ReduxState): StateProps {
   const danceId = getActiveDanceId(getActiveRound(state));
   const notes = getNotesForActiveDance(state, danceId);
   const uiNotes = state.ui.notes;
+
+  console.log(tournament, state.user);
+
   return {
     ...uiNotes,
     tournamentId: state.tournaments.forJudge,
@@ -72,7 +75,8 @@ function getTournament(state: ReduxState): Tournament {
   const tournament = state.tournaments.byId[state.tournaments.forJudge];
   return {
     ...tournament,
-    rounds: tournament.rounds.map(id => state.rounds.byId[id])
+    rounds: tournament.rounds.map(id => state.rounds.byId[id]),
+    judges: tournament.judges.map(id => state.judges.byId[id])
   };
 }
 

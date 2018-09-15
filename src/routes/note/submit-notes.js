@@ -7,7 +7,8 @@ import validateNoteForTournamentAndUser, {
   ParticipantNotFoundError,
   InvalidCriterionForParticipant,
   InvalidValueError,
-  WrongJudgeError
+  WrongJudgeError,
+  WrongJudgeType
 } from './validate-note';
 import { parseNotes, InvalidBodyError } from './parse-note';
 import NoteChecker from '../../domain/note-checker';
@@ -136,7 +137,7 @@ class SubmitNotesRouteHandler {
       e instanceof InvalidValueError
     ) {
       this._res.status(400);
-    } else if (e instanceof WrongJudgeError) {
+    } else if (e instanceof WrongJudgeError || e instanceof WrongJudgeType) {
       this._res.sendStatus(401);
     } else {
       this._res.status(500);
