@@ -59,7 +59,12 @@ export default class NoteChecker {
 
   _getCriteriaForJudgeType = (judgeType: JudgeType): Array<string> => {
     return this._getActiveRound()
-      .criteria.filter(criterion => criterion.forJudgeType === judgeType)
+      .criteria.filter(
+        criterion =>
+          criterion.forJudgeType === 'normal'
+            ? judgeType === 'normal' || judgeType === 'president'
+            : criterion.forJudgeType === judgeType
+      )
       .map(({ id }) => id);
   };
 

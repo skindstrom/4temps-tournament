@@ -560,4 +560,66 @@ describe('Checker that all notes are submitted', () => {
       checker.allSetForDance(danceId, [...normalNotes, ...sanctionerNotes])
     ).toBe(true);
   });
+
+  test('President must also note normal criteria', () => {
+    const presidentJudge = { ...createJudge(), judgeType: 'president' };
+    const normalCriterion = { ...createCriterion(), forJudgeType: 'normal' };
+
+    const participants: Array<Participant> = [
+      { ...createParticipant(), role: 'leader' },
+      { ...createParticipant(), role: 'follower' }
+    ];
+    const danceId = generateId();
+
+    const tournament: Tournament = {
+      ...createTournament(),
+      judges: [presidentJudge],
+      participants,
+      rounds: [
+        {
+          ...createRound(),
+          active: true,
+          criteria: [normalCriterion],
+          groups: [
+            {
+              id: generateId(),
+              pairs: [
+                { follower: participants[1].id, leader: participants[0].id }
+              ],
+              dances: [
+                {
+                  id: danceId,
+                  active: true,
+                  finished: false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    const notes: Array<JudgeNote> = [
+      // leader
+      {
+        judgeId: presidentJudge.id,
+        danceId,
+        criterionId: normalCriterion.id,
+        participantId: participants[0].id,
+        value: 0
+      },
+      // follower
+      {
+        judgeId: presidentJudge.id,
+        danceId,
+        criterionId: normalCriterion.id,
+        participantId: participants[1].id,
+        value: 0
+      }
+    ];
+
+    const checker = new NoteChecker(tournament);
+    expect(checker.allSetForDance(danceId, [])).toBe(false);
+    expect(checker.allSetForDance(danceId, notes)).toBe(true);
+  });
 });
