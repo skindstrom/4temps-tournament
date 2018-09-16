@@ -127,9 +127,9 @@ describe('Dance scorer', () => {
     const expectedScore = scoreValue * 4 - malus;
 
     const participant = createParticipant();
-    const normalJudge1 = { ...createJudge(), type: 'normal' };
-    const normalJudge2 = { ...createJudge(), type: 'normal' };
-    const sanctioner = { ...createJudge(), type: 'sanctioner' };
+    const normalJudge1 = { ...createJudge(), judgeType: 'normal' };
+    const normalJudge2 = { ...createJudge(), judgeType: 'normal' };
+    const sanctioner = { ...createJudge(), judgeType: 'sanctioner' };
     const danceId = 'danceId';
 
     const normalCriterion1 = {
@@ -187,8 +187,8 @@ describe('Dance scorer', () => {
 
   test('Sanctioner can not cause negative score', () => {
     const participant = createParticipant();
-    const normalJudge = { ...createJudge(), type: 'normal' };
-    const sanctioner = { ...createJudge(), type: 'sanctioner' };
+    const normalJudge = { ...createJudge(), judgeType: 'normal' };
+    const sanctioner = { ...createJudge(), judgeType: 'sanctioner' };
     const danceId = 'danceId';
 
     const normalCriterion = {
@@ -233,8 +233,8 @@ describe('Dance scorer', () => {
 
   test('Sanctioner can cause negative score with configuration parameter', () => {
     const participant = createParticipant();
-    const normalJudge = { ...createJudge(), type: 'normal' };
-    const sanctioner = { ...createJudge(), type: 'sanctioner' };
+    const normalJudge = { ...createJudge(), judgeType: 'normal' };
+    const sanctioner = { ...createJudge(), judgeType: 'sanctioner' };
     const danceId = 'danceId';
 
     const normalCriterion = {

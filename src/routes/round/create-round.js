@@ -81,7 +81,9 @@ class CreateRoundRouteHandler {
   };
 
   _tournamentHasSanctioner = (tournament: Tournament): boolean => {
-    return tournament.judges.some(({ type }) => type === 'sanctioner');
+    return tournament.judges.some(
+      ({ judgeType }) => judgeType === 'sanctioner'
+    );
   };
 
   _addMalusCriterion = () => {

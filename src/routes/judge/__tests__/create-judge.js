@@ -19,7 +19,7 @@ describe('/api/judge/create', () => {
     creatorId: admin._id.toString(),
     rounds: [round]
   };
-  const judge = { name: 'judgeName', type: 'normal' };
+  const judge = { name: 'judgeName', judgeType: 'normal' };
 
   let req: Request;
   let res: Response;
@@ -85,7 +85,7 @@ describe('/api/judge/create', () => {
   });
 
   test('If a sanctioner is added to a tournament with a round, a malus criterion is added to the round', async () => {
-    req.body = { ...judge, type: 'sanctioner' };
+    req.body = { ...judge, judgeType: 'sanctioner' };
 
     await route(tournamentRepo, accessRepo)(req, res);
 

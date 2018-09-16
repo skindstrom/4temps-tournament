@@ -119,7 +119,7 @@ describe('/api/round/create route', () => {
 
     await repo.addJudge(tournament.id, {
       ...createJudge(),
-      type: 'sanctioner'
+      judgeType: 'sanctioner'
     });
 
     await route.route(requestWithRound(round), response);

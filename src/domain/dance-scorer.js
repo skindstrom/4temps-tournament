@@ -92,7 +92,9 @@ class DanceScorer {
       .map(key => this._criteria[key])
       .filter(({ forJudgeType }) => forJudgeType === 'normal');
 
-    const normalJudges = this._judges.filter(({ type }) => type === 'normal');
+    const normalJudges = this._judges.filter(
+      ({ judgeType }) => judgeType === 'normal'
+    );
 
     return (
       criteriaForNormalJudges.reduce((acc, { maxValue }) => acc + maxValue, 0) *

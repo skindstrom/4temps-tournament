@@ -24,7 +24,7 @@ type TournamentModel = {
   name: string,
   date: Date,
   type: TournamentType,
-  judges: Array<SimpleUser & { type: JudgeType }>,
+  judges: Array<SimpleUser & { judgeType: JudgeType }>,
   assistants: Array<SimpleUser>,
   participants: Array<ParticipantDbModel>,
   rounds: Array<RoundDbModel>,
@@ -33,7 +33,7 @@ type TournamentModel = {
 
 const judgeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: { type: String, required: true }
+  judgeType: { type: String, required: true }
 });
 
 const assistantSchema = new mongoose.Schema({
@@ -222,7 +222,7 @@ export class TournamentRepositoryImpl implements TournamentRepository {
     const db = {
       _id: new mongoose.Types.ObjectId(judge.id),
       name: judge.name,
-      type: judge.type
+      judgeType: judge.judgeType
     };
     const tournament = await Model.findOneAndUpdate(
       { _id: tournamentId },

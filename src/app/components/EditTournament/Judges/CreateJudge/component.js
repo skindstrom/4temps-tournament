@@ -10,7 +10,7 @@ import {
   Button
 } from 'semantic-ui-react';
 
-type OnSubmitParams = { name: string, type: JudgeType };
+type OnSubmitParams = { name: string, judgeType: JudgeType };
 
 type Props = {
   onSubmit: OnSubmitParams => void,
@@ -24,7 +24,7 @@ type State = OnSubmitParams;
 class CreateJudge extends Component<Props, State> {
   state = {
     name: '',
-    type: 'normal'
+    judgeType: 'normal'
   };
 
   _onChangeName = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -35,7 +35,7 @@ class CreateJudge extends Component<Props, State> {
     event: SyntheticInputEvent<HTMLInputElement>,
     { value }: { value: JudgeType }
   ) => {
-    this.setState({ type: value });
+    this.setState({ judgeType: value });
   };
 
   _onSubmit = () => {
@@ -55,13 +55,13 @@ class CreateJudge extends Component<Props, State> {
             label="Normal"
             value="normal"
             onChange={this._onChangeJugeType}
-            checked={this.state.type === 'normal'}
+            checked={this.state.judgeType === 'normal'}
           />
           <FormRadio
             label="Sanctioner"
             value="sanctioner"
             onChange={this._onChangeJugeType}
-            checked={this.state.type === 'sanctioner'}
+            checked={this.state.judgeType === 'sanctioner'}
           />
         </FormGroup>
         <Button onClick={this._onSubmit}>Add judge</Button>

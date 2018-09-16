@@ -24,7 +24,7 @@ function mapStateToProps(state: ReduxState): StateProps {
     danceId,
     judgeId,
     pairId,
-    criteria: getCriteriaForJudgeType(state, pairId, judge.type)
+    criteria: getCriteriaForJudgeType(state, pairId, judge.judgeType)
   };
 }
 

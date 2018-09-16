@@ -16,7 +16,7 @@ export default function validateNoteForTournamentAndUser(
   const criterion = getCriterion(tournament, note.criterionId);
   const participant = getParticipant(tournament, note.participantId);
 
-  if (judge.type !== criterion.forJudgeType) {
+  if (judge.judgeType !== criterion.forJudgeType) {
     throw new WrongJudgeType();
   }
 

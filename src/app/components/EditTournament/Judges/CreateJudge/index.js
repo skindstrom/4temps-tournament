@@ -14,10 +14,10 @@ function mapStateToProps({ ui }: ReduxState) {
 
 function mapDispatchToProps(dispatch: ReduxDispatch, { tournamentId }: Props) {
   return {
-    onSubmit: ({ name, type }: { name: string, type: JudgeType }) =>
+    onSubmit: ({ name, judgeType }: { name: string, judgeType: JudgeType }) =>
       dispatch({
         type: 'CREATE_JUDGE',
-        promise: createJudge(tournamentId, { id: '', name, type })
+        promise: createJudge(tournamentId, { id: '', name, judgeType })
       })
   };
 }

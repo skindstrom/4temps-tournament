@@ -13,8 +13,8 @@ export default function route(
   return async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const tournamentId = req.params.tournamentId;
-      const { name, type } = parseJudge(req.body);
-      const judge = { name, type, id: ObjectId.generate() };
+      const { name, judgeType } = parseJudge(req.body);
+      const judge = { name, judgeType, id: ObjectId.generate() };
 
       // $FlowFixMe
       if (validateJudge(judge)) {
@@ -25,7 +25,7 @@ export default function route(
           'judge'
         );
 
-        if (judge.type === 'sanctioner') {
+        if (judge.judgeType === 'sanctioner') {
           await addMalusCriterionToRoundsIfNotExists(
             tournamentId,
             tournamentRepository
@@ -42,14 +42,14 @@ export default function route(
   };
 }
 
-function parseJudge(body: mixed): { name: string, type: string } {
+function parseJudge(body: mixed): { name: string, judgeType: string } {
   if (
     typeof body === 'object' &&
     body != null &&
     typeof body.name === 'string' &&
-    typeof body.type === 'string'
+    typeof body.judgeType === 'string'
   ) {
-    return { name: body.name, type: body.type };
+    return { name: body.name, judgeType: body.judgeType };
   }
   throw new ParseError();
 }

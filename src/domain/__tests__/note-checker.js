@@ -465,10 +465,10 @@ describe('Checker that all notes are submitted', () => {
   });
 
   test('Checks the judge type of the criteria', () => {
-    const normalJudge = { ...createJudge(), type: 'normal' };
+    const normalJudge = { ...createJudge(), judgeType: 'normal' };
     const normalCriterion = { ...createCriterion(), forJudgeType: 'normal' };
 
-    const sanctioner = { ...createJudge(), type: 'sanctioner' };
+    const sanctioner = { ...createJudge(), judgeType: 'sanctioner' };
     const sanctionerCriterion = {
       ...createCriterion(),
       forJudgeType: 'sanctioner'

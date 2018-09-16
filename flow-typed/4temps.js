@@ -94,7 +94,7 @@ declare type JudgeType = 'normal' | 'sanctioner' | 'president';
 declare type Judge = {
   id: string,
   name: string,
-  type: JudgeType
+  judgeType: JudgeType
 };
 
 declare type JudgeNote = {

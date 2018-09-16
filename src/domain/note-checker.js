@@ -54,12 +54,12 @@ export default class NoteChecker {
       throw new JudgeNotFoundError();
     }
 
-    return judge.type;
+    return judge.judgeType;
   };
 
-  _getCriteriaForJudgeType = (type: JudgeType): Array<string> => {
+  _getCriteriaForJudgeType = (judgeType: JudgeType): Array<string> => {
     return this._getActiveRound()
-      .criteria.filter(criterion => criterion.forJudgeType === type)
+      .criteria.filter(criterion => criterion.forJudgeType === judgeType)
       .map(({ id }) => id);
   };
 

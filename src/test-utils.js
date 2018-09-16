@@ -355,7 +355,7 @@ export function createJudge(): Judge {
   return {
     id: generateId(),
     name: 'Jane Smith',
-    type: 'normal'
+    judgeType: 'normal'
   };
 }
 

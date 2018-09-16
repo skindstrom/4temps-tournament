@@ -28,7 +28,7 @@ function ListJudges({ judges }: { judges: Array<JudgeViewModel> }) {
         {judges.map(j => (
           <TableRow key={j.id}>
             <TableCell>{j.name}</TableCell>
-            <TableCell>{typeToDisplayName(j.type)}</TableCell>
+            <TableCell>{typeToDisplayName(j.judgeType)}</TableCell>
             <TableCell>{j.accessKey}</TableCell>
           </TableRow>
         ))}
@@ -37,10 +37,10 @@ function ListJudges({ judges }: { judges: Array<JudgeViewModel> }) {
   );
 }
 
-function typeToDisplayName(type: JudgeType): string {
-  if (type === 'normal') {
+function typeToDisplayName(judgeType: JudgeType): string {
+  if (judgeType === 'normal') {
     return 'Normal';
-  } else if (type === 'sanctioner') {
+  } else if (judgeType === 'sanctioner') {
     return 'Sanctioner';
   } else {
     return 'Unknown';
