@@ -42,6 +42,8 @@ function typeToDisplayName(judgeType: JudgeType): string {
     return 'Normal';
   } else if (judgeType === 'sanctioner') {
     return 'Sanctioner';
+  } else if (judgeType === 'president') {
+    return 'President';
   } else {
     return 'Unknown';
   }

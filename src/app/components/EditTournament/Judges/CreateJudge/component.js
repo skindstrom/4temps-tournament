@@ -63,6 +63,12 @@ class CreateJudge extends Component<Props, State> {
             onChange={this._onChangeJugeType}
             checked={this.state.judgeType === 'sanctioner'}
           />
+          <FormRadio
+            label="President"
+            value="president"
+            onChange={this._onChangeJugeType}
+            checked={this.state.judgeType === 'president'}
+          />
         </FormGroup>
         <Button onClick={this._onSubmit}>Add judge</Button>
       </Form>
