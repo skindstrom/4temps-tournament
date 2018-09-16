@@ -89,7 +89,7 @@ declare type AccessKey = {
   role: 'judge' | 'assistant'
 };
 
-declare type JudgeType = 'normal' | 'sanctioner';
+declare type JudgeType = 'normal' | 'sanctioner' | 'president';
 
 declare type Judge = {
   id: string,
