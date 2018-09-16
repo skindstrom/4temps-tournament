@@ -5,12 +5,19 @@ class DanceScorer {
   _criteria: { [id: string]: RoundCriterion };
   _notes: Array<JudgeNote>;
   _allowNegative: boolean;
+  _countPresident: boolean;
 
   constructor(
     judges: Array<Judge>,
     criteria: Array<RoundCriterion>,
     notes: Array<JudgeNote>,
-    { allowNegative }: { allowNegative: boolean } = { allowNegative: false }
+    {
+      allowNegative,
+      countPresident
+    }: { allowNegative: boolean, countPresident: boolean } = {
+      allowNegative: false,
+      countPresident: false
+    }
   ) {
     this._judges = judges;
     this._criteria = criteria.reduce(
@@ -19,6 +26,7 @@ class DanceScorer {
     );
     this._notes = notes;
     this._allowNegative = allowNegative;
+    this._countPresident = countPresident;
   }
 
   scoreDance = (
@@ -48,10 +56,16 @@ class DanceScorer {
   ): { [id: string]: number } => {
     const totals = {};
     notesForDance
-      .filter(
-        ({ criterionId }) =>
-          this._criteria[criterionId].forJudgeType === 'normal'
-      )
+      .filter(note => {
+        const judge: ?Judge = this._judges.find(
+          judge => judge.id === note.judgeId
+        );
+        return (
+          judge != null &&
+          (judge.judgeType === 'normal' ||
+            (this._countPresident && judge.judgeType === 'president'))
+        );
+      })
       .forEach(note => this._addNoteToTotal(note, totals));
 
     return totals;

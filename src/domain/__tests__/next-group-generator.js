@@ -3,7 +3,8 @@ import NextGroupGenerator from '../next-group-generator';
 import {
   createTournament,
   createRound,
-  createParticipant
+  createParticipant,
+  createJudge
 } from '../../test-utils';
 
 describe('Next group generator', () => {
@@ -91,15 +92,16 @@ describe('Next group generator', () => {
     });
 
     test('Picks previous participant if uneven', () => {
+      const judgeId = 'judge1';
       const tournament = {
         ...createTournament(),
+        judges: [{ ...createJudge(), id: judgeId }],
         participants: [...leaders, followers[0]],
         rounds: [round]
       };
 
       const danceId = 'dance1';
       const criterionId = round.criteria[0].id;
-      const judgeId = 'judge1';
       const notes: Array<JudgeNote> = [
         {
           danceId,
@@ -159,8 +161,10 @@ describe('Next group generator', () => {
         ]
       };
 
+      const judgeId = 'judge1';
       const tournament: Tournament = {
         ...createTournament(),
+        judges: [{ ...createJudge(), id: judgeId }],
         participants: [
           ...leaders,
           {
@@ -177,7 +181,6 @@ describe('Next group generator', () => {
 
       const danceId = 'dance1';
       const criterionId = round.criteria[0].id;
-      const judgeId = 'judge1';
       const notes: Array<JudgeNote> = [
         {
           danceId,
@@ -253,8 +256,10 @@ describe('Next group generator', () => {
         ]
       };
 
+      const judgeId = 'judge1';
       const tournament: Tournament = {
         ...createTournament(),
+        judges: [{ ...createJudge(), id: judgeId }],
         participants: [
           ...leaders,
           {
@@ -278,7 +283,6 @@ describe('Next group generator', () => {
 
       const danceId = 'dance1';
       const criterionId = round.criteria[0].id;
-      const judgeId = 'judge1';
       const notes: Array<JudgeNote> = [
         {
           danceId,
@@ -464,14 +468,15 @@ describe('Next group generator', () => {
         ]
       };
 
+      const judgeId = 'judge1';
       const tournament: Tournament = {
         ...createTournament(),
+        judges: [{ ...createJudge(), id: judgeId }],
         participants: [...leaders, ...followers],
         rounds: [round]
       };
 
       const criterionId = round.criteria[0].id;
-      const judgeId = 'judge1';
 
       // L1 has worst follower twice in a row
       const notes: Array<JudgeNote> = [

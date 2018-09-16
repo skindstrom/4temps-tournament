@@ -271,10 +271,76 @@ describe('Dance scorer', () => {
       [normalJudge, sanctioner],
       [normalCriterion, malusCriterion],
       notes,
-      { allowNegative: true }
+      { allowNegative: true, countPresident: false }
     );
     expect(scorer.scoreDance(danceId)).toEqual([
       { participantId: participant.id, score: -2 }
+    ]);
+  });
+
+  test('Does not account for score by president judge', () => {
+    const participants = [createParticipant(), createParticipant()];
+    const presidentJudge: Judge = { ...createJudge(), judgeType: 'president' };
+    const criterion: RoundCriterion = {
+      ...createCriterion(),
+      forJudgeType: 'normal'
+    };
+    const danceId = generateId();
+
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId: presidentJudge.id,
+        participantId: participants[0].id,
+        criterionId: criterion.id,
+        danceId,
+        value: 1
+      },
+      {
+        judgeId: presidentJudge.id,
+        participantId: participants[1].id,
+        criterionId: criterion.id,
+        danceId,
+        value: 2
+      }
+    ];
+
+    const scorer = new DanceScorer([presidentJudge], [criterion], notes);
+    expect(scorer.scoreDance(danceId)).toEqual([]);
+  });
+
+  test('Account for score by president judge if configured to do so', () => {
+    const participants = [createParticipant(), createParticipant()];
+    const presidentJudge: Judge = { ...createJudge(), judgeType: 'president' };
+    const criterion: RoundCriterion = {
+      ...createCriterion(),
+      forJudgeType: 'normal'
+    };
+    const danceId = generateId();
+
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId: presidentJudge.id,
+        participantId: participants[0].id,
+        criterionId: criterion.id,
+        danceId,
+        value: 1
+      },
+      {
+        judgeId: presidentJudge.id,
+        participantId: participants[1].id,
+        criterionId: criterion.id,
+        danceId,
+        value: 2
+      }
+    ];
+
+    const scorer = new DanceScorer([presidentJudge], [criterion], notes, {
+      allowNegative: false,
+      countPresident: true
+    });
+    expect(scorer.scoreDance(danceId)).toEqual([
+      { participantId: participants[1].id, score: 2 },
+      { participantId: participants[0].id, score: 1 }
     ]);
   });
 });
