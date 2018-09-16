@@ -18,6 +18,10 @@ export default function route(
 
       // $FlowFixMe
       if (validateJudge(judge)) {
+        if (hasPresidentJudge(await tournamentRepository.get(tournamentId))) {
+          throw new HasPresidentError();
+        }
+
         await tournamentRepository.addJudge(tournamentId, judge);
         await accessRepository.createForTournamentAndUserWithRole(
           tournamentId,
@@ -57,6 +61,8 @@ function parseJudge(body: mixed): { name: string, judgeType: string } {
 function statusFromError(e: mixed) {
   if (e instanceof ParseError) {
     return 400;
+  } else if (e instanceof HasPresidentError) {
+    return 409;
   }
   return 500;
 }
@@ -84,4 +90,12 @@ function hasMalusCriterion(round: Round): boolean {
   );
 }
 
+function hasPresidentJudge(tournament: ?Tournament): boolean {
+  return (
+    tournament != null &&
+    tournament.judges.some(judge => judge.judgeType === 'president')
+  );
+}
+
 function ParseError() {}
+function HasPresidentError() {}
