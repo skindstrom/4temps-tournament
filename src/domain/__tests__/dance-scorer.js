@@ -343,4 +343,55 @@ describe('Dance scorer', () => {
       { participantId: participants[0].id, score: 1 }
     ]);
   });
+
+  test('Malus accounts for score by president judge if configured to do so', () => {
+    const presidentJudge: Judge = { ...createJudge(), judgeType: 'president' };
+    const normalCriterion: RoundCriterion = {
+      ...createCriterion(),
+      minValue: 0,
+      maxValue: 10,
+      forJudgeType: 'normal'
+    };
+
+    const sanctioner: Judge = { ...createJudge(), judgeType: 'sanctioner' };
+    const sanctionerCriterion: RoundCriterion = {
+      ...createCriterion(),
+      minValue: 0,
+      maxValue: 100,
+      forJudgeType: 'sanctioner'
+    };
+
+    const participant = createParticipant();
+    const danceId = generateId();
+
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId: presidentJudge.id,
+        participantId: participant.id,
+        criterionId: normalCriterion.id,
+        danceId,
+        value: 10
+      },
+      {
+        judgeId: sanctioner.id,
+        participantId: participant.id,
+        criterionId: sanctionerCriterion.id,
+        danceId,
+        value: 50 // 50% off
+      }
+    ];
+
+    const scorer = new DanceScorer(
+      [presidentJudge, sanctioner],
+      [normalCriterion, sanctionerCriterion],
+      notes,
+      {
+        allowNegative: false,
+        countPresident: true
+      }
+    );
+    expect(scorer.scoreDance(danceId)).toEqual([
+      { participantId: participant.id, score: 5 }
+    ]);
+  });
 });

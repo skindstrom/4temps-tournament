@@ -60,11 +60,7 @@ class DanceScorer {
         const judge: ?Judge = this._judges.find(
           judge => judge.id === note.judgeId
         );
-        return (
-          judge != null &&
-          (judge.judgeType === 'normal' ||
-            (this._countPresident && judge.judgeType === 'president'))
-        );
+        return judge != null && this._isPositiveJudgeType(judge.judgeType);
       })
       .forEach(note => this._addNoteToTotal(note, totals));
 
@@ -102,17 +98,26 @@ class DanceScorer {
   };
 
   _maxScoreForParticipants = () => {
-    const criteriaForNormalJudges = Object.keys(this._criteria)
+    const criteriaForPositiveJudges = Object.keys(this._criteria)
       .map(key => this._criteria[key])
-      .filter(({ forJudgeType }) => forJudgeType === 'normal');
+      .filter(({ forJudgeType }) => this._isPositiveJudgeType(forJudgeType));
 
-    const normalJudges = this._judges.filter(
-      ({ judgeType }) => judgeType === 'normal'
+    const positiveJudges = this._judges.filter(({ judgeType }) =>
+      this._isPositiveJudgeType(judgeType)
     );
 
     return (
-      criteriaForNormalJudges.reduce((acc, { maxValue }) => acc + maxValue, 0) *
-      normalJudges.length
+      criteriaForPositiveJudges.reduce(
+        (acc, { maxValue }) => acc + maxValue,
+        0
+      ) * positiveJudges.length
+    );
+  };
+
+  _isPositiveJudgeType = (judgeType: JudgeType): boolean => {
+    return (
+      judgeType === 'normal' ||
+      (this._countPresident === true && judgeType === 'president')
     );
   };
 
