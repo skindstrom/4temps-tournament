@@ -204,7 +204,9 @@ class StartDanceRouteHandler {
   _endRoundOfTournament = async (tournament: Tournament, round: Round) => {
     const notes = await this._getNotes(round);
 
-    round.scores = new RoundScorer(tournament.judges, round).scoreRound(notes);
+    round.roundScores = new RoundScorer(tournament.judges, round).scoreRound(
+      notes
+    );
 
     round.active = false;
     round.finished = true;

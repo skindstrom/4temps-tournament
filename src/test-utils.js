@@ -321,7 +321,7 @@ export function createRound(): Round {
     groups: [],
     active: false,
     finished: false,
-    scores: [],
+    roundScores: [],
     winners: { leaders: [], followers: [] }
   };
 }

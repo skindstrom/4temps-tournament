@@ -12,18 +12,18 @@ function mapStateToProps(
   { roundId }: Props
 ): ComponentProps {
   const round = rounds.byId[roundId];
-  const scores = hydrateScores(round.scores, participants);
+  const roundScores = hydrateScores(round.roundScores, participants);
 
   const pairs = getPairs(round);
 
   const leaders = new Set(getLeaders(pairs));
   const followers = new Set(getFollowers(pairs));
 
-  const leaderScores = scores
+  const leaderScores = roundScores
     .filter(({ participant }) => leaders.has(participant.id))
     .map((score, i) => ({ ...score, position: i + 1 }));
 
-  const followerScores = scores
+  const followerScores = roundScores
     .filter(({ participant }) => followers.has(participant.id))
     .map((score, i) => ({ ...score, position: i + 1 }));
 
@@ -37,10 +37,10 @@ function mapStateToProps(
 }
 
 function hydrateScores(
-  scores: Array<Score>,
+  roundScores: Array<Score>,
   participants: ParticipantsReduxState
 ) {
-  return scores.map(score => ({
+  return roundScores.map(score => ({
     score: score.score,
     participant: participants.byId[score.participantId]
   }));

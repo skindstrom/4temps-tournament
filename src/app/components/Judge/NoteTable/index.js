@@ -13,7 +13,7 @@ function mapStateToProps(state: ReduxState): StateProps {
   const danceId = getActiveDanceId(activeRound);
   const notes = getNotesForActiveDance(state, danceId);
 
-  const scores = new DanceScorer(
+  const danceScores = new DanceScorer(
     tournament.judges,
     activeRound.criteria,
     notes,
@@ -21,7 +21,7 @@ function mapStateToProps(state: ReduxState): StateProps {
   ).scoreDance(danceId);
 
   return {
-    columns: divideScoreIntoColumns(state, scores),
+    columns: divideScoreIntoColumns(state, danceScores),
     tournamentId: state.tournaments.forJudge
   };
 }
@@ -73,9 +73,9 @@ function getActiveRound(state: ReduxState): Round {
 
 function divideScoreIntoColumns(
   state: ReduxState,
-  scores: Array<Score>
+  danceScores: Array<Score>
 ): Array<ColumnViewModel> {
-  const scoreMap = scores.reduce(
+  const scoreMap = danceScores.reduce(
     (acc, score) => ({
       ...acc,
       [score.participantId]: score
@@ -111,16 +111,17 @@ function getPairs(state: ReduxState): Array<Pair> {
 
 function getPairColumn(
   state: ReduxState,
-  scores: { [id: string]: Array<Score> },
+  danceScores: { [id: string]: Array<Score> },
   pairs: Array<Pair>
 ): ColumnViewModel {
   const scoreViewModels = pairs
     .map(pair => ({
       name: getPairName(state, pair),
-      value: scores[pair.leader] != null ? scores[pair.leader].score : 0
+      value:
+        danceScores[pair.leader] != null ? danceScores[pair.leader].score : 0
     }))
     .sort((a, b) => b.value - a.value);
-  return { title: 'Couples', scores: scoreViewModels };
+  return { title: 'Couples', danceScores: scoreViewModels };
 }
 
 function getPairName(state: ReduxState, { leader, follower }: Pair) {
@@ -134,24 +135,24 @@ function getPairName(state: ReduxState, { leader, follower }: Pair) {
 
 function getSeparateColumns(
   state: ReduxState,
-  scores: { [id: string]: Array<Score> },
+  danceScores: { [id: string]: Array<Score> },
   pairs: Array<Pair>
 ): Array<ColumnViewModel> {
   const leaderViewModels = pairs
     .map(({ leader }) => ({
       name: `L${state.participants.byId[leader].attendanceId}`,
-      value: scores[leader] != null ? scores[leader].score : 0
+      value: danceScores[leader] != null ? danceScores[leader].score : 0
     }))
     .sort((a, b) => b.value - a.value);
   const followerViewModels = pairs
     .map(({ follower }) => ({
       name: `L${state.participants.byId[follower].attendanceId}`,
-      value: scores[follower] != null ? scores[follower].score : 0
+      value: danceScores[follower] != null ? danceScores[follower].score : 0
     }))
     .sort((a, b) => b.value - a.value);
   return [
-    { title: 'Leaders', scores: leaderViewModels },
-    { title: 'Followers', scores: followerViewModels }
+    { title: 'Leaders', danceScores: leaderViewModels },
+    { title: 'Followers', danceScores: followerViewModels }
   ];
 }
 

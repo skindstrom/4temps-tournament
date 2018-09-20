@@ -98,9 +98,12 @@ describe('Round scorer', () => {
     };
 
     const scorer = new RoundScorer([], round);
-    const scores = scorer.scoreRound([]);
-    expect(scores).toContainEqual({ participantId: leader.id, score: 0 });
-    expect(scores).toContainEqual({ participantId: follower.id, score: 0 });
+    const roundScores = scorer.scoreRound([]);
+    expect(roundScores).toContainEqual({ participantId: leader.id, score: 0 });
+    expect(roundScores).toContainEqual({
+      participantId: follower.id,
+      score: 0
+    });
   });
 
   test('Selects random participant if equal score', () => {
@@ -164,11 +167,11 @@ describe('Round scorer', () => {
     const leaderWinners = new Set();
     const followerWinners = new Set();
     for (let i = 0; i < 200; ++i) {
-      const scores = scorer.scoreRound(notes);
+      const roundScores = scorer.scoreRound(notes);
       // leaders have higher score, should have pos. 0 and 1
-      leaderWinners.add(scores[0].participantId);
+      leaderWinners.add(roundScores[0].participantId);
       // followers have lower score, should have pos. 2 and 3
-      followerWinners.add(scores[2].participantId);
+      followerWinners.add(roundScores[2].participantId);
     }
     expect(leaderWinners).toContainEqual('l1');
     expect(leaderWinners).toContainEqual('l2');

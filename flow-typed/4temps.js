@@ -57,7 +57,7 @@ declare type Round = {
   active: boolean,
   finished: boolean,
   groups: Array<DanceGroup>,
-  scores: Array<Score>
+  roundScores: Array<Score>
 };
 
 declare type Score = {

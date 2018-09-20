@@ -68,16 +68,16 @@ function createLeaderboardRound(
     };
   }
 
-  const scores = hydrateScores(round.scores, participants);
+  const roundScores = hydrateScores(round.roundScores, participants);
 
   const pairs = getPairs(round);
 
   const leaders = new Set(getLeaders(pairs));
   const followers = new Set(getFollowers(pairs));
 
-  const leaderScores = scores.filter(({ id }) => leaders.has(id));
+  const leaderScores = roundScores.filter(({ id }) => leaders.has(id));
 
-  const followerScores = scores.filter(({ id }) => followers.has(id));
+  const followerScores = roundScores.filter(({ id }) => followers.has(id));
 
   return {
     roundId: round.id,
@@ -91,12 +91,12 @@ function createLeaderboardRound(
 }
 
 function hydrateScores(
-  scores: Array<Score>,
+  roundScores: Array<Score>,
   participants: { [id: string]: Participant }
 ) {
   let prevScore: ?number;
   let prevPosition: number = 1;
-  return scores.map((score, i) => {
+  return roundScores.map((score, i) => {
     const participant = participants[score.participantId];
     let position = i + 1;
 

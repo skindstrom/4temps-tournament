@@ -15,7 +15,7 @@ import {
 
 export type ColumnViewModel = {
   title: string,
-  scores: Array<ScoreViewModel>
+  danceScores: Array<ScoreViewModel>
 };
 
 export type ScoreViewModel = {
@@ -41,7 +41,7 @@ class NoteTable extends PureComponent<NoteTableProps> {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {column.scores.map((score, i) => (
+            {column.danceScores.map((score, i) => (
               <TableRow key={score.name}>
                 <TableCell>{i + 1}</TableCell>
                 <TableCell>{score.name}</TableCell>

@@ -147,7 +147,7 @@ describe('Generate groups route', () => {
       active: false,
       finished: true,
       passingCouplesCount: 1,
-      scores: [
+      roundScores: [
         {
           participantId: participants[0].id,
           score: 10

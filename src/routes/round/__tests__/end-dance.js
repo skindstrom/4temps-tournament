@@ -332,7 +332,7 @@ describe('End dance route', () => {
         ...tournament.rounds[0],
         active: false,
         finished: true,
-        scores: [
+        roundScores: [
           { participantId: participants[0].id, score: 7 },
           { participantId: participants[1].id, score: 3 }
         ],
@@ -434,7 +434,7 @@ describe('End dance route', () => {
         ...tournament.rounds[0],
         active: false,
         finished: true,
-        scores: [
+        roundScores: [
           { participantId: participants[0].id, score: 7 },
           { participantId: participants[1].id, score: 3 },
           { participantId: newParticipants[0].id, score: 2 },

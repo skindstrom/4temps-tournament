@@ -89,11 +89,11 @@ export default class NextGroupGenerator {
     }, {});
 
     const count = round.passingCouplesCount;
-    const passingLeaders = round.scores
+    const passingLeaders = round.roundScores
       .map(({ participantId }) => participantId)
       .filter(id => isAttending[id] && leaderSet.has(id))
       .slice(0, count);
-    const passingFollowers = round.scores
+    const passingFollowers = round.roundScores
       .map(({ participantId }) => participantId)
       .filter(id => isAttending[id] && followerSet.has(id))
       .slice(0, count);
@@ -273,9 +273,9 @@ export default class NextGroupGenerator {
     const participants = this._getParticipantsWithRole(role);
 
     const scorer = new RoundScorer(this._tournament.judges, this._round);
-    const scores = scorer.scoreRound(this._notes);
+    const roundScores = scorer.scoreRound(this._notes);
 
-    return scores.filter(score => participants.has(score.participantId));
+    return roundScores.filter(score => participants.has(score.participantId));
   };
 
   _getParticipantsWithRole = (role: Role): Set<string> => {

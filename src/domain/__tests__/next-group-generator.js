@@ -350,7 +350,7 @@ describe('Next group generator', () => {
       active: false,
       finished: true,
       passingCouplesCount: 1,
-      scores: [
+      roundScores: [
         {
           participantId: leaders[0].id,
           score: 10
