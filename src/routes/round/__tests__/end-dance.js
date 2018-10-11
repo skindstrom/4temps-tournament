@@ -9,7 +9,8 @@ import {
   TournamentRepositoryImpl,
   createCriterion,
   NoteRepositoryImpl,
-  createJudge
+  createJudge,
+  createDance
 } from '../../../test-utils';
 import EndDanceRoute from '../end-dance';
 
@@ -556,6 +557,77 @@ describe('End dance route', () => {
       expect((await tournamentRepo.get(tournament.id)).rounds[0]).toMatchObject(
         expectedRound
       );
+    });
+
+    test('Sets the draw flag if there is a draw regarding who is in the top after the final dance', async () => {
+      const l1: Participant = createParticipant();
+      const l2: Participant = createParticipant();
+      const f1: Participant = createParticipant();
+      const f2: Participant = createParticipant();
+
+      const pair1: Pair = { leader: l1.id, follower: f1.id };
+      const pair2: Pair = { leader: l2.id, follower: f2.id };
+
+      const criterion: RoundCriterion = createCriterion();
+
+      const dance: Dance = { ...createDance(), active: true };
+      const danceGroup: DanceGroup = {
+        id: generateId(),
+        pairs: [pair1, pair2],
+        dances: [dance]
+      };
+
+      const round: Round = {
+        ...createRound(),
+        active: true,
+        finished: false,
+        draw: false,
+        criteria: [criterion],
+        passingCouplesCount: 1,
+        groups: [danceGroup]
+      };
+
+      const judge: Judge = createJudge();
+
+      const tournament: Tournament = {
+        ...createTournament(),
+        judges: [judge],
+        participants: [l1, l2, f1, f2],
+        rounds: [round]
+      };
+      await tournamentRepo.create(tournament);
+
+      const addNoteForParticipant = (participant: Participant): Promise<void> =>
+        noteRepo.createOrUpdate({
+          judgeId: judge.id,
+          criterionId: criterion.id,
+          participantId: participant.id,
+          value: 1,
+          danceId: dance.id
+        });
+
+      await addNoteForParticipant(l1);
+      await addNoteForParticipant(l2);
+      await addNoteForParticipant(f1);
+      await addNoteForParticipant(f2);
+
+      const route = new EndDanceRoute(
+        tournamentRepo,
+        noteRepo,
+        updateLeaderboardFunc
+      );
+
+      const req = Request.withParams({ tournamentId: tournament.id });
+      const res = new Response();
+
+      await route.route()(req, res);
+
+      expect(res.getStatus()).toBe(200);
+      expect(res.getBody()).toMatchObject({
+        draw: true,
+        finished: false,
+        active: true
+      });
     });
   });
 });

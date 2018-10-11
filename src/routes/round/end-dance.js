@@ -6,6 +6,7 @@ import NextGroupGenerator from '../../domain/next-group-generator';
 import type { TournamentRepository } from '../../data/tournament';
 import type { NoteRepository } from '../../data/note';
 import createLeaderboard from '../leaderboard/create-leaderboard';
+import isDrawInRound from '../../domain/is-draw-in-round';
 
 type UpdateLeaderboardFunc = (leaderboard: Leaderboard) => void;
 
@@ -208,9 +209,15 @@ class StartDanceRouteHandler {
       notes
     );
 
-    round.active = false;
-    round.finished = true;
+    if (this._hasDraw(round)) {
+      round.draw = true;
+    } else {
+      round.active = false;
+      round.finished = true;
+    }
   };
+
+  _hasDraw = (round: Round): boolean => isDrawInRound(round);
 
   _getNotes = async (round: Round) => {
     let notes: Array<JudgeNote> = [];

@@ -8,6 +8,34 @@ it('Returns false if no groups in round', () => {
   expect(isDrawInRound(round)).toBe(false);
 });
 
+it('Can be draw even if zero score', () => {
+  const leaderId1 = 'l1';
+  const leaderId2 = 'l2';
+  const followerId1 = 'f1';
+  const followerId2 = 'f2';
+
+  const scores: Array<Score> = [
+    { participantId: leaderId1, score: 0 },
+    { participantId: leaderId2, score: 0 },
+    { participantId: followerId1, score: 0 },
+    { participantId: followerId2, score: 0 }
+  ];
+
+  const pairs: Array<Pair> = [
+    { leader: leaderId1, follower: followerId1 },
+    { leader: leaderId2, follower: followerId2 }
+  ];
+  const group: DanceGroup = { id: 'group', dances: [], pairs };
+  const round: Round = {
+    ...createRound(),
+    passingCouplesCount: 1,
+    groups: [group],
+    roundScores: scores
+  };
+
+  expect(isDrawInRound(round)).toBe(true);
+});
+
 it('Returns true if both leaders and followers have a draw', () => {
   const leaderId1 = 'l1';
   const leaderId2 = 'l2';

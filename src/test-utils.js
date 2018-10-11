@@ -378,3 +378,11 @@ export function createCriterion(): RoundCriterion {
     forJudgeType: 'normal'
   };
 }
+
+export function createDance(): Dance {
+  return {
+    id: generateId(),
+    active: false,
+    finished: false
+  };
+}

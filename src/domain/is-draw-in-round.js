@@ -29,6 +29,7 @@ function scoresForParticipants(
   participantIds: Array<string>,
   roundScores: Array<Score>
 ): Array<number> {
+  // $FlowFixMe
   return roundScores
     .map(score => {
       const participantId: ?string = participantIds.find(
@@ -39,7 +40,7 @@ function scoresForParticipants(
       }
       return score.score;
     })
-    .filter(Boolean);
+    .filter(score => score != null);
 }
 
 function isScoreDraw(
