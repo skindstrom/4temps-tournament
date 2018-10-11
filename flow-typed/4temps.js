@@ -56,6 +56,7 @@ declare type Round = {
   criteria: Array<RoundCriterion>,
   active: boolean,
   finished: boolean,
+  draw: boolean,
   groups: Array<DanceGroup>,
   roundScores: Array<Score>
 };

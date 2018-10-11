@@ -15,6 +15,7 @@ function parseRound(bodyRound: mixed): Round {
     groups: [],
     active: false,
     finished: false,
+    draw: false,
     roundScores: [],
     winners: { leaders: [], followers: [] }
   };

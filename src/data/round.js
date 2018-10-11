@@ -23,6 +23,7 @@ export type RoundDbModel = {
   criteria: Array<CriterionDbModel>,
   active: boolean,
   finished: boolean,
+  draw: boolean,
   groups: Array<DanceGroupDbModel>,
   roundScores: Array<{ participantId: ObjectId, score: number }>
 };
@@ -96,6 +97,10 @@ export const schema = new mongoose.Schema({
     required: true
   },
   finished: {
+    type: Boolean,
+    required: true
+  },
+  draw: {
     type: Boolean,
     required: true
   },
