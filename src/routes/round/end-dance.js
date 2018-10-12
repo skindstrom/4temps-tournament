@@ -52,6 +52,9 @@ export default class StartDanceRoute {
     } else if (e instanceof NotAllNotesError) {
       res.status(400);
       res.json({ isAllSubmitted: false });
+    } else if (e instanceof RoundHasDrawError) {
+      res.status(409);
+      res.json({ isDraw: true });
     } else {
       res.sendStatus(500);
     }
@@ -92,6 +95,10 @@ class StartDanceRouteHandler {
     }
 
     const round = this._getActiveRound(tournament);
+    if (round.draw) {
+      throw new RoundHasDrawError();
+    }
+
     const dance = this._getStartedDance(round);
 
     if (!(await this._hasAllNotesForDance(tournament, dance))) {
@@ -233,3 +240,4 @@ class StartDanceRouteHandler {
 function TournamentNotFoundError() {}
 function NoStartedDanceError() {}
 function NotAllNotesError() {}
+function RoundHasDrawError() {}

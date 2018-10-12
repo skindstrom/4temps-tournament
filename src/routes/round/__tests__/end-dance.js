@@ -141,6 +141,38 @@ describe('End dance route', () => {
     expect(res.getBody()).toEqual({ isAllSubmitted: false });
   });
 
+  test('Returns 409 if trying to end a dance during a draw', async () => {
+    const noteRepo = new NoteRepositoryImpl();
+    const tournamentRepo = new TournamentRepositoryImpl();
+
+    const round: Round = {
+      ...createRound(),
+      active: true,
+      finished: false,
+      draw: true
+    };
+
+    const tournament: Tournament = {
+      ...createTournament(),
+      rounds: [round]
+    };
+    await tournamentRepo.create(tournament);
+
+    const route = new EndDanceRoute(
+      tournamentRepo,
+      noteRepo,
+      updateLeaderboardFunc
+    );
+
+    const req = Request.withParams({ tournamentId: tournament.id });
+    const res = new Response();
+
+    await route.route()(req, res);
+
+    expect(res.getStatus()).toBe(409);
+    expect(res.getBody()).toEqual({ isDraw: true });
+  });
+
   describe('Returns 200 on success and...', () => {
     const expectedBody: Round = {
       ...tournament.rounds[0],
