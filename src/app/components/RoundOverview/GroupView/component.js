@@ -30,6 +30,7 @@ export type RoundViewModel = {
   danceCount: number,
   active: boolean,
   finished: boolean,
+  draw: boolean,
   activeGroup: ?number,
   activeDance: ?number,
   nextGroup: ?number,
@@ -51,6 +52,36 @@ export type Props = {
   regenerateGroup: (groupId: string) => void
 };
 
+function DanceActions({
+  activeDance,
+  draw,
+  startDance,
+  endDance
+}: {
+  activeDance: ?number,
+  draw: boolean,
+  startDance: () => void,
+  endDance: () => void
+}) {
+  if (draw) {
+    return <strong>Waiting for president to settle draw...</strong>;
+  }
+
+  if (activeDance != null) {
+    return (
+      <Button color="red" onClick={endDance}>
+        Stop dance
+      </Button>
+    );
+  } else {
+    return (
+      <Button color="green" onClick={startDance}>
+        Start next dance
+      </Button>
+    );
+  }
+}
+
 class RoundOverview extends Component<Props> {
   _renderState = () => {
     const { round } = this.props;
@@ -62,15 +93,12 @@ class RoundOverview extends Component<Props> {
               {this._groupInformation()}
               {this._danceInformation()}
               <TableCell>
-                {round.activeDance != null ? (
-                  <Button color="red" onClick={this.props.endDance}>
-                    Stop dance
-                  </Button>
-                ) : (
-                  <Button color="green" onClick={this.props.startDance}>
-                    Start next dance
-                  </Button>
-                )}
+                <DanceActions
+                  draw={round.draw}
+                  activeDance={round.activeDance}
+                  startDance={this.props.startDance}
+                  endDance={this.props.endDance}
+                />
               </TableCell>
             </TableRow>
           </TableBody>
