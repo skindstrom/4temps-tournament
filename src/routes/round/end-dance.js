@@ -218,6 +218,9 @@ class StartDanceRouteHandler {
 
     if (this._hasDraw(round)) {
       round.draw = true;
+      round.roundScores = new RoundScorer(tournament.judges, round, {
+        countPresident: true
+      }).scoreRound(notes);
     } else {
       round.active = false;
       round.finished = true;
