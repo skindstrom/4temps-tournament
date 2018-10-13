@@ -121,7 +121,7 @@ describe('Round scorer', () => {
           ],
           dances: [
             {
-              id: 'dance1',
+              id: danceId,
               active: false,
               finished: true
             }
@@ -177,6 +177,71 @@ describe('Round scorer', () => {
     expect(leaderWinners).toContainEqual('l2');
     expect(followerWinners).toContainEqual('f1');
     expect(followerWinners).toContainEqual('f2');
+  });
+
+  test('Account for score by president judge if configured to do so', () => {
+    const president = { ...createJudge(), judgeType: 'president' };
+    const danceId = 'd1';
+
+    const round: Round = {
+      ...createRound(),
+      groups: [
+        {
+          id: 'group1',
+          pairs: [{ leader: 'l1', follower: 'f1' }],
+          dances: [
+            {
+              id: danceId,
+              active: false,
+              finished: true
+            }
+          ]
+        }
+      ]
+    };
+    const criterionId = round.criteria[0].id;
+
+    const notes: Array<JudgeNote> = [
+      {
+        judgeId: president.id,
+        criterionId,
+        danceId,
+        participantId: 'l1',
+        value: 3
+      },
+      {
+        judgeId: president.id,
+        criterionId,
+        danceId,
+        participantId: 'f1',
+        value: 3
+      }
+    ];
+
+    const scoresWithoutPresident = new RoundScorer(
+      [president],
+      round
+    ).scoreRound(notes);
+    expect(scoresWithoutPresident).toContainEqual({
+      participantId: 'l1',
+      score: 0
+    });
+    expect(scoresWithoutPresident).toContainEqual({
+      participantId: 'f1',
+      score: 0
+    });
+
+    const scoresWithPresident = new RoundScorer([president], round, {
+      countPresident: true
+    }).scoreRound(notes);
+    expect(scoresWithPresident).toContainEqual({
+      participantId: 'l1',
+      score: 3
+    });
+    expect(scoresWithPresident).toContainEqual({
+      participantId: 'f1',
+      score: 3
+    });
   });
 });
 

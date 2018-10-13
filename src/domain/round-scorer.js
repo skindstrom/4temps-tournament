@@ -5,10 +5,18 @@ import DanceScorer from './dance-scorer';
 export default class RoundScorer {
   _judges: Array<Judge>;
   _round: Round;
+  _countPresident: boolean;
 
-  constructor(judges: Array<Judge>, round: Round) {
+  constructor(
+    judges: Array<Judge>,
+    round: Round,
+    { countPresident }: { countPresident: boolean } = {
+      countPresident: false
+    }
+  ) {
     this._judges = judges;
     this._round = round;
+    this._countPresident = countPresident;
   }
 
   scoreRound = (
@@ -20,7 +28,11 @@ export default class RoundScorer {
     const danceScorer = new DanceScorer(
       this._judges,
       this._round.criteria,
-      notes
+      notes,
+      {
+        countPresident: this._countPresident,
+        allowNegative: false
+      }
     );
     const totals: { [id: string]: Array<number> } = this._initializeTotals(
       this._getParticipants()
