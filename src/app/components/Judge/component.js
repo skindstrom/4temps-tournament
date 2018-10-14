@@ -9,9 +9,11 @@ import SelectPairGrid from './SelectPairGrid';
 import SubmitNotesModal from './SubmitNotesModal';
 // $FlowFixMe
 import NoteTable from './NoteTable';
+import DrawSettler from './DrawSettler';
 
-type Props = {
+export type Props = {
   tournamentId: string,
+  judgeType: JudgeType,
   activeRound: ?Round,
   activeDanceId: ?string,
   notesSubmitted: boolean
@@ -21,18 +23,36 @@ export default function Judge({
   tournamentId,
   activeRound,
   activeDanceId,
-  notesSubmitted
+  notesSubmitted,
+  judgeType
 }: Props) {
-  return activeRound != null && activeDanceId != null ? (
-    <ActiveDance
-      tournamentId={tournamentId}
-      roundId={activeRound.id}
-      danceId={activeDanceId}
-      notesSubmitted={notesSubmitted}
-    />
-  ) : (
-    <NoActiveDance />
-  );
+  if (activeRound != null && activeRound.draw) {
+    return <Draw activeRound={activeRound} judgeType={judgeType} />;
+  } else if (activeRound != null && activeDanceId != null) {
+    return (
+      <ActiveDance
+        tournamentId={tournamentId}
+        roundId={activeRound.id}
+        danceId={activeDanceId}
+        notesSubmitted={notesSubmitted}
+      />
+    );
+  }
+  return <NoActiveDance />;
+}
+
+function Draw({
+  judgeType,
+  activeRound
+}: {
+  judgeType: JudgeType,
+  activeRound: Round
+}) {
+  if (judgeType === 'president') {
+    return <DrawSettler activeRound={activeRound} />;
+  }
+
+  return <strong>Waiting for president to settle draw...</strong>;
 }
 
 function NoActiveDance() {

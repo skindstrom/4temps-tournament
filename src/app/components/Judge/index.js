@@ -1,17 +1,16 @@
 // @flow
 import { connect } from 'react-redux';
 import Judge from './component';
+import type { Props as JudgeComponentProps } from './component';
 import PreloadContainer from '../PreloadContainer';
 import { getJudgeTournament } from '../../action-creators';
 
-function mapStateToProps(state: ReduxState) {
-  const { tournaments, rounds } = state;
+function mapStateToProps(state: ReduxState): JudgeComponentProps {
+  const { tournaments, rounds, user, judges } = state;
   const activeRound =
     tournaments.forJudge !== ''
       ? getActiveRound(
-        tournaments.byId[tournaments.forJudge].rounds.map(
-          id => rounds.byId[id]
-        )
+        rounds.forTournament[tournaments.forJudge].map(id => rounds.byId[id])
       )
       : null;
 
@@ -26,7 +25,9 @@ function mapStateToProps(state: ReduxState) {
     notesSubmitted:
       tournaments.forJudge === ''
         ? false
-        : isNotesSubmittedForDance(state, activeDanceId)
+        : isNotesSubmittedForDance(state, activeDanceId),
+    judgeType:
+      (judges.byId[user.id] && judges.byId[user.id].judgeType) || 'normal'
   };
 }
 
@@ -60,21 +61,11 @@ function getActiveDanceId(round: Round): string {
 
 function getActiveRound(rounds: Array<Round>): ?Round {
   return rounds.reduce((acc, round) => {
-    if (isRoundActive(round)) {
+    if (round.active) {
       return round;
     }
     return acc;
   }, null);
-}
-
-function isRoundActive(round: Round): boolean {
-  return (
-    round.active && round.groups.reduce((a, b) => a || isGroupActive(b), false)
-  );
-}
-
-function isGroupActive(group: DanceGroup): boolean {
-  return group.dances.reduce((a, b) => a || b.active, false);
 }
 
 const JudgeContainer = connect(

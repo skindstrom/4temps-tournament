@@ -78,7 +78,12 @@ function getCriteriaForJudgeType(
   judgeType: JudgeType
 ): Array<CriterionViewModel> {
   return getRound(state)
-    .criteria.filter(crit => crit.forJudgeType === judgeType)
+    .criteria.filter(
+      criterion =>
+        criterion.forJudgeType === 'normal'
+          ? judgeType === 'normal' || judgeType === 'president'
+          : criterion.forJudgeType === judgeType
+    )
     .map(crit => ({
       id: crit.id,
       name: crit.name,

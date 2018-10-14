@@ -17,7 +17,7 @@ function mapStateToProps(state: ReduxState): StateProps {
     tournament.judges,
     activeRound.criteria,
     notes,
-    { allowNegative: true, countPresident: false }
+    { allowNegative: true, countPresident: true }
   ).scoreDance(danceId);
 
   return {
