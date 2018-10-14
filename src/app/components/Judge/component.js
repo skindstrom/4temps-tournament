@@ -27,7 +27,13 @@ export default function Judge({
   judgeType
 }: Props) {
   if (activeRound != null && activeRound.draw) {
-    return <Draw activeRound={activeRound} judgeType={judgeType} />;
+    return (
+      <Draw
+        tournamentId={tournamentId}
+        activeRound={activeRound}
+        judgeType={judgeType}
+      />
+    );
   } else if (activeRound != null && activeDanceId != null) {
     return (
       <ActiveDance
@@ -42,14 +48,18 @@ export default function Judge({
 }
 
 function Draw({
+  tournamentId,
   judgeType,
   activeRound
 }: {
+  tournamentId: string,
   judgeType: JudgeType,
   activeRound: Round
 }) {
   if (judgeType === 'president') {
-    return <DrawSettler activeRound={activeRound} />;
+    return (
+      <DrawSettler tournamentId={tournamentId} activeRound={activeRound} />
+    );
   }
 
   return <strong>Waiting for president to settle draw...</strong>;

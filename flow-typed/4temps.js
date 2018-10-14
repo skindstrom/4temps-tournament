@@ -401,7 +401,8 @@ declare type ReduxAction =
   | SetNoteAction
   | SelectPairAction
   | GetLeaderboardAction
-  | CreateAssistantAction;
+  | CreateAssistantAction
+  | SettleDrawAction;
 
 // Redux Actions
 declare type LogoutAction = {
@@ -541,5 +542,10 @@ declare type SelectPairAction = {
 
 declare type GetLeaderboardAction = {
   type: 'GET_LEADERBOARD',
+  promise: mixed
+};
+
+declare type SettleDrawAction = {
+  type: 'SETTLE_DRAW',
   promise: mixed
 };

@@ -62,3 +62,10 @@ export async function regenerateGroup(
     `/api/round/${tournamentId}/regenerate/${roundId}/group/${groupId}`
   );
 }
+
+export async function settleDraw(
+  tournamentId: string,
+  roundScores: Array<Score>
+) {
+  return apiPostRequest(`/api/round/${tournamentId}/settle-draw`, roundScores);
+}
