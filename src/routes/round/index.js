@@ -14,6 +14,7 @@ import StartDanceRoute from './start-dance';
 import GenerateGroupsRoute from './generate-groups';
 import EndDanceRoute from './end-dance';
 import RegenerateGroupRoute from './regenerate-group';
+import SettleDrawRoute from './settle-draw';
 
 const router = Router();
 
@@ -63,6 +64,11 @@ router.post(
 router.post(
   '/:tournamentId/regenerate/:roundId/group/:groupId/',
   RegenerateGroupRoute(tournamentRepository, noteRepository)
+);
+
+router.post(
+  '/:tournamentId/settle-draw',
+  new SettleDrawRoute(tournamentRepository).route
 );
 
 export default router;

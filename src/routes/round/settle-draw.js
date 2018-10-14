@@ -8,7 +8,7 @@ export default class SettleDrawRoute {
     this._tournamentRepository = tournamentRepository;
   }
 
-  async route(req: ServerApiRequest, res: ServerApiResponse) {
+  route = async (req: ServerApiRequest, res: ServerApiResponse) => {
     const tournamentId: string = req.params.tournamentId;
 
     const tournament: ?Tournament = await this._tournamentRepository.get(
@@ -55,15 +55,21 @@ export default class SettleDrawRoute {
             draw: false,
             roundScores
           };
-          await this._tournamentRepository.updateRound(
-            tournamentId,
-            updatedRound
-          );
-          res.json(updatedRound);
+          try {
+            await this._tournamentRepository.updateRound(
+              tournamentId,
+              updatedRound
+            );
+            res.json(updatedRound);
+          } catch (e) {
+            res.sendStatus(500);
+            // eslint-disable-next-line
+            console.error(e);
+          }
         }
       }
     }
-  }
+  };
 }
 
 function parseRoundScores(body: mixed): Array<Score> {
