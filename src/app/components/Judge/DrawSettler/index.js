@@ -45,6 +45,9 @@ function mapStateToProps({
   );
 
   return {
+    isPairRound:
+      tournament.rounds.indexOf(activeRound.id) ===
+        tournament.rounds.length - 1 || tournament.type === 'classic',
     roundName: activeRound.name,
     passingCouplesCount: activeRound.passingCouplesCount,
     leaders: {

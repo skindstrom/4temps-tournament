@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Button,
   Header,
@@ -16,6 +16,7 @@ type ScoreViewModel = { score: number, participant: Participant };
 
 export type Props = {
   roundName: string,
+  isPairRound: boolean,
   passingCouplesCount: number,
   leaders: {
     winners: Array<ScoreViewModel>,
@@ -109,7 +110,13 @@ class DrawSettler extends React.Component<
   };
 
   render() {
-    const { roundName, passingCouplesCount, leaders, followers } = this.props;
+    const {
+      isPairRound,
+      roundName,
+      passingCouplesCount,
+      leaders,
+      followers
+    } = this.props;
 
     return (
       <Container>
@@ -126,30 +133,50 @@ class DrawSettler extends React.Component<
         <Button onClick={this.submitRoundScores} primary>
           Submit
         </Button>
-        <DrawSettlerTable
-          header="Leaders"
-          winners={leaders.winners}
-          draw={this.drawWithCheck(leaders.draw, this.state.checkedLeaders)}
-          losers={leaders.losers}
-          addWinner={this.addLeader}
-          removeWinner={this.removeLeader}
-          passingCouplesCount={passingCouplesCount}
-          currentCouplesCount={
-            leaders.winners.length + this.state.checkedLeaders.length
-          }
-        />
-        <DrawSettlerTable
-          header="Followers"
-          winners={followers.winners}
-          draw={this.drawWithCheck(followers.draw, this.state.checkedFollowers)}
-          losers={followers.losers}
-          addWinner={this.addFollower}
-          removeWinner={this.removeFollower}
-          passingCouplesCount={passingCouplesCount}
-          currentCouplesCount={
-            followers.winners.length + this.state.checkedFollowers.length
-          }
-        />
+        {isPairRound ? (
+          <DrawSettlerTable
+            header="Couples"
+            winners={leaders.winners}
+            draw={this.drawWithCheck(leaders.draw, this.state.checkedLeaders)}
+            losers={leaders.losers}
+            addWinner={this.addLeader}
+            removeWinner={this.removeLeader}
+            passingCouplesCount={passingCouplesCount}
+            currentCouplesCount={
+              leaders.winners.length + this.state.checkedLeaders.length
+            }
+          />
+        ) : (
+          <Fragment>
+            <DrawSettlerTable
+              header="Leaders"
+              winners={leaders.winners}
+              draw={this.drawWithCheck(leaders.draw, this.state.checkedLeaders)}
+              losers={leaders.losers}
+              addWinner={this.addLeader}
+              removeWinner={this.removeLeader}
+              passingCouplesCount={passingCouplesCount}
+              currentCouplesCount={
+                leaders.winners.length + this.state.checkedLeaders.length
+              }
+            />
+            <DrawSettlerTable
+              header="Followers"
+              winners={followers.winners}
+              draw={this.drawWithCheck(
+                followers.draw,
+                this.state.checkedFollowers
+              )}
+              losers={followers.losers}
+              addWinner={this.addFollower}
+              removeWinner={this.removeFollower}
+              passingCouplesCount={passingCouplesCount}
+              currentCouplesCount={
+                followers.winners.length + this.state.checkedFollowers.length
+              }
+            />
+          </Fragment>
+        )}
       </Container>
     );
   }
