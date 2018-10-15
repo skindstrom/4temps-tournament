@@ -124,6 +124,11 @@ class DrawSettler extends React.Component<
       followers
     } = this.props;
 
+    const leaderCount =
+      leaders.winners.length + this.state.checkedLeaders.length;
+    const followerCount =
+      leaders.winners.length + this.state.checkedFollowers.length;
+
     return (
       <Container>
         <Header as="h1">
@@ -136,7 +141,14 @@ class DrawSettler extends React.Component<
             president
           </strong>
         </p>
-        <Button onClick={this.submitRoundScores} primary>
+        <Button
+          primary
+          onClick={this.submitRoundScores}
+          disabled={
+            leaderCount !== passingCouplesCount ||
+            (followerCount !== passingCouplesCount && !isPairRound)
+          }
+        >
           Submit
         </Button>
         <Loader inline active={this.props.isLoading} />
@@ -156,9 +168,7 @@ class DrawSettler extends React.Component<
             addWinner={this.addLeader}
             removeWinner={this.removeLeader}
             passingCouplesCount={passingCouplesCount}
-            currentCouplesCount={
-              leaders.winners.length + this.state.checkedLeaders.length
-            }
+            currentCouplesCount={leaderCount}
           />
         ) : (
           <Fragment>
@@ -170,9 +180,7 @@ class DrawSettler extends React.Component<
               addWinner={this.addLeader}
               removeWinner={this.removeLeader}
               passingCouplesCount={passingCouplesCount}
-              currentCouplesCount={
-                leaders.winners.length + this.state.checkedLeaders.length
-              }
+              currentCouplesCount={leaderCount}
             />
             <DrawSettlerTable
               header="Followers"
@@ -185,9 +193,7 @@ class DrawSettler extends React.Component<
               addWinner={this.addFollower}
               removeWinner={this.removeFollower}
               passingCouplesCount={passingCouplesCount}
-              currentCouplesCount={
-                followers.winners.length + this.state.checkedFollowers.length
-              }
+              currentCouplesCount={followerCount}
             />
           </Fragment>
         )}
