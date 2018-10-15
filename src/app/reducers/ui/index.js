@@ -11,6 +11,7 @@ import createJudge from './create-judge';
 import judgeLogin from './judge-login';
 import createAssistant from './create-assistant';
 import notes from './notes';
+import settleDraw from './settle-draw';
 
 export default combineReducers({
   login,
@@ -22,5 +23,6 @@ export default combineReducers({
   createParticipant,
   createJudge,
   createAssistant,
-  notes
+  notes,
+  settleDraw
 });

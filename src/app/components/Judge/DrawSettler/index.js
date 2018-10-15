@@ -14,7 +14,8 @@ type HydratedScore = { score: number, participant: Participant };
 function mapStateToProps({
   participants,
   tournaments,
-  rounds
+  rounds,
+  ui
 }: ReduxState): ComponentProps {
   const tournament = tournaments.byId[tournaments.forJudge];
 
@@ -68,7 +69,8 @@ function mapStateToProps({
         activeRound.passingCouplesCount,
         hydratedFollowerScores
       )
-    }
+    },
+    ...ui.settleDraw
   };
 }
 

@@ -7,7 +7,9 @@ import {
   Container,
   Table,
   Icon,
-  Checkbox
+  Checkbox,
+  Loader,
+  Message
 } from 'semantic-ui-react';
 
 import './styles.css';
@@ -27,7 +29,11 @@ export type Props = {
     winners: Array<ScoreViewModel>,
     losers: Array<ScoreViewModel>,
     draw: Array<ScoreViewModel>
-  }
+  },
+  isLoading: boolean,
+  didSubmit: boolean,
+  successfulSubmit: boolean,
+  errorMessage: string
 };
 
 export type ActionProps = {
@@ -133,6 +139,14 @@ class DrawSettler extends React.Component<
         <Button onClick={this.submitRoundScores} primary>
           Submit
         </Button>
+        <Loader inline active={this.props.isLoading} />
+        <Message
+          error
+          hidden={!this.props.didSubmit || this.props.successfulSubmit}
+        >
+          <Message.Header>Error</Message.Header>
+          {this.props.errorMessage}
+        </Message>
         {isPairRound ? (
           <DrawSettlerTable
             header="Couples"

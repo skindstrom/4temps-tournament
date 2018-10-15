@@ -222,7 +222,9 @@ declare type ReduxState = {
     createJudge: UiCreateJudgeReduxState,
     createAssistant: UiCreateAssistantReduxState,
 
-    notes: UiNotesReduxState
+    notes: UiNotesReduxState,
+
+    settleDraw: UiSettleDrawReduxState,
   }
 };
 
@@ -368,6 +370,13 @@ declare type UiNotesReduxState = {
   isLoading: boolean,
   didSubmit: boolean,
   successfulSubmit: boolean
+};
+
+declare type UiSettleDrawReduxState = {
+  isLoading: boolean,
+  didSubmit: boolean,
+  successfulSubmit: boolean,
+  errorMessage: string
 };
 
 declare type ReduxPackAction = {
