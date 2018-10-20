@@ -106,8 +106,8 @@ class DrawSettler extends React.Component<
     losers: Array<ScoreViewModel>
   ): Array<Score> => {
     return winners
-      .concat(draw.filter(checked => checked))
-      .concat(draw.filter(checked => !checked))
+      .concat(draw.filter(score => score.checked))
+      .concat(draw.filter(score => !score.checked))
       .concat(losers)
       .map(score => ({
         score: score.score,
