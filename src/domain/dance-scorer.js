@@ -122,7 +122,9 @@ class DanceScorer {
   };
 
   _malusFromValueAndMaxScore = (value: number, maxScore: number) => {
-    return Math.round(maxScore * (1 - (100 - value) / 100));
+    const score = maxScore * (1 - (100 - value) / 100);
+    const rounded = parseFloat(score.toFixed(2));
+    return rounded;
   };
 
   _sum = (

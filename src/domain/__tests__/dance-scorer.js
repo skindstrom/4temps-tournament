@@ -117,10 +117,12 @@ describe('Dance scorer', () => {
     const positiveJudgeCount = 2;
     const malusPercentage = 10;
 
-    const malus = Math.round(
-      (maxValueCrit1 + maxValueCrit2) *
+    const malus = parseFloat(
+      (
+        (maxValueCrit1 + maxValueCrit2) *
         positiveJudgeCount *
         (1 - (100 - malusPercentage) / 100)
+      ).toFixed(2)
     );
 
     const scoreValue = 2;
