@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/no-types-missing-file-annotation */
 
 import { connect } from 'react-redux';
 
@@ -17,9 +17,38 @@ type Props = {
 };
 
 function mapStateToProps(state: ReduxState, { roundId, tournamentId }: Props) {
+  const viewModel = createViewModelsForRound(state, roundId, tournamentId);
+
   return {
-    round: createViewModelsForRound(state, roundId, tournamentId)
+    round: viewModel,
+    areAllGroupsGenerated: areAllGroupsGenerated(
+      viewModel,
+      (state.participants.forTournament[tournamentId] &&
+        state.participants.forTournament[tournamentId].length) ||
+        0
+    )
   };
+}
+
+function areAllGroupsGenerated(
+  viewModel: RoundViewModel,
+  participantCount: number
+) {
+  const participants = viewModel.groups
+    .reduce(
+      (participants, group) => [
+        ...participants,
+        ...group.pairs.reduce(
+          (pairs, pair) => [...pairs, pair.leader.number, pair.follower.number],
+          []
+        )
+      ],
+      []
+    )
+    .filter(Boolean);
+
+  const uniqueParticipants = new Set(participants);
+  return uniqueParticipants.size === participantCount;
 }
 
 function createViewModelsForRound(

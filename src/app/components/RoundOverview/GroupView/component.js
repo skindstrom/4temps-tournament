@@ -45,6 +45,7 @@ export type DanceNotes = {
 };
 
 export type Props = {
+  areAllGroupsGenerated: boolean,
   round: RoundViewModel,
   startDance: () => void,
   endDance: () => void,
@@ -274,6 +275,11 @@ class RoundOverview extends Component<Props> {
         )}
         <Header as="h2">Groups</Header>
         {this._renderGroups()}
+        {!this.props.areAllGroupsGenerated && (
+          <strong>
+            The remaining groups will be generated once the others are done
+          </strong>
+        )}
       </div>
     );
   }
