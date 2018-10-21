@@ -174,7 +174,7 @@ describe('Start round route', () => {
     const round = {
       ...createRound(),
       minPairCountPerGroup: 1,
-      maxPairCountPerGroup: 1,
+      maxPairCountPerGroup: 2,
       active: false,
       finished: false
     };
@@ -211,6 +211,6 @@ describe('Start round route', () => {
     await route.route(req, res);
 
     expect(res.getStatus()).toBe(200);
-    expect(repo._tournaments[tournament.id].rounds[0].groups).toHaveLength(3);
+    expect(repo._tournaments[tournament.id].rounds[0].groups).toHaveLength(2);
   });
 });

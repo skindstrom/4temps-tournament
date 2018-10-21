@@ -109,29 +109,23 @@ function generateGroups(
   round: Round,
   notes: Array<JudgeNote>
 ) {
-  const howMany = howManyGroupsToGenerate(round);
-  for (let i = 0; i < howMany; ++i) {
-    const generator = new NextGroupGenerator(tournament, notes);
-    if (i == 0) {
-      generator.removeUneven();
-    }
-    const group = generator.generateForRound(round.id);
-
-    if (group) {
+  let group = null;
+  do {
+    group = generateGroup(tournament, notes, round.id);
+    if (group != null) {
       round.groups.push(group);
     }
-  }
+  } while (group != null);
 }
 
-function howManyGroupsToGenerate(round: Round): number {
-  const groups = round.groups;
-  return groups.length < 2 || isGroupFinished(groups[groups.length - 1])
-    ? 2
-    : 1;
-}
-
-function isGroupFinished(group: DanceGroup): boolean {
-  return group.dances.reduce((acc, { finished }) => acc || finished, false);
+function generateGroup(
+  tournament: Tournament,
+  notes: Array<JudgeNote>,
+  roundId: string
+): ?DanceGroup {
+  const generator = new NextGroupGenerator(tournament, notes);
+  generator.disableReuseOfParticipants();
+  return generator.generateForRound(roundId);
 }
 
 function handleError(e: mixed, res: ServerApiResponse) {

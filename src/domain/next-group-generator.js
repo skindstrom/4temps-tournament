@@ -33,6 +33,7 @@ export default class NextGroupGenerator {
 
   disableReuseOfParticipants = () => {
     this._allowReuseOfParticipants = false;
+    this._removeUneven = true;
   };
 
   _getRound = (roundId: string): Round => {
@@ -116,28 +117,24 @@ export default class NextGroupGenerator {
     let pairs = this._generatePairsFromParticipants(remainingParticipants);
 
     if (this._isUnevenPairing(pairs)) {
-      if (!this._allowReuseOfParticipants) {
-        return null;
-      }
-
       try {
         pairs = this._makeEvenPairing();
       } catch (e) {
         if (e instanceof NoEvenPairingError) {
-          if (this._removeUneven) {
-            pairs = pairs.filter(
-              ({ leader, follower }) => leader != null && follower != null
-            );
-          } else {
-            pairs = null;
-          }
+          pairs = null;
         } else {
           throw e;
         }
       }
     }
 
-    if (pairs == null) {
+    if (this._removeUneven && pairs != null) {
+      pairs = pairs.filter(
+        ({ leader, follower }) => leader != null && follower != null
+      );
+    }
+
+    if (pairs == null || pairs.length == 0) {
       return null;
     }
 
@@ -191,7 +188,7 @@ export default class NextGroupGenerator {
 
     let pairs = this._generatePairsFromParticipants(remainingParticipants);
 
-    while (this._isUnevenPairing(pairs)) {
+    while (this._isUnevenPairing(pairs) && this._allowReuseOfParticipants) {
       if (remainingParticipants.length === this._roundParticipants.length) {
         throw new NoEvenPairingError();
       }
