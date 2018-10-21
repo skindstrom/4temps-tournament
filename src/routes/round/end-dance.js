@@ -107,7 +107,7 @@ class EndDanceRouteHandler {
 
     if (
       this._isLastDanceInGroup(round, dance) &&
-      (this._isLastGroup(round, dance) || this._isSecondLastGroup(round, dance))
+      this._isLastGroup(round, dance)
     ) {
       await this._generateNextGroups(tournament, round);
       // if it's still the last after having generated a new one, it's the very last
@@ -175,18 +175,6 @@ class EndDanceRouteHandler {
       for (let j = 0; j < round.groups[i].dances.length; ++j) {
         if (round.groups[i].dances[j].id === activeDance.id) {
           return i === round.groups.length - 1;
-        }
-      }
-    }
-
-    throw new NoStartedDanceError();
-  };
-
-  _isSecondLastGroup = (round: Round, activeDance: Dance): boolean => {
-    for (let i = 0; i < round.groups.length; ++i) {
-      for (let j = 0; j < round.groups[i].dances.length; ++j) {
-        if (round.groups[i].dances[j].id === activeDance.id) {
-          return i === round.groups.length - 2;
         }
       }
     }
