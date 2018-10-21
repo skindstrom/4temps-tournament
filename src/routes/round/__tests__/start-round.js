@@ -169,4 +169,48 @@ describe('Start round route', () => {
 
     expect(res.getStatus()).toBe(400);
   });
+
+  test('Generates as many groups as possible, without participants competing twice', async () => {
+    const round = {
+      ...createRound(),
+      minPairCountPerGroup: 1,
+      maxPairCountPerGroup: 1,
+      active: false,
+      finished: false
+    };
+    const participants = [
+      { ...createParticipant(), id: 'l1', role: 'leader' },
+      { ...createParticipant(), id: 'l2', role: 'leader' },
+      { ...createParticipant(), id: 'l3', role: 'leader' },
+      { ...createParticipant(), id: 'l4', role: 'leader' },
+      { ...createParticipant(), id: 'l5', role: 'leader' },
+      { ...createParticipant(), id: 'f1', role: 'follower' },
+      { ...createParticipant(), id: 'f2', role: 'follower' },
+      { ...createParticipant(), id: 'f3', role: 'follower' }
+    ];
+
+    const tournament = {
+      ...createTournament(),
+      id: generateId(),
+      rounds: [round],
+      participants
+    };
+    const repo = new TournamentRepositoryImpl();
+    await repo.create(tournament);
+    await repo.createRound(tournament.id, round);
+
+    await repo.create(tournament);
+
+    const req = Request.withParams({
+      tournamentId: tournament.id,
+      roundId: round.id
+    });
+    const res = new Response();
+    const route = new StartRoundRoute(repo);
+
+    await route.route(req, res);
+
+    expect(res.getStatus()).toBe(200);
+    expect(repo._tournaments[tournament.id].rounds[0].groups).toHaveLength(3);
+  });
 });

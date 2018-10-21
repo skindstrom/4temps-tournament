@@ -13,6 +13,7 @@ export default class NextGroupGenerator {
   _round: Round;
   _roundParticipants: Array<Participant>;
   _removeUneven: boolean = false;
+  _allowReuseOfParticipants: boolean = true;
 
   constructor(tournament: Tournament, notes: Array<JudgeNote>) {
     this._tournament = tournament;
@@ -28,6 +29,10 @@ export default class NextGroupGenerator {
 
   removeUneven = () => {
     this._removeUneven = true;
+  };
+
+  disableReuseOfParticipants = () => {
+    this._allowReuseOfParticipants = false;
   };
 
   _getRound = (roundId: string): Round => {
@@ -109,7 +114,12 @@ export default class NextGroupGenerator {
     }
 
     let pairs = this._generatePairsFromParticipants(remainingParticipants);
+
     if (this._isUnevenPairing(pairs)) {
+      if (!this._allowReuseOfParticipants) {
+        return null;
+      }
+
       try {
         pairs = this._makeEvenPairing();
       } catch (e) {

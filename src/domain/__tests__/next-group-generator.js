@@ -343,6 +343,18 @@ describe('Next group generator', () => {
         new NextGroupGenerator(tournament, []).generateForRound(newRound.id)
       ).toBeNull();
     });
+
+    test('Can choose not to reuse participants', () => {
+      const tournament = {
+        ...createTournament(),
+        participants: [...leaders, followers[0]],
+        rounds: [round]
+      };
+
+      const generator = new NextGroupGenerator(tournament, []);
+      generator.disableReuseOfParticipants();
+      expect(generator.generateForRound(round.id)).toBeNull();
+    });
   });
   describe('Two rounds', () => {
     const roundOne: Round = {
