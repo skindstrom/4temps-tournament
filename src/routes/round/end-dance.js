@@ -28,7 +28,7 @@ export default class StartDanceRoute {
   route = () => async (req: ServerApiRequest, res: ServerApiResponse) => {
     try {
       const tournamentId = req.params.tournamentId;
-      const handler = new StartDanceRouteHandler(
+      const handler = new EndDanceRouteHandler(
         this._tournamentRepository,
         this._noteRepository,
         this._updateLeaderboardFunc,
@@ -61,7 +61,7 @@ export default class StartDanceRoute {
   };
 }
 
-class StartDanceRouteHandler {
+class EndDanceRouteHandler {
   _tournamentRepository: TournamentRepository;
   _noteRepository: NoteRepository;
   _updateLeaderboardFunc: UpdateLeaderboardFunc;
@@ -109,7 +109,7 @@ class StartDanceRouteHandler {
       this._isLastDanceInGroup(round, dance) &&
       (this._isLastGroup(round, dance) || this._isSecondLastGroup(round, dance))
     ) {
-      await this._generateNextGroup(tournament, round);
+      await this._generateNextGroups(tournament, round);
       // if it's still the last after having generated a new one, it's the very last
       if (this._isLastGroup(round, dance)) {
         await this._endRoundOfTournament(tournament, round);
@@ -194,7 +194,7 @@ class StartDanceRouteHandler {
     throw new NoStartedDanceError();
   };
 
-  _generateNextGroup = async (
+  _generateNextGroups = async (
     tournament: Tournament,
     round: Round
   ): Promise<void> => {
@@ -203,10 +203,13 @@ class StartDanceRouteHandler {
       await this._getNotes(round)
     );
 
-    const group = generator.generateForRound(round.id);
-    if (group != null) {
-      round.groups.push(group);
-    }
+    let group = null;
+    do {
+      group = generator.generateForRound(round.id);
+      if (group != null) {
+        round.groups.push(group);
+      }
+    } while (group != null);
   };
 
   _endRoundOfTournament = async (tournament: Tournament, round: Round) => {

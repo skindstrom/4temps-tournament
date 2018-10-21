@@ -497,82 +497,56 @@ describe('End dance route', () => {
       expect(res.getBody()).toEqual(expectedRound);
     });
 
-    test("Generates a new group if it's the second last group", async () => {
-      const updatedRound: Round = {
-        ...tournament.rounds[0],
-        groups: [
-          {
-            ...tournament.rounds[0].groups[0],
-            dances: [
-              { ...dance, active: false, finished: true },
-              {
-                ...tournament.rounds[0].groups[0].dances[1],
-                active: true,
-                finished: false
-              }
-            ]
-          },
-          // $FlowFixMe
-          {
-            dances: [],
-            pairs: []
-          }
-        ]
+    test('Generates groups for remaining participants', async () => {
+      const l1: Participant = { ...createParticipant(), role: 'leader' };
+      const l2: Participant = { ...createParticipant(), role: 'leader' };
+      const l3: Participant = { ...createParticipant(), role: 'leader' };
+      const f1: Participant = { ...createParticipant(), role: 'follower' };
+      const f2: Participant = { ...createParticipant(), role: 'follower' };
+      const f3: Participant = { ...createParticipant(), role: 'follower' };
+
+      const criterion: RoundCriterion = createCriterion();
+
+      const dance: Dance = { ...createDance(), active: true };
+      const danceGroup: DanceGroup = {
+        id: generateId(),
+        pairs: [{ leader: l1.id, follower: f1.id }],
+        dances: [dance]
       };
 
-      const expectedRound = {
-        ...tournament.rounds[0],
-        groups: [
-          {
-            ...tournament.rounds[0].groups[0],
-            dances: [
-              { ...dance, active: false, finished: true },
-              {
-                ...tournament.rounds[0].groups[0].dances[1],
-                active: false,
-                finished: true
-              }
-            ]
-          },
-          // $FlowFixMe
-          {
-            dances: [],
-            pairs: []
-          },
-          {
-            pairs: [
-              {
-                leader: participants[2].id, // new participant
-                follower: participants[1].id
-              }
-            ],
-            dances: [
-              {
-                active: false,
-                finished: false
-              }
-            ]
-          }
-        ]
+      const round: Round = {
+        ...createRound(),
+        maxPairCountPerGroup: 1,
+        minPairCountPerGroup: 1,
+        active: true,
+        finished: false,
+        draw: false,
+        criteria: [criterion],
+        passingCouplesCount: 1,
+        groups: [danceGroup]
       };
 
-      const danceId = tournament.rounds[0].groups[0].dances[1].id;
-      await noteRepo.createOrUpdate({
-        judgeId: judge.id,
-        criterionId: criterion.id,
-        participantId: participants[0].id,
-        value: 3,
-        danceId
-      });
-      await noteRepo.createOrUpdate({
-        judgeId: judge.id,
-        criterionId: criterion.id,
-        participantId: participants[1].id,
-        value: 3,
-        danceId
-      });
+      const judge: Judge = createJudge();
 
-      tournamentRepo.updateRound(tournament.id, updatedRound);
+      const tournament: Tournament = {
+        ...createTournament(),
+        judges: [judge],
+        participants: [l1, l2, l3, f1, f2, f3],
+        rounds: [round]
+      };
+      await tournamentRepo.create(tournament);
+
+      const addNoteForParticipant = (participant: Participant): Promise<void> =>
+        noteRepo.createOrUpdate({
+          judgeId: judge.id,
+          criterionId: criterion.id,
+          participantId: participant.id,
+          value: 1,
+          danceId: dance.id
+        });
+
+      await addNoteForParticipant(l1);
+      await addNoteForParticipant(f1);
 
       const route = new EndDanceRoute(
         tournamentRepo,
@@ -586,9 +560,11 @@ describe('End dance route', () => {
       await route.route()(req, res);
 
       expect(res.getStatus()).toBe(200);
-      expect((await tournamentRepo.get(tournament.id)).rounds[0]).toMatchObject(
-        expectedRound
-      );
+
+      // $FlowFixMe
+      const returnedRound: Round = res.getBody();
+      expect(returnedRound).toMatchObject({ active: true, finished: false });
+      expect(returnedRound.groups).toHaveLength(3);
     });
 
     test('Sets the draw flag if there is a draw regarding who is in the top after the final dance', async () => {
