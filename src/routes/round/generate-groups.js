@@ -84,21 +84,18 @@ class GenerateGroupsRouteHandler {
   };
 
   _generateGroups = () => {
-    const groupOne = this._generateGroup();
-
-    if (groupOne != null) {
-      this._round.groups = [groupOne];
-    }
-
-    const groupTwo = this._generateGroup();
-
-    if (groupTwo != null) {
-      this._round.groups.push(groupTwo);
-    }
+    let group = null;
+    do {
+      group = this._generateGroup();
+      if (group != null) {
+        this._round.groups.push(group);
+      }
+    } while (group != null);
   };
 
   _generateGroup = (): ?DanceGroup => {
     const generator = new NextGroupGenerator(this._tournament, []);
+    generator.disableReuseOfParticipants();
     return generator.generateForRound(this._round.id);
   };
 
