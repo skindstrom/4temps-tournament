@@ -18,7 +18,10 @@ export default function route(
 
       // $FlowFixMe
       if (validateJudge(judge)) {
-        if (hasPresidentJudge(await tournamentRepository.get(tournamentId))) {
+        if (
+          hasPresidentJudge(await tournamentRepository.get(tournamentId)) &&
+          judgeType === 'president'
+        ) {
           throw new HasPresidentError();
         }
 
